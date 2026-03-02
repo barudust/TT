@@ -12,6 +12,7 @@ import {
   ResponsiveContainer,
 } from "recharts";
 import { ArrowUpDown, TrendingUp } from "lucide-react";
+import { API_BASE_URL } from "../../config/api";
 
 interface StockMetrics {
   symbol: string;
@@ -50,7 +51,7 @@ export default function Performance() {
     try {
       setLoading(true);
       const response = await fetch(
-        "http://localhost:8000/metrics"
+        `${API_BASE_URL}/metrics`
       );
 
       if (!response.ok) {

@@ -15,6 +15,7 @@ import {
   ResponsiveContainer,
   Dot,
 } from "recharts";
+import { API_BASE_URL } from "../../config/api";
 
 interface StockDetail {
   symbol: string;
@@ -74,7 +75,7 @@ export default function StockDetail() {
   const fetchStockData = async () => {
     try {
       setLoading(true);
-      const baseUrl = "http://localhost:8000";
+      const baseUrl = API_BASE_URL;
 
       // Fetch stock detail
       const detailResponse = await fetch(`${baseUrl}/stocks/${symbol}`);

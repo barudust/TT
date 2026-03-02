@@ -5,6 +5,7 @@ import { MarketStatus } from "../components/MarketStatus";
 import { RefreshCw } from "lucide-react";
 import { Button } from "../components/ui/button";
 import { toast } from "sonner";
+import { API_BASE_URL } from "../../config/api";
 
 export default function Home() {
   const [stocks, setStocks] = useState<Stock[]>([]);
@@ -21,7 +22,7 @@ export default function Home() {
       }
 
       const response = await fetch(
-        "http://localhost:8000/stocks"
+        `${API_BASE_URL}/stocks`
       );
 
       if (!response.ok) {
