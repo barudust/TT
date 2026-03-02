@@ -53,6 +53,9 @@ venv.bak/
 .env.*.local
 .env.example
 
+# ngrok configuration (personal)
+ngrok.yml
+
 # IDE
 .vscode/
 .idea/
