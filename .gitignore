@@ -10,6 +10,9 @@ dist/
 .vite/
 .next/
 
+# Archivos temporales de Claude
+tmpclaude-*
+
 # Archivos compilados de Python
 __pycache__/
 *.py[cod]
