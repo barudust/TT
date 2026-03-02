@@ -1,249 +1,168 @@
-# 📈 TradingSignals AI - Aplicación de Predicción Bursátil
+# TradingSignals AI
 
-Aplicación web para visualizar señales de trading generadas por modelos de Deep Learning (LSTM, CNN-LSTM) para 8 acciones del mercado bursátil estadounidense.
+Predicción bursátil con Deep Learning usando LSTM y CNN-LSTM
 
-**Trabajo Terminal TT 2026-B164 - ESCOM IPN**
+## Descripción
 
----
+Aplicación de trading signals que genera predicciones diarias (BUY, SELL, HOLD) para 8 acciones de alta capitalización:
+- AAPL, MSFT, GOOGL, AMZN, TSLA, META, NVDA, JPM
 
-## 🎯 Características Principales
-
-### 📱 Pantalla de Acciones
-- Lista de 8 acciones con señales diarias (BUY LONG, SELL SHORT, HOLD)
-- Precio actual y nivel de confianza del modelo
-- Actualización manual con botón de recarga
-- Diseño tipo aplicación móvil (responsive)
-
-### 📊 Detalle de Acción
-- Gráfico de precios históricos (30, 60, 90 días)
-- Visualización de predicciones pasadas (backtesting)
-- Métricas de rendimiento del modelo:
-  - Precisión Global (Accuracy)
-  - Precisión para compras (Buy Precision)
-  - Precisión para ventas (Sell Precision)
-  - F1-Score
-- Historial de señales con comparación predicción vs. realidad
-
-### 🏆 Rendimiento Global
-- Gráfico comparativo de todas las acciones
-- Tabla ordenable por cualquier métrica
-- Estadísticas promedio del sistema
-
-### ℹ️ Acerca de
-- Descripción del proyecto académico
-- Metodología y modelos utilizados
-- Disclaimer legal
-- Créditos institucionales
+**Nota importante:** Este es un proyecto académico (TT 2026-B164 - ESCOM IPN). Las señales son solo con fines educativos y de investigación, no constituyen asesoramiento financiero.
 
 ---
 
-## 🏗️ Arquitectura
+## Requisitos previos
 
-```
-Frontend (React + TypeScript)
-       ↓
-API REST (Supabase Edge Functions)
-       ↓
-KV Store (Supabase Database)
-       ↑
-Modelos de Deep Learning (Python/TensorFlow)
+- **Node.js** v18+ (https://nodejs.org/)
+- **Python** v3.9+ (https://www.python.org/)
+- **Git** (https://git-scm.com/)
+
+---
+
+## Instalación rápida
+
+```bash
+# 1. Clonar el repositorio
+git clone https://github.com/barudust/TT.git
+cd TT
+
+# 2. Instalar dependencias de Node
+npm install
+
+# 3. Instalar dependencias de Python
+cd api
+pip install -r requirements.txt
+cd ..
 ```
 
-### Stack Tecnológico
+---
 
-**Frontend:**
-- React 18.3
-- TypeScript
-- React Router 7
-- Recharts (gráficos)
-- Tailwind CSS 4
-- Lucide React (iconos)
+## Ejecución
 
-**Backend:**
-- Supabase Edge Functions
-- Hono (framework web)
-- Deno runtime
-- KV Store para persistencia
+Abrir 2 terminales:
 
-**Modelos (no incluidos):**
-- Python + TensorFlow
-- LSTM / CNN-LSTM
-- Yahoo Finance API
+**Terminal 1 - API (Python):**
+```bash
+cd api
+python main.py
+```
+Verás: `[*] API iniciada en http://localhost:8000`
+
+**Terminal 2 - App (React):**
+```bash
+npm run dev
+```
+Abre: http://localhost:5173
 
 ---
 
-## 📋 Acciones Monitoreadas
+## Instalación como PWA en Android
 
-| Símbolo | Empresa | Sector |
-|---------|---------|--------|
-| AAPL | Apple Inc. | Tecnología |
-| MSFT | Microsoft Corporation | Tecnología |
-| GOOGL | Alphabet Inc. | Tecnología |
-| AMZN | Amazon.com Inc. | E-commerce |
-| TSLA | Tesla Inc. | Automotriz |
-| META | Meta Platforms Inc. | Redes Sociales |
-| NVDA | NVIDIA Corporation | Semiconductores |
-| JPM | JPMorgan Chase & Co. | Financiero |
+La app está configurada como **Progressive Web App (PWA)**, funcionando como una app nativa en tu celular.
+
+### Pasos para instalar en Android:
+
+1. Abre la app en el navegador: **http://localhost:5173/**
+2. Toca el **menú del navegador** (⋮ tres puntos arriba a la derecha)
+3. Selecciona **"Instalar app"** o **"Añadir a pantalla de inicio"**
+4. Confirma y la app aparecerá en tu pantalla de inicio
+
+**Nota:** Si desplegaste en producción (no es localhost), el botón aparecerá automáticamente.
+
+### Características de la PWA:
+
+✅ Se instala como app nativa (sin App Store)
+✅ Funciona offline (cachea los datos)
+✅ Acceso rápido desde pantalla de inicio
+✅ Interfaz a pantalla completa
+✅ Notificaciones (preparadas para implementar)
 
 ---
 
-## 🚀 Estructura del Proyecto
+## Estructura del proyecto
 
 ```
-/
+TT/
+├── public/
+│   ├── manifest.json          # Configuración PWA
+│   └── service-worker.js      # Cache offline
 ├── src/
 │   ├── app/
-│   │   ├── components/
-│   │   │   ├── StockCard.tsx          # Tarjeta de acción
-│   │   │   └── ui/                    # Componentes de UI
 │   │   ├── pages/
-│   │   │   ├── Home.tsx               # Lista de acciones
-│   │   │   ├── StockDetail.tsx        # Detalle con gráficos
-│   │   │   ├── Performance.tsx        # Rendimiento global
-│   │   │   └── About.tsx              # Información del proyecto
-│   │   ├── App.tsx                    # Punto de entrada
-│   │   ├── Root.tsx                   # Layout principal
-│   │   └── routes.ts                  # Configuración de rutas
-│   └── styles/                        # Estilos globales
-├── supabase/
-│   └── functions/
-│       └── server/
-│           ├── index.tsx              # API REST
-│           ├── stock_data.tsx         # Lógica de datos
-│           └── kv_store.tsx           # Acceso a KV Store
-├── INTEGRATION_GUIDE.md               # Guía de integración
-└── package.json
+│   │   │   ├── Home.tsx       # Lista de acciones
+│   │   │   ├── StockDetail.tsx # Detalle + gráficos + métricas
+│   │   │   ├── Performance.tsx # Comparativa de rendimiento
+│   │   │   └── About.tsx      # Información del proyecto
+│   │   ├── Root.tsx           # Layout principal
+│   │   └── routes.ts          # Configuración de rutas
+│   └── main.tsx               # Entrada React
+├── api/
+│   ├── main.py                # API Flask (11 endpoints)
+│   ├── requirements.txt        # Dependencias Python
+│   └── send_data.py           # Script para enviar datos simulados
+├── index.html                 # PWA manifest + service worker
+├── package.json               # Dependencias Node
+├── vite.config.ts             # Config Vite
+└── tailwind.config.ts         # Estilos Tailwind
 ```
 
 ---
 
-## 🔌 API Endpoints
+## API Endpoints
 
-### GET `/make-server-8ca8c1f7/stocks`
-Lista de todas las acciones con señales actuales.
-
-### GET `/make-server-8ca8c1f7/stocks/:symbol`
-Detalle de una acción específica con historial de señales.
-
-### GET `/make-server-8ca8c1f7/stocks/:symbol/history?days=30`
-Datos históricos de precios (30, 60 o 90 días).
-
-### GET `/make-server-8ca8c1f7/stocks/:symbol/metrics`
-Métricas de rendimiento del modelo para una acción.
-
-### GET `/make-server-8ca8c1f7/metrics`
-Métricas de todas las acciones.
+- `GET /stocks` - Lista de todas las acciones con señales
+- `GET /stocks/<symbol>` - Detalle de una acción específica
+- `GET /stocks/<symbol>/history?days=30` - Histórico de precios
+- `GET /stocks/<symbol>/metrics` - Métricas de rendimiento
+- `GET /metrics` - Métricas globales de todas las acciones
 
 ---
 
-## 📊 Formato de Datos
+## Tecnologías
 
-Consulta el archivo `INTEGRATION_GUIDE.md` para la documentación completa del formato de datos que tus modelos deben generar.
-
-### Ejemplo de Señal:
-```json
-{
-  "symbol": "AAPL",
-  "name": "Apple Inc.",
-  "currentPrice": 175.30,
-  "signal": "buy",
-  "confidence": 0.78,
-  "lastUpdate": "2026-03-02T18:00:00Z"
-}
-```
-
----
-
-## 🎨 Diseño UI/UX
-
-### Colores de Señales
-- 🟢 **BUY LONG**: Verde (#4CAF50) - Flecha hacia arriba
-- 🔴 **SELL SHORT**: Rojo (#F44336) - Flecha hacia abajo
-- 🟡 **HOLD**: Amarillo (#FFC107) - Círculo
-
-### Navegación
-- Bottom Navigation con 3 secciones
-- Diseño mobile-first responsive
-- Transiciones suaves y animaciones
-
----
-
-## 🔄 Flujo de Actualización Diaria
-
-1. **Cierre del mercado** (4:00 PM EST)
-2. **Recolección de datos** via Yahoo Finance
-3. **Ejecución de modelos** LSTM/CNN-LSTM
-4. **Generación de señales** con nivel de confianza
-5. **Actualización en KV Store** via API
-6. **Disponibilidad en app web** para usuarios
-
----
-
-## 📝 Datos Simulados
-
-Actualmente, la aplicación utiliza **datos simulados** para demostración. Los datos incluyen:
-
-- Precios realistas basados en valores históricos
-- Señales aleatorias con distribución balanceada
-- Métricas de rendimiento coherentes (60-75% accuracy)
-- Historial de 30, 60 y 90 días
-
-**Para producción:** Reemplaza con datos reales de tus modelos siguiendo la guía en `INTEGRATION_GUIDE.md`.
-
----
-
-## ⚠️ Disclaimer Legal
-
-Esta aplicación es parte de un proyecto académico con fines **exclusivamente educativos y de investigación**. 
-
-**NO constituye asesoramiento financiero** de ningún tipo. Las señales generadas por los modelos de Deep Learning no garantizan resultados futuros.
-
-Invertir en el mercado de valores conlleva riesgos significativos y puede resultar en pérdida de capital. Consulte siempre con un asesor financiero certificado antes de tomar decisiones de inversión.
-
----
-
-## 🎓 Créditos
-
-**Institución:** Escuela Superior de Cómputo (ESCOM)  
-**Organización:** Instituto Politécnico Nacional (IPN)  
-**Trabajo Terminal:** TT 2026-B164  
-**Año:** 2026
-
-### Tecnologías Utilizadas
-- Python
-- TensorFlow
-- LSTM / CNN-LSTM
-- React
-- TypeScript
-- Supabase
-- Yahoo Finance API
-- Recharts
+**Frontend:**
+- React 18 + TypeScript
+- Vite (bundler)
 - Tailwind CSS
+- Recharts (gráficos)
+- React Router v7
+
+**Backend:**
+- Flask (Python)
+- CORS habilitado
+
+**Deep Learning (modelos conceptuales):**
+- LSTM (Long Short-Term Memory)
+- CNN-LSTM (Arquitectura híbrida)
+- Datos: Yahoo Finance
 
 ---
 
-## 📞 Soporte y Preguntas
+## Commits en español
 
-Para integrar tus modelos de Deep Learning con esta aplicación:
+Todos los commits están en español. Ejemplos:
 
-1. Lee la guía completa en `INTEGRATION_GUIDE.md`
-2. Revisa los ejemplos en `/supabase/functions/server/stock_data.tsx`
-3. Asegúrate de seguir el formato exacto de datos
-
----
-
-## 🚧 Próximos Pasos
-
-Para poner en producción:
-
-1. ✅ Conectar modelos reales de Deep Learning
-2. ✅ Configurar actualización automática diaria
-3. ✅ Integrar Yahoo Finance API para precios reales
-4. ✅ Implementar sistema de notificaciones (opcional)
-5. ✅ Agregar análisis de sentimiento de noticias (futuro)
-6. ✅ Expandir a más acciones (futuro)
+```bash
+git commit -m "Agregar navegación rápida de 8 acciones"
+git commit -m "Mejorar tabla de historial de señales"
+git commit -m "Actualizar métricas de estrategia"
+```
 
 ---
 
-**Versión:** 1.0.0  
-**Última actualización:** Marzo 2026
+## Desarrolladores
+
+- Reyes Ramos David
+- Polvo Cuatianquiz Jesús Baruc
+
+**Directores:**
+- Abdiel Reyes Vega
+- Emmanuel Juarez Carvajal
+
+**Institución:** Escuela Superior de Cómputo (ESCOM) - Instituto Politécnico Nacional (IPN)
+
+---
+
+## Licencia
+
+Proyecto académico - 2026

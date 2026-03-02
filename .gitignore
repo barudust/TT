@@ -8,6 +8,7 @@ pnpm-debug.log*
 # Build files de Vite
 dist/
 .vite/
+.next/
 
 # Archivos compilados de Python
 __pycache__/
@@ -33,6 +34,7 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
+pip-log.txt
 
 # Entornos virtuales Python
 venv/
@@ -40,11 +42,13 @@ env/
 ENV/
 env.bak/
 venv.bak/
+.venv
 
 # Variables de entorno
 .env
 .env.local
 .env.*.local
+.env.example
 
 # IDE
 .vscode/
@@ -65,3 +69,11 @@ logs/
 # Archivos temporales
 .tmp/
 temp/
+
+# Testing
+.pytest_cache/
+.coverage
+
+# OS
+*.exe
+*.dll
