@@ -3,18 +3,15 @@ import { TrendingUp, BarChart3, Info } from "lucide-react";
 
 export default function Root() {
   const location = useLocation();
-
   const stocks = ["AAPL", "MSFT", "GOOGL", "AMZN", "TSLA", "META", "NVDA", "JPM"];
-
   const navItems = [
-    { path: "/", icon: TrendingUp, label: "Acciones" },
-    { path: "/performance", icon: BarChart3, label: "Rendimiento" },
-    { path: "/about", icon: Info, label: "Acerca de" },
+    { path: "/", icon: TrendingUp, label: "Stocks" },
+    { path: "/performance", icon: BarChart3, label: "Performance" },
+    { path: "/about", icon: Info, label: "About" },
   ];
 
   return (
     <div className="min-h-screen bg-gray-50 pb-20">
-      {/* Header */}
       <header className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
         <div className="max-w-4xl mx-auto px-4 py-4">
           <div className="flex items-center gap-3">
@@ -23,13 +20,12 @@ export default function Root() {
             </div>
             <div>
               <h1 className="text-xl font-bold text-gray-900">TradingSignals AI</h1>
-              <p className="text-xs text-gray-500">Predicción Bursátil con Deep Learning</p>
+              <p className="text-xs text-gray-500">Deep Learning Stock Prediction</p>
             </div>
           </div>
         </div>
       </header>
 
-      {/* Stock Navigation - Quick Access */}
       <div className="bg-white border-b border-gray-200 sticky top-16 z-40">
         <div className="max-w-4xl mx-auto px-4 py-3">
           <div className="overflow-x-auto">
@@ -55,12 +51,10 @@ export default function Root() {
         </div>
       </div>
 
-      {/* Main Content */}
       <main className="max-w-4xl mx-auto px-4 py-6">
         <Outlet />
       </main>
 
-      {/* Bottom Navigation */}
       <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg z-50">
         <div className="max-w-4xl mx-auto px-4">
           <div className="flex justify-around items-center h-16">
@@ -91,3 +85,4 @@ export default function Root() {
     </div>
   );
 }
+

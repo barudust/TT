@@ -1,168 +1,272 @@
 # TradingSignals AI
 
-Predicción bursátil con Deep Learning usando LSTM y CNN-LSTM
+Deep learning-based stock market price prediction system. Generates daily buy/sell/hold signals for 8 major stocks using LSTM and CNN-LSTM neural networks.
 
-## Descripción
+## Project Overview
 
-Aplicación de trading signals que genera predicciones diarias (BUY, SELL, HOLD) para 8 acciones de alta capitalización:
-- AAPL, MSFT, GOOGL, AMZN, TSLA, META, NVDA, JPM
+TradingSignals AI is an educational platform that combines deep learning models with a modern web interface to predict stock market movements. The system analyzes historical price data to generate trading signals and displays comprehensive performance metrics.
 
-**Nota importante:** Este es un proyecto académico (TT 2026-B164 - ESCOM IPN). Las señales son solo con fines educativos y de investigación, no constituyen asesoramiento financiero.
+- **Frontend:** React 18 + TypeScript + Tailwind CSS
+- **Backend:** Flask REST API with in-memory data storage
+- **State Management:** React Router for navigation
+- **Charts:** Recharts for data visualization
+- **Deep Learning:** LSTM and CNN-LSTM model architectures
 
----
+## Tracked Stocks
 
-## Requisitos previos
+The system monitors 8 major US stocks:
+- **AAPL** - Apple Inc.
+- **MSFT** - Microsoft Corporation
+- **GOOGL** - Alphabet Inc.
+- **AMZN** - Amazon.com Inc.
+- **TSLA** - Tesla Inc.
+- **META** - Meta Platforms Inc.
+- **NVDA** - NVIDIA Corporation
+- **JPM** - JPMorgan Chase & Co.
 
-- **Node.js** v18+ (https://nodejs.org/)
-- **Python** v3.9+ (https://www.python.org/)
-- **Git** (https://git-scm.com/)
+## Installation
 
----
+### Prerequisites
 
-## Instalación rápida
+- Node.js 18+ (https://nodejs.org/)
+- Python 3.9+ (https://www.python.org/)
+- Git (https://git-scm.com/)
+
+### Frontend Setup
 
 ```bash
-# 1. Clonar el repositorio
-git clone https://github.com/barudust/TT.git
+# Navigate to project root
 cd TT
 
-# 2. Instalar dependencias de Node
+# Install Node dependencies
 npm install
 
-# 3. Instalar dependencias de Python
-cd api
-pip install -r requirements.txt
-cd ..
+# Build Tailwind CSS
+npm run build
 ```
 
----
+### Backend Setup
 
-## Ejecución
+```bash
+# Create virtual environment (optional but recommended)
+python -m venv venv
 
-Abrir 2 terminales:
+# Windows
+venv\Scripts\activate
+# macOS/Linux
+source venv/bin/activate
 
-**Terminal 1 - API (Python):**
+# Install Python dependencies
+cd api
+pip install -r requirements.txt
+```
+
+## Configuration
+
+### Environment Variables
+
+Create a `.env.local` file in the project root (optional):
+
+```
+VITE_API_URL=http://localhost:8000
+```
+
+If not specified, the app automatically detects:
+- Development: `http://localhost:8000`
+- Production: `https://yourdomain.com:8000`
+
+## Running the Project
+
+Open **3 separate terminals**:
+
+### Terminal 1: Backend API (Python)
+
 ```bash
 cd api
 python main.py
 ```
-Verás: `[*] API iniciada en http://localhost:8000`
 
-**Terminal 2 - App (React):**
+Expected output:
+```
+[INFO] API server started on http://localhost:8000
+[INFO] Flask in debug mode
+ * Running on http://0.0.0.0:8000
+```
+
+### Terminal 2: Frontend Development Server
+
 ```bash
 npm run dev
 ```
-Abre: http://localhost:5173
 
----
+Expected output:
+```
+VITE v5.0.0  ready in 100 ms
 
-## Instalación como PWA en Android
+➜  Local:   http://localhost:5173/
+```
 
-La app está configurada como **Progressive Web App (PWA)**, funcionando como una app nativa en tu celular.
+### Terminal 3 (Optional): Data Injection
 
-### Pasos para instalar en Android:
+```bash
+cd api
+python send_data.py
+```
 
-1. Abre la app en el navegador: **http://localhost:5173/**
-2. Toca el **menú del navegador** (⋮ tres puntos arriba a la derecha)
-3. Selecciona **"Instalar app"** o **"Añadir a pantalla de inicio"**
-4. Confirma y la app aparecerá en tu pantalla de inicio
+This allows you to send simulated stock data updates programmatically.
 
-**Nota:** Si desplegaste en producción (no es localhost), el botón aparecerá automáticamente.
+## Accessing the Application
 
-### Características de la PWA:
+Open your browser and navigate to:
+```
+http://localhost:5173
+```
 
-✅ Se instala como app nativa (sin App Store)
-✅ Funciona offline (cachea los datos)
-✅ Acceso rápido desde pantalla de inicio
-✅ Interfaz a pantalla completa
-✅ Notificaciones (preparadas para implementar)
-
----
-
-## Estructura del proyecto
+## Project Structure
 
 ```
-TT/
-├── public/
-│   ├── manifest.json          # Configuración PWA
-│   └── service-worker.js      # Cache offline
+.
 ├── src/
 │   ├── app/
 │   │   ├── pages/
-│   │   │   ├── Home.tsx       # Lista de acciones
-│   │   │   ├── StockDetail.tsx # Detalle + gráficos + métricas
-│   │   │   ├── Performance.tsx # Comparativa de rendimiento
-│   │   │   └── About.tsx      # Información del proyecto
-│   │   ├── Root.tsx           # Layout principal
-│   │   └── routes.ts          # Configuración de rutas
-│   └── main.tsx               # Entrada React
+│   │   │   ├── Home.tsx          # Stock signals list
+│   │   │   ├── StockDetail.tsx   # Detailed metrics and charts
+│   │   │   ├── Performance.tsx   # Global performance comparison
+│   │   │   └── About.tsx         # Project information
+│   │   ├── components/           # Reusable UI components
+│   │   ├── config/
+│   │   │   └── api.ts            # API configuration
+│   │   ├── Root.tsx              # Main layout component
+│   │   └── routes.ts             # Route definitions
+│   ├── styles/
+│   └── main.tsx                  # React entry point
+│
 ├── api/
-│   ├── main.py                # API Flask (11 endpoints)
-│   ├── requirements.txt        # Dependencias Python
-│   └── send_data.py           # Script para enviar datos simulados
-├── index.html                 # PWA manifest + service worker
-├── package.json               # Dependencias Node
-├── vite.config.ts             # Config Vite
-└── tailwind.config.ts         # Estilos Tailwind
+│   ├── main.py                   # Flask API server
+│   ├── send_data.py              # Data injection script
+│   ├── requirements.txt           # Python dependencies
+│   └── output_examples/           # Expected API response reference
+│
+├── public/
+│   ├── manifest.json             # PWA manifest
+│   └── service-worker.js         # Service worker for offline support
+│
+├── package.json                  # Node dependencies and scripts
+├── vite.config.ts                # Vite configuration
+├── tailwind.config.ts            # Tailwind CSS configuration
+├── tsconfig.json                 # TypeScript configuration
+└── README.md                     # This file
 ```
-
----
 
 ## API Endpoints
 
-- `GET /stocks` - Lista de todas las acciones con señales
-- `GET /stocks/<symbol>` - Detalle de una acción específica
-- `GET /stocks/<symbol>/history?days=30` - Histórico de precios
-- `GET /stocks/<symbol>/metrics` - Métricas de rendimiento
-- `GET /metrics` - Métricas globales de todas las acciones
+Full API documentation is available in [API_README.md](./API_README.md).
 
----
+### Quick Reference
 
-## Tecnologías
+- `GET /health` - Health check
+- `GET /stocks` - All stocks with current signals
+- `GET /stocks/<symbol>` - Detailed data for a specific stock
+- `GET /stocks/<symbol>/history?days=30` - Historical price data
+- `GET /stocks/<symbol>/metrics` - Performance metrics for one stock
+- `GET /metrics` - Aggregated metrics for all stocks
 
-**Frontend:**
-- React 18 + TypeScript
-- Vite (bundler)
-- Tailwind CSS
-- Recharts (gráficos)
-- React Router v7
+## Technologies
 
-**Backend:**
-- Flask (Python)
-- CORS habilitado
+### Frontend Stack
+- **React 18** - UI framework
+- **TypeScript** - Type safety
+- **Vite** - Build tool
+- **Tailwind CSS** - Styling
+- **Recharts** - Data visualization
+- **React Router 7** - Navigation
+- **Lucide React** - Icons
 
-**Deep Learning (modelos conceptuales):**
-- LSTM (Long Short-Term Memory)
-- CNN-LSTM (Arquitectura híbrida)
-- Datos: Yahoo Finance
+### Backend Stack
+- **Flask** - Web framework
+- **Flask-CORS** - Cross-origin support
+- **Python 3.9+** - Runtime
 
----
+### Build & Deployment
+- **PWA** - Progressive Web App support
+- **Service Worker** - Offline caching
+- **CORS** - Cross-origin requests
 
-## Commits en español
-
-Todos los commits están en español. Ejemplos:
+## Available Commands
 
 ```bash
-git commit -m "Agregar navegación rápida de 8 acciones"
-git commit -m "Mejorar tabla de historial de señales"
-git commit -m "Actualizar métricas de estrategia"
+# Development
+npm run dev          # Start dev server
+npm run build        # Build for production
+npm run preview      # Preview production build locally
+
+# Server commands (in api/ directory)
+python main.py       # Start Flask server
+python send_data.py  # Send test data to API
 ```
 
+## Model Architecture
+
+The system uses two neural network architectures:
+
+### LSTM (Long Short-Term Memory)
+- Handles sequential temporal dependencies
+- Single-layer LSTM with 64 units
+- Effective for time-series analysis
+
+### CNN-LSTM (Hybrid Architecture)
+- CNN layers for feature extraction
+- LSTM layers for temporal patterns
+- Combines local and temporal feature learning
+
+Note: Current implementation uses simulated data. To integrate real trained models, implement the model prediction logic in the `/api` module.
+
+## Metrics Explained
+
+### Classification Metrics
+- **Accuracy** - Percentage of correct direction predictions
+- **Precision (BUY/SELL/HOLD)** - Accuracy for each signal type
+- **F1-Score** - Harmonic mean of precision and recall
+
+### Strategy Metrics
+- **Cumulative Return** - Total simulated profit/loss percentage
+- **Sharpe Ratio** - Risk-adjusted returns
+- **Win Rate** - Percentage of profitable trades
+- **Profit Factor** - Gross profit / Gross loss ratio
+- **Max Drawdown** - Largest peak-to-trough decline
+- **Exposure** - Percentage of days with open positions
+
+## PWA Installation
+
+The application is configured as a Progressive Web App (PWA):
+
+### On Android
+1. Open the app in Chrome browser
+2. Tap menu (⋮) → "Install app"
+3. App appears on home screen
+
+### On iOS
+1. Open Safari browser
+2. Tap share → "Add to Home Screen"
+3. App runs in fullscreen mode
+
+## Contributing
+
+This is an academic project (ESCOM IPN, 2026). For bug reports or improvements:
+1. Create an issue describing the problem
+2. Include steps to reproduce
+3. Provide expected vs actual behavior
+
+## License
+
+Educational/Research Use Only - 2026
+
+## Disclaimer
+
+This project is for educational purposes. Trading signals generated are simulated and should not be used as financial advice. Always consult qualified financial professionals before making investment decisions.
+
 ---
 
-## Desarrolladores
-
-- Reyes Ramos David
-- Polvo Cuatianquiz Jesús Baruc
-
-**Directores:**
-- Abdiel Reyes Vega
-- Emmanuel Juarez Carvajal
-
-**Institución:** Escuela Superior de Cómputo (ESCOM) - Instituto Politécnico Nacional (IPN)
-
----
-
-## Licencia
-
-Proyecto académico - 2026
+**Developers:** Reyes Ramos David, Polvo Cuatianquiz Jesús Baruc
+**Advisors:** Abdiel Reyes Vega, Emmanuel Juarez Carvajal
+**Institution:** ESCOM (Escuela Superior de Cómputo) - IPN
