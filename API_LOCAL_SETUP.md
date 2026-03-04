@@ -128,7 +128,7 @@ Elige una opción (1-3):
 
 **Opciones:**
 
-- **Opción 1:** Actualiza las 8 acciones con nuevas señales (BUY, SELL, HOLD), precios y confianzas aleatorias
+- **Opción 1:** Actualiza las 7 acciones con nuevas señales (BUY, SELL, HOLD), precios y confianzas aleatorias
   ```
   Elige una opción (1-3): 1
   ```
@@ -136,14 +136,14 @@ Elige una opción (1-3):
 - **Opción 2:** Actualiza una acción específica
   ```
   Elige una opción (1-3): 2
-  Acciones disponibles: AAPL, MSFT, GOOGL, AMZN, TSLA, META, NVDA, JPM
+  Acciones disponibles: AAPL, MSFT, GOOGL, AMZN, TSLA, META, NVDA
   Ingresa el símbolo: AAPL
   ```
 
 - **Opción 3:** Actualiza múltiples acciones
   ```
   Elige una opción (1-3): 3
-  Acciones disponibles: AAPL, MSFT, GOOGL, AMZN, TSLA, META, NVDA, JPM
+  Acciones disponibles: AAPL, MSFT, GOOGL, AMZN, TSLA, META, NVDA
   Ingresa los símbolos separados por comas (ej: AAPL,MSFT,GOOGL): AAPL,MSFT,NVDA
   ```
 

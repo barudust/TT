@@ -1,7 +1,10 @@
 import { defineConfig } from 'vite'
-import path from 'path'
+import { fileURLToPath } from 'url'
+import { dirname } from 'path'
 import tailwindcss from '@tailwindcss/vite'
 import react from '@vitejs/plugin-react'
+
+const __dirname = dirname(fileURLToPath(import.meta.url))
 
 export default defineConfig({
   plugins: [
@@ -10,7 +13,7 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src'),
+      '@': `${__dirname}/src`,
     },
   },
 

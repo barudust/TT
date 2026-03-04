@@ -222,7 +222,6 @@ La aplicación actualmente usa **datos simulados** que incluyen:
 | TSLA | Tesla Inc. | ~$195 |
 | META | Meta Platforms Inc. | ~$485 |
 | NVDA | NVIDIA Corporation | ~$875 |
-| JPM | JPMorgan Chase & Co. | ~$195 |
 
 ---
 

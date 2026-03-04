@@ -63,7 +63,7 @@ import * as kv from "./kv_store.tsx";
  *    ]);
  */
 
-// Definición de las 8 acciones a seguir
+// Definición de las 7 acciones a seguir
 const STOCKS = [
   { symbol: "AAPL", name: "Apple Inc." },
   { symbol: "MSFT", name: "Microsoft Corporation" },
@@ -72,7 +72,6 @@ const STOCKS = [
   { symbol: "TSLA", name: "Tesla Inc." },
   { symbol: "META", name: "Meta Platforms Inc." },
   { symbol: "NVDA", name: "NVIDIA Corporation" },
-  { symbol: "JPM", name: "JPMorgan Chase & Co." },
 ];
 
 // Función para generar datos históricos simulados
@@ -126,7 +125,6 @@ function getBasePrice(symbol: string): number {
     TSLA: 195.00,
     META: 485.00,
     NVDA: 875.00,
-    JPM: 195.00,
   };
   return prices[symbol] || 100;
 }

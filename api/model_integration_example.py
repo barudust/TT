@@ -57,10 +57,10 @@ def actualizar_prediccion_aapl():
 
 def actualizar_todas_predicciones():
     """
-    Actualiza las 8 acciones con predicciones de tus modelos
+    Actualiza las 7 acciones con predicciones de tus modelos
     """
 
-    STOCKS = ["AAPL", "MSFT", "GOOGL", "AMZN", "TSLA", "META", "NVDA", "JPM"]
+    STOCKS = ["AAPL", "MSFT", "GOOGL", "AMZN", "TSLA", "META", "NVDA"]
     NOMBRES = {
         "AAPL": "Apple Inc.",
         "MSFT": "Microsoft Corporation",
@@ -69,7 +69,6 @@ def actualizar_todas_predicciones():
         "TSLA": "Tesla Inc.",
         "META": "Meta Platforms Inc.",
         "NVDA": "NVIDIA Corporation",
-        "JPM": "JPMorgan Chase & Co.",
     }
 
     stocks_data = []

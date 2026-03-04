@@ -1,6 +1,6 @@
 # TradingSignals AI
 
-Deep learning-based stock market price prediction system. Generates daily buy/sell/hold signals for 8 major stocks using LSTM and CNN-LSTM neural networks.
+Deep learning-based stock market price prediction system. Generates daily buy/sell/hold signals for 7 major stocks using LSTM and CNN-LSTM neural networks.
 
 ## Project Overview
 
@@ -14,7 +14,7 @@ TradingSignals AI is an educational platform that combines deep learning models 
 
 ## Tracked Stocks
 
-The system monitors 8 major US stocks:
+The system monitors 7 major US tech and e-commerce stocks:
 - **AAPL** - Apple Inc.
 - **MSFT** - Microsoft Corporation
 - **GOOGL** - Alphabet Inc.
@@ -22,7 +22,6 @@ The system monitors 8 major US stocks:
 - **TSLA** - Tesla Inc.
 - **META** - Meta Platforms Inc.
 - **NVDA** - NVIDIA Corporation
-- **JPM** - JPMorgan Chase & Co.
 
 ## Installation
 
@@ -60,6 +59,12 @@ source venv/bin/activate
 cd api
 pip install -r requirements.txt
 ```
+
+**Dependencies:**
+- Flask 3.0.0 - Web framework
+- Flask-CORS 4.0.0 - Cross-origin support
+- yfinance 0.2.32 - Yahoo Finance data
+- pandas 2.1.4 - Data manipulation
 
 ## Configuration
 
@@ -166,9 +171,10 @@ Full API documentation is available in [API_README.md](./API_README.md).
 
 - `GET /health` - Health check
 - `GET /stocks` - All stocks with current signals
-- `GET /stocks/<symbol>` - Detailed data for a specific stock
-- `GET /stocks/<symbol>/history?days=30` - Historical price data
+- `GET /stocks/<symbol>` - Detailed data for a specific stock (includes company info)
+- `GET /stocks/<symbol>/history?days=30` - Historical price data from Yahoo Finance
 - `GET /stocks/<symbol>/metrics` - Performance metrics for one stock
+- `GET /stocks/<symbol>/info` - Company information (sector, market cap, PE ratio, etc.)
 - `GET /metrics` - Aggregated metrics for all stocks
 
 ## Technologies
@@ -185,6 +191,8 @@ Full API documentation is available in [API_README.md](./API_README.md).
 ### Backend Stack
 - **Flask** - Web framework
 - **Flask-CORS** - Cross-origin support
+- **yfinance** - Yahoo Finance data fetching
+- **pandas** - Data manipulation and analysis
 - **Python 3.9+** - Runtime
 
 ### Build & Deployment

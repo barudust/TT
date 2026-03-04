@@ -253,7 +253,7 @@ import requests
 # Configuración
 SUPABASE_URL = "https://tu-proyecto.supabase.co"
 API_KEY = "tu-api-key"
-STOCKS = ["AAPL", "MSFT", "GOOGL", "AMZN", "TSLA", "META", "NVDA", "JPM"]
+STOCKS = ["AAPL", "MSFT", "GOOGL", "AMZN", "TSLA", "META", "NVDA"]
 
 def get_current_price(symbol):
     """Obtiene el precio actual de Yahoo Finance"""
@@ -417,8 +417,8 @@ Obtiene métricas de rendimiento de todas las acciones.
 
 5. **Direcciones Válidas:** Solo usa `"up"`, `"down"`, o `"neutral"` (minúsculas).
 
-6. **Acciones Soportadas:** La app espera exactamente estas 8 acciones:
-   - AAPL, MSFT, GOOGL, AMZN, TSLA, META, NVDA, JPM
+6. **Acciones Soportadas:** La app espera exactamente estas 7 acciones:
+   - AAPL, MSFT, GOOGL, AMZN, TSLA, META, NVDA
 
 ---
 

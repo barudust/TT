@@ -176,7 +176,7 @@ python send_data.py
 
 ## 📈 Datos que Maneja
 
-Las 8 acciones monitoreadas:
+Las 7 acciones monitoreadas:
 1. **AAPL** - Apple Inc.
 2. **MSFT** - Microsoft Corporation
 3. **GOOGL** - Alphabet Inc.
@@ -184,7 +184,6 @@ Las 8 acciones monitoreadas:
 5. **TSLA** - Tesla Inc.
 6. **META** - Meta Platforms Inc.
 7. **NVDA** - NVIDIA Corporation
-8. **JPM** - JPMorgan Chase & Co.
 
 Para cada acción:
 - Precio actual

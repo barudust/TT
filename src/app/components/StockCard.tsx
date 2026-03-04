@@ -19,23 +19,23 @@ export function StockCard({ stock }: StockCardProps) {
     buy: {
       icon: ArrowUp,
       label: "BUY LONG",
-      color: "text-green-600",
-      bgColor: "bg-green-50",
-      borderColor: "border-green-200",
+      color: "text-[#10b981] dark:text-[#10b981]",
+      bgColor: "bg-slate-800 dark:bg-slate-900",
+      borderColor: "border-[#10b981] dark:border-[#10b981]",
     },
     sell: {
       icon: ArrowDown,
       label: "SELL SHORT",
-      color: "text-red-600",
-      bgColor: "bg-red-50",
-      borderColor: "border-red-200",
+      color: "text-[#ef4444] dark:text-[#ef4444]",
+      bgColor: "bg-slate-800 dark:bg-slate-900",
+      borderColor: "border-[#ef4444] dark:border-[#ef4444]",
     },
     hold: {
       icon: Circle,
       label: "HOLD",
-      color: "text-yellow-600",
-      bgColor: "bg-yellow-50",
-      borderColor: "border-yellow-200",
+      color: "text-[#f59e0b] dark:text-[#f59e0b]",
+      bgColor: "bg-slate-800 dark:bg-slate-900",
+      borderColor: "border-[#f59e0b] dark:border-[#f59e0b]",
     },
   };
 
@@ -44,20 +44,20 @@ export function StockCard({ stock }: StockCardProps) {
 
   return (
     <Link to={`/stock/${stock.symbol}`}>
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-4 hover:shadow-md transition-all hover:border-gray-300 cursor-pointer">
+      <div className="bg-card rounded-xl shadow-sm border border-border p-4 hover:shadow-md transition-all hover:border-border/80 cursor-pointer">
         <div className="flex items-center justify-between">
           {/* Stock Info */}
           <div className="flex-1">
             <div className="flex items-baseline gap-2 mb-1">
-              <h3 className="text-lg font-bold text-gray-900">{stock.symbol}</h3>
-              <span className="text-xs text-gray-500 truncate max-w-[180px]">
+              <h3 className="text-lg font-bold text-foreground">{stock.symbol}</h3>
+              <span className="text-xs text-muted-foreground truncate max-w-[180px]">
                 {stock.name}
               </span>
             </div>
-            <div className="text-2xl font-bold text-gray-900 mb-2">
+            <div className="text-2xl font-bold text-foreground mb-2">
               ${stock.currentPrice.toFixed(2)}
             </div>
-            <div className="text-xs text-gray-500">
+            <div className="text-xs text-muted-foreground">
               Confianza: {(stock.confidence * 100).toFixed(0)}%
             </div>
           </div>

@@ -10,7 +10,6 @@ export default function About() {
     { symbol: "TSLA", name: "Tesla Inc.", sector: "Automotriz / Energía" },
     { symbol: "META", name: "Meta Platforms Inc.", sector: "Redes Sociales" },
     { symbol: "NVDA", name: "NVIDIA Corporation", sector: "Semiconductores / IA" },
-    { symbol: "JPM", name: "JPMorgan Chase & Co.", sector: "Finanzas" },
   ];
 
   const technologies = [
@@ -27,21 +26,21 @@ export default function About() {
   return (
     <div className="pb-8">
       <div className="mb-6">
-        <h2 className="text-2xl font-bold text-gray-900">Acerca del Proyecto</h2>
-        <p className="text-sm text-gray-500 mt-1">
+        <h2 className="text-2xl font-bold text-foreground">Acerca del Proyecto</h2>
+        <p className="text-sm text-muted-foreground mt-1">
           Trabajo Terminal 2026-B164 - ESCOM IPN
         </p>
       </div>
 
       {/* Disclaimer */}
-      <Card className="p-6 mb-6 border-2 border-red-200 bg-red-50">
+      <Card className="p-6 mb-6 border-2 border-[#ef4444] bg-slate-800 dark:bg-slate-900">
         <div className="flex gap-4">
-          <AlertTriangle className="w-8 h-8 text-red-600 flex-shrink-0 mt-1" />
+          <AlertTriangle className="w-8 h-8 text-[#ef4444] flex-shrink-0 mt-1" />
           <div>
-            <h3 className="font-bold text-red-900 text-lg mb-2">
+            <h3 className="font-bold text-[#ef4444] text-lg mb-2">
               Aviso Legal Importante
             </h3>
-            <p className="text-sm text-red-800 leading-relaxed">
+            <p className="text-sm text-muted-foreground leading-relaxed">
               Las señales de trading generadas por esta aplicación son{" "}
               <strong>exclusivamente con fines educativos y de investigación</strong>. Este
               proyecto forma parte de un trabajo de tesis académico en la Escuela Superior de
@@ -58,14 +57,14 @@ export default function About() {
       {/* Descripción del Proyecto */}
       <Card className="p-6 mb-6">
         <div className="flex items-start gap-4">
-          <div className="bg-blue-100 p-3 rounded-lg flex-shrink-0">
-            <BookOpen className="w-6 h-6 text-blue-600" />
+          <div className="bg-slate-800 dark:bg-slate-900 p-3 rounded-lg flex-shrink-0">
+            <BookOpen className="w-6 h-6 text-[#3b82f6]" />
           </div>
           <div className="flex-1">
-            <h3 className="font-bold text-gray-900 text-lg mb-3">
+            <h3 className="font-bold text-foreground text-lg mb-3">
               Descripción del Proyecto
             </h3>
-            <p className="text-gray-700 leading-relaxed mb-4">
+            <p className="text-muted-foreground leading-relaxed mb-4">
               Esta aplicación es el resultado del Trabajo Terminal{" "}
               <strong>TT 2026-B164</strong>, cuyo objetivo es demostrar la aplicación de
               técnicas de Deep Learning para la predicción de tendencias en el mercado
@@ -73,7 +72,7 @@ export default function About() {
               entrenados con datos históricos de precios obtenidos de Yahoo Finance, generamos
               señales de trading diarias para una selección de acciones de alta capitalización.
             </p>
-            <div className="space-y-2 text-sm text-gray-700">
+            <div className="space-y-2 text-sm text-muted-foreground">
               <p>
                 <strong>BUY (Comprar):</strong> Se espera que el precio suba en el corto
                 plazo.
@@ -93,16 +92,16 @@ export default function About() {
       {/* Metodología */}
       <Card className="p-6 mb-6">
         <div className="flex items-start gap-4">
-          <div className="bg-purple-100 p-3 rounded-lg flex-shrink-0">
-            <Code className="w-6 h-6 text-purple-600" />
+          <div className="bg-slate-800 dark:bg-slate-900 p-3 rounded-lg flex-shrink-0">
+            <Code className="w-6 h-6 text-[#8b5cf6]" />
           </div>
           <div className="flex-1">
-            <h3 className="font-bold text-gray-900 text-lg mb-3">Metodología</h3>
+            <h3 className="font-bold text-foreground text-lg mb-3">Metodología</h3>
 
             <div className="space-y-4">
               <div>
-                <h4 className="font-semibold text-gray-900 mb-2">Modelos Utilizados</h4>
-                <ul className="text-sm text-gray-700 space-y-2 list-disc list-inside">
+                <h4 className="font-semibold text-foreground mb-2">Modelos Utilizados</h4>
+                <ul className="text-sm text-muted-foreground space-y-2 list-disc list-inside">
                   <li>
                     <strong>LSTM (Long Short-Term Memory):</strong> Redes neuronales
                     recurrentes diseñadas para capturar dependencias temporales en series de
@@ -117,10 +116,10 @@ export default function About() {
               </div>
 
               <div>
-                <h4 className="font-semibold text-gray-900 mb-2">
+                <h4 className="font-semibold text-foreground mb-2">
                   Proceso de Entrenamiento
                 </h4>
-                <ol className="text-sm text-gray-700 space-y-2 list-decimal list-inside">
+                <ol className="text-sm text-muted-foreground space-y-2 list-decimal list-inside">
                   <li>
                     <strong>Recolección de datos:</strong> Descarga de precios históricos
                     desde Yahoo Finance
@@ -151,15 +150,15 @@ export default function About() {
       {/* Acciones Seleccionadas */}
       <Card className="p-6 mb-6">
         <div className="flex items-start gap-4">
-          <div className="bg-green-100 p-3 rounded-lg flex-shrink-0">
-            <TrendingUp className="w-6 h-6 text-green-600" />
+          <div className="bg-slate-800 dark:bg-slate-900 p-3 rounded-lg flex-shrink-0">
+            <TrendingUp className="w-6 h-6 text-[#10b981]" />
           </div>
           <div className="flex-1">
-            <h3 className="font-bold text-gray-900 text-lg mb-3">
+            <h3 className="font-bold text-foreground text-lg mb-3">
               Acciones Seleccionadas
             </h3>
-            <p className="text-gray-700 mb-4">
-              Se eligieron 8 acciones de alta capitalización que representan diversos
+            <p className="text-muted-foreground mb-4">
+              Se eligieron 7 acciones de alta capitalización que representan diversos
               sectores del mercado, garantizando liquidez y disponibilidad de datos
               históricos:
             </p>
@@ -167,13 +166,13 @@ export default function About() {
               {stocks.map((stock) => (
                 <div
                   key={stock.symbol}
-                  className="flex justify-between items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+                  className="flex justify-between items-center p-3 bg-muted dark:bg-muted rounded-lg hover:bg-card transition-colors"
                 >
                   <div>
-                    <div className="font-semibold text-gray-900">{stock.symbol}</div>
-                    <div className="text-sm text-gray-600">{stock.name}</div>
+                    <div className="font-semibold text-foreground">{stock.symbol}</div>
+                    <div className="text-sm text-muted-foreground">{stock.name}</div>
                   </div>
-                  <div className="text-xs text-gray-500 bg-gray-200 px-2 py-1 rounded">
+                  <div className="text-xs text-muted-foreground bg-muted dark:bg-muted/50 px-2 py-1 rounded">
                     {stock.sector}
                   </div>
                 </div>
@@ -186,16 +185,16 @@ export default function About() {
       {/* Créditos y Tecnologías */}
       <Card className="p-6">
         <div className="flex items-start gap-4">
-          <div className="bg-orange-100 p-3 rounded-lg flex-shrink-0">
-            <Users className="w-6 h-6 text-orange-600" />
+          <div className="bg-slate-800 dark:bg-slate-900 p-3 rounded-lg flex-shrink-0">
+            <Users className="w-6 h-6 text-[#f59e0b]" />
           </div>
           <div className="flex-1">
-            <h3 className="font-bold text-gray-900 text-lg mb-4">Créditos</h3>
+            <h3 className="font-bold text-foreground text-lg mb-4">Créditos</h3>
 
-            <div className="space-y-4 text-sm text-gray-700">
+            <div className="space-y-4 text-sm text-muted-foreground">
               <div>
-                <div className="font-semibold text-gray-900 mb-2">Institución</div>
-                <p className="text-gray-700">
+                <div className="font-semibold text-foreground mb-2">Institución</div>
+                <p className="text-muted-foreground">
                   Escuela Superior de Cómputo (ESCOM)
                   <br />
                   Instituto Politécnico Nacional (IPN)
@@ -203,31 +202,31 @@ export default function About() {
               </div>
 
               <div>
-                <div className="font-semibold text-gray-900 mb-2">Trabajo Terminal</div>
-                <p className="text-gray-700">TT 2026-B164</p>
+                <div className="font-semibold text-foreground mb-2">Trabajo Terminal</div>
+                <p className="text-muted-foreground">TT 2026-B164</p>
               </div>
 
               <div>
-                <div className="font-semibold text-gray-900 mb-2">Desarrolladores</div>
-                <ul className="text-gray-700 list-disc list-inside space-y-1">
+                <div className="font-semibold text-foreground mb-2">Desarrolladores</div>
+                <ul className="text-muted-foreground list-disc list-inside space-y-1">
                   <li>Reyes Ramos David</li>
                   <li>Polvo Cuatianquiz Jesús Baruc</li>
                 </ul>
               </div>
 
               <div>
-                <div className="font-semibold text-gray-900 mb-2">Director</div>
-                <p className="text-gray-700">Abdiel Reyes Vega</p>
-                <p className="text-gray-700">Emmanuel Juarez Carvajal</p>
+                <div className="font-semibold text-foreground mb-2">Director</div>
+                <p className="text-muted-foreground">Abdiel Reyes Vega</p>
+                <p className="text-muted-foreground">Emmanuel Juarez Carvajal</p>
               </div>
 
               <div>
-                <div className="font-semibold text-gray-900 mb-2">Tecnologías Utilizadas</div>
+                <div className="font-semibold text-foreground mb-2">Tecnologías Utilizadas</div>
                 <div className="flex flex-wrap gap-2 mt-2">
                   {technologies.map((tech) => (
                     <span
                       key={tech}
-                      className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-medium"
+                      className="px-3 py-1 bg-slate-800 dark:bg-slate-900 text-[#3b82f6] border border-[#3b82f6] rounded-full text-xs font-medium"
                     >
                       {tech}
                     </span>
@@ -240,7 +239,7 @@ export default function About() {
       </Card>
 
       {/* Footer */}
-      <div className="mt-6 text-center text-sm text-gray-500">
+      <div className="mt-6 text-center text-sm text-muted-foreground">
         <p>Versión 1.0.0 - Marzo 2026</p>
         <p className="mt-1">Desarrollado con fines académicos</p>
       </div>

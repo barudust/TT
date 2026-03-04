@@ -2,6 +2,10 @@
 
 Complete REST API reference for the Flask backend server.
 
+## Data Source
+
+All historical price data, company information, and market data are fetched in real-time from **Yahoo Finance** using the yfinance library. The API automatically updates stock information on startup and when endpoints are called.
+
 ## Base URL
 
 ```
@@ -174,19 +178,28 @@ curl http://localhost:8000/stocks/AAPL
     {
       "date": "2026-02-02",
       "close": 172.15,
+      "high": 173.50,
+      "low": 171.80,
+      "volume": 52341200,
       "prediction": "buy",
       "actualDirection": "up"
     },
     {
       "date": "2026-02-03",
       "close": 173.42,
+      "high": 174.10,
+      "low": 172.50,
+      "volume": 48921500,
       "prediction": "buy",
       "actualDirection": "up"
     },
     {
       "date": "2026-03-02",
       "close": 175.42,
-      "prediction": "buyx",
+      "high": 176.20,
+      "low": 174.90,
+      "volume": 51234800,
+      "prediction": "buy",
       "actualDirection": "up"
     }
   ]
@@ -197,7 +210,10 @@ curl http://localhost:8000/stocks/AAPL
 | Field | Type | Description |
 |-------|------|-------------|
 | date | string | Date in YYYY-MM-DD format |
-| close | float | Closing price for the day |
+| close | float | Closing price (from Yahoo Finance) |
+| high | float | Daily high price (from Yahoo Finance) |
+| low | float | Daily low price (from Yahoo Finance) |
+| volume | integer | Trading volume (from Yahoo Finance) |
 | prediction | string | Model prediction: "buy", "sell", "hold" |
 | actualDirection | string | Price movement: "up", "down", "neutral" |
 
@@ -292,7 +308,7 @@ curl http://localhost:8000/stocks/AAPL/metrics
 
 **Endpoint:** `GET /metrics`
 
-**Description:** Aggregated metrics for all 8 tracked stocks.
+**Description:** Aggregated metrics for all 7 tracked stocks.
 
 **Response:**
 ```json
@@ -335,6 +351,60 @@ curl http://localhost:8000/stocks/AAPL/metrics
 **Example:**
 ```bash
 curl http://localhost:8000/metrics
+```
+
+---
+
+### 7. Get Company Information
+
+**Endpoint:** `GET /stocks/<symbol>/info`
+
+**Description:** Company fundamental information from Yahoo Finance for a specific stock.
+
+**Parameters:**
+- `symbol` (path, required): Stock ticker (e.g., "AAPL")
+
+**Response:**
+```json
+{
+  "success": true,
+  "data": {
+    "symbol": "AAPL",
+    "sector": "Technology",
+    "industry": "Consumer Electronics",
+    "marketCap": 2850000000000,
+    "employees": 164000,
+    "website": "https://www.apple.com",
+    "peRatio": 28.5,
+    "pegRatio": 2.1,
+    "dividendYield": 0.0042,
+    "beta": 1.25,
+    "fiftyTwoWeekHigh": 199.62,
+    "fiftyTwoWeekLow": 150.42,
+    "averageVolume": 52341200
+  }
+}
+```
+
+**Fields:**
+| Field | Type | Description |
+|-------|------|-------------|
+| sector | string | Industry sector (e.g., "Technology") |
+| industry | string | Industry classification |
+| marketCap | integer | Market capitalization in USD |
+| employees | integer | Total number of employees |
+| website | string | Company website URL |
+| peRatio | float | Price-to-Earnings ratio |
+| pegRatio | float | PEG (Price/Earnings to Growth) ratio |
+| dividendYield | float | Annual dividend yield (0.0-1.0) |
+| beta | float | Stock volatility vs market (1.0 = market correlation) |
+| fiftyTwoWeekHigh | float | Highest price in last 52 weeks |
+| fiftyTwoWeekLow | float | Lowest price in last 52 weeks |
+| averageVolume | integer | Average daily trading volume |
+
+**Example:**
+```bash
+curl http://localhost:8000/stocks/AAPL/info
 ```
 
 ---

@@ -109,8 +109,8 @@ export default function StockDetail() {
   if (loading || !stock || !metrics) {
     return (
       <div className="flex flex-col items-center justify-center py-20">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-        <p className="mt-4 text-gray-600">Cargando datos...</p>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
+        <p className="mt-4 text-muted-foreground">Cargando datos...</p>
       </div>
     );
   }
@@ -119,23 +119,23 @@ export default function StockDetail() {
     buy: {
       icon: ArrowUp,
       label: "BUY LONG",
-      color: "text-green-600",
-      bgColor: "bg-green-50",
-      borderColor: "border-green-200",
+      color: "text-[#10b981]",
+      bgColor: "bg-slate-800",
+      borderColor: "border-[#10b981]",
     },
     sell: {
       icon: ArrowDown,
       label: "SELL SHORT",
-      color: "text-red-600",
-      bgColor: "bg-red-50",
-      borderColor: "border-red-200",
+      color: "text-[#ef4444]",
+      bgColor: "bg-slate-800",
+      borderColor: "border-[#ef4444]",
     },
     hold: {
       icon: Circle,
       label: "HOLD",
-      color: "text-yellow-600",
-      bgColor: "bg-yellow-50",
-      borderColor: "border-yellow-200",
+      color: "text-[#f59e0b]",
+      bgColor: "bg-slate-800",
+      borderColor: "border-[#f59e0b]",
     },
   };
 
@@ -189,9 +189,9 @@ export default function StockDetail() {
       <Card className="p-6 mb-6">
         <div className="flex items-start justify-between mb-4">
           <div className="flex-1">
-            <h1 className="text-3xl font-bold text-gray-900">{stock.symbol}</h1>
-            <p className="text-gray-600 mt-1">{stock.name}</p>
-            <div className="text-4xl font-bold text-gray-900 mt-4">
+            <h1 className="text-3xl font-bold text-foreground">{stock.symbol}</h1>
+            <p className="text-muted-foreground mt-1">{stock.name}</p>
+            <div className="text-4xl font-bold text-foreground mt-4">
               ${stock.currentPrice.toFixed(2)}
             </div>
           </div>
@@ -224,13 +224,13 @@ export default function StockDetail() {
       {/* Price Chart */}
       <Card className="p-6 mb-6">
         <div className="flex items-center gap-2 mb-4">
-          <TrendingUp className="w-5 h-5 text-blue-600" />
-          <h2 className="text-xl font-bold text-gray-900">Historial de Precios</h2>
+          <TrendingUp className="w-5 h-5 text-[#3b82f6]" />
+          <h2 className="text-xl font-bold text-foreground">Historial de Precios</h2>
         </div>
         <div className="h-64">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={chartData}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+              <CartesianGrid strokeDasharray="3 3" stroke="currentColor" opacity={0.2} />
               <XAxis
                 dataKey="date"
                 tick={{ fontSize: 11 }}
@@ -242,9 +242,10 @@ export default function StockDetail() {
               <YAxis tick={{ fontSize: 11 }} domain={["auto", "auto"]} />
               <Tooltip
                 contentStyle={{
-                  backgroundColor: "white",
-                  border: "1px solid #e5e7eb",
+                  backgroundColor: "var(--color-background)",
+                  border: "1px solid var(--color-border)",
                   borderRadius: "8px",
+                  color: "var(--color-foreground)",
                 }}
                 formatter={(value: any) => [`$${value.toFixed(2)}`, "Precio"]}
               />
@@ -261,129 +262,129 @@ export default function StockDetail() {
         </div>
         <div className="mt-4 flex gap-4 text-xs">
           <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-full bg-green-500"></div>
-            <span className="text-gray-600">Señal BUY</span>
+            <div className="w-3 h-3 rounded-full bg-[#10b981]"></div>
+            <span className="text-muted-foreground">Señal BUY</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-full bg-red-500"></div>
-            <span className="text-gray-600">Señal SELL</span>
+            <div className="w-3 h-3 rounded-full bg-[#ef4444]"></div>
+            <span className="text-muted-foreground">Señal SELL</span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
-            <span className="text-gray-600">Señal HOLD</span>
+            <div className="w-3 h-3 rounded-full bg-[#f59e0b]"></div>
+            <span className="text-muted-foreground">Señal HOLD</span>
           </div>
         </div>
       </Card>
 
       {/* Performance Metrics */}
       <Card className="p-6 mb-6">
-        <h2 className="text-xl font-bold text-gray-900 mb-4">Métricas del Modelo</h2>
+        <h2 className="text-xl font-bold text-foreground mb-4">Métricas del Modelo</h2>
 
         {/* Métricas de Clasificación */}
         <div className="mb-6">
-          <h3 className="font-semibold text-gray-900 mb-3 text-sm">Métricas de Clasificación</h3>
+          <h3 className="font-semibold text-foreground mb-3 text-sm">Métricas de Clasificación</h3>
           <div className="grid grid-cols-2 gap-4">
-            <div className="bg-blue-50 p-4 rounded-lg">
-              <div className="text-3xl font-bold text-blue-600">
+            <div className="bg-slate-800 dark:bg-slate-900 p-4 rounded-lg">
+              <div className="text-3xl font-bold text-[#3b82f6]">
                 {(metrics.accuracy * 100).toFixed(1)}%
               </div>
-              <div className="text-sm text-gray-600 mt-1">Accuracy</div>
+              <div className="text-sm text-muted-foreground mt-1">Accuracy</div>
             </div>
-            <div className="bg-purple-50 p-4 rounded-lg">
-              <div className="text-3xl font-bold text-purple-600">
+            <div className="bg-slate-800 dark:bg-slate-900 p-4 rounded-lg">
+              <div className="text-3xl font-bold text-[#8b5cf6]">
                 {(metrics.f1Score * 100).toFixed(1)}%
               </div>
-              <div className="text-sm text-gray-600 mt-1">F1-Score</div>
+              <div className="text-sm text-muted-foreground mt-1">F1-Score</div>
             </div>
-            <div className="bg-green-50 p-4 rounded-lg">
-              <div className="text-3xl font-bold text-green-600">
+            <div className="bg-slate-800 dark:bg-slate-900 p-4 rounded-lg">
+              <div className="text-3xl font-bold text-[#10b981]">
                 {(metrics.buyPrecision * 100).toFixed(1)}%
               </div>
-              <div className="text-sm text-gray-600 mt-1">Precisión BUY</div>
+              <div className="text-sm text-muted-foreground mt-1">Precisión BUY</div>
             </div>
-            <div className="bg-red-50 p-4 rounded-lg">
-              <div className="text-3xl font-bold text-red-600">
+            <div className="bg-slate-800 dark:bg-slate-900 p-4 rounded-lg">
+              <div className="text-3xl font-bold text-[#ef4444]">
                 {(metrics.sellPrecision * 100).toFixed(1)}%
               </div>
-              <div className="text-sm text-gray-600 mt-1">Precisión SELL</div>
+              <div className="text-sm text-muted-foreground mt-1">Precisión SELL</div>
             </div>
-            <div className="bg-yellow-50 p-4 rounded-lg">
-              <div className="text-3xl font-bold text-yellow-600">
+            <div className="bg-slate-800 dark:bg-slate-900 p-4 rounded-lg">
+              <div className="text-3xl font-bold text-[#f59e0b]">
                 {(metrics.holdPrecision * 100).toFixed(1)}%
               </div>
-              <div className="text-sm text-gray-600 mt-1">Precisión HOLD</div>
+              <div className="text-sm text-muted-foreground mt-1">Precisión HOLD</div>
             </div>
           </div>
         </div>
 
-        <div className="border-t border-gray-200 pt-6">
-          <h3 className="font-semibold text-gray-900 mb-3 text-sm">Rendimiento de la Estrategia</h3>
+        <div className="border-t border-border pt-6">
+          <h3 className="font-semibold text-foreground mb-3 text-sm">Rendimiento de la Estrategia</h3>
           <div className="grid grid-cols-2 gap-4">
-            <div className="bg-gradient-to-br from-green-50 to-green-100 p-4 rounded-lg border border-green-200">
-              <div className="text-3xl font-bold text-green-700">
+            <div className="bg-slate-800 dark:bg-slate-900 p-4 rounded-lg border border-[#10b981]">
+              <div className="text-3xl font-bold text-[#10b981]">
                 {metrics.cumulativeReturn.toFixed(1)}%
               </div>
-              <div className="text-sm text-gray-700 mt-1">Retorno Acumulado</div>
+              <div className="text-sm text-muted-foreground mt-1">Retorno Acumulado</div>
             </div>
-            <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded-lg border border-blue-200">
-              <div className="text-3xl font-bold text-blue-700">
+            <div className="bg-slate-800 dark:bg-slate-900 p-4 rounded-lg border border-[#3b82f6]">
+              <div className="text-3xl font-bold text-[#3b82f6]">
                 {metrics.sharpeRatio.toFixed(2)}
               </div>
-              <div className="text-sm text-gray-700 mt-1">Sharpe Ratio</div>
+              <div className="text-sm text-muted-foreground mt-1">Sharpe Ratio</div>
             </div>
-            <div className="bg-gradient-to-br from-purple-50 to-purple-100 p-4 rounded-lg border border-purple-200">
-              <div className="text-3xl font-bold text-purple-700">
+            <div className="bg-slate-800 dark:bg-slate-900 p-4 rounded-lg border border-[#8b5cf6]">
+              <div className="text-3xl font-bold text-[#8b5cf6]">
                 {metrics.winRate.toFixed(1)}%
               </div>
-              <div className="text-sm text-gray-700 mt-1">Win Rate</div>
+              <div className="text-sm text-muted-foreground mt-1">Win Rate</div>
             </div>
-            <div className="bg-gradient-to-br from-orange-50 to-orange-100 p-4 rounded-lg border border-orange-200">
-              <div className="text-3xl font-bold text-orange-700">
+            <div className="bg-slate-800 dark:bg-slate-900 p-4 rounded-lg border border-[#f59e0b]">
+              <div className="text-3xl font-bold text-[#f59e0b]">
                 {metrics.profitFactor.toFixed(2)}x
               </div>
-              <div className="text-sm text-gray-700 mt-1">Profit Factor</div>
+              <div className="text-sm text-muted-foreground mt-1">Profit Factor</div>
             </div>
-            <div className="bg-gradient-to-br from-red-50 to-red-100 p-4 rounded-lg border border-red-200">
-              <div className="text-3xl font-bold text-red-700">
+            <div className="bg-slate-800 dark:bg-slate-900 p-4 rounded-lg border border-[#ef4444]">
+              <div className="text-3xl font-bold text-[#ef4444]">
                 -{metrics.maxDrawdown.toFixed(1)}%
               </div>
-              <div className="text-sm text-gray-700 mt-1">Max Drawdown</div>
+              <div className="text-sm text-muted-foreground mt-1">Max Drawdown</div>
             </div>
-            <div className="bg-gradient-to-br from-indigo-50 to-indigo-100 p-4 rounded-lg border border-indigo-200">
-              <div className="text-3xl font-bold text-indigo-700">
+            <div className="bg-slate-800 dark:bg-slate-900 p-4 rounded-lg border border-[#06b6d4]">
+              <div className="text-3xl font-bold text-[#06b6d4]">
                 {metrics.numberOfTrades}
               </div>
-              <div className="text-sm text-gray-700 mt-1">Operaciones</div>
+              <div className="text-sm text-muted-foreground mt-1">Operaciones</div>
             </div>
           </div>
         </div>
 
         {/* Estadísticas Adicionales */}
-        <div className="mt-6 pt-6 border-t border-gray-200 grid gap-3">
+        <div className="mt-6 pt-6 border-t border-border grid gap-3">
           <div className="flex justify-between text-sm">
-            <span className="text-gray-600">Capital Final (simulado):</span>
-            <span className="font-semibold text-gray-900">${metrics.finalCapital.toFixed(2)}</span>
+            <span className="text-muted-foreground">Capital Final (simulado):</span>
+            <span className="font-semibold text-foreground">${metrics.finalCapital.toFixed(2)}</span>
           </div>
           <div className="flex justify-between text-sm">
-            <span className="text-gray-600">Días en Mercado:</span>
-            <span className="font-semibold text-gray-900">{metrics.exposure.toFixed(1)}%</span>
+            <span className="text-muted-foreground">Días en Mercado:</span>
+            <span className="font-semibold text-foreground">{metrics.exposure.toFixed(1)}%</span>
           </div>
           <div className="flex justify-between text-sm">
-            <span className="text-gray-600">Período de Evaluación:</span>
-            <span className="font-semibold text-gray-900">Últimos {metrics.evaluationPeriod} días</span>
+            <span className="text-muted-foreground">Período de Evaluación:</span>
+            <span className="font-semibold text-foreground">Últimos {metrics.evaluationPeriod} días</span>
           </div>
           <div className="flex justify-between text-sm">
-            <span className="text-gray-600">Predicciones Totales:</span>
-            <span className="font-semibold text-gray-900">{metrics.totalPredictions}</span>
+            <span className="text-muted-foreground">Predicciones Totales:</span>
+            <span className="font-semibold text-foreground">{metrics.totalPredictions}</span>
           </div>
           <div className="flex justify-between text-sm">
-            <span className="text-gray-600">Predicciones Correctas:</span>
-            <span className="font-semibold text-green-600">{metrics.correctPredictions}</span>
+            <span className="text-muted-foreground">Predicciones Correctas:</span>
+            <span className="font-semibold text-[#10b981]">{metrics.correctPredictions}</span>
           </div>
         </div>
 
         {/* Nota sobre la simulación */}
-        <div className="mt-4 p-3 bg-blue-50 border border-blue-200 rounded text-xs text-blue-800">
+        <div className="mt-4 p-3 bg-slate-800 dark:bg-slate-900 border border-[#3b82f6] rounded text-xs text-muted-foreground">
           <strong>Nota:</strong> Capital Final es una simulación con capital inicial ficticio ($1000).
           Se incluye un costo de transacción del 0.1% por operación. Este es un proyecto académico, no asesoría financiera.
         </div>
@@ -392,33 +393,33 @@ export default function StockDetail() {
       {/* Recent Signals History */}
       <Card className="p-6">
         <div className="flex items-center gap-2 mb-4">
-          <Calendar className="w-5 h-5 text-blue-600" />
-          <h2 className="text-xl font-bold text-gray-900">Historial de Señales (Últimas 10)</h2>
+          <Calendar className="w-5 h-5 text-[#3b82f6]" />
+          <h2 className="text-xl font-bold text-foreground">Historial de Señales (Últimas 10)</h2>
         </div>
 
         {/* Tabla de Señales */}
         <div className="overflow-x-auto mb-4">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b-2 border-gray-300 bg-gray-50">
-                <th className="text-left py-2 px-3 font-semibold text-gray-700">Fecha</th>
-                <th className="text-center py-2 px-3 font-semibold text-gray-700">Señal</th>
-                <th className="text-center py-2 px-3 font-semibold text-gray-700">Correcta</th>
-                <th className="text-right py-2 px-3 font-semibold text-gray-700">Precio Cierre</th>
+              <tr className="border-b-2 border-border bg-muted">
+                <th className="text-left py-2 px-3 font-semibold text-foreground">Fecha</th>
+                <th className="text-center py-2 px-3 font-semibold text-foreground">Señal</th>
+                <th className="text-center py-2 px-3 font-semibold text-foreground">Correcta</th>
+                <th className="text-right py-2 px-3 font-semibold text-foreground">Precio Cierre</th>
               </tr>
             </thead>
             <tbody>
               {stock.recentSignals.slice(0, 10).map((signal, index) => (
-                <tr key={index} className="border-b border-gray-200 hover:bg-gray-50">
-                  <td className="py-3 px-3 text-gray-700">{signal.date}</td>
+                <tr key={index} className="border-b border-border hover:bg-muted">
+                  <td className="py-3 px-3 text-foreground">{signal.date}</td>
                   <td className="py-3 px-3 text-center">
                     <span
                       className={`px-2 py-1 rounded text-xs font-bold inline-block ${
                         signal.signal === "buy"
-                          ? "bg-green-100 text-green-700"
+                          ? "bg-slate-800 text-[#10b981]"
                           : signal.signal === "sell"
-                          ? "bg-red-100 text-red-700"
-                          : "bg-yellow-100 text-yellow-700"
+                          ? "bg-slate-800 text-[#ef4444]"
+                          : "bg-slate-800 text-[#f59e0b]"
                       }`}
                     >
                       {signal.signal === "buy"
@@ -430,16 +431,16 @@ export default function StockDetail() {
                   </td>
                   <td className="py-3 px-3 text-center">
                     {signal.correct ? (
-                      <div className="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center mx-auto">
-                        <span className="text-green-600 text-sm font-bold">✓</span>
+                      <div className="w-6 h-6 rounded-full bg-slate-800 flex items-center justify-center mx-auto border border-[#10b981]">
+                        <span className="text-[#10b981] text-sm font-bold">✓</span>
                       </div>
                     ) : (
-                      <div className="w-6 h-6 rounded-full bg-red-100 flex items-center justify-center mx-auto">
-                        <span className="text-red-600 text-sm font-bold">✗</span>
+                      <div className="w-6 h-6 rounded-full bg-slate-800 flex items-center justify-center mx-auto border border-[#ef4444]">
+                        <span className="text-[#ef4444] text-sm font-bold">✗</span>
                       </div>
                     )}
                   </td>
-                  <td className="py-3 px-3 text-right text-gray-900 font-semibold">
+                  <td className="py-3 px-3 text-right text-foreground font-semibold">
                     ${signal.actualPrice.toFixed(2)}
                   </td>
                 </tr>
@@ -449,23 +450,23 @@ export default function StockDetail() {
         </div>
 
         {/* Resumen de aciertos */}
-        <div className="pt-4 border-t border-gray-200 flex gap-4 text-sm">
+        <div className="pt-4 border-t border-border flex gap-4 text-sm">
           <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-full bg-green-100 border border-green-500"></div>
-            <span className="text-gray-700">
+            <div className="w-3 h-3 rounded-full bg-slate-800 border border-[#10b981]"></div>
+            <span className="text-muted-foreground">
               Correctas: {stock.recentSignals.slice(0, 10).filter(s => s.correct).length}/10
             </span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-full bg-red-100 border border-red-500"></div>
-            <span className="text-gray-700">
+            <div className="w-3 h-3 rounded-full bg-slate-800 border border-[#ef4444]"></div>
+            <span className="text-muted-foreground">
               Incorrectas: {stock.recentSignals.slice(0, 10).filter(s => !s.correct).length}/10
             </span>
           </div>
         </div>
 
         {/* Nota sobre las señales */}
-        <div className="mt-4 p-3 bg-amber-50 border border-amber-200 rounded text-xs text-amber-800">
+        <div className="mt-4 p-3 bg-slate-800 dark:bg-slate-900 border border-[#f59e0b] rounded text-xs text-muted-foreground">
           <strong>Nota:</strong> Las señales se generan después del cierre del mercado.
           La simulación asume operaciones al cierre del día siguiente. Se muestra el precio de cierre real para contexto.
         </div>

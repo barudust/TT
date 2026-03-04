@@ -17,7 +17,6 @@ STOCKS_CONFIG = [
     {"symbol": "TSLA", "name": "Tesla Inc."},
     {"symbol": "META", "name": "Meta Platforms Inc."},
     {"symbol": "NVDA", "name": "NVIDIA Corporation"},
-    {"symbol": "JPM", "name": "JPMorgan Chase & Co."},
 ]
 
 BASE_PRICES = {
@@ -28,7 +27,6 @@ BASE_PRICES = {
     "TSLA": 195.00,
     "META": 485.00,
     "NVDA": 875.00,
-    "JPM": 195.00,
 }
 
 def generate_stock_data(symbol: str) -> dict:

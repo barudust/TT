@@ -59,8 +59,8 @@ export default function Home() {
     return (
       <div>
         <div className="mb-6">
-          <h2 className="text-2xl font-bold text-gray-900">Señales del Día</h2>
-          <p className="text-sm text-gray-500 mt-1">Cargando predicciones...</p>
+          <h2 className="text-2xl font-bold text-foreground">Señales del Día</h2>
+          <p className="text-sm text-muted-foreground mt-1">Cargando predicciones...</p>
         </div>
         <div className="space-y-3">
           {Array.from({ length: 8 }).map((_, i) => (
@@ -77,8 +77,8 @@ export default function Home() {
       <div className="mb-6">
         <div className="flex items-center justify-between mb-2">
           <div>
-            <h2 className="text-2xl font-bold text-gray-900">Señales del Día</h2>
-            <p className="text-sm text-gray-500 mt-1">
+            <h2 className="text-2xl font-bold text-foreground">Señales del Día</h2>
+            <p className="text-sm text-muted-foreground mt-1">
               Predicciones generadas al cierre del mercado
             </p>
           </div>
@@ -108,8 +108,8 @@ export default function Home() {
       </div>
 
       {/* Info Banner */}
-      <div className="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-4">
-        <p className="text-sm text-blue-800">
+      <div className="mt-8 bg-muted border border-border rounded-lg p-4">
+        <p className="text-sm text-muted-foreground">
           <span className="font-semibold">💡 Nota:</span> Las señales son generadas
           por modelos de Deep Learning (LSTM, CNN-LSTM) entrenados con datos
           históricos. No constituyen asesoramiento financiero.

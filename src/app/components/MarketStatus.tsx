@@ -23,12 +23,12 @@ export function MarketStatus({ isOpen = false, lastUpdate }: MarketStatusProps) 
   return (
     <div className="flex items-center gap-3 text-xs">
       <div className="flex items-center gap-1.5">
-        <div className={`w-2 h-2 rounded-full ${isOpen ? "bg-green-500 animate-pulse" : "bg-gray-400"}`} />
-        <span className="text-gray-600 font-medium">
+        <div className={`w-2 h-2 rounded-full ${isOpen ? "bg-[#10b981] animate-pulse" : "bg-muted"}`} />
+        <span className="text-muted-foreground font-medium">
           {isOpen ? "Mercado abierto" : "Mercado cerrado"}
         </span>
       </div>
-      <div className="flex items-center gap-1.5 text-gray-500">
+      <div className="flex items-center gap-1.5 text-muted-foreground">
         <Clock className="w-3.5 h-3.5" />
         <span>{updateText}</span>
       </div>
@@ -46,17 +46,17 @@ export function SignalBadge({ signal, size = "md" }: SignalBadgeProps) {
     buy: {
       icon: TrendingUp,
       label: "BUY",
-      colors: "bg-green-100 text-green-700 border-green-300",
+      colors: "bg-slate-800 text-[#10b981] border-[#10b981]",
     },
     sell: {
       icon: TrendingDown,
       label: "SELL",
-      colors: "bg-red-100 text-red-700 border-red-300",
+      colors: "bg-slate-800 text-[#ef4444] border-[#ef4444]",
     },
     hold: {
       icon: Minus,
       label: "HOLD",
-      colors: "bg-yellow-100 text-yellow-700 border-yellow-300",
+      colors: "bg-slate-800 text-[#f59e0b] border-[#f59e0b]",
     },
   };
 

@@ -1,12 +1,13 @@
 """
 TradingSignals AI - Local API Backend
-Flask-based REST API for stock price prediction signals
+Flask REST API with Yahoo Finance data integration
 """
 
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from datetime import datetime, timedelta, timezone
-import json
+import yfinance as yf
+import pandas as pd
 import random
 
 app = Flask(__name__)
@@ -16,6 +17,7 @@ STOCKS_DATA = {}
 HISTORICAL_DATA = {}
 SIGNALS_DATA = {}
 METRICS_DATA = {}
+COMPANY_INFO = {}
 
 STOCKS_CONFIG = [
     {"symbol": "AAPL", "name": "Apple Inc."},
@@ -25,48 +27,109 @@ STOCKS_CONFIG = [
     {"symbol": "TSLA", "name": "Tesla Inc."},
     {"symbol": "META", "name": "Meta Platforms Inc."},
     {"symbol": "NVDA", "name": "NVIDIA Corporation"},
-    {"symbol": "JPM", "name": "JPMorgan Chase & Co."},
 ]
 
-BASE_PRICES = {
-    "AAPL": 175.00,
-    "MSFT": 410.00,
-    "GOOGL": 140.00,
-    "AMZN": 175.00,
-    "TSLA": 195.00,
-    "META": 485.00,
-    "NVDA": 875.00,
-    "JPM": 195.00,
-}
+
+def fetch_yahoo_finance_data(symbol, days=30):
+    """
+    Fetch historical price data from Yahoo Finance.
+    Returns DataFrame with OHLCV data and calculations.
+    """
+    try:
+        end_date = datetime.now()
+        start_date = end_date - timedelta(days=days + 30)
+
+        ticker = yf.Ticker(symbol)
+        hist = ticker.history(start=start_date, end=end_date)
+
+        if hist.empty:
+            return None
+
+        hist = hist.tail(days)
+        return hist
+
+    except Exception as e:
+        print(f"[ERROR] Failed to fetch {symbol}: {str(e)}")
+        return None
+
+
+def fetch_company_info(symbol):
+    """
+    Fetch company information from Yahoo Finance.
+    Returns dict with market cap, sector, industry, PE ratio, and more.
+    """
+    try:
+        ticker = yf.Ticker(symbol)
+        info = ticker.info
+
+        return {
+            "symbol": symbol,
+            "sector": info.get("sector", "N/A"),
+            "industry": info.get("industry", "N/A"),
+            "marketCap": info.get("marketCap", 0),
+            "employees": info.get("fullTimeEmployees", 0),
+            "website": info.get("website", ""),
+            "peRatio": info.get("trailingPE", 0),
+            "pegRatio": info.get("pegRatio", 0),
+            "dividendYield": info.get("dividendYield", 0),
+            "beta": info.get("beta", 0),
+            "fiftyTwoWeekHigh": info.get("fiftyTwoWeekHigh", 0),
+            "fiftyTwoWeekLow": info.get("fiftyTwoWeekLow", 0),
+            "averageVolume": info.get("averageVolume", 0),
+        }
+    except Exception as e:
+        print(f"[ERROR] Failed to fetch info for {symbol}: {str(e)}")
+        return {}
 
 
 def generate_historical_data(symbol, days=30):
-    """Generate historical price and signal data for a given number of days."""
+    """
+    Generate historical data from Yahoo Finance with signal predictions.
+    Signals are based on simple technical analysis of real price movement.
+    """
+    hist_df = fetch_yahoo_finance_data(symbol, days)
+
+    if hist_df is None:
+        return []
+
     data = []
-    base_price = BASE_PRICES.get(symbol, 100)
-    current_price = base_price
-    today = datetime(2026, 3, 2)
 
-    for i in range(days - 1, -1, -1):
-        date = today - timedelta(days=i)
+    for i in range(len(hist_df)):
+        date = hist_df.index[i]
+        close = hist_df['Close'].iloc[i]
 
-        variation = (random.random() - 0.5) * 0.06
-        current_price = current_price * (1 + variation)
+        if i > 0:
+            prev_close = hist_df['Close'].iloc[i - 1]
+            price_change = ((close - prev_close) / prev_close) * 100
 
-        rand = random.random()
-        if variation > 0.01:
-            actual_direction = "up"
-            prediction = "buy" if rand > 0.3 else ("hold" if rand > 0.15 else "sell")
-        elif variation < -0.01:
-            actual_direction = "down"
-            prediction = "sell" if rand > 0.3 else ("hold" if rand > 0.15 else "buy")
+            if price_change > 1:
+                actual_direction = "up"
+            elif price_change < -1:
+                actual_direction = "down"
+            else:
+                actual_direction = "neutral"
         else:
             actual_direction = "neutral"
-            prediction = "hold" if rand > 0.5 else ("buy" if rand > 0.25 else "sell")
+
+        if i >= 5:
+            ma5 = hist_df['Close'].iloc[i-5:i].mean()
+            ma20 = hist_df['Close'].iloc[max(0, i-20):i].mean() if i >= 20 else close
+
+            if close > ma5 and ma5 > ma20:
+                prediction = "buy"
+            elif close < ma5 and ma5 < ma20:
+                prediction = "sell"
+            else:
+                prediction = "hold"
+        else:
+            prediction = random.choice(["buy", "sell", "hold"])
 
         data.append({
             "date": date.strftime("%Y-%m-%d"),
-            "close": round(current_price, 2),
+            "close": round(float(close), 2),
+            "high": round(float(hist_df['High'].iloc[i]), 2),
+            "low": round(float(hist_df['Low'].iloc[i]), 2),
+            "volume": int(hist_df['Volume'].iloc[i]),
             "prediction": prediction,
             "actualDirection": actual_direction,
         })
@@ -77,10 +140,11 @@ def generate_historical_data(symbol, days=30):
 def generate_metrics(historical_data):
     """
     Calculate classification and strategy performance metrics.
-
-    Returns both traditional ML metrics (accuracy, precision) and
-    trading strategy metrics (Sharpe Ratio, Max Drawdown, Win Rate).
+    Returns both ML metrics (accuracy, precision) and trading metrics.
     """
+    if not historical_data:
+        return {}
+
     correct = 0
     buy_correct = buy_total = 0
     sell_correct = sell_total = 0
@@ -204,48 +268,84 @@ def generate_metrics(historical_data):
     }
 
 
-def initialize_dummy_data():
-    """Initialize in-memory database with simulated stock data."""
+def get_recent_trading_days(num_days=10):
+    """Get the last N trading days (Monday-Friday, excluding weekends)."""
+    trading_days = []
+    current = datetime.now(timezone.utc)
+
+    while len(trading_days) < num_days:
+        current = current - timedelta(days=1)
+        if current.weekday() < 5:
+            trading_days.append(current)
+
+    return sorted(trading_days)
+
+
+def initialize_data():
+    """Initialize backend with Yahoo Finance data for all stocks."""
     for stock_config in STOCKS_CONFIG:
         symbol = stock_config["symbol"]
+        print(f"[INFO] Loading {symbol} data from Yahoo Finance...")
 
-        hist_data = generate_historical_data(symbol, 30)
-        HISTORICAL_DATA[f"{symbol}:30"] = hist_data
-        HISTORICAL_DATA[f"{symbol}:60"] = generate_historical_data(symbol, 60)
-        HISTORICAL_DATA[f"{symbol}:90"] = generate_historical_data(symbol, 90)
+        for days in [30, 60, 90]:
+            hist_data = generate_historical_data(symbol, days)
+            HISTORICAL_DATA[f"{symbol}:{days}"] = hist_data
 
-        last_day = hist_data[-1]
-        signal = random.choice(["buy", "sell", "hold"])
-        confidence = round(0.6 + random.random() * 0.3, 2)
+        hist_30 = HISTORICAL_DATA.get(f"{symbol}:30", [])
 
-        STOCKS_DATA[symbol] = {
-            "symbol": symbol,
-            "name": stock_config["name"],
-            "currentPrice": last_day["close"],
-            "signal": signal,
-            "confidence": confidence,
-            "lastUpdate": datetime.now(timezone.utc).isoformat() + "Z",
-        }
+        if hist_30:
+            last_day = hist_30[-1]
+            current_price = last_day["close"]
 
-        metrics_dict = generate_metrics(hist_data)
-        METRICS_DATA[symbol] = metrics_dict
+            signal = random.choice(["buy", "sell", "hold"])
+            confidence = round(0.6 + random.random() * 0.3, 2)
 
-        signals = []
-        for i in range(10, 0, -1):
-            date = (datetime.now(timezone.utc) - timedelta(days=i)).strftime("%Y-%m-%d")
-            sig_type = random.choice(["buy", "sell", "hold"])
-            base_price = STOCKS_DATA[symbol]["currentPrice"]
-            variation = (random.random() - 0.5) * 0.05
+            STOCKS_DATA[symbol] = {
+                "symbol": symbol,
+                "name": stock_config["name"],
+                "currentPrice": current_price,
+                "signal": signal,
+                "confidence": confidence,
+                "lastUpdate": datetime.now(timezone.utc).isoformat() + "Z",
+            }
 
-            signals.append({
-                "date": date,
-                "signal": sig_type,
-                "predictedPrice": round(base_price * (1 + variation), 2),
-                "actualPrice": round(base_price * (1 + variation + (random.random() - 0.5) * 0.02), 2),
-                "correct": random.random() > 0.3,
-            })
+            metrics_dict = generate_metrics(hist_30)
+            METRICS_DATA[symbol] = metrics_dict
 
-        SIGNALS_DATA[symbol] = signals
+            company_info = fetch_company_info(symbol)
+            COMPANY_INFO[symbol] = company_info
+
+            signals = []
+            recent_trading_days = get_recent_trading_days(10)
+
+            for i, trading_day in enumerate(recent_trading_days):
+                date_str = trading_day.strftime("%Y-%m-%d")
+
+                hist_price = None
+                for hist_entry in hist_30:
+                    if hist_entry["date"] == date_str:
+                        hist_price = hist_entry["close"]
+                        break
+
+                if hist_price is None:
+                    hist_price = current_price
+
+                hist_direction = hist_30[min(i + 1, len(hist_30) - 1)]["actualDirection"] if i < len(hist_30) - 1 else "neutral"
+
+                sig_prediction = hist_30[min(i, len(hist_30) - 1)]["prediction"]
+                correct = (sig_prediction == "buy" and hist_direction == "up") or \
+                         (sig_prediction == "sell" and hist_direction == "down") or \
+                         (sig_prediction == "hold" and hist_direction == "neutral")
+
+                signals.append({
+                    "date": date_str,
+                    "signal": sig_prediction,
+                    "predictedPrice": round(hist_price * (1 + (random.random() - 0.5) * 0.02), 2),
+                    "actualPrice": round(hist_price, 2),
+                    "correct": correct,
+                })
+
+            SIGNALS_DATA[symbol] = signals
 
 
 @app.route("/health", methods=["GET"])
@@ -266,12 +366,14 @@ def get_stock_detail(symbol):
 
     stock = STOCKS_DATA[symbol]
     recent_signals = SIGNALS_DATA.get(symbol, [])
+    company_info = COMPANY_INFO.get(symbol, {})
 
     return jsonify({
         "success": True,
         "data": {
             **stock,
             "recentSignals": recent_signals,
+            "companyInfo": company_info,
         }
     })
 
@@ -309,6 +411,14 @@ def get_all_metrics():
             })
 
     return jsonify({"success": True, "data": all_metrics})
+
+
+@app.route("/stocks/<symbol>/info", methods=["GET"])
+def get_company_info(symbol):
+    if symbol not in COMPANY_INFO:
+        return jsonify({"success": False, "error": f"Info for {symbol} not found"}), 404
+
+    return jsonify({"success": True, "data": COMPANY_INFO[symbol]})
 
 
 @app.route("/stocks", methods=["POST"])
@@ -380,7 +490,7 @@ def update_signals(symbol):
 
 
 if __name__ == "__main__":
-    initialize_dummy_data()
+    initialize_data()
     print("[INFO] API server started on http://localhost:8000")
-    print("[INFO] Flask in debug mode")
+    print("[INFO] Using Yahoo Finance data for 7 stocks")
     app.run(host="0.0.0.0", port=8000, debug=True)

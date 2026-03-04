@@ -35,7 +35,6 @@ STOCKS = [
     {"symbol": "TSLA", "name": "Tesla Inc."},
     {"symbol": "META", "name": "Meta Platforms Inc."},
     {"symbol": "NVDA", "name": "NVIDIA Corporation"},
-    {"symbol": "JPM", "name": "JPMorgan Chase & Co."},
 ]
 
 # ===========================
