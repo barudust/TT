@@ -18,24 +18,24 @@ export function StockCard({ stock }: StockCardProps) {
   const signalConfig = {
     buy: {
       icon: ArrowUp,
-      label: "BUY LONG",
-      color: "text-[#10b981] dark:text-[#10b981]",
-      bgColor: "bg-slate-800 dark:bg-slate-900",
-      borderColor: "border-[#10b981] dark:border-[#10b981]",
+      label: "COMPRAR (LARGO)",
+      color: "text-emerald-600 dark:text-emerald-400",
+      bgColor: "bg-muted",
+      borderColor: "border-emerald-500 dark:border-emerald-400",
     },
     sell: {
       icon: ArrowDown,
-      label: "SELL SHORT",
-      color: "text-[#ef4444] dark:text-[#ef4444]",
-      bgColor: "bg-slate-800 dark:bg-slate-900",
-      borderColor: "border-[#ef4444] dark:border-[#ef4444]",
+      label: "VENDER (CORTO)",
+      color: "text-red-600 dark:text-red-400",
+      bgColor: "bg-muted",
+      borderColor: "border-red-500 dark:border-red-400",
     },
     hold: {
       icon: Circle,
-      label: "HOLD",
-      color: "text-[#f59e0b] dark:text-[#f59e0b]",
-      bgColor: "bg-slate-800 dark:bg-slate-900",
-      borderColor: "border-[#f59e0b] dark:border-[#f59e0b]",
+      label: "MANTENER",
+      color: "text-amber-600 dark:text-amber-400",
+      bgColor: "bg-muted",
+      borderColor: "border-amber-500 dark:border-amber-400",
     },
   };
 

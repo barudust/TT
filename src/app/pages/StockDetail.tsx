@@ -118,24 +118,24 @@ export default function StockDetail() {
   const signalConfig = {
     buy: {
       icon: ArrowUp,
-      label: "BUY LONG",
-      color: "text-[#10b981]",
-      bgColor: "bg-slate-800",
-      borderColor: "border-[#10b981]",
+      label: "COMPRAR (LARGO)",
+      color: "text-emerald-600 dark:text-emerald-400",
+      bgColor: "bg-muted",
+      borderColor: "border-emerald-500 dark:border-emerald-400",
     },
     sell: {
       icon: ArrowDown,
-      label: "SELL SHORT",
-      color: "text-[#ef4444]",
-      bgColor: "bg-slate-800",
-      borderColor: "border-[#ef4444]",
+      label: "VENDER (CORTO)",
+      color: "text-red-600 dark:text-red-400",
+      bgColor: "bg-muted",
+      borderColor: "border-red-500 dark:border-red-400",
     },
     hold: {
       icon: Circle,
-      label: "HOLD",
-      color: "text-[#f59e0b]",
-      bgColor: "bg-slate-800",
-      borderColor: "border-[#f59e0b]",
+      label: "MANTENER",
+      color: "text-amber-600 dark:text-amber-400",
+      bgColor: "bg-muted",
+      borderColor: "border-amber-500 dark:border-amber-400",
     },
   };
 
@@ -224,7 +224,7 @@ export default function StockDetail() {
       {/* Price Chart */}
       <Card className="p-6 mb-6">
         <div className="flex items-center gap-2 mb-4">
-          <TrendingUp className="w-5 h-5 text-[#3b82f6]" />
+          <TrendingUp className="w-5 h-5 text-blue-600 dark:text-blue-400" />
           <h2 className="text-xl font-bold text-foreground">Historial de Precios</h2>
         </div>
         <div className="h-64">
@@ -263,15 +263,15 @@ export default function StockDetail() {
         <div className="mt-4 flex gap-4 text-xs">
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 rounded-full bg-[#10b981]"></div>
-            <span className="text-muted-foreground">Señal BUY</span>
+            <span className="text-muted-foreground">Señal COMPRAR</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 rounded-full bg-[#ef4444]"></div>
-            <span className="text-muted-foreground">Señal SELL</span>
+            <span className="text-muted-foreground">Señal VENDER</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 rounded-full bg-[#f59e0b]"></div>
-            <span className="text-muted-foreground">Señal HOLD</span>
+            <span className="text-muted-foreground">Señal MANTENER</span>
           </div>
         </div>
       </Card>
@@ -284,31 +284,31 @@ export default function StockDetail() {
         <div className="mb-6">
           <h3 className="font-semibold text-foreground mb-3 text-sm">Métricas de Clasificación</h3>
           <div className="grid grid-cols-2 gap-4">
-            <div className="bg-slate-800 dark:bg-slate-900 p-4 rounded-lg">
+            <div className="bg-muted p-4 rounded-lg">
               <div className="text-3xl font-bold text-[#3b82f6]">
                 {(metrics.accuracy * 100).toFixed(1)}%
               </div>
               <div className="text-sm text-muted-foreground mt-1">Accuracy</div>
             </div>
-            <div className="bg-slate-800 dark:bg-slate-900 p-4 rounded-lg">
+            <div className="bg-muted p-4 rounded-lg">
               <div className="text-3xl font-bold text-[#8b5cf6]">
                 {(metrics.f1Score * 100).toFixed(1)}%
               </div>
               <div className="text-sm text-muted-foreground mt-1">F1-Score</div>
             </div>
-            <div className="bg-slate-800 dark:bg-slate-900 p-4 rounded-lg">
+            <div className="bg-muted p-4 rounded-lg">
               <div className="text-3xl font-bold text-[#10b981]">
                 {(metrics.buyPrecision * 100).toFixed(1)}%
               </div>
               <div className="text-sm text-muted-foreground mt-1">Precisión BUY</div>
             </div>
-            <div className="bg-slate-800 dark:bg-slate-900 p-4 rounded-lg">
+            <div className="bg-muted p-4 rounded-lg">
               <div className="text-3xl font-bold text-[#ef4444]">
                 {(metrics.sellPrecision * 100).toFixed(1)}%
               </div>
               <div className="text-sm text-muted-foreground mt-1">Precisión SELL</div>
             </div>
-            <div className="bg-slate-800 dark:bg-slate-900 p-4 rounded-lg">
+            <div className="bg-muted p-4 rounded-lg">
               <div className="text-3xl font-bold text-[#f59e0b]">
                 {(metrics.holdPrecision * 100).toFixed(1)}%
               </div>
@@ -320,37 +320,37 @@ export default function StockDetail() {
         <div className="border-t border-border pt-6">
           <h3 className="font-semibold text-foreground mb-3 text-sm">Rendimiento de la Estrategia</h3>
           <div className="grid grid-cols-2 gap-4">
-            <div className="bg-slate-800 dark:bg-slate-900 p-4 rounded-lg border border-[#10b981]">
+            <div className="bg-muted p-4 rounded-lg border border-[#10b981]">
               <div className="text-3xl font-bold text-[#10b981]">
                 {metrics.cumulativeReturn.toFixed(1)}%
               </div>
               <div className="text-sm text-muted-foreground mt-1">Retorno Acumulado</div>
             </div>
-            <div className="bg-slate-800 dark:bg-slate-900 p-4 rounded-lg border border-[#3b82f6]">
+            <div className="bg-muted p-4 rounded-lg border border-[#3b82f6]">
               <div className="text-3xl font-bold text-[#3b82f6]">
                 {metrics.sharpeRatio.toFixed(2)}
               </div>
               <div className="text-sm text-muted-foreground mt-1">Sharpe Ratio</div>
             </div>
-            <div className="bg-slate-800 dark:bg-slate-900 p-4 rounded-lg border border-[#8b5cf6]">
+            <div className="bg-muted p-4 rounded-lg border border-[#8b5cf6]">
               <div className="text-3xl font-bold text-[#8b5cf6]">
                 {metrics.winRate.toFixed(1)}%
               </div>
               <div className="text-sm text-muted-foreground mt-1">Win Rate</div>
             </div>
-            <div className="bg-slate-800 dark:bg-slate-900 p-4 rounded-lg border border-[#f59e0b]">
+            <div className="bg-muted p-4 rounded-lg border border-[#f59e0b]">
               <div className="text-3xl font-bold text-[#f59e0b]">
                 {metrics.profitFactor.toFixed(2)}x
               </div>
               <div className="text-sm text-muted-foreground mt-1">Profit Factor</div>
             </div>
-            <div className="bg-slate-800 dark:bg-slate-900 p-4 rounded-lg border border-[#ef4444]">
+            <div className="bg-muted p-4 rounded-lg border border-[#ef4444]">
               <div className="text-3xl font-bold text-[#ef4444]">
                 -{metrics.maxDrawdown.toFixed(1)}%
               </div>
               <div className="text-sm text-muted-foreground mt-1">Max Drawdown</div>
             </div>
-            <div className="bg-slate-800 dark:bg-slate-900 p-4 rounded-lg border border-[#06b6d4]">
+            <div className="bg-muted p-4 rounded-lg border border-[#06b6d4]">
               <div className="text-3xl font-bold text-[#06b6d4]">
                 {metrics.numberOfTrades}
               </div>
@@ -384,7 +384,7 @@ export default function StockDetail() {
         </div>
 
         {/* Nota sobre la simulación */}
-        <div className="mt-4 p-3 bg-slate-800 dark:bg-slate-900 border border-[#3b82f6] rounded text-xs text-muted-foreground">
+        <div className="mt-4 p-3 bg-muted border border-[#3b82f6] rounded text-xs text-muted-foreground">
           <strong>Nota:</strong> Capital Final es una simulación con capital inicial ficticio ($1000).
           Se incluye un costo de transacción del 0.1% por operación. Este es un proyecto académico, no asesoría financiera.
         </div>
@@ -416,26 +416,26 @@ export default function StockDetail() {
                     <span
                       className={`px-2 py-1 rounded text-xs font-bold inline-block ${
                         signal.signal === "buy"
-                          ? "bg-slate-800 text-[#10b981]"
+                          ? "bg-muted text-emerald-600 dark:text-emerald-400"
                           : signal.signal === "sell"
-                          ? "bg-slate-800 text-[#ef4444]"
-                          : "bg-slate-800 text-[#f59e0b]"
+                          ? "bg-muted text-red-600 dark:text-red-400"
+                          : "bg-muted text-amber-600 dark:text-amber-400"
                       }`}
                     >
                       {signal.signal === "buy"
-                        ? "BUY"
+                        ? "COMPRAR"
                         : signal.signal === "sell"
-                        ? "SELL"
-                        : "HOLD"}
+                        ? "VENDER"
+                        : "MANTENER"}
                     </span>
                   </td>
                   <td className="py-3 px-3 text-center">
                     {signal.correct ? (
-                      <div className="w-6 h-6 rounded-full bg-slate-800 flex items-center justify-center mx-auto border border-[#10b981]">
+                      <div className="w-6 h-6 rounded-full bg-muted flex items-center justify-center mx-auto border border-[#10b981]">
                         <span className="text-[#10b981] text-sm font-bold">✓</span>
                       </div>
                     ) : (
-                      <div className="w-6 h-6 rounded-full bg-slate-800 flex items-center justify-center mx-auto border border-[#ef4444]">
+                      <div className="w-6 h-6 rounded-full bg-muted flex items-center justify-center mx-auto border border-[#ef4444]">
                         <span className="text-[#ef4444] text-sm font-bold">✗</span>
                       </div>
                     )}
@@ -452,13 +452,13 @@ export default function StockDetail() {
         {/* Resumen de aciertos */}
         <div className="pt-4 border-t border-border flex gap-4 text-sm">
           <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-full bg-slate-800 border border-[#10b981]"></div>
+            <div className="w-3 h-3 rounded-full bg-muted border border-[#10b981]"></div>
             <span className="text-muted-foreground">
               Correctas: {stock.recentSignals.slice(0, 10).filter(s => s.correct).length}/10
             </span>
           </div>
           <div className="flex items-center gap-2">
-            <div className="w-3 h-3 rounded-full bg-slate-800 border border-[#ef4444]"></div>
+            <div className="w-3 h-3 rounded-full bg-muted border border-[#ef4444]"></div>
             <span className="text-muted-foreground">
               Incorrectas: {stock.recentSignals.slice(0, 10).filter(s => !s.correct).length}/10
             </span>
@@ -466,7 +466,7 @@ export default function StockDetail() {
         </div>
 
         {/* Nota sobre las señales */}
-        <div className="mt-4 p-3 bg-slate-800 dark:bg-slate-900 border border-[#f59e0b] rounded text-xs text-muted-foreground">
+        <div className="mt-4 p-3 bg-muted border border-[#f59e0b] rounded text-xs text-muted-foreground">
           <strong>Nota:</strong> Las señales se generan después del cierre del mercado.
           La simulación asume operaciones al cierre del día siguiente. Se muestra el precio de cierre real para contexto.
         </div>

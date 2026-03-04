@@ -1,7 +1,7 @@
 {
   "name": "TradingSignals AI",
   "short_name": "TradingSignals",
-  "description": "Predicción bursátil con Deep Learning - LSTM y CNN-LSTM",
+  "description": "Clasificación bursátil con Deep Learning - LSTM y CNN-LSTM",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",

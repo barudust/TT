@@ -45,18 +45,18 @@ export function SignalBadge({ signal, size = "md" }: SignalBadgeProps) {
   const configs = {
     buy: {
       icon: TrendingUp,
-      label: "BUY",
-      colors: "bg-slate-800 text-[#10b981] border-[#10b981]",
+      label: "COMPRAR",
+      colors: "bg-muted text-emerald-600 dark:text-emerald-400 border-current",
     },
     sell: {
       icon: TrendingDown,
-      label: "SELL",
-      colors: "bg-slate-800 text-[#ef4444] border-[#ef4444]",
+      label: "VENDER",
+      colors: "bg-muted text-red-600 dark:text-red-400 border-current",
     },
     hold: {
       icon: Minus,
-      label: "HOLD",
-      colors: "bg-slate-800 text-[#f59e0b] border-[#f59e0b]",
+      label: "MANTENER",
+      colors: "bg-muted text-amber-600 dark:text-amber-400 border-current",
     },
   };
 

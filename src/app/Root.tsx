@@ -14,9 +14,9 @@ export default function Root() {
 
   const stocks = ["AAPL", "MSFT", "GOOGL", "AMZN", "TSLA", "META", "NVDA"];
   const navItems = [
-    { path: "/", icon: TrendingUp, label: "Stocks" },
-    { path: "/performance", icon: BarChart3, label: "Performance" },
-    { path: "/about", icon: Info, label: "About" },
+    { path: "/", icon: TrendingUp, label: "Acciones" },
+    { path: "/performance", icon: BarChart3, label: "Rendimiento" },
+    { path: "/about", icon: Info, label: "Acerca de" },
   ];
 
   return (
@@ -29,8 +29,8 @@ export default function Root() {
                 <TrendingUp className="w-6 h-6 text-white" />
               </div>
               <div>
-                <h1 className="text-xl font-bold text-foreground">TradingSignals AI</h1>
-                <p className="text-xs text-muted-foreground">Deep Learning Stock Prediction</p>
+                <h1 className="text-xl font-bold text-foreground">TT 2026-B164</h1>
+                <p className="text-xs text-muted-foreground">Clasificación bursátil con Deep Learning</p>
               </div>
             </div>
             {mounted && (
@@ -98,7 +98,7 @@ export default function Root() {
                       : "text-muted-foreground hover:text-foreground"
                   }`}
                 >
-                  <Icon className={`w-6 h-6 ${isActive ? "fill-blue-100 dark:fill-blue-900" : ""}`} />
+                  <Icon className="w-6 h-6" />
                   <span className="text-xs font-medium">{item.label}</span>
                 </Link>
               );
@@ -109,4 +109,3 @@ export default function Root() {
     </div>
   );
 }
-

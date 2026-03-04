@@ -9,7 +9,7 @@ interface ErrorStateProps {
 export function ErrorState({ message, onRetry }: ErrorStateProps) {
   return (
     <div className="flex flex-col items-center justify-center py-20 px-4">
-      <div className="bg-slate-800 dark:bg-slate-900 p-4 rounded-full mb-4">
+      <div className="bg-muted p-4 rounded-full mb-4">
         <AlertCircle className="w-12 h-12 text-[#ef4444]" />
       </div>
       <h3 className="text-lg font-semibold text-foreground mb-2">

@@ -33,7 +33,7 @@ export default function About() {
       </div>
 
       {/* Disclaimer */}
-      <Card className="p-6 mb-6 border-2 border-[#ef4444] bg-slate-800 dark:bg-slate-900">
+      <Card className="p-6 mb-6 border-2 border-[#ef4444] bg-muted">
         <div className="flex gap-4">
           <AlertTriangle className="w-8 h-8 text-[#ef4444] flex-shrink-0 mt-1" />
           <div>
@@ -57,7 +57,7 @@ export default function About() {
       {/* Descripción del Proyecto */}
       <Card className="p-6 mb-6">
         <div className="flex items-start gap-4">
-          <div className="bg-slate-800 dark:bg-slate-900 p-3 rounded-lg flex-shrink-0">
+          <div className="bg-muted p-3 rounded-lg flex-shrink-0">
             <BookOpen className="w-6 h-6 text-[#3b82f6]" />
           </div>
           <div className="flex-1">
@@ -92,7 +92,7 @@ export default function About() {
       {/* Metodología */}
       <Card className="p-6 mb-6">
         <div className="flex items-start gap-4">
-          <div className="bg-slate-800 dark:bg-slate-900 p-3 rounded-lg flex-shrink-0">
+          <div className="bg-muted p-3 rounded-lg flex-shrink-0">
             <Code className="w-6 h-6 text-[#8b5cf6]" />
           </div>
           <div className="flex-1">
@@ -150,7 +150,7 @@ export default function About() {
       {/* Acciones Seleccionadas */}
       <Card className="p-6 mb-6">
         <div className="flex items-start gap-4">
-          <div className="bg-slate-800 dark:bg-slate-900 p-3 rounded-lg flex-shrink-0">
+          <div className="bg-muted p-3 rounded-lg flex-shrink-0">
             <TrendingUp className="w-6 h-6 text-[#10b981]" />
           </div>
           <div className="flex-1">
@@ -185,7 +185,7 @@ export default function About() {
       {/* Créditos y Tecnologías */}
       <Card className="p-6">
         <div className="flex items-start gap-4">
-          <div className="bg-slate-800 dark:bg-slate-900 p-3 rounded-lg flex-shrink-0">
+          <div className="bg-muted p-3 rounded-lg flex-shrink-0">
             <Users className="w-6 h-6 text-[#f59e0b]" />
           </div>
           <div className="flex-1">
@@ -226,7 +226,7 @@ export default function About() {
                   {technologies.map((tech) => (
                     <span
                       key={tech}
-                      className="px-3 py-1 bg-slate-800 dark:bg-slate-900 text-[#3b82f6] border border-[#3b82f6] rounded-full text-xs font-medium"
+                      className="px-3 py-1 bg-muted text-[#3b82f6] border border-[#3b82f6] rounded-full text-xs font-medium"
                     >
                       {tech}
                     </span>
