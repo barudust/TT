@@ -73,7 +73,6 @@ export default function Home() {
 
   return (
     <div>
-      {/* Header Section */}
       <div className="mb-6">
         <div className="flex items-center justify-between mb-2">
           <div>
@@ -99,15 +98,11 @@ export default function Home() {
           </div>
         )}
       </div>
-
-      {/* Stock List */}
       <div className="space-y-3">
         {stocks.map((stock) => (
           <StockCard key={stock.symbol} stock={stock} />
         ))}
       </div>
-
-      {/* Info Banner */}
       <div className="mt-8 bg-muted border border-border rounded-lg p-4">
         <p className="text-sm text-muted-foreground">
           <span className="font-semibold">💡 Nota:</span> Las señales son generadas

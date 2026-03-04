@@ -1,6 +1,6 @@
 {
-  "name": "TradingSignals AI",
-  "short_name": "TradingSignals",
+  "name": "TT 2026-B164",
+  "short_name": "TT",
   "description": "Clasificación bursátil con Deep Learning - LSTM y CNN-LSTM",
   "start_url": "/",
   "display": "standalone",

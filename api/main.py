@@ -1,8 +1,3 @@
-"""
-TradingSignals AI - Local API Backend
-Flask REST API with Yahoo Finance data integration
-"""
-
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from datetime import datetime, timedelta, timezone
@@ -31,10 +26,6 @@ STOCKS_CONFIG = [
 
 
 def fetch_yahoo_finance_data(symbol, days=30):
-    """
-    Fetch historical price data from Yahoo Finance.
-    Returns DataFrame with OHLCV data and calculations.
-    """
     try:
         end_date = datetime.now()
         start_date = end_date - timedelta(days=days + 30)
@@ -54,10 +45,7 @@ def fetch_yahoo_finance_data(symbol, days=30):
 
 
 def fetch_company_info(symbol):
-    """
-    Fetch company information from Yahoo Finance.
-    Returns dict with market cap, sector, industry, PE ratio, and more.
-    """
+   
     try:
         ticker = yf.Ticker(symbol)
         info = ticker.info
@@ -83,10 +71,7 @@ def fetch_company_info(symbol):
 
 
 def generate_historical_data(symbol, days=30):
-    """
-    Generate historical data from Yahoo Finance with signal predictions.
-    Signals are based on simple technical analysis of real price movement.
-    """
+    
     hist_df = fetch_yahoo_finance_data(symbol, days)
 
     if hist_df is None:
@@ -138,10 +123,7 @@ def generate_historical_data(symbol, days=30):
 
 
 def generate_metrics(historical_data):
-    """
-    Calculate classification and strategy performance metrics.
-    Returns both ML metrics (accuracy, precision) and trading metrics.
-    """
+   
     if not historical_data:
         return {}
 
@@ -269,7 +251,6 @@ def generate_metrics(historical_data):
 
 
 def get_recent_trading_days(num_days=10):
-    """Get the last N trading days (Monday-Friday, excluding weekends)."""
     trading_days = []
     current = datetime.now(timezone.utc)
 
@@ -282,7 +263,6 @@ def get_recent_trading_days(num_days=10):
 
 
 def initialize_data():
-    """Initialize backend with Yahoo Finance data for all stocks."""
     for stock_config in STOCKS_CONFIG:
         symbol = stock_config["symbol"]
         print(f"[INFO] Loading {symbol} data from Yahoo Finance...")

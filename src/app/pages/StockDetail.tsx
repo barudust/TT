@@ -174,7 +174,6 @@ export default function StockDetail() {
 
   return (
     <div>
-      {/* Back Button */}
       <Button
         onClick={() => navigate("/")}
         variant="ghost"
@@ -184,8 +183,6 @@ export default function StockDetail() {
         <ArrowLeft className="w-4 h-4" />
         Volver
       </Button>
-
-      {/* Stock Header */}
       <Card className="p-6 mb-6">
         <div className="flex items-start justify-between mb-4">
           <div className="flex-1">
@@ -206,8 +203,6 @@ export default function StockDetail() {
           </div>
         </div>
       </Card>
-
-      {/* Period Selector */}
       <div className="flex gap-2 mb-4">
         {[30, 60, 90].map((days) => (
           <Button
@@ -220,8 +215,6 @@ export default function StockDetail() {
           </Button>
         ))}
       </div>
-
-      {/* Price Chart */}
       <Card className="p-6 mb-6">
         <div className="flex items-center gap-2 mb-4">
           <TrendingUp className="w-5 h-5 text-blue-600 dark:text-blue-400" />
@@ -276,10 +269,8 @@ export default function StockDetail() {
         </div>
       </Card>
 
-      {/* Performance Metrics */}
       <Card className="p-6 mb-6">
         <h2 className="text-xl font-bold text-foreground mb-4">Métricas del Modelo</h2>
-
         {/* Métricas de Clasificación */}
         <div className="mb-6">
           <h3 className="font-semibold text-foreground mb-3 text-sm">Métricas de Clasificación</h3>
@@ -316,7 +307,6 @@ export default function StockDetail() {
             </div>
           </div>
         </div>
-
         <div className="border-t border-border pt-6">
           <h3 className="font-semibold text-foreground mb-3 text-sm">Rendimiento de la Estrategia</h3>
           <div className="grid grid-cols-2 gap-4">
@@ -359,7 +349,6 @@ export default function StockDetail() {
           </div>
         </div>
 
-        {/* Estadísticas Adicionales */}
         <div className="mt-6 pt-6 border-t border-border grid gap-3">
           <div className="flex justify-between text-sm">
             <span className="text-muted-foreground">Capital Final (simulado):</span>
@@ -382,22 +371,16 @@ export default function StockDetail() {
             <span className="font-semibold text-[#10b981]">{metrics.correctPredictions}</span>
           </div>
         </div>
-
-        {/* Nota sobre la simulación */}
         <div className="mt-4 p-3 bg-muted border border-[#3b82f6] rounded text-xs text-muted-foreground">
           <strong>Nota:</strong> Capital Final es una simulación con capital inicial ficticio ($1000).
           Se incluye un costo de transacción del 0.1% por operación. Este es un proyecto académico, no asesoría financiera.
         </div>
       </Card>
-
-      {/* Recent Signals History */}
       <Card className="p-6">
         <div className="flex items-center gap-2 mb-4">
           <Calendar className="w-5 h-5 text-[#3b82f6]" />
           <h2 className="text-xl font-bold text-foreground">Historial de Señales (Últimas 10)</h2>
         </div>
-
-        {/* Tabla de Señales */}
         <div className="overflow-x-auto mb-4">
           <table className="w-full text-sm">
             <thead>
@@ -448,8 +431,6 @@ export default function StockDetail() {
             </tbody>
           </table>
         </div>
-
-        {/* Resumen de aciertos */}
         <div className="pt-4 border-t border-border flex gap-4 text-sm">
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 rounded-full bg-muted border border-[#10b981]"></div>
@@ -464,8 +445,6 @@ export default function StockDetail() {
             </span>
           </div>
         </div>
-
-        {/* Nota sobre las señales */}
         <div className="mt-4 p-3 bg-muted border border-[#f59e0b] rounded text-xs text-muted-foreground">
           <strong>Nota:</strong> Las señales se generan después del cierre del mercado.
           La simulación asume operaciones al cierre del día siguiente. Se muestra el precio de cierre real para contexto.

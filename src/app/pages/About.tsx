@@ -32,7 +32,6 @@ export default function About() {
         </p>
       </div>
 
-      {/* Disclaimer */}
       <Card className="p-6 mb-6 border-2 border-[#ef4444] bg-muted">
         <div className="flex gap-4">
           <AlertTriangle className="w-8 h-8 text-[#ef4444] flex-shrink-0 mt-1" />
@@ -54,7 +53,6 @@ export default function About() {
         </div>
       </Card>
 
-      {/* Descripción del Proyecto */}
       <Card className="p-6 mb-6">
         <div className="flex items-start gap-4">
           <div className="bg-muted p-3 rounded-lg flex-shrink-0">
@@ -67,8 +65,8 @@ export default function About() {
             <p className="text-muted-foreground leading-relaxed mb-4">
               Esta aplicación es el resultado del Trabajo Terminal{" "}
               <strong>TT 2026-B164</strong>, cuyo objetivo es demostrar la aplicación de
-              técnicas de Deep Learning para la predicción de tendencias en el mercado
-              bursátil. A través de modelos de redes neuronales avanzadas (LSTM y CNN-LSTM),
+              técnicas de Deep Learning para la clasificación de tendencias en el mercado
+              bursátil. A través de modelos de redes neuronales (LSTM y CNN-LSTM),
               entrenados con datos históricos de precios obtenidos de Yahoo Finance, generamos
               señales de trading diarias para una selección de acciones de alta capitalización.
             </p>
@@ -89,7 +87,6 @@ export default function About() {
         </div>
       </Card>
 
-      {/* Metodología */}
       <Card className="p-6 mb-6">
         <div className="flex items-start gap-4">
           <div className="bg-muted p-3 rounded-lg flex-shrink-0">
@@ -147,7 +144,6 @@ export default function About() {
         </div>
       </Card>
 
-      {/* Acciones Seleccionadas */}
       <Card className="p-6 mb-6">
         <div className="flex items-start gap-4">
           <div className="bg-muted p-3 rounded-lg flex-shrink-0">
@@ -182,7 +178,6 @@ export default function About() {
         </div>
       </Card>
 
-      {/* Créditos y Tecnologías */}
       <Card className="p-6">
         <div className="flex items-start gap-4">
           <div className="bg-muted p-3 rounded-lg flex-shrink-0">
@@ -238,7 +233,6 @@ export default function About() {
         </div>
       </Card>
 
-      {/* Footer */}
       <div className="mt-6 text-center text-sm text-muted-foreground">
         <p>Versión 1.0.0 - Marzo 2026</p>
         <p className="mt-1">Desarrollado con fines académicos</p>
