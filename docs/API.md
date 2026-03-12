@@ -45,7 +45,7 @@ Servidor HTTP que expone datos de acciones, historial, métricas y señales. Pun
     "confidence": 0.78,
     "lastUpdate": "2026-03-02T18:00:00Z",
     "recentSignals": [
-      { "date": "2026-02-20", "signal": "buy", "predictedPrice": 176.1, "actualPrice": 175.9, "correct": true }
+      { "date": "2026-02-20", "signal": "buy", "actualPrice": 175.9, "correct": true }
     ],
     "companyInfo": {
       "sector": "Technology",
@@ -76,14 +76,13 @@ Servidor HTTP que expone datos de acciones, historial, métricas y señales. Pun
 
 ### Señales
 - `POST /stocks/:symbol/signals`
-  - Sobrescribe señales recientes (`date`, `signal`, `predictedPrice`, `actualPrice`, `correct`).
+  - Sobrescribe señales recientes (`date`, `signal`, `actualPrice`, `correct`).
 
 ## Inicialización
 - La función `initialize_data()` carga Yahoo Finance, deriva señales y métricas, y precalcula ventanas 30/60/90 días.
-- El modelo ML puede sustituir o complementar esta generación (ver `docs/MODEL_INTEGRATION.md`).
+- El modelo ML proporciona la acción y su confianza a nivel diario; el precio real proviene de mercado. Ver `docs/MODEL_INTEGRATION.md`.
 
 ## Consideraciones
 - Zona horaria: se usa `timezone.utc`.
 - Fuentes de datos: yfinance puede tener límites o retrasos; considerar caché local.
 - CORS: abierto para facilitar desarrollo; ajustar en producción.
-

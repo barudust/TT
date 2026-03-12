@@ -320,7 +320,6 @@ def initialize_data():
                 signals.append({
                     "date": date_str,
                     "signal": sig_prediction,
-                    "predictedPrice": round(hist_price * (1 + (random.random() - 0.5) * 0.02), 2),
                     "actualPrice": round(hist_price, 2),
                     "correct": correct,
                 })

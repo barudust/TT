@@ -27,7 +27,6 @@ interface StockDetail {
   recentSignals: Array<{
     date: string;
     signal: string;
-    predictedPrice: number;
     actualPrice: number;
     correct: boolean;
   }>;

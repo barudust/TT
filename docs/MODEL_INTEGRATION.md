@@ -1,6 +1,6 @@
 # Integración del Modelo en la API (Local)
 
-Objetivo: incorporar un modelo de ML que produzca señales COMPRAR/VENDER/MANTENER y métricas, sirviéndolas a través de `api/main.py`.
+Objetivo: incorporar un modelo de ML que produzca señales COMPRAR/VENDER/MANTENER y su confianza, sirviéndolas a través de `api/main.py`. El precio real mostrado proviene de datos de mercado, no del modelo.
 
 ## Ubicación
 - Archivo: `api/main.py`
@@ -35,7 +35,7 @@ Objetivo: incorporar un modelo de ML que produzca señales COMPRAR/VENDER/MANTEN
    - Para cada símbolo:
      - `STOCKS_DATA[symbol]["signal"] = "buy"|"sell"|"hold"`
      - `STOCKS_DATA[symbol]["confidence"] = float(probabilidad_max)`
-     - Actualizar `SIGNALS_DATA[symbol]` con histórico de inferencias si corresponde.
+     - Actualizar `SIGNALS_DATA[symbol]` con histórico de inferencias si corresponde (campos: `date`, `signal`, `actualPrice`, `correct` cuando aplique).
 
 5. **Métricas**
    - Calcular `accuracy`, `precision` por clase, `f1Score`, y métricas financieras (retornos simulados).
@@ -78,4 +78,3 @@ for stock_config in STOCKS_CONFIG:
 ## Validación
 - Verificar coherencia de las señales con datos reales.
 - Reportar métricas (precisión por clase, F1, retorno simulado) en `GET /stocks/:symbol/metrics`.
-
