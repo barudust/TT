@@ -472,4 +472,4 @@ if __name__ == "__main__":
     initialize_data()
     print("[INFO] API server started on http://localhost:8000")
     print("[INFO] Using Yahoo Finance data for 7 stocks")
-    app.run(host="0.0.0.0", port=8000, debug=True)
+    app.run(host="127.0.0.1", port=8000, debug=True)
