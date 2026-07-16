@@ -2,7 +2,7 @@
 Ingenieria de features tecnicas + contexto de mercado (SPY/VIX).
 
 Puerto exacto de la logica de calculo usada para entrenar los modelos en
-`RESULTADOS_OPTIMIZADOS/` (ver `01_build_raw_dataset.py` y `scripts_opt/common.py`
+`RESULTADOS_OPTIMIZADOS/` (ver `scripts_v1/01_build_raw_dataset.py` y `scripts_opt/common.py`
 en la raiz del repo). Las formulas deben coincidir bit a bit con las de
 entrenamiento: cualquier cambio aqui hace que las predicciones en vivo dejen
 de ser comparables con las metricas reportadas en la tesis.

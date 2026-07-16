@@ -7,7 +7,7 @@ persistencia en SQLite. Preparado para PWA y futuro empaquetado Android.
 
 El modelo en producción es una **Regresión Logística elasticnet** (no
 LSTM/CNN-LSTM): fue el ganador declarado tras comparar 4 familias de
-modelos en `RESULTADOS_OPTIMIZADOS/GUIA_PROGRESO.md` (F1-macro=0.417,
+modelos en `RESULTADOS_OPTIMIZADOS/docs/GUIA_PROGRESO.md` (F1-macro=0.417,
 Sharpe test=1.25). Detalle completo en `docs/MODEL_INTEGRATION.md`.
 
 ## Tecnologías

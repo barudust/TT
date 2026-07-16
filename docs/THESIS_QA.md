@@ -8,7 +8,7 @@
 ## Modelado
 - Selección final: Regresión Logística elasticnet (global, Exp B) por
   encima de XGBoost, LightGBM, LSTM y CNN-LSTM — ver comparación completa
-  y justificación en `RESULTADOS_OPTIMIZADOS/GUIA_PROGRESO.md` y
+  y justificación en `RESULTADOS_OPTIMIZADOS/docs/GUIA_PROGRESO.md` y
   `docs/MODEL_INTEGRATION.md`. Los modelos de deep learning se probaron y
   quedaron documentados, pero no superaron a LR en Exp B/C.
 - Etiquetado de clases (buy/sell/hold) y umbrales.

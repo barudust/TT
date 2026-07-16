@@ -2,7 +2,7 @@
 Carga del modelo ganador (Regresion Logistica elasticnet, global, Exp B)
 y su uso para inferencia de señales BUY/SELL/HOLD.
 
-Ver RESULTADOS_OPTIMIZADOS/GUIA_PROGRESO.md en la raiz del repo para el
+Ver RESULTADOS_OPTIMIZADOS/docs/GUIA_PROGRESO.md en la raiz del repo para el
 analisis completo que declara este modelo como ganador
 (F1-macro=0.4167, Sharpe test=1.25) frente a XGBoost, LightGBM, LSTM y
 CNN-LSTM.

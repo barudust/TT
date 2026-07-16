@@ -12,7 +12,7 @@ juntos), Experimento B (train 2018-2023, val 2024, test 2025).**
 Config id: `LR-02-elasticnet-all`, artefacto original:
 `RESULTADOS_OPTIMIZADOS/modelos_optimizados/lr/LR-02-elasticnet-all/experimento_B/modelo_global.pkl`.
 
-Es el ganador declarado en `RESULTADOS_OPTIMIZADOS/GUIA_PROGRESO.md` tras
+Es el ganador declarado en `RESULTADOS_OPTIMIZADOS/docs/GUIA_PROGRESO.md` tras
 comparar contra XGBoost, LightGBM, LSTM y CNN-LSTM en los tres experimentos
 temporales:
 
@@ -38,7 +38,7 @@ en tiempo de ejecución (útil si se despliega la API sola, p. ej. a Azure).
 ## Features (61 columnas)
 
 `api/ml/features.py` reimplementa **exactamente** el cálculo de
-`01_build_raw_dataset.py` (raíz del repo): retornos log, momentum,
+`scripts_v1/01_build_raw_dataset.py` (raíz del repo): retornos log, momentum,
 distancia a medias móviles (10/20/30/50/200), cruces de medias, RSI,
 MACD, estocástico, Williams %R, ATR, volumen/OBV/CMF/MFI, velas
 japonesas (cuerpo, sombras, gap de apertura), estacionalidad
