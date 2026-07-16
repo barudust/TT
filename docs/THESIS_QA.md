@@ -42,7 +42,11 @@
 ## Mejoras Futuras
 - ~~Integración del modelo final en `api/main.py`~~ — hecho, ver `docs/MODEL_INTEGRATION.md`.
 - ~~Persistencia durable de datos~~ — hecho, SQLite vía SQLAlchemy, ver `docs/DATABASE.md`.
-- Refresco automático programado (scheduler/cron) en vez de manual (`POST /admin/refresh`).
+- ~~Refresco automático programado~~ — hecho, APScheduler corre `initialize_data()`
+  cada día hábil a las 16:30 hora de Nueva York (ver `docs/API.md`).
+- ~~Tests automatizados~~ — hecho, `api/tests/` (pytest, sin red real).
+- ~~Empaquetado de despliegue~~ — hecho, `Dockerfile`(s) + `docker-compose.yml`.
 - Entrenamiento incremental y evaluación en producción.
-- Zona horaria de mercado (NYSE) explícita en vez de UTC genérico.
+- Empaquetado Android nativo (se decidió no perseguirlo; el proyecto queda
+  como aplicación web/PWA).
 

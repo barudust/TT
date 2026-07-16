@@ -62,8 +62,9 @@ Servidor HTTP que expone datos de acciones, historial, métricas y señales
 ```
 
 - `POST /stocks`, `POST /stocks/:symbol`
-  - Sobrescriben la caché en memoria (útil para pruebas/demos puntuales).
-    **No** tocan la base de datos — ver limitación en `docs/DATABASE.md`.
+  - Sobrescriben la caché en memoria y hacen upsert best-effort en SQLite
+    (fila de hoy en `predictions`/`ohlcv_daily`, `model_version="manual-override"`).
+    Pensados para pruebas/demos puntuales, no para el flujo real de datos.
 
 ### Historial
 - `GET /stocks/:symbol/history?days=30|60|90`
@@ -72,7 +73,8 @@ Servidor HTTP que expone datos de acciones, historial, métricas y señales
     `confidence`, `actualDirection` (movimiento real del precio al día
     siguiente: `up`/`down`/`neutral`, umbral ±1%).
 - `POST /stocks/:symbol/history?days=N`
-  - Reemplaza el historial en caché para esa ventana (solo memoria).
+  - Reemplaza el historial en caché para esa ventana y hace upsert de cada
+    fila en `ohlcv_daily`/`predictions`.
 
 ### Métricas
 - `GET /stocks/:symbol/metrics`
@@ -85,17 +87,25 @@ Servidor HTTP que expone datos de acciones, historial, métricas y señales
 - `GET /metrics`
   - Lo mismo para las 7 acciones, en arreglo.
 - `POST /stocks/:symbol/metrics`
-  - Sobrescribe las métricas en caché (solo memoria).
+  - Sobrescribe las métricas en caché y hace upsert en `metrics`
+    (ventana 30 días, por convención).
 
 ### Señales
 - `POST /stocks/:symbol/signals`
-  - Sobrescribe señales recientes en caché (solo memoria).
+  - Sobrescribe señales recientes en caché y hace upsert en `predictions`.
 
 ### Administración
 - `POST /admin/refresh`
   - Vuelve a descargar OHLCV + contexto de mercado, recorre el modelo y
     repuebla caché + base de datos, sin reiniciar el proceso. Útil para
     demos en vivo. Puede tardar ~20-40s (7 tickers × descarga Yahoo).
+  - Esto mismo corre automáticamente cada día hábil a las 16:30 hora de
+    Nueva York (`REFRESH_HOUR`/`REFRESH_MINUTE` en `.env`), 30 min después
+    del cierre de NYSE, vía APScheduler (`start_scheduler()` en `main.py`).
+    Si se despliega con varios workers (gunicorn `-w N`), cada worker
+    tendría su propio scheduler y el refresco correría N veces — para ese
+    caso conviene mover el scheduler a un proceso/cron externo que llame a
+    `POST /admin/refresh` una sola vez.
 
 ## Inicialización
 
@@ -111,9 +121,11 @@ Servidor HTTP que expone datos de acciones, historial, métricas y señales
    30/60/90 días y persiste todo en SQLite.
 
 ## Consideraciones
-- Zona horaria: `timezone.utc` para timestamps de refresco; las fechas de
-  velas OHLCV son las que reporta Yahoo Finance (calendario NYSE, sin
-  conversión adicional).
+- Zona horaria: `timezone.utc` para el timestamp `lastUpdate`; el
+  *scheduler* automático sí usa `America/New_York` (con DST manejado por
+  `zoneinfo`/`tzdata`) para disparar después del cierre real de NYSE.
+  Las fechas de las velas OHLCV son las que reporta Yahoo Finance
+  (calendario NYSE, sin conversión adicional).
 - Fuentes de datos: yfinance puede tener límites de tasa o datos
   retrasados; por eso existe `/admin/refresh` en vez de recalcular en
   cada request.

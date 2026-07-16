@@ -41,7 +41,28 @@ python -m venv .venv
 pip install -r api/requirements.txt
 python api/main.py
 ```
-Por defecto sirve en `http://localhost:8000`.
+Por defecto sirve en `http://localhost:8000`. Al arrancar descarga datos
+reales, calcula las 61 features y corre el modelo (tarda ~20-40s para los
+7 tickers); después se refresca solo cada día hábil a las 16:30 hora de
+Nueva York (configurable, ver `api/.env.example`), o a demanda con
+`POST /admin/refresh`.
+
+### Tests de la API
+```bash
+pip install -r api/requirements-dev.txt
+cd api && pytest
+```
+No hacen llamadas de red reales (Yahoo Finance se mockea) — cubren las 61
+features, la carga/inferencia del modelo y el flujo completo de
+`initialize_data()`.
+
+### Todo junto con Docker
+```bash
+docker compose up -d --build
+```
+Frontend en `http://localhost:8080`, API en `http://localhost:8000`.
+SQLite se persiste en un volumen de Docker. Postgres es opcional (perfil
+`postgres`), ver comentarios en `docker-compose.yml`.
 
 ### Configuración de API (Frontend)
 El frontend usa la variable `VITE_API_URL` si está definida. Si no, intenta:
@@ -57,14 +78,17 @@ VITE_API_URL=http://localhost:8000
 ```
 .
 ├── api/
-│   ├── main.py                # Servidor Flask: endpoints + orquestación
+│   ├── main.py                # Servidor Flask: endpoints + orquestación + scheduler
 │   ├── database.py            # Engine/sesión SQLAlchemy (lee DATABASE_URL de .env)
 │   ├── models.py              # Esquema: Asset, OHLCVDaily, Prediction, Metric
+│   ├── db_ops.py              # Upserts compartidos (refresco automático + overrides POST)
 │   ├── ml/
 │   │   ├── features.py        # Ingeniería de las 61 features (idéntica al entrenamiento)
 │   │   ├── model.py           # Carga del modelo ganador + inferencia
 │   │   └── artifacts/         # .pkl del modelo empaquetado con la API
-│   └── requirements.txt
+│   ├── tests/                 # pytest, sin red real (yfinance mockeado)
+│   ├── Dockerfile
+│   └── requirements.txt / requirements-dev.txt
 ├── public/
 │   ├── manifest.json          # PWA
 │   └── service-worker.js      # PWA
@@ -81,8 +105,11 @@ VITE_API_URL=http://localhost:8000
 ├── docs/                      # Documentación técnica
 │   ├── FRONTEND.md
 │   ├── API.md
+│   ├── DATABASE.md
 │   ├── MODEL_INTEGRATION.md
 │   └── THESIS_QA.md
+├── Dockerfile / nginx.conf     # Imagen del frontend (build Vite + nginx)
+├── docker-compose.yml          # Stack completo (api + frontend [+ postgres opcional])
 └── vite.config.ts
 ```
 

@@ -10,9 +10,10 @@ proyecto); es SQLAlchemy declarativo simple con sesiones manuales.
 - Cero configuración: un archivo `trading_system.db` en `api/`.
 - Es lo que ya declaraban `.env`/`.env.example` desde antes de esta
   integración.
-- `docker-compose.yml` deja Postgres listo como opción para un despliegue
-  futuro tipo Azure (ver ese archivo); no se usa por defecto y las
-  credenciales ya no están quemadas en el código, se leen de `.env`.
+- `docker-compose.yml` (raíz del proyecto) deja Postgres listo como
+  perfil opcional (`docker compose --profile postgres up -d`) para un
+  despliegue futuro tipo Azure; no se usa por defecto y las credenciales
+  ya no están quemadas en el código, se leen de variables de entorno.
 - Migración a Postgres cuando haga falta: cambiar `DATABASE_URL` en
   `.env`; el esquema (`api/models.py`) es compatible con ambos motores
   porque usa tipos genéricos de SQLAlchemy.

@@ -1,12 +1,16 @@
+import os
 from datetime import datetime, date, timezone
+from zoneinfo import ZoneInfo
 
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from dotenv import load_dotenv
+from apscheduler.schedulers.background import BackgroundScheduler
+from apscheduler.triggers.cron import CronTrigger
 import yfinance as yf
 
 import database
-import models
+import db_ops
 from ml.features import fetch_ohlcv, fetch_market_context, build_feature_frame
 from ml.model import load_model, MODEL_VERSION
 
@@ -14,6 +18,13 @@ load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
+
+# NYSE cierra 16:00 hora de Nueva York; se espera 30 min para que Yahoo
+# Finance termine de publicar los datos EOD. ZoneInfo maneja el cambio a
+# horario de verano automaticamente (requiere el paquete `tzdata` en Windows).
+NYSE_TZ = ZoneInfo("America/New_York")
+REFRESH_HOUR = int(os.getenv("REFRESH_HOUR", "16"))
+REFRESH_MINUTE = int(os.getenv("REFRESH_MINUTE", "30"))
 
 STOCKS_DATA = {}
 HISTORICAL_DATA = {}
@@ -105,11 +116,7 @@ def build_recent_signals(rows, limit=10):
     recent = rows[-limit:]
     signals = []
     for r in recent:
-        correct = (
-            (r["prediction"] == "buy" and r["actualDirection"] == "up") or
-            (r["prediction"] == "sell" and r["actualDirection"] == "down") or
-            (r["prediction"] == "hold" and r["actualDirection"] == "neutral")
-        )
+        correct = db_ops.compute_correct(r["prediction"], r["actualDirection"])
         signals.append({
             "date": r["date"],
             "signal": r["prediction"],
@@ -250,56 +257,27 @@ def generate_metrics(historical_data):
 
 
 def persist_to_db(session, symbol, name, company_info, rows, metrics_by_window):
-    asset = session.query(models.Asset).filter_by(ticker=symbol).one_or_none()
-    if asset is None:
-        asset = models.Asset(ticker=symbol, name=name)
-        session.add(asset)
-        session.flush()
-
-    asset.name = name
+    asset = db_ops.get_or_create_asset(session, symbol, name)
     asset.sector = company_info.get("sector")
     asset.industry = company_info.get("industry")
 
-    session.query(models.OHLCVDaily).filter_by(asset_id=asset.id).delete()
-    session.query(models.Prediction).filter_by(asset_id=asset.id).delete()
-
     for row in rows:
-        d = datetime.strptime(row["date"], "%Y-%m-%d").date()
-        session.add(models.OHLCVDaily(
-            asset_id=asset.id, date=d,
+        d = db_ops.parse_date(row["date"])
+        db_ops.upsert_ohlcv(
+            session, asset.id, d,
             open=row["open"], high=row["high"], low=row["low"],
             close=row["close"], volume=row["volume"],
-        ))
-        session.add(models.Prediction(
-            asset_id=asset.id, date=d, signal=row["prediction"],
-            confidence=row["confidence"], actual_price=row["close"],
-            model_version=MODEL_VERSION,
-        ))
+        )
+        correct = db_ops.compute_correct(row["prediction"], row["actualDirection"])
+        db_ops.upsert_prediction(
+            session, asset.id, d, row["prediction"], model_version=MODEL_VERSION,
+            confidence=row["confidence"], actual_price=row["close"], correct=int(correct),
+        )
 
     for window_days, m in metrics_by_window.items():
         if not m:
             continue
-        metric = session.query(models.Metric).filter_by(asset_id=asset.id, window_days=window_days).one_or_none()
-        if metric is None:
-            metric = models.Metric(asset_id=asset.id, window_days=window_days)
-            session.add(metric)
-        metric.model_version = MODEL_VERSION
-        metric.accuracy = m.get("accuracy")
-        metric.f1_macro = m.get("f1_macro")
-        metric.f1_buy = m.get("f1_buy")
-        metric.f1_sell = m.get("f1_sell")
-        metric.cumulative_return = m.get("cumulativeReturn")
-        metric.return_vs_bh = m.get("return_vs_bh")
-        metric.sharpe_ratio = m.get("sharpeRatio")
-        metric.max_drawdown = m.get("maxDrawdown")
-        metric.win_rate = m.get("winRate")
-        metric.profit_factor = m.get("profitFactor")
-        metric.number_of_trades = m.get("numberOfTrades")
-        metric.exposure = m.get("exposure")
-        metric.final_capital = m.get("finalCapital")
-        metric.signal_buy_pct = m.get("signal_buy_pct")
-        metric.signal_hold_pct = m.get("signal_hold_pct")
-        metric.signal_sell_pct = m.get("signal_sell_pct")
+        db_ops.upsert_metric_from_payload(session, asset.id, window_days, m, model_version=MODEL_VERSION)
 
     session.commit()
 
@@ -444,6 +422,24 @@ def get_company_info(symbol):
     return jsonify({"success": True, "data": COMPANY_INFO[symbol]})
 
 
+def _persist_stock_override(session, stock):
+    """Best-effort: upsert Asset + la Prediction/OHLCV de hoy a partir de un
+    override manual parcial (ver POST /stocks). No falla el request si algo
+    falta; estos endpoints son para pruebas/demos, no la ruta caliente."""
+    symbol = stock.get("symbol")
+    if not symbol:
+        return
+    asset = db_ops.get_or_create_asset(session, symbol, stock.get("name"))
+    today = date.today()
+    if stock.get("currentPrice") is not None:
+        db_ops.upsert_ohlcv(session, asset.id, today, close=stock["currentPrice"])
+    if stock.get("signal"):
+        db_ops.upsert_prediction(
+            session, asset.id, today, stock["signal"], model_version="manual-override",
+            confidence=stock.get("confidence"),
+        )
+
+
 @app.route("/stocks", methods=["POST"])
 def update_stocks():
     data = request.get_json()
@@ -451,9 +447,18 @@ def update_stocks():
     if not isinstance(data, list):
         return jsonify({"success": False, "error": "Expected list of stocks"}), 400
 
-    for stock in data:
-        if "symbol" in stock:
-            STOCKS_DATA[stock["symbol"]] = stock
+    session = database.get_session()
+    try:
+        for stock in data:
+            if "symbol" in stock:
+                STOCKS_DATA[stock["symbol"]] = stock
+                try:
+                    _persist_stock_override(session, stock)
+                except Exception as e:
+                    print(f"[WARN] No se pudo persistir override de {stock.get('symbol')}: {e}")
+        session.commit()
+    finally:
+        session.close()
 
     return jsonify({
         "success": True,
@@ -466,6 +471,16 @@ def update_stocks():
 def update_stock(symbol):
     data = request.get_json()
     STOCKS_DATA[symbol] = data
+
+    session = database.get_session()
+    try:
+        _persist_stock_override(session, {**data, "symbol": symbol})
+        session.commit()
+    except Exception as e:
+        session.rollback()
+        print(f"[WARN] No se pudo persistir override de {symbol}: {e}")
+    finally:
+        session.close()
 
     return jsonify({
         "success": True,
@@ -481,6 +496,35 @@ def update_historical_data(symbol):
     key = f"{symbol}:{days}"
     HISTORICAL_DATA[key] = data
 
+    if isinstance(data, list):
+        session = database.get_session()
+        try:
+            asset = db_ops.get_or_create_asset(session, symbol)
+            for row in data:
+                if not row.get("date"):
+                    continue
+                d = db_ops.parse_date(row["date"])
+                if any(row.get(k) is not None for k in ("open", "high", "low", "close", "volume")):
+                    db_ops.upsert_ohlcv(
+                        session, asset.id, d,
+                        open=row.get("open"), high=row.get("high"), low=row.get("low"),
+                        close=row.get("close"), volume=row.get("volume"),
+                    )
+                if row.get("prediction"):
+                    correct = None
+                    if row.get("actualDirection"):
+                        correct = int(db_ops.compute_correct(row["prediction"], row["actualDirection"]))
+                    db_ops.upsert_prediction(
+                        session, asset.id, d, row["prediction"], model_version="manual-override",
+                        confidence=row.get("confidence"), actual_price=row.get("close"), correct=correct,
+                    )
+            session.commit()
+        except Exception as e:
+            session.rollback()
+            print(f"[WARN] No se pudo persistir historial override de {symbol}: {e}")
+        finally:
+            session.close()
+
     return jsonify({
         "success": True,
         "message": f"Updated history for {symbol} ({days} days)",
@@ -493,6 +537,18 @@ def update_metrics(symbol):
     data = request.get_json()
     METRICS_DATA[symbol] = data
 
+    session = database.get_session()
+    try:
+        asset = db_ops.get_or_create_asset(session, symbol)
+        # Por convención METRICS_DATA siempre representa la ventana de 30 dias.
+        db_ops.upsert_metric_from_payload(session, asset.id, 30, data, model_version="manual-override")
+        session.commit()
+    except Exception as e:
+        session.rollback()
+        print(f"[WARN] No se pudo persistir metricas override de {symbol}: {e}")
+    finally:
+        session.close()
+
     return jsonify({
         "success": True,
         "message": f"Updated metrics for {symbol}",
@@ -504,6 +560,27 @@ def update_metrics(symbol):
 def update_signals(symbol):
     data = request.get_json()
     SIGNALS_DATA[symbol] = data
+
+    if isinstance(data, list):
+        session = database.get_session()
+        try:
+            asset = db_ops.get_or_create_asset(session, symbol)
+            for sig in data:
+                if not sig.get("date") or not sig.get("signal"):
+                    continue
+                d = db_ops.parse_date(sig["date"])
+                correct = sig.get("correct")
+                db_ops.upsert_prediction(
+                    session, asset.id, d, sig["signal"], model_version="manual-override",
+                    actual_price=sig.get("actualPrice"),
+                    correct=int(correct) if correct is not None else None,
+                )
+            session.commit()
+        except Exception as e:
+            session.rollback()
+            print(f"[WARN] No se pudo persistir señales override de {symbol}: {e}")
+        finally:
+            session.close()
 
     return jsonify({
         "success": True,
@@ -522,7 +599,43 @@ def refresh_data():
         return jsonify({"success": False, "error": str(e)}), 500
 
 
+def scheduled_refresh():
+    print("[SCHEDULER] Refresco automatico post-cierre de mercado...")
+    try:
+        initialize_data()
+    except Exception as e:
+        print(f"[SCHEDULER] Error en refresco automatico: {e}")
+
+
+def start_scheduler():
+    """
+    Refresca datos y señales cada dia habil despues del cierre de NYSE.
+    Nota: si se corre con varios workers (p.ej. gunicorn -w N), cada worker
+    tendria su propio scheduler y el refresco se ejecutaria N veces; para
+    ese caso conviene mover esto a un proceso/cron externo que llame a
+    POST /admin/refresh una sola vez.
+    """
+    scheduler = BackgroundScheduler(timezone=NYSE_TZ)
+    scheduler.add_job(
+        scheduled_refresh,
+        CronTrigger(day_of_week="mon-fri", hour=REFRESH_HOUR, minute=REFRESH_MINUTE, timezone=NYSE_TZ),
+        id="daily_refresh",
+        replace_existing=True,
+    )
+    scheduler.start()
+    return scheduler
+
+
 if __name__ == "__main__":
+    host = os.getenv("API_HOST", "127.0.0.1")
+    port = int(os.getenv("API_PORT", "8000"))
+    debug_mode = os.getenv("FLASK_DEBUG", "1") == "1"
+
     initialize_data()
-    print("[INFO] API server started on http://localhost:8000")
-    app.run(host="127.0.0.1", port=8000, debug=True, use_reloader=False)
+    scheduler = start_scheduler()
+    print(f"[INFO] API server started on http://{host}:{port}")
+    print(f"[INFO] Refresco automatico: L-V {REFRESH_HOUR:02d}:{REFRESH_MINUTE:02d} hora de Nueva York")
+    try:
+        app.run(host=host, port=port, debug=debug_mode, use_reloader=False)
+    finally:
+        scheduler.shutdown(wait=False)

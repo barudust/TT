@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 
 from sqlalchemy import (
     BigInteger, Column, Date, DateTime, ForeignKey, Integer, Numeric,
@@ -7,6 +7,10 @@ from sqlalchemy import (
 from sqlalchemy.orm import relationship
 
 from database import Base
+
+
+def _utcnow():
+    return datetime.now(timezone.utc)
 
 
 class Asset(Base):
@@ -55,7 +59,7 @@ class Prediction(Base):
     actual_price = Column(Numeric)
     correct = Column(Integer)  # 0/1, se resuelve un dia despues con el precio real
     model_version = Column(String(50))
-    created_at = Column(DateTime, default=datetime.utcnow)
+    created_at = Column(DateTime, default=_utcnow)
 
     asset = relationship("Asset", back_populates="predictions")
 
@@ -89,6 +93,6 @@ class Metric(Base):
     signal_hold_pct = Column(Numeric)
     signal_sell_pct = Column(Numeric)
 
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    updated_at = Column(DateTime, default=_utcnow, onupdate=_utcnow)
 
     asset = relationship("Asset", back_populates="metrics")
