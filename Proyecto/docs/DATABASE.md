@@ -61,10 +61,16 @@ llamar `POST /admin/refresh`):
 
 1. Descarga OHLCV + contexto de mercado real (Yahoo Finance) por ticker.
 2. Corre el modelo sobre toda la serie disponible (no solo el día actual).
-3. Por cada ticker: hace *upsert* del `Asset`, borra e inserta de nuevo
-   sus filas de `ohlcv_daily` y `predictions` (más simple y suficientemente
-   rápido que un upsert fila por fila para el tamaño de este proyecto), y
-   hace upsert de las 3 filas de `metrics` (una por ventana 30/60/90).
+3. Por cada ticker: hace *upsert* del `Asset` y, fila por fila (por
+   `asset_id`+`date`), de `ohlcv_daily` y `predictions` (`api/db_ops.py`),
+   más upsert de las 3 filas de `metrics` (una por ventana 30/60/90).
+
+Como esto recalcula y sobrescribe toda la ventana (3 años) con el modelo
+actual en cada refresco, la base de datos es reconstruible por completo a
+partir de Yahoo Finance + el `.pkl` en producción — no guarda ningún
+estado que no se pueda regenerar. Esto es relevante para el despliegue:
+una SQLite efímera (sin disco persistente) es suficiente, ver
+`docs/DEPLOY_RENDER.md`.
 
 Los endpoints `GET` de la API siguen sirviendo desde caché en memoria
 (poblada en el mismo paso) por velocidad; la base de datos es el registro
@@ -75,7 +81,10 @@ de lectura.
 
 - Fechas en UTC, sin zona horaria de mercado (NYSE) todavía — ver
   limitaciones en `docs/THESIS_QA.md`.
-- Los endpoints `POST /stocks*` (actualización manual/testing) siguen
-  operando solo sobre la caché en memoria, no tocan la base de datos.
-  Es una limitación conocida, no un descuido: esos endpoints existen para
-  pruebas/demos puntuales, no para el flujo real de datos.
+- Los endpoints `POST /stocks*` (actualización manual/testing) sí
+  persisten en la base de datos además de la caché en memoria (upsert
+  best-effort vía `_persist_stock_override` en `api/main.py`), pero
+  siguen siendo para pruebas/demos puntuales, no el flujo real de datos
+  (que viene de `initialize_data()`/Yahoo Finance). En un despliegue con
+  almacenamiento efímero (ver `docs/DEPLOY_RENDER.md`) estos overrides no
+  sobreviven un reinicio — aceptable dado su propósito.

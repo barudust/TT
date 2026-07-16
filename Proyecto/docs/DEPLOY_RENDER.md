@@ -43,8 +43,19 @@ ambos servicios (`autoDeploy: true`).
     haga `POST /admin/refresh` en el horario deseado (eso además despierta
     la instancia).
 - **SQLite es efímero**: sin disco persistente en el plan free, la base se
-  reconstruye en cada arranque/redeploy. Es el comportamiento esperado (ver
-  `docs/DATABASE.md`), no hace falta un volumen para esto en Render.
+  reconstruye en cada arranque/redeploy. Es el comportamiento esperado —
+  `initialize_data()` recalcula y sobrescribe (upsert) toda la ventana de
+  3 años con el modelo actual en cada arranque/refresco, así que no hay
+  ningún dato en la BD que no sea reproducible desde Yahoo Finance + el
+  `.pkl` (ver `docs/DATABASE.md`). Lo único que se pierde al reiniciar son
+  los overrides manuales de `POST /stocks*`, que existen solo para
+  pruebas/demos puntuales. No hace falta Postgres ni disco persistente
+  para este proyecto tal como está diseñado.
+- **`numInstances: 1` es obligatorio en `tt-api`**, no solo el default del
+  plan free: el scheduler de refresco diario vive en memoria de un solo
+  proceso (`start_scheduler()` en `main.py`); con 2+ instancias cada una
+  correría su propio scheduler y downloads/refrescos se duplicarían. Si
+  subes de plan, no actives autoscaling en este servicio.
 
 ## Alternativa: todo Docker
 

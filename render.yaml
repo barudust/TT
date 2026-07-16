@@ -19,6 +19,7 @@ services:
     dockerfilePath: ./Proyecto/api/Dockerfile
     dockerContext: ./Proyecto/api
     plan: free
+    numInstances: 1 # obligatorio: el scheduler in-process (main.py) se duplicaria con mas de 1
     branch: dev
     autoDeploy: true
     healthCheckPath: /health
