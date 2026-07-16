@@ -1,0 +1,135 @@
+{
+  "ticker": "AAPL",
+  "experimento": "B",
+  "lookback": 20,
+  "config_id": "CNN-05-focal",
+  "tipo": "por_ticker",
+  "modelo": "CNN-LSTM",
+  "arch_config": {
+    "cnn_type": "stack",
+    "filters": [
+      64,
+      128
+    ],
+    "kernels": [
+      3,
+      3
+    ],
+    "lstm_hidden": 128,
+    "lstm_layers": 2,
+    "bidir": true,
+    "attn": false,
+    "dropout": 0.3,
+    "loss": "focal",
+    "focal_gamma": 2.0,
+    "label_smooth": 0.0
+  },
+  "n_features": 66,
+  "n_seeds": 3,
+  "metricas_val": {
+    "split": "val",
+    "f1_macro": 0.3202,
+    "f1_buy": 0.2149,
+    "f1_hold": 0.4162,
+    "f1_sell": 0.3294,
+    "f1_buy_sell_avg": 0.2721,
+    "precision_buy": 0.2708,
+    "precision_sell": 0.2718,
+    "recall_buy": 0.1781,
+    "recall_sell": 0.4179,
+    "accuracy": 0.3319,
+    "signal_distribution": {
+      "SELL": {
+        "n": 103,
+        "pct": 44.4
+      },
+      "HOLD": {
+        "n": 81,
+        "pct": 34.9
+      },
+      "BUY": {
+        "n": 48,
+        "pct": 20.7
+      }
+    },
+    "confusion_matrix": [
+      [
+        28,
+        18,
+        21
+      ],
+      [
+        42,
+        36,
+        14
+      ],
+      [
+        33,
+        27,
+        13
+      ]
+    ],
+    "n_samples": 232,
+    "dist_real": {
+      "SELL": 67,
+      "HOLD": 92,
+      "BUY": 73
+    }
+  },
+  "metricas_test": {
+    "split": "test",
+    "f1_macro": 0.3342,
+    "f1_buy": 0.2549,
+    "f1_hold": 0.3399,
+    "f1_sell": 0.408,
+    "f1_buy_sell_avg": 0.3314,
+    "precision_buy": 0.3023,
+    "precision_sell": 0.3083,
+    "recall_buy": 0.2203,
+    "recall_sell": 0.6029,
+    "accuracy": 0.3509,
+    "signal_distribution": {
+      "SELL": {
+        "n": 133,
+        "pct": 58.3
+      },
+      "HOLD": {
+        "n": 52,
+        "pct": 22.8
+      },
+      "BUY": {
+        "n": 43,
+        "pct": 18.9
+      }
+    },
+    "confusion_matrix": [
+      [
+        41,
+        16,
+        11
+      ],
+      [
+        56,
+        26,
+        19
+      ],
+      [
+        36,
+        10,
+        13
+      ]
+    ],
+    "n_samples": 228,
+    "dist_real": {
+      "SELL": 68,
+      "HOLD": 101,
+      "BUY": 59
+    },
+    "cumul_return_test": 0.1919,
+    "return_vs_bh_test": -0.0111,
+    "sharpe_test": 0.6371,
+    "max_drawdown_test": -0.1917,
+    "win_rate_test": 0.5057,
+    "profit_factor_test": 1.1598
+  }
+}

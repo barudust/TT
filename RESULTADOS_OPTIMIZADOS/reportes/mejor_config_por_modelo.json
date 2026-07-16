@@ -1,0 +1,23 @@
+{
+  "LogisticRegression": {
+    "config_id": "LR-02-elasticnet-all",
+    "tipo": "global",
+    "experimento": "B",
+    "lookback": NaN,
+    "test_f1_macro": 0.4167
+  },
+  "LSTM": {
+    "config_id": "LSTM-02-bi",
+    "tipo": "global",
+    "experimento": "C",
+    "lookback": 20.0,
+    "test_f1_macro": 0.3702
+  },
+  "CNN-LSTM": {
+    "config_id": "CNN-01-base",
+    "tipo": "global",
+    "experimento": "B",
+    "lookback": 20.0,
+    "test_f1_macro": 0.378
+  }
+}

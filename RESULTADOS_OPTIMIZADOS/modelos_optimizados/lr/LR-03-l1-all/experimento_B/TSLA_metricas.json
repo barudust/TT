@@ -1,0 +1,183 @@
+{
+  "ticker": "TSLA",
+  "experimento": "B",
+  "tipo": "por_ticker",
+  "config_id": "LR-03-l1-all",
+  "modelo": "LogisticRegression",
+  "hp": {
+    "f1_va": 0.35281310945848343,
+    "C": 1.0,
+    "l1_ratio": null
+  },
+  "n_features": 61,
+  "n_seeds": 5,
+  "feat_cols": [
+    "ret_1d",
+    "ret_2d",
+    "ret_3d",
+    "ret_5d",
+    "ret_10d",
+    "mom_5d",
+    "mom_10d",
+    "mom_20d",
+    "mom_60d",
+    "dist_ma10",
+    "dist_ma20",
+    "dist_ma30",
+    "dist_ma50",
+    "dist_ma200",
+    "cruce_ma10_ma50",
+    "cruce_ma20_ma50",
+    "cruce_ma50_ma200",
+    "pendiente_ma20",
+    "atr_14",
+    "atr_norm",
+    "vol_5d",
+    "vol_10d",
+    "vol_20d",
+    "vol_60d",
+    "vol_ratio_5_20",
+    "vol_ratio_20_60",
+    "rsi_14",
+    "rsi_7",
+    "macd",
+    "macd_sig",
+    "macd_hist",
+    "stoch_k",
+    "stoch_d",
+    "stoch_diff",
+    "williams_r",
+    "vol_log",
+    "vol_ratio",
+    "obv_ratio",
+    "obv_pendiente",
+    "vwap_dist",
+    "cmf_20",
+    "mfi_14",
+    "vol_trend",
+    "rango_rel",
+    "cambio_intra",
+    "cuerpo_rel",
+    "sombra_sup",
+    "sombra_inf",
+    "gap_apertura",
+    "hl_ratio",
+    "dia_sin",
+    "dia_cos",
+    "mes_sin",
+    "mes_cos",
+    "semana_mes",
+    "SP500_ret",
+    "SP500_vol20",
+    "SP500_mom20",
+    "VIX",
+    "VIX_change",
+    "VIX_norm"
+  ],
+  "metricas_val": {
+    "split": "val",
+    "f1_macro": 0.3528,
+    "f1_buy": 0.303,
+    "f1_hold": 0.3478,
+    "f1_sell": 0.4076,
+    "f1_buy_sell_avg": 0.3553,
+    "precision_buy": 0.4082,
+    "precision_sell": 0.3233,
+    "recall_buy": 0.241,
+    "recall_sell": 0.5513,
+    "accuracy": 0.3611,
+    "signal_distribution": {
+      "SELL": {
+        "n": 133,
+        "pct": 52.8
+      },
+      "HOLD": {
+        "n": 70,
+        "pct": 27.8
+      },
+      "BUY": {
+        "n": 49,
+        "pct": 19.4
+      }
+    },
+    "confusion_matrix": [
+      [
+        43,
+        25,
+        10
+      ],
+      [
+        44,
+        28,
+        19
+      ],
+      [
+        46,
+        17,
+        20
+      ]
+    ],
+    "n_samples": 252,
+    "dist_real": {
+      "SELL": 78,
+      "HOLD": 91,
+      "BUY": 83
+    }
+  },
+  "metricas_test": {
+    "split": "test",
+    "f1_macro": 0.3682,
+    "f1_buy": 0.2537,
+    "f1_hold": 0.4294,
+    "f1_sell": 0.4216,
+    "f1_buy_sell_avg": 0.3377,
+    "precision_buy": 0.2615,
+    "precision_sell": 0.3421,
+    "recall_buy": 0.2464,
+    "recall_sell": 0.5493,
+    "accuracy": 0.379,
+    "signal_distribution": {
+      "SELL": {
+        "n": 114,
+        "pct": 46.0
+      },
+      "HOLD": {
+        "n": 69,
+        "pct": 27.8
+      },
+      "BUY": {
+        "n": 65,
+        "pct": 26.2
+      }
+    },
+    "confusion_matrix": [
+      [
+        39,
+        12,
+        20
+      ],
+      [
+        42,
+        38,
+        28
+      ],
+      [
+        33,
+        19,
+        17
+      ]
+    ],
+    "n_samples": 248,
+    "dist_real": {
+      "SELL": 71,
+      "HOLD": 108,
+      "BUY": 69
+    },
+    "cumul_return_test": 0.1214,
+    "return_vs_bh_test": -0.0767,
+    "sharpe_test": 0.2009,
+    "max_drawdown_test": -0.3939,
+    "win_rate_test": 0.5196,
+    "profit_factor_test": 1.0414
+  }
+}

@@ -1,0 +1,125 @@
+{
+  "ticker": "META",
+  "experimento": "A",
+  "tipo": "por_ticker",
+  "config_id": "LRv2-l1-calib",
+  "modelo": "LogisticRegression",
+  "hp": {
+    "f1": 0.3720721720000739,
+    "C": 0.01,
+    "l1_ratio": null
+  },
+  "calib": {
+    "f1": 0.3749428129881882,
+    "f_buy": 1.1,
+    "f_sell": 1.1
+  },
+  "n_features": 181,
+  "n_seeds": 5,
+  "metricas_val": {
+    "split": "val",
+    "f1_macro": 0.3749,
+    "f1_buy": 0.3757,
+    "f1_hold": 0.4764,
+    "f1_sell": 0.2727,
+    "f1_buy_sell_avg": 0.3242,
+    "precision_buy": 0.317,
+    "precision_sell": 0.3235,
+    "recall_buy": 0.461,
+    "recall_sell": 0.2357,
+    "accuracy": 0.3892,
+    "signal_distribution": {
+      "SELL": {
+        "n": 102,
+        "pct": 20.4
+      },
+      "HOLD": {
+        "n": 175,
+        "pct": 34.9
+      },
+      "BUY": {
+        "n": 224,
+        "pct": 44.7
+      }
+    },
+    "confusion_matrix": [
+      [
+        33,
+        33,
+        74
+      ],
+      [
+        37,
+        91,
+        79
+      ],
+      [
+        32,
+        51,
+        71
+      ]
+    ],
+    "n_samples": 501,
+    "dist_real": {
+      "SELL": 140,
+      "HOLD": 207,
+      "BUY": 154
+    }
+  },
+  "metricas_test": {
+    "split": "test",
+    "f1_macro": 0.3372,
+    "f1_buy": 0.398,
+    "f1_hold": 0.3221,
+    "f1_sell": 0.2915,
+    "f1_buy_sell_avg": 0.3448,
+    "precision_buy": 0.3045,
+    "precision_sell": 0.305,
+    "recall_buy": 0.5745,
+    "recall_sell": 0.2792,
+    "accuracy": 0.344,
+    "signal_distribution": {
+      "SELL": {
+        "n": 141,
+        "pct": 28.2
+      },
+      "HOLD": {
+        "n": 93,
+        "pct": 18.6
+      },
+      "BUY": {
+        "n": 266,
+        "pct": 53.2
+      }
+    },
+    "confusion_matrix": [
+      [
+        43,
+        25,
+        86
+      ],
+      [
+        58,
+        48,
+        99
+      ],
+      [
+        40,
+        20,
+        81
+      ]
+    ],
+    "n_samples": 500,
+    "dist_real": {
+      "SELL": 154,
+      "HOLD": 205,
+      "BUY": 141
+    },
+    "cumul_return_test": 0.0755,
+    "return_vs_bh_test": -0.8611,
+    "sharpe_test": 0.1037,
+    "max_drawdown_test": -0.3432,
+    "win_rate_test": 0.5135,
+    "profit_factor_test": 1.0222
+  }
+}
