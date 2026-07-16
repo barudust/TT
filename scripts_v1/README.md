@@ -15,8 +15,8 @@ python scripts_v1/01_build_raw_dataset.py
   ingeniería de features (61 columnas técnicas + contexto SPY/VIX).
   Escribe en `tesis_ml_stocks/01_raw_datasets/`, que es lo que consume
   `scripts_opt/` para entrenar todo lo que hay en `RESULTADOS_OPTIMIZADOS/`.
-  También fue portado 1:1 a `Proyecto/api/ml/features.py` para inferencia
-  en vivo — ver `Proyecto/docs/MODEL_INTEGRATION.md`.
+  También fue portado 1:1 a `api/ml/features.py` para inferencia
+  en vivo — ver `docs/MODEL_INTEGRATION.md`.
 - **`02_validate_features.py`**: validación de esas features (nulos,
   colinealidad, distribución).
 

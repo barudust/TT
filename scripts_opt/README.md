@@ -20,7 +20,7 @@ fuente de verdad y qué quedó como historial.
 
 - **`opt_lr.py`** (config `LR-02-elasticnet-all`, experimento B) — generó
   `modelo_global.pkl`, verificado **idéntico byte a byte** al `.pkl` que
-  corre en producción en `Proyecto/api/ml/artifacts/`. Es el script a
+  corre en producción en `api/ml/artifacts/`. Es el script a
   re-ejecutar si algún día hay que reentrenar el modelo de producción.
 - **`consolidar_120.py`** — produce la tabla maestra de 120 corridas citada
   literalmente en `../RESULTADOS_OPTIMIZADOS/docs/PAPER_FINAL.md` (líneas

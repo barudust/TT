@@ -2,13 +2,13 @@
 
 `render.yaml` (raíz del repo) define dos servicios via [Blueprint](https://render.com/docs/blueprint-spec):
 
-- **`tt-api`** — Docker (`Proyecto/api/Dockerfile`), gunicorn + 1 worker, expone `/health` para el health check.
-- **`tt-frontend`** — static site (`npm ci && npm run build`, publica `Proyecto/dist`).
+- **`tt-api`** — Docker (`api/Dockerfile`), gunicorn + 1 worker, expone `/health` para el health check.
+- **`tt-frontend`** — static site (`npm ci && npm run build`, publica `Frontend/dist`).
 
-Solo `Proyecto/` se despliega. El resto del repo (`scripts_v1/`, `scripts_opt/`,
-`tesis_ml_stocks/`, `RESULTADOS_OPTIMIZADOS/`) es el pipeline de investigación
-que generó el modelo empaquetado en `Proyecto/api/ml/artifacts/`; Render no
-lo necesita para servir la app.
+Solo `api/` y `Frontend/` se despliegan. El resto del repo (`scripts_v1/`,
+`scripts_opt/`, `tesis_ml_stocks/`, `RESULTADOS_OPTIMIZADOS/`) es el pipeline
+de investigación que generó el modelo empaquetado en `api/ml/artifacts/`;
+Render no lo necesita para servir la app.
 
 ## Primer despliegue
 
@@ -60,9 +60,9 @@ ambos servicios (`autoDeploy: true`).
 ## Alternativa: todo Docker
 
 Si prefieres desplegar el frontend también como contenedor Docker (usando
-`Proyecto/Dockerfile` + `nginx.conf`, igual que `docker compose`) en vez de
+`Frontend/Dockerfile` + `nginx.conf`, igual que `docker compose`) en vez de
 static site, cambia el bloque `tt-frontend` de `render.yaml` a
-`env: docker`, `dockerfilePath: ./Proyecto/Dockerfile`,
-`dockerContext: ./Proyecto`, y pasa `VITE_API_URL` como `dockerBuildArgs`
+`env: docker`, `dockerfilePath: ./Frontend/Dockerfile`,
+`dockerContext: ./Frontend`, y pasa `VITE_API_URL` como `dockerBuildArgs`
 en vez de `envVars` (el Dockerfile ya lo espera como `ARG`). El static site
 es la opción por defecto aquí porque es gratis y no se duerme.

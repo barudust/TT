@@ -7,7 +7,7 @@
 # opcional (perfil "postgres"), pensado como paso previo a un despliegue
 # tipo Azure — no se levanta a menos que lo pidas explicitamente:
 #   docker compose --profile postgres up -d
-#   (requiere POSTGRES_PASSWORD en Proyecto/.env, ver .env.example, y
+#   (requiere POSTGRES_PASSWORD en .env, ver .env.example, y
 #    apuntar DATABASE_URL=postgresql://<user>:<password>@db:5432/<db>)
 services:
   api:
@@ -26,7 +26,7 @@ services:
 
   frontend:
     build:
-      context: .
+      context: ./Frontend
       args:
         VITE_API_URL: ${VITE_API_URL:-http://localhost:8000}
     container_name: tt_frontend
@@ -43,7 +43,7 @@ services:
     restart: unless-stopped
     environment:
       POSTGRES_USER: ${POSTGRES_USER:-user_admin}
-      # OJO: cambia este default en Proyecto/.env antes de usar --profile postgres
+      # OJO: cambia este default en .env antes de usar --profile postgres
       # de verdad. No se puede usar la sintaxis "variable requerida" (${VAR:?...})
       # aqui porque Compose interpola TODOS los servicios (incluso los de un
       # profile inactivo) al correr `docker compose up`/`config`, y eso rompia

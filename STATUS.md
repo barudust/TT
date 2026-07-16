@@ -35,7 +35,7 @@ Pendiente si se retoma el modelado: threshold calibration por clase,
 stacking de los 4 modelos, walk-forward validation, costos de
 transacción en el backtest (ver "Próximos pasos" en la bitácora).
 
-## Plataforma web (`Proyecto/`)
+## Plataforma web (`api/` + `Frontend/`)
 
 **Fase 1 — conectar todo con datos/modelo reales: completa.**
 API real (Yahoo Finance + 61 features + modelo ganador), persistencia en
@@ -91,14 +91,14 @@ descartado a propósito (queda como app web/PWA).
   importadores) y `comparar_baseline.py` (superado por `reporte_final.py`)
   quedaron señalados como candidatos a limpieza futura, sin borrar.
 - **Higiene**: renombrados `scripts_v1/04-07_*.py` (traían un sufijo
-  ` (1)` de descarga de navegador); `Proyecto/package.json` traía el nombre
-  de scaffold `@figma/my-make-file`, ahora `trading-signals-frontend`.
+  ` (1)` de descarga de navegador); el `package.json` del frontend traía el
+  nombre de scaffold `@figma/my-make-file`, ahora `trading-signals-frontend`.
   Eliminado `RESULTADOS_OPTIMIZADOS/v4_final.zip` (backup manual del 1 de
   junio, duplicado/desactualizado respecto a `reportes/v4_final/` y
   `docs/` que ya viven en el repo).
 - **Preparado para Render**: `render.yaml` en la raíz (Blueprint con
   `tt-api` Docker + `tt-frontend` static site, rama `dev`, autoDeploy en
-  cada push). `Proyecto/api/wsgi.py` nuevo — necesario porque
+  cada push). `api/wsgi.py` nuevo — necesario porque
   `initialize_data()`/`start_scheduler()` solo corrían dentro de
   `if __name__ == "__main__"` (a propósito, para que los tests puedan
   `import main` sin red real); gunicorn no ejecuta ese bloque, así que sin
@@ -107,16 +107,37 @@ descartado a propósito (queda como app web/PWA).
   varios) en vez del servidor de desarrollo de Flask, y respeta `$PORT` de
   Render. Detalle completo y limitaciones del plan free (spin-down,
   refresco automático poco confiable sin plan pago) en
-  `Proyecto/docs/DEPLOY_RENDER.md`.
-- **Pendiente**: crear la rama `dev` (no existía) y hacer el primer push;
-  crear el Blueprint en el dashboard de Render y fijar `VITE_API_URL` en
-  `tt-frontend` una vez que `tt-api` tenga su URL pública (queda
-  `sync: false` a propósito, Render no puede saberla de antemano).
+  `docs/DEPLOY_RENDER.md`.
+- **`dev` creada y sincronizada**: rama nueva, ya en GitHub y al día con
+  `main`/`Baru` (fast-forward, sin conflictos — las tres apuntaban al mismo
+  commit antes de este trabajo). El remoto de `origin` se cambió de HTTPS a
+  SSH (`git@github-barudust:barudust/TT.git`) porque el push por HTTPS se
+  quedaba esperando un login por navegador que no se podía completar; con
+  SSH usa la llave `github-barudust` ya configurada.
+- **Aplanado `Proyecto/` (mismo día, a pedido explícito)**: `Proyecto/`
+  generaba la sensación de "API metida dentro de otra carpeta" y frontend
+  suelto sin su propio espacio, así que se quitó el nivel intermedio:
+  `Proyecto/api/` → `api/`, `Proyecto/docs/` → fusionado con `docs/` (que ya
+  existía en la raíz), y todo el frontend (`src/`, `public/`, `package.json`,
+  `vite.config.ts`, `Dockerfile`, `nginx.conf`, etc.) → `Frontend/`.
+  `docker-compose.yml` y `.env.example` (el de nivel Docker Compose) subieron
+  a la raíz junto con `render.yaml`. Se actualizaron todas las rutas que
+  apuntaban a `Proyecto/` (`render.yaml`, `docker-compose.yml`,
+  `.claude/launch.json`, este archivo, `README.md`,
+  `scripts_v1/README.md`, `scripts_opt/README.md`) y se fusionaron
+  `Proyecto/.gitignore` + `Proyecto/README.md` dentro de los archivos raíz
+  equivalentes. Los `Dockerfile`s no necesitaron cambios internos (sus
+  `COPY`/`ARG` son relativos al build context, que sigue siendo la misma
+  carpeta, solo que ahora vive un nivel más arriba).
+- **Pendiente**: crear el Blueprint en el dashboard de Render (apuntando a
+  `dev`) y fijar `VITE_API_URL` en `tt-frontend` una vez que `tt-api` tenga
+  su URL pública (queda `sync: false` a propósito, Render no puede saberla
+  de antemano).
 
 ## Huecos conocidos / no abordados
 
 - No existe un `requirements.txt` para el pipeline de entrenamiento
-  (`scripts_opt/`, `scripts_v1/`) — solo para `Proyecto/api/`. Reproducir
+  (`scripts_opt/`, `scripts_v1/`) — solo para `api/`. Reproducir
   el entrenamiento requiere instalar manualmente pandas, numpy,
   scikit-learn, xgboost, lightgbm, torch, optuna, pyarrow.
 - Sin control de versiones previo de los datos (`tesis_ml_stocks/*.parquet`)

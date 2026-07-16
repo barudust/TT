@@ -1,4 +1,4 @@
-# Render Blueprint — despliega la plataforma web (Proyecto/) en dos servicios.
+# Render Blueprint — despliega la plataforma web (api/ + Frontend/) en dos servicios.
 # Docs: https://render.com/docs/blueprint-spec
 #
 # Uso: en el dashboard de Render, "New" -> "Blueprint", apuntar al repo y
@@ -9,15 +9,16 @@
 #
 # El pipeline de entrenamiento (scripts_v1/, scripts_opt/,
 # tesis_ml_stocks/, RESULTADOS_OPTIMIZADOS/) no se despliega: no es un
-# servicio, es investigacion/reproducibilidad. Solo Proyecto/ corre en Render.
+# servicio, es investigacion/reproducibilidad. Solo api/ y Frontend/
+# corren en Render.
 
 services:
-  # --- API: Flask + gunicorn, modelo LR-elasticnet (Proyecto/docs/MODEL_INTEGRATION.md) ---
+  # --- API: Flask + gunicorn, modelo LR-elasticnet (docs/MODEL_INTEGRATION.md) ---
   - type: web
     name: tt-api
     env: docker
-    dockerfilePath: ./Proyecto/api/Dockerfile
-    dockerContext: ./Proyecto/api
+    dockerfilePath: ./api/Dockerfile
+    dockerContext: ./api
     plan: free
     numInstances: 1 # obligatorio: el scheduler in-process (main.py) se duplicaria con mas de 1
     branch: dev
@@ -46,8 +47,8 @@ services:
   - type: web
     name: tt-frontend
     env: static
-    buildCommand: cd Proyecto && npm ci && npm run build
-    staticPublishPath: Proyecto/dist
+    buildCommand: cd Frontend && npm ci && npm run build
+    staticPublishPath: Frontend/dist
     branch: dev
     autoDeploy: true
     envVars:
