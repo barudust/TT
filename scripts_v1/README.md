@@ -1,11 +1,11 @@
 # scripts_v1 — pipeline inicial (numerado)
 
 Primer pipeline de la tesis, ejecutado en orden (01 → 08). Se corren desde
-la raíz de `Dataset_N` (usan rutas relativas tipo `tesis_ml_stocks/...`,
+la raíz del repo (usan rutas relativas tipo `tesis_ml_stocks/...`,
 no relativas al script):
 
 ```bash
-cd Dataset_N
+cd TT_Proyecto
 python scripts_v1/01_build_raw_dataset.py
 ```
 
@@ -32,5 +32,11 @@ python scripts_v1/01_build_raw_dataset.py
   `../RESULTADOS_OPTIMIZADOS/docs/GUIA_PROGRESO.md` para la bitácora
   completa y la comparación baseline vs. optimizado).
 
-Se conservan (no se borraron) porque documentan la primera iteración del
-trabajo, no porque haya que volver a correrlos.
+Se conservan los scripts (no se borraron) porque documentan la primera
+iteración del trabajo, no porque haya que volver a correrlos. Sus
+**salidas grandes** sí se recortaron el 2026-07-15 (~676MB): de
+`tesis_ml_stocks/03_model_datasets` y `04_models` solo quedan los CSV de
+resultados que otros scripts todavía leen (`comparar_baseline.py`,
+`analisis_feature_selection.py`, `reporte_final.py` en `../scripts_opt/`);
+`Validacion_A/B/C` (gráficas de validación de esta primera pasada) se
+eliminó por completo al no estar referenciado en ningún lado.

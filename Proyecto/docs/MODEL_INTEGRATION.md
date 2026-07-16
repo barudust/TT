@@ -24,6 +24,15 @@ temporales:
 | Retorno acumulado | +20.6% |
 | Retorno vs Buy&Hold | +17.4% |
 
+> **Nota sobre las métricas citadas arriba**: son las de la evaluación
+> "v1" (la que efectivamente entrenó el `.pkl` que corre en producción,
+> vía `scripts_opt/opt_lr.py`). Existe una evaluación posterior ("v4",
+> splits unificados, `RESULTADOS_OPTIMIZADOS/paper_latex/paper.tex`) con
+> números distintos (F1-macro=0.385, Sharpe=0.755 en Exp B) que nunca se
+> integró a `GUIA_PROGRESO.md`. v4 no guardó modelos entrenables, solo
+> métricas — no cambia qué modelo corre aquí, pero sí qué número es más
+> correcto citar en la tesis. Ver `STATUS.md` en la raíz del repo.
+
 Razones documentadas para elegirlo sobre los modelos de deep learning:
 gana en Exp B y Exp C, pierde por solo +0.012 F1 frente a XGBoost en Exp A,
 es más interpretable, no requiere GPU, y las arquitecturas más complejas
