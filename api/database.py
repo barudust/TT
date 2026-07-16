@@ -1,12 +1,25 @@
-from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
+import os
 
-db = SQLAlchemy()
-migrate = Migrate()
+from dotenv import load_dotenv
+from sqlalchemy import create_engine
+from sqlalchemy.orm import declarative_base, sessionmaker
 
-def init_db(app):
-    # URI para Docker local. En Azure se cambiará por la URL de producción
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://user_admin:password123@localhost:5432/stocks_db'
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    db.init_app(app)
-    migrate.init_app(app, db)
+load_dotenv()
+
+DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./trading_system.db")
+
+_connect_args = {"check_same_thread": False} if DATABASE_URL.startswith("sqlite") else {}
+engine = create_engine(DATABASE_URL, connect_args=_connect_args)
+SessionLocal = sessionmaker(bind=engine, autoflush=False, autocommit=False)
+
+Base = declarative_base()
+
+
+def init_db():
+    """Crea las tablas si no existen. Idempotente."""
+    import models  # noqa: F401  (registra los modelos en Base.metadata)
+    Base.metadata.create_all(bind=engine)
+
+
+def get_session():
+    return SessionLocal()

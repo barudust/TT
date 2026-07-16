@@ -1,10 +1,14 @@
 # API Local (Flask) — Especificación
 
-Servidor HTTP que expone datos de acciones, historial, métricas y señales. Punto de integración del modelo ML.
+Servidor HTTP que expone datos de acciones, historial, métricas y señales
+**generadas por el modelo real** (Regresión Logística elasticnet — ver
+`docs/MODEL_INTEGRATION.md`), respaldadas en SQLite (`docs/DATABASE.md`).
 
 ## Tecnologías
 - Flask + CORS
-- yfinance (datos históricos)
+- yfinance (datos históricos reales, no simulados)
+- SQLAlchemy 2.0 + SQLite
+- scikit-learn (inferencia del modelo)
 
 ## Endpoints
 
@@ -14,8 +18,7 @@ Servidor HTTP que expone datos de acciones, historial, métricas y señales. Pun
 
 ### Acciones
 - `GET /stocks`
-  - Devuelve lista de acciones con señal actual:
-  - Ejemplo:
+  - Devuelve lista de acciones con señal actual del modelo:
 ```json
 {
   "success": true,
@@ -23,66 +26,95 @@ Servidor HTTP que expone datos de acciones, historial, métricas y señales. Pun
     {
       "symbol": "AAPL",
       "name": "Apple Inc.",
-      "currentPrice": 175.3,
-      "signal": "buy",
-      "confidence": 0.78,
-      "lastUpdate": "2026-03-02T18:00:00Z"
+      "currentPrice": 327.5,
+      "signal": "hold",
+      "confidence": 0.39,
+      "lastUpdate": "2026-07-16T04:32:10.47Z"
     }
   ]
 }
 ```
 
 - `GET /stocks/:symbol`
-  - Incluye señales recientes y datos de compañía:
+  - Incluye señales recientes (últimos 10 días reales) e info de la
+    compañía (de `yfinance`):
 ```json
 {
   "success": true,
   "data": {
     "symbol": "AAPL",
     "name": "Apple Inc.",
-    "currentPrice": 175.3,
-    "signal": "buy",
-    "confidence": 0.78,
-    "lastUpdate": "2026-03-02T18:00:00Z",
+    "currentPrice": 327.5,
+    "signal": "hold",
+    "confidence": 0.39,
+    "lastUpdate": "2026-07-16T04:32:10.47Z",
     "recentSignals": [
-      { "date": "2026-02-20", "signal": "buy", "actualPrice": 175.9, "correct": true }
+      { "date": "2026-07-15", "signal": "hold", "actualPrice": 327.5, "correct": false }
     ],
     "companyInfo": {
       "sector": "Technology",
-      "industry": "Consumer Electronics"
+      "industry": "Consumer Electronics",
+      "marketCap": 4810109091840,
+      "peRatio": 38.17
     }
   }
 }
 ```
 
-- `POST /stocks`
-  - Actualiza varias acciones a la vez. Cuerpo: lista de objetos con clave `symbol`.
-- `POST /stocks/:symbol`
-  - Actualiza una acción. Cuerpo: objeto con los campos que desees persistir.
+- `POST /stocks`, `POST /stocks/:symbol`
+  - Sobrescriben la caché en memoria (útil para pruebas/demos puntuales).
+    **No** tocan la base de datos — ver limitación en `docs/DATABASE.md`.
 
 ### Historial
 - `GET /stocks/:symbol/history?days=30|60|90`
-  - Devuelve arreglo de observaciones con `date`, `close`, `prediction`, `actualDirection`.
+  - Arreglo de observaciones reales: `date`, `open`, `close`, `high`,
+    `low`, `volume`, `prediction` (señal del modelo ese día),
+    `confidence`, `actualDirection` (movimiento real del precio al día
+    siguiente: `up`/`down`/`neutral`, umbral ±1%).
 - `POST /stocks/:symbol/history?days=N`
-  - Reemplaza el historial para esa ventana.
+  - Reemplaza el historial en caché para esa ventana (solo memoria).
 
 ### Métricas
 - `GET /stocks/:symbol/metrics`
-  - Métricas por acción: `accuracy`, `buyPrecision`, `sellPrecision`, `holdPrecision`, `f1Score`, `cumulativeReturn`, `sharpeRatio`, `winRate`, `profitFactor`, `maxDrawdown`, `numberOfTrades`, `exposure`, `finalCapital`.
+  - Métricas sobre la ventana de 30 días: `accuracy`, `f1_macro`,
+    `f1_buy`, `f1_sell`, `cumulativeReturn`, `return_vs_bh`,
+    `sharpeRatio`, `maxDrawdown`, `winRate`, `profitFactor`,
+    `numberOfTrades`, `exposure`, `finalCapital`,
+    `signal_buy_pct`/`signal_hold_pct`/`signal_sell_pct`.
+    Ver mapeo completo en `docs/API_FRONTEND_METRICS.md`.
 - `GET /metrics`
-  - Métricas globales agregadas.
+  - Lo mismo para las 7 acciones, en arreglo.
 - `POST /stocks/:symbol/metrics`
-  - Sobrescribe las métricas de una acción.
+  - Sobrescribe las métricas en caché (solo memoria).
 
 ### Señales
 - `POST /stocks/:symbol/signals`
-  - Sobrescribe señales recientes (`date`, `signal`, `actualPrice`, `correct`).
+  - Sobrescribe señales recientes en caché (solo memoria).
+
+### Administración
+- `POST /admin/refresh`
+  - Vuelve a descargar OHLCV + contexto de mercado, recorre el modelo y
+    repuebla caché + base de datos, sin reiniciar el proceso. Útil para
+    demos en vivo. Puede tardar ~20-40s (7 tickers × descarga Yahoo).
 
 ## Inicialización
-- La función `initialize_data()` carga Yahoo Finance, deriva señales y métricas, y precalcula ventanas 30/60/90 días.
-- El modelo ML proporciona la acción y su confianza a nivel diario; el precio real proviene de mercado. Ver `docs/MODEL_INTEGRATION.md`.
+
+`initialize_data()` (llamada al arrancar `api/main.py` y por
+`POST /admin/refresh`):
+1. Descarga contexto de mercado (SPY, VIX) una sola vez.
+2. Por cada uno de los 7 tickers: descarga ~3 años de OHLCV, calcula las
+   61 features técnicas, corre el modelo sobre toda la serie disponible.
+3. Si Yahoo Finance falla para un ticker (o para el contexto de mercado),
+   ese ticker se omite del catálogo — no se rellena con datos simulados
+   (ver justificación en `docs/MODEL_INTEGRATION.md`).
+4. Calcula métricas de clasificación + financieras sobre las ventanas de
+   30/60/90 días y persiste todo en SQLite.
 
 ## Consideraciones
-- Zona horaria: se usa `timezone.utc`.
-- Fuentes de datos: yfinance puede tener límites o retrasos; considerar caché local.
+- Zona horaria: `timezone.utc` para timestamps de refresco; las fechas de
+  velas OHLCV son las que reporta Yahoo Finance (calendario NYSE, sin
+  conversión adicional).
+- Fuentes de datos: yfinance puede tener límites de tasa o datos
+  retrasados; por eso existe `/admin/refresh` en vez de recalcular en
+  cada request.
 - CORS: abierto para facilitar desarrollo; ajustar en producción.

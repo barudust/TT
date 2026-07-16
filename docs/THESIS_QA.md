@@ -6,7 +6,11 @@
 - Enrutamiento y estado en el cliente: elección de React Router 7.
 
 ## Modelado
-- Selección de LSTM/CNN-LSTM: razones y escenarios de uso.
+- Selección final: Regresión Logística elasticnet (global, Exp B) por
+  encima de XGBoost, LightGBM, LSTM y CNN-LSTM — ver comparación completa
+  y justificación en `RESULTADOS_OPTIMIZADOS/GUIA_PROGRESO.md` y
+  `docs/MODEL_INTEGRATION.md`. Los modelos de deep learning se probaron y
+  quedaron documentados, pero no superaron a LR en Exp B/C.
 - Etiquetado de clases (buy/sell/hold) y umbrales.
 - Preprocesamiento: ventanas temporales, normalización.
 - Métricas: accuracy, precision por clase, F1-Score; métricas financieras (retorno, Sharpe, drawdown).
@@ -36,7 +40,9 @@
 - Divulgación de limitaciones al usuario.
 
 ## Mejoras Futuras
-- Integración del modelo final en `api/main.py`.
-- Persistencia durable de datos y cachés.
+- ~~Integración del modelo final en `api/main.py`~~ — hecho, ver `docs/MODEL_INTEGRATION.md`.
+- ~~Persistencia durable de datos~~ — hecho, SQLite vía SQLAlchemy, ver `docs/DATABASE.md`.
+- Refresco automático programado (scheduler/cron) en vez de manual (`POST /admin/refresh`).
 - Entrenamiento incremental y evaluación en producción.
+- Zona horaria de mercado (NYSE) explícita en vez de UTC genérico.
 

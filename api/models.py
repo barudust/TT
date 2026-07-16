@@ -1,89 +1,94 @@
-from database import db
 from datetime import datetime
 
-class Asset(db.Model):
-    __tablename__ = 'assets'
-    id = db.Column(db.Integer, primary_key=True)
-    ticker = db.Column(db.String(10), unique=True, nullable=False)
-    name = db.Column(db.String(100))
-    sector = db.Column(db.String(50))
+from sqlalchemy import (
+    BigInteger, Column, Date, DateTime, ForeignKey, Integer, Numeric,
+    String, UniqueConstraint,
+)
+from sqlalchemy.orm import relationship
 
-class OHLCVDaily(db.Model):
-    __tablename__ = 'ohlcv_daily'
-    id = db.Column(db.Integer, primary_key=True)
-    asset_id = db.Column(db.Integer, db.ForeignKey('assets.id'), nullable=False)
-    date = db.Column(db.Date, nullable=False)
-    open = db.Column(db.Numeric)
-    high = db.Column(db.Numeric)
-    low = db.Column(db.Numeric)
-    close = db.Column(db.Numeric)
-    volume = db.Column(db.BigInteger)
+from database import Base
 
-class FeaturesDaily(db.Model):
-    __tablename__ = 'features_daily'
-    id = db.Column(db.Integer, primary_key=True)
-    asset_id = db.Column(db.Integer, db.ForeignKey('assets.id'), nullable=False)
-    date = db.Column(db.Date, nullable=False)
-    # Retornos y Momentum
-    retorno_1d = db.Column(db.Numeric)
-    retorno_2d = db.Column(db.Numeric)
-    momentum_5d = db.Column(db.Numeric)
-    momentum_20d = db.Column(db.Numeric)
-    # Medias Móviles y Osciladores
-    distancia_ma10 = db.Column(db.Numeric)
-    distancia_ma30 = db.Column(db.Numeric)
-    rsi_14 = db.Column(db.Numeric)
-    atr_14 = db.Column(db.Numeric)
-    atr_norm = db.Column(db.Numeric)
-    volatilidad_20d = db.Column(db.Numeric)
-    # Volumen y Flujo
-    volumen_log = db.Column(db.Numeric)
-    volumen_ratio = db.Column(db.Numeric)
-    obv_ratio = db.Column(db.Numeric)
-    # Análisis Intradiario y Velas
-    rango_relativo = db.Column(db.Numeric)
-    cambio_intradiario = db.Column(db.Numeric)
-    sombra_superior = db.Column(db.Numeric)
-    sombra_inferior = db.Column(db.Numeric)
-    # Datos Temporales Cíclicos
-    dia_semana_sin = db.Column(db.Numeric)
-    dia_semana_cos = db.Column(db.Numeric)
-    semana_mes = db.Column(db.Numeric)
 
-class Predictions(db.Model):
-    __tablename__ = 'predictions'
-    id = db.Column(db.Integer, primary_key=True)
-    asset_id = db.Column(db.Integer, db.ForeignKey('assets.id'), nullable=False)
-    date = db.Column(db.Date, nullable=False)
-    signal = db.Column(db.String(20))
-    prob_buy = db.Column(db.Numeric)
-    prob_hold = db.Column(db.Numeric)
-    prob_sell = db.Column(db.Numeric)
-    model_version = db.Column(db.String(50))
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+class Asset(Base):
+    __tablename__ = "assets"
 
-class StrategyMetrics(db.Model):
-    __tablename__ = 'strategy_metrics'
-    id = db.Column(db.Integer, primary_key=True)
-    asset_id = db.Column(db.Integer, db.ForeignKey('assets.id'), nullable=False)
-    evaluation_date = db.Column(db.Date, nullable=False)
-    model_version = db.Column(db.String(50))
-    cumul_return = db.Column(db.Numeric)
-    annual_return = db.Column(db.Numeric)
-    sharpe_ratio = db.Column(db.Numeric)
-    max_drawdown = db.Column(db.Numeric)
-    win_rate = db.Column(db.Numeric)
-    total_trades = db.Column(db.Integer)
+    id = Column(Integer, primary_key=True)
+    ticker = Column(String(10), unique=True, nullable=False)
+    name = Column(String(100))
+    sector = Column(String(50))
+    industry = Column(String(100))
 
-class ModelMetrics(db.Model):
-    __tablename__ = 'model_metrics'
-    id = db.Column(db.Integer, primary_key=True)
-    asset_id = db.Column(db.Integer, db.ForeignKey('assets.id'), nullable=False)
-    evaluation_date = db.Column(db.Date, nullable=False)
-    model_version = db.Column(db.String(50))
-    accuracy = db.Column(db.Numeric)
-    f1_macro = db.Column(db.Numeric)
-    f1_buy = db.Column(db.Numeric)
-    f1_hold = db.Column(db.Numeric)
-    f1_sell = db.Column(db.Numeric)
-    confusion_matrix = db.Column(db.JSON) # JSONB en Postgres
+    ohlcv = relationship("OHLCVDaily", back_populates="asset", cascade="all, delete-orphan")
+    predictions = relationship("Prediction", back_populates="asset", cascade="all, delete-orphan")
+    metrics = relationship("Metric", back_populates="asset", cascade="all, delete-orphan")
+
+
+class OHLCVDaily(Base):
+    __tablename__ = "ohlcv_daily"
+    __table_args__ = (UniqueConstraint("asset_id", "date", name="uq_ohlcv_asset_date"),)
+
+    id = Column(Integer, primary_key=True)
+    asset_id = Column(Integer, ForeignKey("assets.id"), nullable=False)
+    date = Column(Date, nullable=False)
+    open = Column(Numeric)
+    high = Column(Numeric)
+    low = Column(Numeric)
+    close = Column(Numeric)
+    volume = Column(BigInteger)
+
+    asset = relationship("Asset", back_populates="ohlcv")
+
+
+class Prediction(Base):
+    """Señal diaria generada por el modelo (buy/sell/hold) con su confianza."""
+    __tablename__ = "predictions"
+    __table_args__ = (UniqueConstraint("asset_id", "date", name="uq_prediction_asset_date"),)
+
+    id = Column(Integer, primary_key=True)
+    asset_id = Column(Integer, ForeignKey("assets.id"), nullable=False)
+    date = Column(Date, nullable=False)
+    signal = Column(String(10), nullable=False)  # buy | sell | hold
+    prob_buy = Column(Numeric)
+    prob_hold = Column(Numeric)
+    prob_sell = Column(Numeric)
+    confidence = Column(Numeric)
+    actual_price = Column(Numeric)
+    correct = Column(Integer)  # 0/1, se resuelve un dia despues con el precio real
+    model_version = Column(String(50))
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    asset = relationship("Asset", back_populates="predictions")
+
+
+class Metric(Base):
+    """Metricas de clasificacion + financieras agregadas por ventana (30/60/90 dias)."""
+    __tablename__ = "metrics"
+    __table_args__ = (UniqueConstraint("asset_id", "window_days", name="uq_metric_asset_window"),)
+
+    id = Column(Integer, primary_key=True)
+    asset_id = Column(Integer, ForeignKey("assets.id"), nullable=False)
+    window_days = Column(Integer, nullable=False)  # 30 | 60 | 90
+    model_version = Column(String(50))
+
+    accuracy = Column(Numeric)
+    f1_macro = Column(Numeric)
+    f1_buy = Column(Numeric)
+    f1_sell = Column(Numeric)
+
+    cumulative_return = Column(Numeric)
+    return_vs_bh = Column(Numeric)
+    sharpe_ratio = Column(Numeric)
+    max_drawdown = Column(Numeric)
+    win_rate = Column(Numeric)
+    profit_factor = Column(Numeric)
+    number_of_trades = Column(Integer)
+    exposure = Column(Numeric)
+    final_capital = Column(Numeric)
+
+    signal_buy_pct = Column(Numeric)
+    signal_hold_pct = Column(Numeric)
+    signal_sell_pct = Column(Numeric)
+
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    asset = relationship("Asset", back_populates="metrics")

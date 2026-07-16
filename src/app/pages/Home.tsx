@@ -106,8 +106,8 @@ export default function Home() {
       <div className="mt-8 bg-muted border border-border rounded-lg p-4">
         <p className="text-sm text-muted-foreground">
           <span className="font-semibold">💡 Nota:</span> Las señales son generadas
-          por modelos de Deep Learning (LSTM, CNN-LSTM) entrenados con datos
-          históricos. No constituyen asesoramiento financiero.
+          por un modelo de Machine Learning (Regresión Logística elasticnet)
+          entrenado con datos históricos. No constituyen asesoramiento financiero.
         </p>
       </div>
     </div>

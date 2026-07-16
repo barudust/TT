@@ -1,4 +1,11 @@
-flask==3.0.0
-flask-cors==4.0.0
-yfinance==0.2.32
-pandas>=2.2.3
+Flask==3.1.3
+flask-cors==6.0.2
+python-dotenv==1.2.2
+SQLAlchemy==2.0.49
+yfinance==1.3.0
+pandas==3.0.2
+numpy==2.4.4
+scikit-learn==1.7.2
+
+# Solo necesario si DATABASE_URL apunta a Postgres (ver docker-compose.yml)
+psycopg2-binary==2.9.11

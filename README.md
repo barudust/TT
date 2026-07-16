@@ -1,11 +1,20 @@
 # TT 2026-B164 — Plataforma de Clasificación Bursátil
 
-Sistema web para clasificar señales de mercado (COMPRAR, VENDER, MANTENER) mediante modelos de Deep Learning. Incluye un frontend en React + TypeScript y una API en Flask. Preparado para PWA y futuro empaquetado Android.
+Sistema web para clasificar señales de mercado (COMPRAR, VENDER, MANTENER)
+usando un modelo de Machine Learning entrenado sobre datos reales de Yahoo
+Finance. Incluye un frontend en React + TypeScript, una API en Flask y
+persistencia en SQLite. Preparado para PWA y futuro empaquetado Android.
+
+El modelo en producción es una **Regresión Logística elasticnet** (no
+LSTM/CNN-LSTM): fue el ganador declarado tras comparar 4 familias de
+modelos en `RESULTADOS_OPTIMIZADOS/GUIA_PROGRESO.md` (F1-macro=0.417,
+Sharpe test=1.25). Detalle completo en `docs/MODEL_INTEGRATION.md`.
 
 ## Tecnologías
 - Frontend: React 18, TypeScript, Vite, Tailwind CSS 4, Recharts
 - Temas: next-themes, tokens CSS en `src/styles/theme.css`
-- Backend: Flask + CORS, Yahoo Finance (datos históricos), punto de integración de modelo ML
+- Backend: Flask + CORS, Yahoo Finance (datos históricos reales), scikit-learn (inferencia)
+- Base de datos: SQLite vía SQLAlchemy 2.0 (`docs/DATABASE.md`)
 - PWA: Manifest y Service Worker
 
 ## Requisitos
@@ -48,7 +57,13 @@ VITE_API_URL=http://localhost:8000
 ```
 .
 ├── api/
-│   ├── main.py                # Servidor Flask (punto de integración del modelo)
+│   ├── main.py                # Servidor Flask: endpoints + orquestación
+│   ├── database.py            # Engine/sesión SQLAlchemy (lee DATABASE_URL de .env)
+│   ├── models.py              # Esquema: Asset, OHLCVDaily, Prediction, Metric
+│   ├── ml/
+│   │   ├── features.py        # Ingeniería de las 61 features (idéntica al entrenamiento)
+│   │   ├── model.py           # Carga del modelo ganador + inferencia
+│   │   └── artifacts/         # .pkl del modelo empaquetado con la API
 │   └── requirements.txt
 ├── public/
 │   ├── manifest.json          # PWA

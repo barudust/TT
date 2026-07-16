@@ -1,80 +1,109 @@
-# Integración del Modelo en la API (Local)
+# Integración del Modelo en la API
 
-Objetivo: incorporar un modelo de ML que produzca señales COMPRAR/VENDER/MANTENER y su confianza, sirviéndolas a través de `api/main.py`. El precio real mostrado proviene de datos de mercado, no del modelo.
+Estado: **implementado**. La API (`api/main.py`) genera señales BUY/SELL/HOLD
+reales usando el modelo entrenado en `RESULTADOS_OPTIMIZADOS/`, no una
+heurística ni datos simulados.
 
-## Ubicación
-- Archivo: `api/main.py`
-- Puntos de integración:
-  - Cálculo de señales diarias: reemplazar/ajustar `generate_historical_data` o crear una función `infer_signals_with_model`.
-  - Señal actual por acción: asignar `STOCKS_DATA[symbol]["signal"]` y `confidence`.
-  - Métricas: calcular y asignar `METRICS_DATA[symbol]`.
+## Modelo elegido
 
-## Flujo Propuesto
-1. **Carga del modelo**
-   - TensorFlow o PyTorch, según el proyecto.
-   - Ejemplo (conceptual):
-   ```python
-   # Al inicio de main.py
-   import tensorflow as tf
-   model = tf.keras.models.load_model("ruta/al/modelo")
-   ```
+**Regresión Logística con elasticnet, entrenamiento global (los 7 tickers
+juntos), Experimento B (train 2018-2023, val 2024, test 2025).**
 
-2. **Construcción de características**
-   - A partir de OHLCV reciente (usando `yfinance` o tus propios datos).
-   - Normalización y ventanas temporales coherentes con el entrenamiento.
+Config id: `LR-02-elasticnet-all`, artefacto original:
+`RESULTADOS_OPTIMIZADOS/modelos_optimizados/lr/LR-02-elasticnet-all/experimento_B/modelo_global.pkl`.
 
-3. **Inferencia**
-   - Entrada: ventana temporal de características.
-   - Salida: probabilidades o logits por clase.
-   - Mapeo:
-     - índice 0 → "buy"
-     - índice 1 → "sell"
-     - índice 2 → "hold"
+Es el ganador declarado en `RESULTADOS_OPTIMIZADOS/GUIA_PROGRESO.md` tras
+comparar contra XGBoost, LightGBM, LSTM y CNN-LSTM en los tres experimentos
+temporales:
 
-4. **Asignación de resultados**
-   - Para cada símbolo:
-     - `STOCKS_DATA[symbol]["signal"] = "buy"|"sell"|"hold"`
-     - `STOCKS_DATA[symbol]["confidence"] = float(probabilidad_max)`
-     - Actualizar `SIGNALS_DATA[symbol]` con histórico de inferencias si corresponde (campos: `date`, `signal`, `actualPrice`, `correct` cuando aplique).
+| Métrica (test, Exp B GLOBAL) | Valor |
+|---|---|
+| F1-macro | 0.4167 |
+| Accuracy | 0.4407 |
+| Sharpe (backtest simple) | 1.25 |
+| Retorno acumulado | +20.6% |
+| Retorno vs Buy&Hold | +17.4% |
 
-5. **Métricas**
-   - Calcular `accuracy`, `precision` por clase, `f1Score`, y métricas financieras (retornos simulados).
-   - Guardar en `METRICS_DATA[symbol]`.
+Razones documentadas para elegirlo sobre los modelos de deep learning:
+gana en Exp B y Exp C, pierde por solo +0.012 F1 frente a XGBoost en Exp A,
+es más interpretable, no requiere GPU, y las arquitecturas más complejas
+(LSTM, CNN-LSTM) no superaron el techo de ~0.42 F1-macro pese a más
+esfuerzo de optimización (ver sección 7 de `GUIA_PROGRESO.md`).
 
-## Ejemplo Esquemático
+El `.pkl` (modelo + `StandardScaler` + lista de 61 features, ~5KB) está
+copiado dentro del propio API en `api/ml/artifacts/lr_elasticnet_global_expB.pkl`
+para que el servicio no dependa de la carpeta `RESULTADOS_OPTIMIZADOS/`
+en tiempo de ejecución (útil si se despliega la API sola, p. ej. a Azure).
+
+## Features (61 columnas)
+
+`api/ml/features.py` reimplementa **exactamente** el cálculo de
+`01_build_raw_dataset.py` (raíz del repo): retornos log, momentum,
+distancia a medias móviles (10/20/30/50/200), cruces de medias, RSI,
+MACD, estocástico, Williams %R, ATR, volumen/OBV/CMF/MFI, velas
+japonesas (cuerpo, sombras, gap de apertura), estacionalidad
+(día/mes/semana del mes) y contexto de mercado (retorno y volatilidad de
+SPY, nivel y cambio de VIX). Cualquier cambio a estas fórmulas debe
+replicarse en ambos archivos o las predicciones dejan de ser comparables
+con las métricas reportadas en la tesis.
+
+Para inferencia en vivo se descargan ~3 años de historial OHLCV por
+ticker (necesario para el *warmup* de indicadores como la media móvil de
+200 días y la ventana rodante de 252 días de `VIX_norm`); solo la última
+fila (día más reciente) se usa como señal "de hoy", pero se conserva
+toda la serie para las ventanas de 30/60/90 días y las métricas de
+backtest.
+
+## Flujo de inferencia (`api/ml/model.py`)
+
 ```python
-def infer_signals_with_model(symbol, hist_df):
-    # hist_df: DataFrame con columnas ['Open','High','Low','Close','Volume'] ya alineadas temporalmente
-    window = build_window(hist_df)           # conversión a tensor [T, F]
-    probs = model.predict(window[None, ...]) # [1, 3]
-    pred_idx = int(probs.argmax(axis=1)[0])
-    classes = ["buy","sell","hold"]
-    signal = classes[pred_idx]
-    confidence = float(probs[0,pred_idx])
-    return signal, confidence
+from ml.features import fetch_ohlcv, fetch_market_context, build_feature_frame
+from ml.model import load_model
+
+market = fetch_market_context("3y")          # SPY + VIX, una sola vez
+ohlcv  = fetch_ohlcv("AAPL", "3y")
+feat   = build_feature_frame(ohlcv, market)   # 61 features + OHLCV crudo
+model  = load_model()                         # carga una vez (cache en proceso)
+
+pred = model.predict_row(feat.iloc[-1])
+# {"signal": "hold", "confidence": 0.39, "probabilities": {"buy": .., "sell": .., "hold": ..}}
 ```
 
-Integración en `initialize_data()`:
-```python
-for stock_config in STOCKS_CONFIG:
-    symbol = stock_config["symbol"]
-    hist_30 = HISTORICAL_DATA.get(f"{symbol}:30", [])
-    # Convertir a DataFrame si lo necesitas para tu pipeline
-    # hist_df = ...
-    # signal, confidence = infer_signals_with_model(symbol, hist_df)
-    # STOCKS_DATA[symbol]["signal"] = signal
-    # STOCKS_DATA[symbol]["confidence"] = confidence
-```
+Mapeo de clases (idéntico al entrenamiento, ver `scripts_opt/common.py`):
+`0=SELL`, `1=HOLD`, `2=BUY`.
 
-## Persistencia
-- La implementación actual mantiene datos en memoria.
-- Para producción: evaluar SQLite/PostgreSQL o cachés locales.
+`initialize_data()` en `api/main.py` corre este flujo para los 7 tickers al
+arrancar el servidor, guarda resultados en memoria (para servir rápido) y
+los persiste en SQLite (ver `docs/DATABASE.md`). También existe
+`POST /admin/refresh` para recalcular todo sin reiniciar el proceso.
 
-## Rendimiento
-- Pre-cargar el modelo al iniciar el servidor.
-- Reutilizar ventanas y evitar consultas redundantes a Yahoo Finance.
-- Paralelizar inferencia si el hardware lo permite.
+## Qué pasa si Yahoo Finance falla
 
-## Validación
-- Verificar coherencia de las señales con datos reales.
-- Reportar métricas (precisión por clase, F1, retorno simulado) en `GET /stocks/:symbol/metrics`.
+Si no se puede descargar el contexto de mercado (SPY/VIX) o el historial
+de un ticker puntual, ese ticker se omite del catálogo en memoria (no
+aparece en `GET /stocks`) en vez de mostrar una señal simulada como
+real. Se prefirió esto a un *fallback* silencioso a datos sintéticos
+porque mezclar señales reales y falsas sin marcarlas sería engañoso para
+quien usa la app o evalúa la tesis.
+
+## Confianza baja, ¿es un bug?
+
+No. El modelo tiene F1-macro ≈ 0.42 sobre 3 clases (el azar sería
+≈0.33), por lo que sus `predict_proba` suelen quedar entre 0.35 y 0.45
+para la clase ganadora — es el techo de información real que hay en
+datos OHLCV de 1 día (ver el análisis "Conclusión definitiva sobre el
+ceiling" en `GUIA_PROGRESO.md`). Confianzas artificialmente altas
+serían la señal de alarma, no lo contrario.
+
+## Modelos alternativos disponibles
+
+Si se quisiera cambiar de modelo en el futuro (p. ej. comparar en vivo
+contra XGBoost o LightGBM), basta con apuntar `MODEL_PATH` en `.env` a
+otro `.pkl` compatible... con una salvedad: **solo los modelos de
+`scripts_opt/opt_lr.py` guardan el `StandardScaler` dentro del mismo
+pickle** (`{"model", "scaler", "hp", "feat_cols", "config_id"}`).
+XGBoost/LightGBM no necesitan scaler pero tienen otra API de carga
+(`Booster.load_model`); LSTM/CNN-LSTM están en PyTorch (`.pt`) y
+requieren además fijar el `lookback` y no tienen el scaler serializado
+(hay que recalcularlo). Cambiar de familia de modelo implica adaptar
+`api/ml/model.py`, no solo la ruta del archivo.

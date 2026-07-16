@@ -1,12 +1,17 @@
+# Opcional: Postgres para un despliegue futuro tipo produccion/Azure.
+# Por defecto la API usa SQLite (ver .env) y este compose no hace falta.
+# Para usarlo: definir POSTGRES_USER/POSTGRES_PASSWORD/POSTGRES_DB en .env,
+# levantar con `docker compose up -d` y apuntar DATABASE_URL a
+# postgresql://<user>:<password>@localhost:5432/<db>.
 services:
   db:
     image: postgres:15
     container_name: postgres_db
     restart: always
     environment:
-      POSTGRES_USER: user_admin
-      POSTGRES_PASSWORD: password123
-      POSTGRES_DB: stocks_db
+      POSTGRES_USER: ${POSTGRES_USER:-user_admin}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+      POSTGRES_DB: ${POSTGRES_DB:-stocks_db}
     ports:
       - "5432:5432"
     volumes:
