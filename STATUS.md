@@ -1,6 +1,6 @@
 # Estado del proyecto
 
-Última actualización: 2026-07-15.
+Última actualización: 2026-07-16.
 
 ## Modelado (`scripts_opt/` → `RESULTADOS_OPTIMIZADOS/`)
 
@@ -79,6 +79,39 @@ descartado a propósito (queda como app web/PWA).
   hizo push automáticamente. Ver la conversación para la evaluación de
   factibilidad de unificar en GitHub (nada supera el límite de 100MB por
   archivo; es factible con git normal, sin necesidad de Git LFS).
+
+## Organización + preparación para Render (2026-07-16)
+
+- **`scripts_opt/README.md` nuevo**: mismo formato vigente/obsoleto que ya
+  existía para `scripts_v1/`. Confirma que `opt_lr.py` (config
+  `LR-02-elasticnet-all`, exp B) generó el `.pkl` que corre en producción
+  (verificado idéntico byte a byte), que `consolidar_120.py`/`reporte_final.py`
+  son los consolidadores citados en el paper, y documenta qué de v2/v3/v4
+  quedó como historial de iteración. `common_velas.py` (huérfano, sin
+  importadores) y `comparar_baseline.py` (superado por `reporte_final.py`)
+  quedaron señalados como candidatos a limpieza futura, sin borrar.
+- **Higiene**: renombrados `scripts_v1/04-07_*.py` (traían un sufijo
+  ` (1)` de descarga de navegador); `Proyecto/package.json` traía el nombre
+  de scaffold `@figma/my-make-file`, ahora `trading-signals-frontend`.
+  Eliminado `RESULTADOS_OPTIMIZADOS/v4_final.zip` (backup manual del 1 de
+  junio, duplicado/desactualizado respecto a `reportes/v4_final/` y
+  `docs/` que ya viven en el repo).
+- **Preparado para Render**: `render.yaml` en la raíz (Blueprint con
+  `tt-api` Docker + `tt-frontend` static site, rama `dev`, autoDeploy en
+  cada push). `Proyecto/api/wsgi.py` nuevo — necesario porque
+  `initialize_data()`/`start_scheduler()` solo corrían dentro de
+  `if __name__ == "__main__"` (a propósito, para que los tests puedan
+  `import main` sin red real); gunicorn no ejecuta ese bloque, así que sin
+  este entrypoint la API en producción nunca hubiera cargado datos.
+  `api/Dockerfile` ahora corre gunicorn (1 worker — el scheduler no soporta
+  varios) en vez del servidor de desarrollo de Flask, y respeta `$PORT` de
+  Render. Detalle completo y limitaciones del plan free (spin-down,
+  refresco automático poco confiable sin plan pago) en
+  `Proyecto/docs/DEPLOY_RENDER.md`.
+- **Pendiente**: crear la rama `dev` (no existía) y hacer el primer push;
+  crear el Blueprint en el dashboard de Render y fijar `VITE_API_URL` en
+  `tt-frontend` una vez que `tt-api` tenga su URL pública (queda
+  `sync: false` a propósito, Render no puede saberla de antemano).
 
 ## Huecos conocidos / no abordados
 

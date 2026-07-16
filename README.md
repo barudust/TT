@@ -18,6 +18,7 @@ inferencia reales.
 ├── scripts_v1/                # Primera iteración del pipeline (parcialmente superada)
 ├── tesis_ml_stocks/           # Datasets crudos y artefactos de datos (parquet)
 ├── docs/                      # Diagramas/recursos a nivel de todo el proyecto
+├── render.yaml                # Blueprint de despliegue (ver Proyecto/docs/DEPLOY_RENDER.md)
 └── STATUS.md
 ```
 
@@ -33,6 +34,9 @@ inferencia reales.
   [`scripts_opt/`](scripts_opt) (ver `scripts_opt/common.py` para configuración
   de tickers/splits/rutas) leen de `tesis_ml_stocks/01_raw_datasets/` y
   escriben en `RESULTADOS_OPTIMIZADOS/`. Se corren desde la raíz del repo.
+  Ver [`scripts_opt/README.md`](scripts_opt/README.md) para qué scripts son
+  la fuente de verdad (incl. el que generó el `.pkl` en producción) y
+  cuáles son iteraciones (v2/v3/v4) ya superadas.
 - **¿Qué es `scripts_v1/`?** → la primera pasada del pipeline (antes de la
   fase de optimización). Ver [`scripts_v1/README.md`](scripts_v1/README.md)
   para qué sigue vigente y qué quedó superado.

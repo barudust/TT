@@ -1,0 +1,62 @@
+# Render Blueprint — despliega la plataforma web (Proyecto/) en dos servicios.
+# Docs: https://render.com/docs/blueprint-spec
+#
+# Uso: en el dashboard de Render, "New" -> "Blueprint", apuntar al repo y
+# rama que quieras usar como produccion (ver nota de `branch` mas abajo).
+# Render detecta este archivo automaticamente y crea/actualiza ambos
+# servicios. autoDeploy: true hace que cada push a esa rama dispare un
+# deploy nuevo sin accion manual.
+#
+# El pipeline de entrenamiento (scripts_v1/, scripts_opt/,
+# tesis_ml_stocks/, RESULTADOS_OPTIMIZADOS/) no se despliega: no es un
+# servicio, es investigacion/reproducibilidad. Solo Proyecto/ corre en Render.
+
+services:
+  # --- API: Flask + gunicorn, modelo LR-elasticnet (Proyecto/docs/MODEL_INTEGRATION.md) ---
+  - type: web
+    name: tt-api
+    env: docker
+    dockerfilePath: ./Proyecto/api/Dockerfile
+    dockerContext: ./Proyecto/api
+    plan: free
+    branch: dev
+    autoDeploy: true
+    healthCheckPath: /health
+    envVars:
+      - key: FLASK_DEBUG
+        value: "0"
+      - key: DATABASE_URL
+        value: sqlite:////data/trading_system.db
+      - key: REFRESH_HOUR
+        value: "16"
+      - key: REFRESH_MINUTE
+        value: "30"
+    # SQLite vive en el filesystem efimero del contenedor (sin disco
+    # persistente en el plan free): se reconstruye solo en cada arranque
+    # via initialize_data(), asi que no hace falta un volumen para esto.
+    #
+    # OJO plan free: la instancia se "duerme" tras ~15 min sin trafico. El
+    # refresco automatico diario (REFRESH_HOUR/REFRESH_MINUTE, scheduler en
+    # main.py) solo corre si el servicio esta despierto a esa hora. Si
+    # necesitas que el refresco sea confiable, sube a un plan pago (always-on)
+    # o agrega un Render Cron Job que haga POST /admin/refresh en ese horario.
+
+  # --- Frontend: SPA React/Vite, servida como static site (gratis, siempre activa) ---
+  - type: web
+    name: tt-frontend
+    env: static
+    buildCommand: cd Proyecto && npm ci && npm run build
+    staticPublishPath: Proyecto/dist
+    branch: dev
+    autoDeploy: true
+    envVars:
+      - key: VITE_API_URL
+        sync: false # completar en el dashboard con la URL publica de tt-api tras su primer deploy
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
+    headers:
+      - path: /service-worker.js
+        name: Cache-Control
+        value: no-cache

@@ -2,10 +2,10 @@ import re
 
 # Lista de tus 4 scripts
 files = [
-    "04_train_logistic_regression (1).py",
-    "05_train_xgboost (1).py",
-    "06_train_lstm (1).py",
-    "07_train_cnn_lstm (1).py"
+    "04_train_logistic_regression.py",
+    "05_train_xgboost.py",
+    "06_train_lstm.py",
+    "07_train_cnn_lstm.py"
 ]
 
 for f in files:

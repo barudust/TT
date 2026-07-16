@@ -18,7 +18,7 @@ VOLUME ["/data"]
 
 EXPOSE 8000
 
-# Servidor de desarrollo de Flask (sin reloader, sin debugger): suficiente
-# para esta demo de tesis. Para produccion real, cambiar a gunicorn con un
-# solo worker (ver nota sobre el scheduler en start_scheduler() en main.py).
-CMD ["python", "main.py"]
+# gunicorn con un solo worker: el scheduler en memoria (start_scheduler() en
+# main.py, disparado por wsgi.py) correria N veces con N workers. $PORT lo
+# inyecta Render en produccion; localmente (docker-compose) cae a API_PORT.
+CMD gunicorn --bind 0.0.0.0:${PORT:-$API_PORT} --workers 1 --timeout 120 wsgi:app

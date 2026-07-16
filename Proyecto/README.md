@@ -79,6 +79,7 @@ VITE_API_URL=http://localhost:8000
 .
 ├── api/
 │   ├── main.py                # Servidor Flask: endpoints + orquestación + scheduler
+│   ├── wsgi.py                 # Entrypoint de gunicorn (Docker/Render): dispara init+scheduler
 │   ├── database.py            # Engine/sesión SQLAlchemy (lee DATABASE_URL de .env)
 │   ├── models.py              # Esquema: Asset, OHLCVDaily, Prediction, Metric
 │   ├── db_ops.py              # Upserts compartidos (refresco automático + overrides POST)
@@ -118,6 +119,7 @@ VITE_API_URL=http://localhost:8000
 - Especificación de la API: `docs/API.md`
 - Integración del Modelo en la API: `docs/MODEL_INTEGRATION.md`
 - Guía de preguntas/respuestas para defensa: `docs/THESIS_QA.md`
+- Despliegue en Render (auto-deploy por push): `docs/DEPLOY_RENDER.md`
 
 ## PWA y Android
 El proyecto conserva manifest y service worker. Para Android puedes evaluar:
