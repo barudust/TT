@@ -35,6 +35,15 @@ ambos servicios (`autoDeploy: true`).
   Render). El primer request tras dormir tarda ~20-40s (reconstruye datos y
   señales desde cero, ver `initialize_data()` en `api/main.py`) — es
   esperable, no es un error.
+- **Fallas transitorias de Yahoo Finance en el arranque en frío**: se
+  observó al menos una vez que `initialize_data()` terminaba sin poblar
+  ningún ticker (`GET /stocks` devolvía `[]`) tras un cold start, sin que
+  la API cayera — el `/health` seguía respondiendo "ok" porque no depende
+  de los datos. `initialize_data()` ahora reintenta (`FETCH_RETRY_ATTEMPTS`,
+  default 3, con `FETCH_RETRY_DELAY_SECONDS` entre intentos, default 5) el
+  contexto de mercado y cada ticker antes de darse por vencido, para
+  autorrecuperarse de este tipo de falla sin intervención manual. Si aun así
+  pasa, `POST /admin/refresh` fuerza un reintento inmediato.
 - **El refresco automático diario** (`REFRESH_HOUR`/`REFRESH_MINUTE`, scheduler
   en `main.py`) solo corre si la instancia está despierta a esa hora. En plan
   free esto no está garantizado. Opciones si hace falta que sea confiable:

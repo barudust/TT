@@ -1,4 +1,5 @@
 import os
+import time
 from datetime import datetime, date, timezone
 from zoneinfo import ZoneInfo
 
@@ -44,6 +45,26 @@ STOCKS_CONFIG = [
 
 # Historial suficiente para el warmup de indicadores (MA200, VIX rolling 252d)
 FEATURE_LOOKBACK_PERIOD = "3y"
+
+# Reintentos para fallas transitorias de red/Yahoo Finance, sobre todo en el
+# arranque en frio (el plan free de Render duerme la API y yfinance a veces
+# falla la primera llamada tras despertar).
+FETCH_RETRY_ATTEMPTS = int(os.getenv("FETCH_RETRY_ATTEMPTS", "3"))
+FETCH_RETRY_DELAY_SECONDS = int(os.getenv("FETCH_RETRY_DELAY_SECONDS", "5"))
+
+
+def _with_retries(fn, *, label):
+    last_exc = None
+    for attempt in range(1, FETCH_RETRY_ATTEMPTS + 1):
+        try:
+            return fn()
+        except Exception as e:
+            last_exc = e
+            if attempt < FETCH_RETRY_ATTEMPTS:
+                print(f"[WARN] {label}: intento {attempt}/{FETCH_RETRY_ATTEMPTS} fallo ({e}). "
+                      f"Reintentando en {FETCH_RETRY_DELAY_SECONDS}s...")
+                time.sleep(FETCH_RETRY_DELAY_SECONDS)
+    raise last_exc
 
 
 def fetch_company_info(symbol):
@@ -289,9 +310,12 @@ def initialize_data():
 
     print("[INFO] Descargando contexto de mercado (SPY, VIX)...")
     try:
-        market = fetch_market_context(FEATURE_LOOKBACK_PERIOD)
+        market = _with_retries(
+            lambda: fetch_market_context(FEATURE_LOOKBACK_PERIOD),
+            label="contexto de mercado",
+        )
     except Exception as e:
-        print(f"[ERROR] No se pudo descargar contexto de mercado: {e}")
+        print(f"[ERROR] No se pudo descargar contexto de mercado tras {FETCH_RETRY_ATTEMPTS} intentos: {e}")
         market = None
 
     for stock_config in STOCKS_CONFIG:
@@ -302,14 +326,17 @@ def initialize_data():
             print(f"[WARN] {symbol}: se omite (sin contexto de mercado).")
             continue
 
-        try:
+        def _fetch_and_predict(symbol=symbol):
             ohlcv = fetch_ohlcv(symbol, FEATURE_LOOKBACK_PERIOD)
             feat = build_feature_frame(ohlcv, market)
             if feat.empty:
                 raise ValueError("historial insuficiente tras calcular indicadores")
-            predictions = model.predict_frame(feat)
+            return feat, model.predict_frame(feat)
+
+        try:
+            feat, predictions = _with_retries(_fetch_and_predict, label=symbol)
         except Exception as e:
-            print(f"[WARN] {symbol}: fallo al calcular señales reales ({e}). Se omite.")
+            print(f"[WARN] {symbol}: fallo al calcular señales reales tras {FETCH_RETRY_ATTEMPTS} intentos ({e}). Se omite.")
             continue
 
         rows = rows_from_predictions(feat, predictions)

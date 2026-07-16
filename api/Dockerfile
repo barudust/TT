@@ -21,4 +21,8 @@ EXPOSE 8000
 # gunicorn con un solo worker: el scheduler en memoria (start_scheduler() en
 # main.py, disparado por wsgi.py) correria N veces con N workers. $PORT lo
 # inyecta Render en produccion; localmente (docker-compose) cae a API_PORT.
-CMD gunicorn --bind 0.0.0.0:${PORT:-$API_PORT} --workers 1 --timeout 120 wsgi:app
+# --timeout 300: gunicorn mata y reinicia un worker que no "avisa" (heartbeat)
+# en ese lapso, y eso incluye el tiempo de carga inicial de wsgi.py
+# (initialize_data() con reintentos, ver FETCH_RETRY_* en main.py) antes de
+# que el worker llegue a servir su primer request.
+CMD gunicorn --bind 0.0.0.0:${PORT:-$API_PORT} --workers 1 --timeout 300 wsgi:app

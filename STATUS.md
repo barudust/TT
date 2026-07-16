@@ -129,10 +129,19 @@ descartado a propósito (queda como app web/PWA).
   equivalentes. Los `Dockerfile`s no necesitaron cambios internos (sus
   `COPY`/`ARG` son relativos al build context, que sigue siendo la misma
   carpeta, solo que ahora vive un nivel más arriba).
-- **Pendiente**: crear el Blueprint en el dashboard de Render (apuntando a
-  `dev`) y fijar `VITE_API_URL` en `tt-frontend` una vez que `tt-api` tenga
-  su URL pública (queda `sync: false` a propósito, Render no puede saberla
-  de antemano).
+- **Blueprint desplegado y verificado en vivo**: `tt-api` (`tt-api-jc7n.onrender.com`)
+  y `tt-frontend` (`tt-frontend-womf.onrender.com`) corriendo en Render.
+  Se detectó un fallo real en el primer arranque: `initialize_data()`
+  terminó sin poblar ningún ticker (`GET /stocks` → `[]`) por una falla
+  transitoria de red/Yahoo Finance en el cold start del plan free — la API
+  seguía "sana" (`/health` ok) porque ese endpoint no depende de los datos,
+  pero el frontend no tenía nada que mostrar. `POST /admin/refresh` lo
+  resolvió manualmente esa vez; ahora `initialize_data()` reintenta
+  automáticamente (`FETCH_RETRY_ATTEMPTS`/`FETCH_RETRY_DELAY_SECONDS` en
+  `api/main.py`, default 3 intentos / 5s) tanto el contexto de mercado como
+  cada ticker antes de rendirse, y el `--timeout` de gunicorn subió de 120
+  a 300s para no matar al worker mientras reintenta durante el arranque.
+  Suite de tests (14) sigue en verde tras el cambio.
 
 ## Huecos conocidos / no abordados
 
