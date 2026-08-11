@@ -21,15 +21,36 @@ export default function Home() {
         setLoading(true);
       }
 
-      const response = await fetch(
-        `${API_BASE_URL}/stocks`
-      );
+      let response = await fetch(`${API_BASE_URL}/stocks`);
 
       if (!response.ok) {
         throw new Error("Error al obtener datos de acciones");
       }
 
-      const data = await response.json();
+      let data = await response.json();
+
+      if (!data.success) {
+        throw new Error(data.error || "Error desconocido");
+      }
+
+      // Cold start conocido del plan free de Render: la API puede responder
+      // "sana" (health check ok) pero con el catálogo vacío si Yahoo
+      // Finance falló transitoriamente al arrancar (ver
+      // docs/DEPLOY_RENDER.md). Antes este botón solo releía esa misma
+      // caché vacía sin arreglar nada. Si detectamos el catálogo vacío,
+      // forzamos /admin/refresh (recalcula todo desde cero, ~30-40s) y
+      // reintentamos una sola vez antes de rendirnos.
+      if (data.data.length === 0) {
+        toast.info("El servidor no tenía datos cargados. Repoblando… puede tardar ~30s.");
+        await fetch(`${API_BASE_URL}/admin/refresh`, { method: "POST" }).catch((e) => {
+          console.error("Error triggering /admin/refresh:", e);
+        });
+
+        response = await fetch(`${API_BASE_URL}/stocks`);
+        if (response.ok) {
+          data = await response.json();
+        }
+      }
 
       if (data.success) {
         setStocks(data.data);
