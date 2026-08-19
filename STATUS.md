@@ -18,22 +18,47 @@ distinta y no son intercambiables:
   reciente, 1 junio, "versión final para el paper" según su propio
   script): F1-macro=0.385 en Exp B, Sharpe=0.755. **No mencionada en
   GUIA_PROGRESO.md ni en PAPER_FINAL.md** — solo queda documentada en
-  `RESULTADOS_OPTIMIZADOS/paper_latex/paper.tex` (el paper académico en
-  inglés, también del 1 de junio, y el documento más riguroso/actualizado
-  que hay). v4 nunca guardó modelos entrenables (solo CSVs de métricas),
-  por eso el `.pkl` deployado sigue siendo el de v1 — no había otra
-  opción real.
+  `paper/paper.tex` (el paper académico en inglés, también del 1 de
+  junio, y el documento más riguroso/actualizado que hay). v4 nunca
+  guardó modelos entrenables (solo CSVs de métricas), por eso el `.pkl`
+  deployado sigue siendo el de v1 — no había otra opción real.
 - **Conclusión que se sostiene en ambas**: LR gana en Sharpe y F1
   por-ticker de forma clara; en v4 XGBoost solo empata/gana F1-macro
   GLOBAL por un margen insignificante (0.0015) y con la mitad de Sharpe.
   El modelo elegido para producción sigue siendo el correcto.
-- **Pendiente**: `paper_latex/paper.tex` no está referenciado desde
-  `docs/README.md` como "la versión más reciente" — vale la pena
-  revisarlo si se va a citar un número específico en la defensa.
+- **Resuelto (14 ago)**: `paper/paper.tex` ahora está referenciado desde
+  `paper/README.md` y desde el `README.md` raíz como "la versión más
+  reciente/canónica" — ver sección de organización abajo.
 
 Pendiente si se retoma el modelado: threshold calibration por clase,
 stacking de los 4 modelos, walk-forward validation, costos de
-transacción en el backtest (ver "Próximos pasos" en la bitácora).
+transacción en el backtest (ver "Próximos pasos" en la bitácora). También
+pendiente (a pedido del Revisor #2 de MICAI): darle a LSTM/CNN/CNN-LSTM una
+búsqueda de hiperparámetros real con Optuna — hoy solo XGBoost la tiene, los
+3 modelos profundos usan un grid fijo hecho a mano.
+
+**Diagnóstico y plan nuevo (2026-08-14).** Antes de correr esa búsqueda se midió
+qué está pasando realmente (`python scripts_opt/diag_deep.py`, 2.2 min) y el
+resultado cambia las prioridades — detalle en
+`RESULTADOS_OPTIMIZADOS/docs/DIAGNOSTICO_MODELOS_PROFUNDOS.md`:
+
+- Un entrenamiento profundo cuesta **10 s**, no minutos: el cómputo nunca fue la
+  restricción (caben 150 trials de Optuna por arquitectura en un par de horas).
+- El early stopping por `val_loss` **restaura la época 1–2**: los modelos
+  profundos del paper están entrenados ~1 época efectiva. Su `val_loss` nunca
+  baja de ln(3) (= azar) en ninguna configuración probada, ni siquiera con un
+  modelo 57× más chico → **no es un problema de hiperparámetros**.
+- Tres asimetrías de protocolo frente a LR/XGBoost: el lookback se eligió con
+  **F1 de test** (`consolidar_v4.py:35`, contradice `paper.tex:198`), LR/XGB
+  reentrenan con train+val y los profundos no, y los profundos se evalúan sobre
+  menos filas de test (1 316–1 596 vs 1 736) por cómo se construyen las ventanas.
+- En **validación** los cinco modelos empatan dentro de 0.02 (LR 0.356,
+  LSTM 0.357, XGBoost 0.374): el ranking del paper podría ser ruido de un único
+  año de test, y hoy no hay ninguna prueba estadística que lo descarte.
+
+Plan de trabajo vigente: `RESULTADOS_OPTIMIZADOS/docs/PLAN_MAESTRO_BUSQUEDA.md`
+(siete vías con compuertas de decisión, ~6–8 h de GPU en total, solo con datos de
+Yahoo Finance). `PLAN_OPTUNA_DEEP_MODELS.md` quedó marcado como superado.
 
 ## Plataforma web (`api/` + `Frontend/`)
 
@@ -142,6 +167,33 @@ descartado a propósito (queda como app web/PWA).
   cada ticker antes de rendirse, y el `--timeout` de gunicorn subió de 120
   a 300s para no matar al worker mientras reintenta durante el arranque.
   Suite de tests (14) sigue en verde tras el cambio.
+
+## Organización: carpeta `paper/` dedicada (2026-08-14)
+
+- Todo lo del paper académico (repartido en tres sitios dentro de
+  `RESULTADOS_OPTIMIZADOS/`) se movió a una carpeta `paper/` propia en la
+  raíz: `RESULTADOS_OPTIMIZADOS/paper_latex/{paper.tex,figures/,README.md}`
+  → `paper/{paper.tex,figures/,README.md}`;
+  `RESULTADOS_OPTIMIZADOS/docs/PAPER_FINAL.md` → `paper/PAPER_FINAL.md`;
+  `RESULTADOS_OPTIMIZADOS/docs/borradores/` → `paper/borradores/`. Todo
+  vía `git mv`, historial preservado. `RESULTADOS_OPTIMIZADOS/` se queda
+  solo con datos de experimentos (modelos, logs, reportes, bitácora
+  `GUIA_PROGRESO.md`) — nada de prosa del paper. `paper.tex` sigue citando
+  rutas como `RESULTADOS_OPTIMIZADOS/reportes/v4_final/*.csv` sin cambios,
+  porque esa carpeta no se movió.
+- Antes de este cambio, `git status` mostró la rama local 4 commits detrás
+  de `origin/main` (los del aplanado de `Proyecto/` a `api/`+`Frontend/`+`docs/`
+  y la preparación para Render, documentados arriba) — se hizo `git pull`
+  primero y la reorganización de `paper/` se rehizo sobre esa base ya
+  actualizada, no sobre la vieja estructura con `Proyecto/`.
+- **Pendiente sin resolver**: `Proyecto/` quedó como carpeta huérfana en
+  disco (no en git) con `.venv`, `node_modules`, `.pytest_cache`,
+  `__pycache__`, `api/.env` y `api/trading_system.db` — nada de eso estaba
+  trackeado, así que el aplanado no lo movió ni lo borró. Si sigues
+  trabajando desde esta copia local, hace falta decidir si se copia el
+  `.env` viejo a `api/.env` (el nuevo path) y se borra `Proyecto/` a mano,
+  o si se regenera todo desde cero (`npm install` en `Frontend/`,
+  `pip install` en `api/`).
 
 ## Huecos conocidos / no abordados
 

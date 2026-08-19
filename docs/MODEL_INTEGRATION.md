@@ -27,7 +27,7 @@ temporales:
 > **Nota sobre las métricas citadas arriba**: son las de la evaluación
 > "v1" (la que efectivamente entrenó el `.pkl` que corre en producción,
 > vía `scripts_opt/opt_lr.py`). Existe una evaluación posterior ("v4",
-> splits unificados, `RESULTADOS_OPTIMIZADOS/paper_latex/paper.tex`) con
+> splits unificados, `paper/paper.tex`) con
 > números distintos (F1-macro=0.385, Sharpe=0.755 en Exp B) que nunca se
 > integró a `GUIA_PROGRESO.md`. v4 no guardó modelos entrenables, solo
 > métricas — no cambia qué modelo corre aquí, pero sí qué número es más

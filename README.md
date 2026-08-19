@@ -17,11 +17,12 @@ Sharpe test=1.25). Detalle completo en `docs/MODEL_INTEGRATION.md`.
 
 ```
 .
+├── paper/                      # El paper académico (paper.tex, figuras, borradores) — y solo eso
 ├── api/                        # API Flask (endpoints, modelo ML, SQLite)
 ├── Frontend/                   # SPA React + TypeScript (Vite, Tailwind, PWA)
 ├── docs/                       # Documentación técnica de la plataforma web
 ├── scripts_opt/                # Pipeline de optimización que generó RESULTADOS_OPTIMIZADOS/
-├── RESULTADOS_OPTIMIZADOS/     # Resultados de todos los experimentos + papers/bitácora
+├── RESULTADOS_OPTIMIZADOS/     # Resultados de todos los experimentos + bitácora
 ├── scripts_v1/                 # Primera iteración del pipeline (parcialmente superada)
 ├── tesis_ml_stocks/            # Datasets crudos y artefactos de datos (parquet)
 ├── docker-compose.yml          # Stack completo local (api + Frontend [+ postgres opcional])
@@ -99,10 +100,13 @@ VITE_API_URL=http://localhost:8000
 
 ## Dónde está cada cosa
 
+- **¿Quiero leer o compilar el paper?** → [`paper/README.md`](paper/README.md)
+  (`paper.tex` es el documento canónico; `PAPER_FINAL.md` y `borradores/`
+  son historial).
 - **¿Quiero entender qué modelo ganó y por qué?** →
   [`RESULTADOS_OPTIMIZADOS/docs/GUIA_PROGRESO.md`](RESULTADOS_OPTIMIZADOS/docs/GUIA_PROGRESO.md)
-  (bitácora completa) o [`RESULTADOS_OPTIMIZADOS/docs/PAPER_FINAL.md`](RESULTADOS_OPTIMIZADOS/docs/PAPER_FINAL.md)
-  (redacción tipo paper).
+  (bitácora completa) o [`paper/paper.tex`](paper/paper.tex)
+  (redacción tipo paper, la más rigurosa/actualizada).
 - **¿Quiero reproducir el entrenamiento?** → los scripts en
   [`scripts_opt/`](scripts_opt) (ver `scripts_opt/common.py` para configuración
   de tickers/splits/rutas) leen de `tesis_ml_stocks/01_raw_datasets/` y

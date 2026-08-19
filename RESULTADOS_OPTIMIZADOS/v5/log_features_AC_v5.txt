@@ -1,0 +1,7 @@
+--- dataset v5, Exp A y C (dev) ---
+  expA LSTM      F1(2024) = 0.3428 +- 0.0189
+  expA CNN-LSTM  F1(2024) = 0.3430 +- 0.0136
+  expA LR        F1(2024) = 0.2483 +- 0.0000
+  expC LSTM      F1(2024) = 0.3356 +- 0.0120
+  expC CNN-LSTM  F1(2024) = 0.3254 +- 0.0227
+  expC LR        F1(2024) = 0.2856 +- 0.0003

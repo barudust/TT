@@ -1,0 +1,28 @@
+Dispositivo: cuda — NVIDIA GeForce RTX 5060 Ti
+==============================================================================
+  V6 — intervalos de confianza por bootstrap de bloques (test 2025)
+==============================================================================
+  Todos los modelos evaluados sobre las mismas 1736 filas ✓
+
+  F1-macro con IC 95 % (bootstrap de bloques de 20 días, 2000 remuestreos):
+    CNN        0.2627  IC95 [0.2457, 0.2794]
+    CNN-LSTM   0.2448  IC95 [0.2296, 0.2611]
+    LR         0.4058  IC95 [0.3824, 0.4284]
+    LSTM       0.3731  IC95 [0.3450, 0.4016]
+    XGBoost    0.3588  IC95 [0.3343, 0.3827]
+
+  Diferencias entre pares (IC 95 % de la diferencia de F1):
+    CNN        - CNN-LSTM   +0.0179  IC95 [+0.0030, +0.0326]  SIGNIFICATIVA
+    CNN        - LR         -0.1431  IC95 [-0.1692, -0.1155]  SIGNIFICATIVA
+    CNN        - LSTM       -0.1104  IC95 [-0.1396, -0.0789]  SIGNIFICATIVA
+    CNN        - XGBoost    -0.0961  IC95 [-0.1227, -0.0685]  SIGNIFICATIVA
+    CNN-LSTM   - LR         -0.1611  IC95 [-0.1862, -0.1352]  SIGNIFICATIVA
+    CNN-LSTM   - LSTM       -0.1283  IC95 [-0.1601, -0.0983]  SIGNIFICATIVA
+    CNN-LSTM   - XGBoost    -0.1141  IC95 [-0.1410, -0.0868]  SIGNIFICATIVA
+    LR         - LSTM       +0.0327  IC95 [+0.0022, +0.0612]  SIGNIFICATIVA
+    LR         - XGBoost    +0.0470  IC95 [+0.0206, +0.0717]  SIGNIFICATIVA
+    LSTM       - XGBoost    +0.0143  IC95 [-0.0144, +0.0440]  no significativa
+
+  → RESULTADOS_OPTIMIZADOS\v5\v6_ic_A.csv y RESULTADOS_OPTIMIZADOS\v5\v6_pares_A.csv
+
+[stats] tiempo total: 0.9 min

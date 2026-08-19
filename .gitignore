@@ -71,3 +71,27 @@ logs/
 # Temp
 .tmp/
 temp/
+
+# LaTeX build artifacts (paper/paper.tex se compila localmente, ver paper/README.md)
+*.aux
+*.out
+*.toc
+*.bbl
+*.blg
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+*.pdf
+
+# Paper LaTeX y borradores markdown — excluidos del repo remoto
+# (se editan localmente; ver METODOLOGIA_COMPLETA.md para el detalle metodológico)
+paper/
+RESULTADOS_OPTIMIZADOS/PAPER.md
+RESULTADOS_OPTIMIZADOS/PAPER_FINAL.md
+RESULTADOS_OPTIMIZADOS/docs/PAPER_FINAL.md
+RESULTADOS_OPTIMIZADOS/docs/borradores/
+
+# Datos crudos regenerables via yfinance (~18 MB) y caches
+tesis_ml_stocks/01_raw_datasets_v5/
+tesis_ml_stocks/_cache_mercado_v5.parquet
+*.parquet

@@ -1,0 +1,22 @@
+Dispositivo: cuda — NVIDIA GeForce RTX 5060 Ti
+==============================================================================
+  V2 — Optuna CNN  (80 trials × 2 semillas)
+  base: cnn_lb20_h128_l2_val_loss_ali   modo dev (época en 2023, objetivo = F1 2024)
+==============================================================================
+
+  80 trials completos / 80 (26.3 min, 19.7s por trial)
+  mejor F1(2024) = 0.3626
+  mejores parámetros: {'criterio': 'val_f1_ma3', 'lookback': 10, 'dropout': 0.022526736010091503, 'lr': 2.4065569402138704e-05, 'weight_decay': 0.05860568103104996, 'batch': 128, 'class_weight': 'balanced', 'scheduler': 'plateau', 'grad_clip': 5.0, 'escalador': 'robust', 'loss': 'focal', 'focal_gamma': 2.443448123485113, 'n_bloques': 3, 'filtros_base': 36, 'kernel': 7, 'dilatacion': 1, 'batchnorm': False, 'fc_dim': 116, 'pool_cnn': 'gap'}
+  importancia de hiperparámetros: dropout=0.402, lookback=0.232, weight_decay=0.092, batch=0.086, filtros_base=0.059, fc_dim=0.032
+
+  ── finalistas (5 semillas) ──
+  trial 51                           val_f1=0.3310 (sem 0.3345±0.0165)  eval_f1=0.3488 (sem 0.3533±0.0130)  Sharpe=-0.539  [58s ep=[4, 8, 9, 21, 26]]
+  trial 63                           val_f1=0.3475 (sem 0.3356±0.0073)  eval_f1=0.3600 (sem 0.3600±0.0092)  Sharpe=+0.232  [52s ep=[8, 8, 7, 10, 9]]
+  trial 50                           val_f1=0.3457 (sem 0.3359±0.0177)  eval_f1=0.3591 (sem 0.3440±0.0221)  Sharpe=-0.554  [66s ep=[19, 13, 40, 5, 29]]
+  trial 70                           val_f1=0.3269 (sem 0.3385±0.0109)  eval_f1=0.3807 (sem 0.3443±0.0130)  Sharpe=+0.214  [57s ep=[7, 24, 7, 9, 3]]
+  trial 48                           val_f1=0.3176 (sem 0.2999±0.0452)  eval_f1=0.3501 (sem 0.3232±0.0617)  Sharpe=-0.224  [61s ep=[22, 21, 1, 27, 31]]
+
+  → ganador cnn: trial 50  F1(2024)=0.3440±0.0221
+  guardado → RESULTADOS_OPTIMIZADOS\v5\ganadores_dl.json
+
+[optuna] tiempo total: 31.2 min

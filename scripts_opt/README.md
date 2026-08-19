@@ -23,14 +23,19 @@ fuente de verdad y qué quedó como historial.
   corre en producción en `api/ml/artifacts/`. Es el script a
   re-ejecutar si algún día hay que reentrenar el modelo de producción.
 - **`consolidar_120.py`** — produce la tabla maestra de 120 corridas citada
-  literalmente en `../RESULTADOS_OPTIMIZADOS/docs/PAPER_FINAL.md` (líneas
-  470 y 483). Es el consolidador "oficial" citado en el paper (superset de
-  `consolidar.py`, que solo cubre 4 de los 5 modelos).
+  literalmente en `../paper/PAPER_FINAL.md` (líneas 470 y 483). Es el
+  consolidador "oficial" citado en el paper (superset de `consolidar.py`,
+  que solo cubre 4 de los 5 modelos).
 - **`reporte_final.py`** — reporte completo baseline-vs-optimizado (tablas
   `MAESTRA_`/`MEJOR_` + plots `FINAL_*`); superset funcional de
   `comparar_baseline.py`.
 - **`analisis_feature_selection.py`** — respaldado por
   `../RESULTADOS_OPTIMIZADOS/docs/ANALISIS_FEATURE_SELECTION.md`.
+- **`diag_deep.py`** (2026-08-14) — diagnóstico de los modelos profundos de v4:
+  costo real por entrenamiento, época que restaura el early stopping, curvas
+  train/val sin early stopping, efecto del `MinMaxScaler` y F1 de validación de
+  LR como referencia. No toca test. Corre en 2.2 min y respalda
+  `../RESULTADOS_OPTIMIZADOS/docs/DIAGNOSTICO_MODELOS_PROFUNDOS.md`.
 - **`opt_xgb.py`, `opt_lstm.py`, `opt_cnn_lstm.py`, `opt_cnn_puro.py`,
   `opt_cnn_puro_filtradas.py`** — comparadores de la iteración v1 que
   alimentan las tablas anteriores (no ganaron, pero sus CSVs siguen siendo
