@@ -95,3 +95,6 @@ RESULTADOS_OPTIMIZADOS/docs/borradores/
 tesis_ml_stocks/01_raw_datasets_v5/
 tesis_ml_stocks/_cache_mercado_v5.parquet
 *.parquet
+
+# Excepcion: paper_review/paper.pdf SI se sube (revision temporal)
+!paper_review/paper.pdf
