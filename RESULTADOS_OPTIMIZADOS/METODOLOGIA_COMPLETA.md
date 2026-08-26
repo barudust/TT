@@ -275,34 +275,45 @@ Buscar pesos `w_i` que maximicen F1 en validación (constraint suma=1). El ópti
 
 ## 7. Alternativas de arquitectura probadas y no adoptadas
 
-Documentadas en `ALTERNATIVAS_FUTURAS.md`. Cada una probada empíricamente:
+Documentadas en `docs/ALTERNATIVAS_FUTURAS.md`. Cada una probada empíricamente:
 
 | Arquitectura | Resultado | Motivo de descarte |
 |---|---|---|
 | **LightGBM** (`opt_lgbm.py`) | F1 similar a XGB | No aporta variedad, mismo enfoque |
 | **CatBoost** | F1 similar a XGB | 3× más lento, sin ventaja |
 | **GRU** | F1 similar a LSTM | Sin ventaja significativa |
-| **Attention** sobre BiLSTM | ~+0.005 F1 | No justifica complejidad |
+| **Attention** sobre BiLSTM | Neutro | Ya cubierto en Optuna v5 (pooling=attn ganó en LSTM) |
 | **Transformer** | Peor con 1500 samples | Sin pre-training disponible |
 | **TabNet** | Peor | Diseñado para datos tabulares grandes |
 | **N-BEATS/N-HiTS** | No aplicable | Diseñados para regresión de series, no clasificación |
 | **XGBoost + threshold calibration** (v2) | Marginal | No estable entre folds |
 | **Feature engineering avanzado** (v2) | Neutro | Nuevas features linealmente dependientes |
 | **Confidence filter** (LR + threshold τ) | Cobertura baja | Útil en producción, no comparable en F1 |
+| **Focal loss + label smoothing** | Adoptado en deep | Ya en el espacio de Optuna v5; ganadores usan focal_gamma≈1.4–2.5 |
+| **Escalador robust vs minmax** | Adoptado | Ganadores de Optuna v5 eligieron robust en los 3 deep + XGB |
+| **Isotonic/Platt calibration** | v7 | Ver `docs/VIA7_REFINAMIENTO.md` |
+| **Blending LR+XGB por Sharpe** | v7 | Ver `docs/VIA7_REFINAMIENTO.md` |
+| **SWA (Stochastic Weight Averaging)** | v7 | Ver `docs/VIA7_REFINAMIENTO.md` |
+| **Recency weighting temporal** | v7 | Ver `docs/VIA7_REFINAMIENTO.md` |
 
 ---
 
-## 8. Iteraciones del proyecto (v1 → v3 → v4 → v5)
+## 8. Iteraciones del proyecto (v1 → v3 → v4 → v5 → v7)
 
 | Versión | Cambio principal | Splits | Features | Resultado |
 |---|---|---|---|---|
 | **v1** | Baseline inicial, todos los modelos | A/B/C originales | 61 | LR 0.380 en Exp A |
 | **v2** | Threshold calibration | A/B/C | 61 | Sin mejora estable |
 | **v3** | 94 features (mercado extra) | A/B/C | 94 | Sin mejora — overfitting |
-| **v4** (final) | **Splits unificados: test=2025 en todos** | A/B/C v4 | 61 | LR 0.399 promedio |
-| **v5** | Sandbox: calibración por-ticker | A/B/C v4 | 61 | Similar a v4 |
+| **v4** (paper) | **Splits unificados: test=2025 en todos** | A/B/C v4 | 61 | LR 0.399 promedio |
+| **v5** | Protocolo corregido + Optuna 150 trials LR/XGB, 80 trials deep | A/B/C v4 | 61 + 94 v5 | LR 0.404 (val 2024 elegida honestamente) |
+| **v7** | Refinamiento: calibración isotónica, blending, SWA, recency weighting | v5 | 61 | En ejecución (2026-08-25) |
 
-**La versión final del paper es v4.** Todos los resultados reportados se recomputan con `common_v4.py` y `train_all_v4.py`.
+**La versión final del paper enviado a MICAI es v4.** Todos los resultados reportados salen de `common_v4.py` / `train_all_v4.py`.
+
+**v5** fue una re-ejecución con protocolo académico corregido (validación separada de test, Optuna real). Confirma la conclusión de v4: LR gana, aunque con márgenes más ajustados dado que el pipeline v5 evita el sobreajuste implícito de v4.
+
+**v7** cierra la búsqueda con técnicas que ni v0-v6 probaron. **Cerrada 2026-08-25:** solo XGBoost + isotonic mejora (F1 0.359 → 0.371, Sharpe +0.46 → +0.60). Las otras 11 combinaciones (blending, SWA, recency, threshold económico, isotonic en LR/deep) no producen mejora robusta. **LR baseline sigue siendo el ganador general** (F1 0.404, Sharpe +0.895). Detalles: [`docs/VIA7_REFINAMIENTO.md`](docs/VIA7_REFINAMIENTO.md).
 
 ---
 

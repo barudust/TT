@@ -1,0 +1,34 @@
+modelo,tecnica,f1,sharpe,win_rate,pf,max_dd
+LR,calibr:threshold,0.2563,1.1765,0.6203,2.8536,-0.1514
+LR,recency:recency (τ=999999 d),0.4042,0.9468,0.5222,0.0,-0.45
+LR,baseline_v5,0.4036,0.8946,0.5203,1.2695,-0.453
+LR,calibr:baseline,0.4036,0.8946,0.5203,1.2695,-0.453
+XGBoost,calibr:threshold,0.3786,0.8093,0.507,1.2591,-0.3698
+LR,calibr:iso+threshold,0.2458,0.8048,0.5271,1.1652,-0.4623
+CNN-LSTM,calibr:threshold,0.2517,0.619,0.5052,1.6069,-0.1642
+XGBoost,calibr:isotonic,0.3711,0.5958,0.5155,1.1995,-0.317
+CNN,calibr:isotonic,0.3124,0.481,0.5018,1.2475,-0.4275
+XGBoost,baseline_v5,0.3591,0.462,0.4908,1.1111,-0.4985
+XGBoost,calibr:baseline,0.3591,0.462,0.4908,1.1111,-0.4985
+CNN,calibr:iso+threshold,0.3029,0.3784,0.502,1.2017,-0.4051
+CNN-LSTM,calibr:isotonic,0.3053,0.3319,0.5228,1.1493,-0.2877
+XGBoost,calibr:iso+threshold,0.2443,0.3203,0.4971,1.0627,-0.51
+-,blend:blend_lr_xgb_sharpe,0.3586,0.3064,0.4873,0.0,-0.5295
+LR,calibr:isotonic,0.3575,0.3031,0.5054,1.0949,-0.4005
+-,blend:blend_5way_sharpe,0.3578,0.1525,0.4843,0.0,-0.5269
+LSTM,"swa:SWA (start=40, avg últimas 40 épocas)",0.3611,0.1405,0.4971,1.0337,-0.5269
+LSTM,calibr:isotonic,0.3126,0.1231,0.5204,1.0535,-0.3974
+CNN,calibr:threshold,0.2379,0.0463,0.5286,1.041,-0.2926
+-,blend:blend_5way_f1,0.373,0.0417,0.4875,0.0,-0.6463
+XGBoost,recency:recency (τ=3000 d),0.3642,0.0288,0.4831,0.0,-0.5608
+CNN-LSTM,"swa:SWA (start=40, avg últimas 40 épocas)",0.3723,-0.0509,0.4977,0.9884,-0.5183
+CNN-LSTM,calibr:baseline,0.3723,-0.0739,0.4844,0.9824,-0.6213
+CNN-LSTM,baseline_v5,0.3723,-0.0739,0.4844,0.9824,-0.6213
+LSTM,calibr:iso+threshold,0.218,-0.2579,0.375,0.7562,-0.332
+LSTM,calibr:baseline,0.3688,-0.3451,0.4901,0.9225,-0.6758
+LSTM,baseline_v5,0.3688,-0.3451,0.4901,0.9225,-0.6758
+CNN,"swa:SWA (start=40, avg últimas 40 épocas)",0.3375,-0.4479,0.4922,0.908,-0.8312
+CNN,calibr:baseline,0.359,-0.4592,0.4842,0.9001,-0.725
+CNN,baseline_v5,0.359,-0.4592,0.4842,0.9001,-0.725
+LSTM,calibr:threshold,0.341,-0.4701,0.4864,0.8465,-0.6843
+CNN-LSTM,calibr:iso+threshold,0.1996,-0.7364,0.1429,0.096,-0.1858

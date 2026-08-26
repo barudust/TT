@@ -1,0 +1,4 @@
+tecnica,pesos,f1_macro,sharpe,win_rate,profit_factor,max_dd
+blend_lr_xgb_sharpe,"LR=0.255,XGB=0.745",0.3586,0.3064,0.4873,1.0727,-0.5295
+blend_5way_f1,"LR=0.03,XGBoost=0.03,LSTM=0.41,CNN=0.03,CNN-LSTM=0.49",0.373,0.0417,0.4875,1.01,-0.6463
+blend_5way_sharpe,"LR=0.11,XGBoost=0.45,LSTM=0.28,CNN=0.06,CNN-LSTM=0.10",0.3578,0.1525,0.4843,1.0356,-0.5269

@@ -1,0 +1,4 @@
+modelo,tecnica,f1,sharpe,win_rate,pf,max_dd,segundos
+LSTM,"SWA (start=40, avg últimas 40 épocas)",0.3611,0.1405,0.4971,1.0337,-0.5269,99.4
+CNN,"SWA (start=40, avg últimas 40 épocas)",0.3375,-0.4479,0.4922,0.908,-0.8312,108.9
+CNN-LSTM,"SWA (start=40, avg últimas 40 épocas)",0.3723,-0.0509,0.4977,0.9884,-0.5183,105.2
