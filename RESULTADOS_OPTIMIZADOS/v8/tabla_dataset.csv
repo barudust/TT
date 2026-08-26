@@ -1,0 +1,16 @@
+experimento,modelo,f1,sharpe,win_rate
+"target(h=5d,q=0.25/0.75)",LR,0.4296,1.1485,0.5284
+"target(h=10d,q=0.33/0.67)",LR,0.4164,1.2046,0.5269
+"target(h=5d,q=0.30/0.70)",LR,0.4143,1.2888,0.5342
++inter,LR,0.4133,0.9136,0.5316
+"target(h=1d,q=0.25/0.75)",LR,0.4105,0.7205,0.5206
+"target(h=3d,q=0.25/0.75)",LR,0.4088,0.808,0.5109
+baseline_v5,LR,0.4036,0.8946,0.5203
++cross_asset,LR,0.394,0.8229,0.521
++multi_tf,LR,0.3886,0.484,0.5
++lags,LR,0.3865,0.5396,0.5121
++inter,XGBoost,0.3826,0.2047,0.5078
++multi_tf,XGBoost,0.3818,0.5035,0.5041
++lags,XGBoost,0.3814,0.2619,0.5067
++cross_asset,XGBoost,0.3789,0.4282,0.4995
+baseline_v5,XGBoost,0.3591,0.462,0.4908

@@ -315,6 +315,15 @@ Documentadas en `docs/ALTERNATIVAS_FUTURAS.md`. Cada una probada empíricamente:
 
 **v7** cierra la búsqueda con técnicas que ni v0-v6 probaron. **Cerrada 2026-08-25:** solo XGBoost + isotonic mejora (F1 0.359 → 0.371, Sharpe +0.46 → +0.60). Las otras 11 combinaciones (blending, SWA, recency, threshold económico, isotonic en LR/deep) no producen mejora robusta. **LR baseline sigue siendo el ganador general** (F1 0.404, Sharpe +0.895). Detalles: [`docs/VIA7_REFINAMIENTO.md`](docs/VIA7_REFINAMIENTO.md).
 
+**v8** amplía el dataset con 5 técnicas nuevas (target ablation, lag features, cross-asset, multi-timeframe, interactions). **Hallazgos:**
+- **LR + interactions** (productos entre top-10 features): mejora sin cambiar el problema → F1 0.390 → 0.413 (+0.023), Sharpe +0.68 → +0.92.
+- **Target ablation:** h=5-7d con q=0.25/0.75 es más aprendible que h=1d (F1 sube ~0.03, Sharpe hasta +1.5), pero cambia la definición del problema. Se documenta como sensibilidad.
+- **Lag features, multi-timeframe:** redundantes con las features existentes.
+- **Cross-asset por sí solo:** marginal; solo suma cuando se combina con interactions + target de 5d.
+- **Mejor combinación absoluta:** h=5d, q=0.25/0.75, LR + interactions + crossasset → F1=0.432, Sharpe=+1.15.
+
+Detalles: [`docs/VIA8_DATASET.md`](docs/VIA8_DATASET.md).
+
 ---
 
 ## 9. Evaluación

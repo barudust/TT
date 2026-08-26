@@ -1,0 +1,5 @@
+dataset,modelo,f1,sharpe,win_rate,profit_factor,max_dd,signal_buy,signal_hold,signal_sell,segundos
+baseline,LR,0.3907,0.6828,0.5161,1.2141,-0.4208,16.65,57.03,26.32,0.4
+baseline,XGBoost,0.3695,0.565,0.4996,1.1405,-0.5741,21.6,33.81,44.59,19.4
++lags,LR,0.3865,0.5396,0.5121,1.1679,-0.4064,13.08,59.62,27.3,0.9
++lags,XGBoost,0.3814,0.2619,0.5067,1.066,-0.6123,18.38,39.52,42.11,41.0
