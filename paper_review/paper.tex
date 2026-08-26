@@ -10,8 +10,16 @@
 \usepackage{xcolor}
 \usepackage{multirow}
 \usepackage{array}
+\usepackage{multicol}
 
 \hypersetup{colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue}
+
+% Compactado de floats para caber en 12 páginas LNCS.
+\setlength{\textfloatsep}{6pt plus 2pt minus 2pt}
+\setlength{\floatsep}{6pt plus 2pt minus 2pt}
+\setlength{\intextsep}{6pt plus 2pt minus 2pt}
+\setlength{\abovecaptionskip}{4pt}
+\setlength{\belowcaptionskip}{2pt}
 
 % Three figures (global metrics, Sharpe boxplot, training-window effect) are
 % redundant with Tables 4-5 and are shipped as supplementary material so the
@@ -52,7 +60,7 @@ We benchmark five supervised classifiers --- multinomial logistic regression (LR
 
 \section{Introduction}
 
-Short-term equity forecasting is among the most studied problems in quantitative finance. The Efficient Market Hypothesis~\cite{fama1970} predicts no meaningful predictability; in practice, recent surveys~\cite{sezer2020,jiang2021} show machine-learning models extracting a small but exploitable signal from technical indicators. Three limitations recur, however: (i) comparisons usually involve only one or two models; (ii) the reported metric is often accuracy or root-mean-square error (RMSE), which do not translate cleanly into trading performance; and (iii) univariate feature pre-selection is applied without checking that it helps. This paper addresses the three jointly.
+Short-term equity forecasting is among the most studied problems in quantitative finance. The Efficient Market Hypothesis~\cite{fama1970} predicts no meaningful predictability; in practice, recent surveys~\cite{sezer2020,jiang2021} show machine-learning models extracting a small but exploitable signal from technical indicators. Three limitations recur: (i) comparisons involve only one or two models; (ii) the reported metric is often accuracy or root-mean-square error (RMSE), which do not translate cleanly into trading performance; (iii) univariate feature pre-selection is applied without checking it helps. This paper addresses the three jointly.
 
 We compare five representative models --- a linear baseline (LR), a gradient-boosted tree model (XGBoost) and three deep-learning architectures (LSTM, CNN, CNN-LSTM) --- under an identical protocol across 120 controlled runs (5 models $\times$ 3 splits $\times$ 8 modalities). All runs share the same test year (2025); only the amount of training history differs (10, 6 or 4 years). Every run reports F1-macro together with win rate, profit factor and maximum drawdown.
 
@@ -98,28 +106,14 @@ By construction the class distribution is close to 30/40/30 in every market regi
 
 We compute the indicators in Table~\ref{tab:features}. All values are derived from daily OHLCV plus SPY and VIX. Seasonality variables are encoded as sine/cosine pairs to preserve periodicity. No fundamentals, news or option data are used. The abbreviations in the table are the standard ones: MA (moving average), ATR (average true range), RSI (relative strength index), MACD (moving-average convergence/divergence), Stoch (stochastic oscillator), OBV (on-balance volume), VWAP (volume-weighted average price), CMF (Chaikin money flow) and MFI (money flow index).
 
-\begin{table}[t]
-\centering
-\caption{Feature categories. All indicators are derived from OHLCV; SPY/VIX provide market context.}
-\label{tab:features}
-\begin{tabular}{lcl}
-\toprule
-Category & Count & Examples \\
-\midrule
-Log returns & 5 & ret\_1d, ret\_2d, ret\_3d, ret\_5d, ret\_10d \\
-Momentum & 4 & mom\_5d, mom\_20d, mom\_60d \\
-Moving averages & 9 & dist\_ma$\{10,20,50,200\}$, 3 crossovers, slope MA20 \\
-Volatility & 8 & ATR(14), realized vol 5/10/20/60d, 2 ratios \\
-Oscillators & 9 & RSI(7,14), MACD/signal/hist, Stoch K/D/diff, Williams \%R \\
-Volume/flow & 8 & OBV, VWAP distance, CMF(20), MFI(14), vol\_ratio \\
-Candle patterns & 7 & body/range, upper/lower shadow, gap, high/low ratio \\
-Seasonality & 5 & weekday and month (sine/cosine), week-of-month \\
-Market context & 6 & SPY return/vol/momentum, VIX level/change/normalized \\
-\midrule
-\textbf{Total} & \textbf{61} & \\
-\bottomrule
-\end{tabular}
-\end{table}
+The 61 features span nine families: log returns (5: ret\_$\{1,2,3,5,10\}$d),
+momentum (4: mom\_$\{5,10,20,60\}$d), moving-average distances and crossovers
+(9), volatility (8: ATR(14), realized vol 5/10/20/60d, ratios), oscillators (9:
+RSI(7,14), MACD/signal/histogram, stochastic K/D/diff, Williams \%R), volume and
+flow (8: OBV, VWAP distance, CMF(20), MFI(14), volume ratios), candle patterns
+(7), seasonality (5: weekday and month as sine/cosine pairs, week-of-month) and
+market context (6: SPY return, 20-day volatility and momentum; VIX level, change
+and normalized).
 
 \subsection{Temporal splits}
 
@@ -141,16 +135,14 @@ C & 2020--2023 & 2024 & 2025 & 4 \\
 \end{table}
 
 \paragraph{Is 2025 a representative test year?}
-Since all three splits share it, the comparison rests on one out-of-sample period.
-Averaged over the seven tickers, 2025 returned $+24.2\,\%$ against a 2014--2024
-median of $+46.3\,\%$ (9th of twelve years), with realized volatility $39.1\,\%$
-(3rd highest), mean maximum drawdown $-33.0\,\%$ (median $-21.4\,\%$) and mean VIX
-19.0; label balance was 29.6/42.2/28.3 against 30.0/40.0/30.0 over the full sample.
-All four market statistics fall inside the 2014--2024 range, so no model
-extrapolates, but the year is below-median on return and above-median on
-volatility and drawdown --- not the easy bull market that would flatter a
-long-biased classifier. That makes 2025 a defensible single choice, not a
-substitute for multiple test years (Section~\ref{sec:limitations}).
+Averaged over the seven tickers, 2025 returned $+24.2\,\%$ (2014--2024 median
+$+46.3\,\%$, 9th of twelve), with realized volatility $39.1\,\%$ (3rd highest),
+mean maximum drawdown $-33.0\,\%$ and mean VIX 19.0; label balance was
+29.6/42.2/28.3 against 30.0/40.0/30.0 over 2014--2025. All four market
+statistics fall inside the 2014--2024 range, but the year is below-median on
+return and above-median on volatility --- not the easy bull market that would
+flatter a long-biased classifier. That makes 2025 defensible as a single
+choice, not a substitute for multiple test years (Section~\ref{sec:limitations}).
 
 \section{Models}
 \label{sec:models}
@@ -213,7 +205,7 @@ Table~\ref{tab:featselect} shows that in 11 of 15 cases keeping all 61 features 
 \section{Results}
 \label{sec:results}
 
-We report 120 controlled runs (5 models $\times$ 3 splits $\times$ (1 global + 7 per-ticker)). For the three sequence models (LSTM, CNN, CNN-LSTM) two look-back windows were trained (20 and 60 days) and this section reports, for each run, the better of the two \emph{as measured on the test set}. That choice is deliberately generous: it gives the deep models an oracle advantage that LR and XGBoost do not get, so the gaps reported below are a lower bound on LR's margin. Section~\ref{sec:robust} repeats the comparison under a protocol in which no test-set information is used for any selection.
+We report 120 controlled runs (5 models $\times$ 3 splits $\times$ (1 global + 7 per-ticker)). For the sequence models (LSTM, CNN, CNN-LSTM) we trained look-backs of 20 and 60 days and report the better of the two \emph{as measured on the test set}; this deliberately generous choice gives the deep models an oracle advantage that LR and XGBoost do not get, so the gaps below are a lower bound on LR's margin. Section~\ref{sec:robust} repeats the comparison with no test-set information used for selection.
 
 \subsection{Global models}
 
@@ -251,6 +243,7 @@ The economic metrics tell a more nuanced story (Table~\ref{tab:econ_B}). For the
 
 \begin{table}[t]
 \centering
+\small
 \caption{Economic metrics on Exp B GLOBAL (test = 2025). Sharpe is annualized.}
 \label{tab:econ_B}
 \begin{tabular}{lccccc}
@@ -294,7 +287,7 @@ Figure~\ref{fig:sharpe_heatmap} breaks down the annualized Sharpe by model and t
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=\textwidth]{figures/fig_sharpe_heatmap.png}
+\includegraphics[width=0.85\textwidth]{figures/fig_sharpe_heatmap.png}
 \caption{Annualized Sharpe ratio per model and ticker, for the three experiments (test = 2025).}
 \label{fig:sharpe_heatmap}
 \end{figure}
@@ -332,41 +325,20 @@ Figure~\ref{fig:signaldist} shows the predicted BUY/HOLD/SELL distribution for t
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.95\textwidth]{figures/fig_signal_dist.png}
+\includegraphics[width=0.85\textwidth]{figures/fig_signal_dist.png}
 \caption{Predicted distribution of the three signals for the global models on Exp B (test=2025). Dotted lines indicate the 33.3\,\% / 66.6\,\% references.}
 \label{fig:signaldist}
 \end{figure}
 
 \subsection{Drill-down on the best model per ticker}
+\label{sec:drilldown}
 
-Table~\ref{tab:tsla_drill} reports the seven per-ticker XGBoost models of Exp B, the setting with the highest global F1. TSLA is the outlier (F1 0.44, Sharpe +2.06, +201\,\% cumulative return) and GOOGL the worst, negative on both. The best-to-worst spread across tickers (0.44 vs.\ 0.34 in F1, +2.06 vs.\ $-0.88$ in Sharpe) is far wider than the spread across model classes in Table~\ref{tab:f1_global}.
-
-\begin{table}[t]
-\centering
-\caption{Per-ticker XGBoost models of Exp B (test = 2025), ordered by F1-macro; META (0.347) and AAPL (0.336) are omitted for space.}
-\label{tab:tsla_drill}
-\begin{tabular}{lccccc}
-\toprule
-Ticker & F1-macro & Sharpe & Cum.\ return & Win rate & Max drawdown \\
-\midrule
-\textbf{TSLA} & \textbf{0.441} & \textbf{+2.06} & \textbf{+2.01} & 0.604 & $-0.20$ \\
-MSFT & 0.399 & $-0.06$ & $-0.01$ & 0.473 & $-0.22$ \\
-AMZN & 0.390 & +0.57 & +0.19 & 0.531 & $-0.21$ \\
-NVDA & 0.338 & +1.41 & +0.77 & 0.539 & $-0.37$ \\
-GOOGL & 0.336 & $-0.88$ & $-0.21$ & 0.487 & $-0.35$ \\
-\bottomrule
-\end{tabular}
-\end{table}
+For the seven per-ticker XGBoost models of Exp B (highest global F1), TSLA is the outlier --- F1 0.44, Sharpe $+2.06$, +201\,\% cumulative return, 60\,\% win rate, drawdown $-0.20$ --- and GOOGL is the worst, F1 0.34, Sharpe $-0.88$, cumulative $-21\,\%$. NVDA reaches Sharpe $+1.41$ despite an F1 of 0.34; AMZN, MSFT, META and AAPL cluster in F1 $\in [0.34, 0.40]$ with Sharpes between $-0.06$ and $+0.71$. The best-to-worst spread (0.44 vs.\ 0.34 in F1, $+2.06$ vs.\ $-0.88$ in Sharpe) is far wider than the spread across model classes in Table~\ref{tab:f1_global}.
 
 \section{Robustness: symmetric search and confidence intervals}
 \label{sec:robust}
 
-Two asymmetries in Section~\ref{sec:results} could by themselves explain the
-ranking: XGBoost was tuned by an automated Optuna search while the deep models got
-only a small hand-built grid over \texttt{hidden}, \texttt{layers} and
-\texttt{dropout} --- one that did not contain the learning rate or the weight decay
-at all --- and their look-back was picked on the test set. We re-ran the whole
-comparison under a protocol that removes both.
+Two asymmetries in Section~\ref{sec:results} could by themselves explain the ranking: XGBoost was tuned by Optuna while the deep models got only a small hand-built grid over \texttt{hidden}, \texttt{layers} and \texttt{dropout} --- without the learning rate or the weight decay --- and their look-back was picked on the test set. We re-ran the whole comparison under a protocol that removes both.
 
 \paragraph{Protocol.}
 Three roles are separated. In \emph{dev} mode the models train on 2018--2022, the
@@ -382,18 +354,11 @@ Reproducing the published pipeline inside the new code gives identical numbers i
 18 of 18 cells, so what follows is the protocol, not the reimplementation.
 
 \paragraph{Search budget.}
-Every model is now tuned by the same Optuna TPE sampler on the same decision year
-(Table~\ref{tab:robust}). The deep models search 17--20 hyper-parameters ---
-learning rate, weight decay, cross-entropy versus focal loss, label smoothing, the
-temporal pooling operator, the scaler and the look-back itself --- against the 9 of
-XGBoost and the 5 of LR; of the 80 trials each, 54 (LSTM), 53 (CNN 1D) and 74
-(CNN-LSTM) ran to completion and the rest were pruned by a median pruner. The
-search is cheap: one full deep training run takes
-7--12\,s on a single consumer GPU, so the binding constraint here is statistical
-power, not compute.
+Every model is now tuned by the same Optuna TPE sampler on the same decision year (Table~\ref{tab:robust}). The deep models search 17--20 hyper-parameters --- learning rate, weight decay, cross-entropy vs.\ focal loss, label smoothing, temporal pooling, scaler and look-back --- against the 9 of XGBoost and the 5 of LR; of 80 trials each, 54/53/74 (LSTM/CNN/CNN-LSTM) completed and the rest were pruned. One full deep training takes 7--12\,s on a consumer GPU, so the binding constraint is statistical power, not compute.
 
 \begin{table}[t]
 \centering
+\small
 \caption{Exp B GLOBAL under the corrected protocol (test = 2025). \emph{Trials} and
 \emph{H-par} are the search budget, spent entirely on the 2024 decision year; CI is
 a 95\,\% block bootstrap; $\Delta$ is the F1 change from Table~\ref{tab:econ_B}.}
@@ -429,48 +394,44 @@ The largest lever was not a hyper-parameter: selecting the checkpoint by validat
 F1 rather than validation loss is worth $+0.059$ F1 to the LSTM, more than the
 entire spread among the deep models in Table~\ref{tab:f1_global} --- under the old
 criterion validation loss rose almost monotonically from epoch 1, so the restored
-checkpoint was effectively the first or second. Three diagnostics bound what tuning
-can achieve here. Validation loss never falls appreciably below $\ln 3 = 1.0986$ in
-any configuration tried, and shrinking the LSTM from 592\,k to 10\,k parameters
-changes nothing, so the limit is neither capacity nor regularization. Retraining on
+checkpoint was effectively the first or second. Two further diagnostics bound what
+tuning can achieve: validation loss never falls appreciably below $\ln 3 = 1.0986$
+in any configuration, and shrinking the LSTM from 592\,k to 10\,k parameters
+changes nothing --- the limit is neither capacity nor regularization. Retraining on
 train\,$+$\,validation, which only LR and XGBoost did, makes all three deep models
-\emph{worse} ($-0.024$ to $-0.047$). And an implementation change that leaves the
-mathematics untouched moved the LSTM's test F1 by $0.023$ through floating-point
-reduction order alone --- hence the means over seeds.
+\emph{worse} ($-0.024$ to $-0.047$).
 
 \section{Discussion}
 \label{sec:discussion}
 
 \paragraph{Why does LR win on F1?}
-With approximately 1500 training samples per ticker (10\,500 globally) and 61 inputs, deep models with $10^5$--$10^6$ parameters are firmly in an overfitting regime. The technical indicators already capture most of the linear predictive content of price action; the elasticnet penalty selects an effective subset of them automatically and stabilizes the remaining coefficients. XGBoost shows similar resilience because tree pruning and the $\ell_2$ leaf penalty play the same role.
-
-This matches a broader finding: on tabular data with engineered features, tree-based and linear models often match or beat deep networks, whose inductive biases target raw spatial or sequential signals rather than engineered columns~\cite{grinsztajn2022,shwartzziv2022}. The asset-pricing literature is instructive about \emph{when} that ordering flips. Gu et al.~\cite{gukellyxiu2020} do rank neural networks first, but on roughly 30\,000 stocks over 60 years --- orders of magnitude more label-bearing rows than the 10\,500 here --- and for a continuous excess-return target rather than a three-way daily sign; Fischer and Krauss~\cite{fischer2018} likewise report LSTM gains on the full S\&P 500 rather than seven tickers, while Patel et al.~\cite{patel2015} reach our conclusion at a comparable sample size. Our result is therefore not evidence against deep learning for financial time series: it locates the regime where it does not pay --- short daily histories, a near-noise one-day label, and features that are already multi-day aggregates --- and Section~\ref{sec:robust} shows a serious search does not rescue it.
+With approximately 1500 training samples per ticker (10\,500 globally) and 61 inputs, deep models with $10^5$--$10^6$ parameters are firmly in an overfitting regime. The technical indicators already capture most of the linear predictive content of price action; the elasticnet penalty selects an effective subset of them automatically and stabilizes the remaining coefficients. XGBoost shows similar resilience because tree pruning and the $\ell_2$ leaf penalty play the same role. This matches a broader finding: on tabular data with engineered features, tree-based and linear models often match or beat deep networks~\cite{grinsztajn2022}. The asset-pricing literature is instructive about \emph{when} that ordering flips: Gu et al.~\cite{gukellyxiu2020} rank neural networks first, but on $\sim$30\,000 stocks over 60 years and for a continuous target rather than a three-way daily sign; Fischer and Krauss~\cite{fischer2018} report LSTM gains on the full S\&P 500 rather than seven tickers, while Patel et al.~\cite{patel2015} reach our conclusion at a comparable sample size. Our result locates the regime where deep learning does not pay --- short daily histories, a near-noise one-day label, features that are already multi-day aggregates --- and Section~\ref{sec:robust} shows a serious search does not rescue it.
 
 \paragraph{Why is the cross-asset variation so large?}
 Section~\ref{sec:crossasset} indicates that the model accounts for a smaller share of Sharpe variance than the ticker does. Tickers with persistent trends or high realized volatility (AMZN, TSLA, NVDA) reward any reasonably calibrated classifier; range-bound tickers (GOOGL) do not. This has practical consequences: a portfolio constructor would do better to pre-screen tickers by predictability than to choose a more elaborate model class.
 
-\paragraph{Global vs.\ per ticker.}
-Pooling all tickers into one training set helps XGBoost in all three experiments and the deep models in seven of nine (Tables~\ref{tab:f1_global} and~\ref{tab:f1_pt}), which is expected when it multiplies the sample by seven. For LR it is a wash --- per-ticker is marginally better in Exps A and B, clearly worse in Exp C. Pooling thus buys most for the sample-hungry models and nothing for the one that already regularizes hardest.
-
-\paragraph{When should one use the deep models?}
-Under the protocol of Section~\ref{sec:results} the LSTM and CNN-LSTM at least contain drawdown better than LR ($-0.41$ and $-0.40$ against $-0.47$), but that advantage does not survive Section~\ref{sec:robust}, where their drawdowns are the worst of the five ($-0.68$ and $-0.62$). They become attractive when the application needs temporal dependencies beyond the look-back already baked into the features, and when there is enough history to justify the parameter count. Here neither condition is met.
+\paragraph{Pooling and when to use deep models.}
+Pooling all tickers helps XGBoost in all three experiments and the deep models in seven of nine (Tables~\ref{tab:f1_global} and~\ref{tab:f1_pt}) --- expected when it multiplies the sample by seven --- but is a wash for LR, which already regularizes hardest. As for the deep models themselves: under Section~\ref{sec:results}'s protocol the LSTM and CNN-LSTM contain drawdown better than LR ($-0.41$ and $-0.40$ vs.\ $-0.47$), but that advantage vanishes under Section~\ref{sec:robust} ($-0.68$ and $-0.62$). They become attractive with longer histories or richer inputs; neither condition is met here.
 
 \section{Limitations}
 \label{sec:limitations}
 
 We do not include transaction costs or slippage; under realistic costs the rank order between models with $\text{Sharpe}\!<\!0.5$ would likely flip toward the strategy that trades least. The sample is restricted to seven large-cap US tech stocks, so conclusions need not generalize to other sectors or markets. Position sizing is binary ($\pm 1$ or $0$); a Kelly or volatility-targeted scheme would change absolute Sharpe figures while keeping the relative ranking. We use a single split per experiment; walk-forward, purged cross-validation~\cite{lopezdeprado2018} would tighten confidence intervals at higher compute cost.
 
-The main limitation is that all three splits test on 2025. Section~\ref{sec:data} argues the year is not anomalous and Section~\ref{sec:robust} attaches bootstrap intervals, but one period cannot fully separate a model effect from a year-specific regime; rolling the protocol over several consecutive test years remains the most valuable extension, and the run-to-run sensitivity of Section~\ref{sec:robust} suggests it would widen the intervals. Two caveats follow. The search is symmetric in \emph{procedure} but not in \emph{dimension} --- 80 trials over 17--20 hyper-parameters explore a deep space far more sparsely than 150 over 9 explore XGBoost's --- so we claim only that a realistic search does not overturn the ranking. And the conclusion is scoped to this representation: multi-day aggregates stacked over a short window are close to the worst case for a sequence model.
+The main limitation is that all three splits test on 2025. Section~\ref{sec:data} argues the year is not anomalous and Section~\ref{sec:robust} attaches bootstrap intervals, but a single period cannot fully separate a model effect from a year-specific regime; rolling the protocol over several test years remains the most valuable extension. Two caveats: our search is symmetric in \emph{procedure} but not in \emph{dimension} (80 trials over 17--20 deep hyper-parameters vs.\ 150 over XGBoost's 9), so we claim only that a realistic search does not overturn the ranking; and the conclusion is scoped to this representation, where multi-day aggregates over a short window are close to the worst case for a sequence model.
 
 \section{Conclusions}
 \label{sec:conclusions}
 
-A multinomial logistic regression with elasticnet regularization, trained on 61 indicator features from free Yahoo Finance data, beats three deep architectures and a tuned XGBoost on average F1-macro across three temporal splits and matches or exceeds them economically --- and its margin survives a symmetric hyper-parameter search, a selection protocol that touches no test data, and bootstrap confidence intervals. Statistical feature pre-selection does not help: keeping all features and relying on the model's own regularization wins in 11 of 15 cases. Ticker volatility, not model class, explains the bulk of the cross-asset Sharpe variation. For daily large-cap data with no alternative datasets, a well-regularized linear classifier is a competitive and cheap default; deep models become attractive only with longer histories or richer inputs.
+A multinomial logistic regression with elasticnet regularization, trained on 61 indicator features from free Yahoo Finance data, beats three deep architectures and a tuned XGBoost on average F1-macro across three temporal splits and matches or exceeds them economically --- and its margin survives a symmetric hyper-parameter search, a selection protocol that touches no test data, and bootstrap confidence intervals. Statistical feature pre-selection does not help: keeping all features and relying on the model's own regularization wins in 11 of 15 cases. Ticker volatility, not model class, explains the bulk of the cross-asset Sharpe variation. For daily large-cap data with no alternative datasets, a well-regularized linear classifier is a competitive and cheap default; deep models become attractive only with longer histories or richer inputs. All code, data manifests, fixed random seeds and library versions are available in the supplementary material.
 
-\paragraph{Reproducibility.}
-All code and data manifests are available in the supplementary material. Random seeds are fixed and listed per run; library versions match those in \texttt{requirements.txt}.
-
-\begin{thebibliography}{9}
+{\footnotesize
+\setlength{\columnsep}{12pt}
+\begin{multicols}{2}
+\begin{thebibliography}{99}
+\setlength{\itemsep}{0.5pt plus 0.5pt minus 0.5pt}
+\setlength{\parskip}{0pt}
+\raggedright
 
 \bibitem{fama1970}
 Fama, E. F.: Efficient capital markets: A review of theory and empirical work. The Journal of Finance \textbf{25}(2), 383--417 (1970)
@@ -511,12 +472,11 @@ L\'opez de Prado, M.: Advances in Financial Machine Learning. Wiley (2018)
 \bibitem{grinsztajn2022}
 Grinsztajn, L., Oyallon, E., Varoquaux, G.: Why do tree-based models still outperform deep learning on tabular data? In: Advances in Neural Information Processing Systems (Datasets and Benchmarks Track), vol.~35 (2022)
 
-\bibitem{shwartzziv2022}
-Shwartz-Ziv, R., Armon, A.: Tabular data: Deep learning is not all you need. Information Fusion \textbf{81}, 84--90 (2022)
-
 \bibitem{gukellyxiu2020}
 Gu, S., Kelly, B., Xiu, D.: Empirical asset pricing via machine learning. The Review of Financial Studies \textbf{33}(5), 2223--2273 (2020)
 
 \end{thebibliography}
+\end{multicols}
+}
 
 \end{document}
