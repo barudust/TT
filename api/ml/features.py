@@ -6,13 +6,21 @@ Puerto exacto de la logica de calculo usada para entrenar los modelos en
 en la raiz del repo). Las formulas deben coincidir bit a bit con las de
 entrenamiento: cualquier cambio aqui hace que las predicciones en vivo dejen
 de ser comparables con las metricas reportadas en la tesis.
+
+Desde Vía 8 (2026-08-25), el modelo de produccion ademas de las 61 features
+base incluye 15 features de interaccion (productos entre pares de las top-10).
+Ver INVESTIGACION_COMPLETA.md §7 y scripts_opt/entrenar_produccion.py.
 """
+import json
+from pathlib import Path
+
 import numpy as np
 import pandas as pd
 import yfinance as yf
 
-# Debe coincidir con feat_cols del modelo ganador (metricas_global.json).
-FEATURE_COLUMNS = [
+# Las 61 features base — coinciden con scripts_opt/common.py y el dataset de
+# entrenamiento (`tesis_ml_stocks/01_raw_datasets/`).
+FEATURES_BASE = [
     "ret_1d", "ret_2d", "ret_3d", "ret_5d", "ret_10d",
     "mom_5d", "mom_10d", "mom_20d", "mom_60d",
     "dist_ma10", "dist_ma20", "dist_ma30", "dist_ma50", "dist_ma200",
@@ -31,6 +39,35 @@ FEATURE_COLUMNS = [
     "SP500_ret", "SP500_vol20", "SP500_mom20",
     "VIX", "VIX_change", "VIX_norm",
 ]
+
+
+def _cargar_pares_interaction() -> list[tuple[str, str]]:
+    """Carga los pares desde el JSON del artefacto (fuente de verdad)."""
+    p = Path(__file__).parent / "artifacts" / "interaction_pairs.json"
+    if not p.exists():
+        return []
+    with open(p) as f:
+        data = json.load(f)
+    return [tuple(par) for par in data["pairs"]]
+
+
+PARES_INTERACTION = _cargar_pares_interaction()
+FEATURES_INTERACTION = [f"{a}_x_{b}" for a, b in PARES_INTERACTION]
+
+# API pública: 61 base + 15 interactions = 76 features
+FEATURE_COLUMNS = FEATURES_BASE + FEATURES_INTERACTION
+
+
+def anadir_interactions(df: pd.DataFrame) -> pd.DataFrame:
+    """Agrega las 15 columnas de interaccion `a_x_b` = df[a] * df[b].
+
+    Se aplica sobre un DataFrame con las 61 features base. Devuelve el mismo
+    DataFrame con 15 columnas adicionales.
+    """
+    for a, b in PARES_INTERACTION:
+        df[f"{a}_x_{b}"] = df[a] * df[b]
+    return df
+
 
 EPS = 1e-8
 
@@ -271,6 +308,10 @@ def build_feature_frame(df_ohlcv: pd.DataFrame, df_market: pd.DataFrame) -> pd.D
     Conserva tambien Open/High/Low/Close/Volume crudos para uso del API
     (precio actual, historial de velas, etc.) y descarta filas con NaN
     (warmup de indicadores).
+
+    Desde Vía 8, ademas de las 61 features base agrega 15 features de
+    interaccion (productos entre las top-10). Es lo que el modelo LR de
+    produccion espera.
     """
     feat = calcular_features(df_ohlcv)
 
@@ -280,6 +321,10 @@ def build_feature_frame(df_ohlcv: pd.DataFrame, df_market: pd.DataFrame) -> pd.D
     if not df_market.empty:
         feat = feat.join(df_market, how="left")
         feat[df_market.columns] = feat[df_market.columns].ffill()
+
+    # Añadir 15 features de interaccion (después de que SPY/VIX estén disponibles,
+    # porque varios pares combinan SP500_* con features tecnicas locales).
+    feat = anadir_interactions(feat)
 
     feat.dropna(subset=FEATURE_COLUMNS, inplace=True)
     return feat

@@ -6,9 +6,10 @@ from ml.model import load_model, CLASS_TO_SIGNAL
 
 
 def test_load_model_matches_feature_columns():
+    """Desde Vía 8 el modelo usa 61 features base + 15 interactions = 76."""
     model = load_model()
     assert set(model.feat_cols) == set(FEATURE_COLUMNS)
-    assert len(model.feat_cols) == 61
+    assert len(model.feat_cols) == 76
 
 
 def test_predict_row_shape():

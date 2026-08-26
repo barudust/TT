@@ -1,11 +1,14 @@
 """
-Carga del modelo ganador (Regresion Logistica elasticnet, global, Exp B)
+Carga del modelo ganador (Regresion Logistica L2 + interactions, global, Exp B)
 y su uso para inferencia de señales BUY/SELL/HOLD.
 
-Ver RESULTADOS_OPTIMIZADOS/docs/GUIA_PROGRESO.md en la raiz del repo para el
-analisis completo que declara este modelo como ganador
-(F1-macro=0.4167, Sharpe test=1.25) frente a XGBoost, LightGBM, LSTM y
-CNN-LSTM.
+Actualizado 2026-08-25 al ganador de Vía 8 (LR + 15 interactions), que mejora
+al baseline LR elasticnet en F1 (+0.023) y Sharpe (+0.23) sobre val 2024.
+
+Ver RESULTADOS_OPTIMIZADOS/INVESTIGACION_COMPLETA.md §7 para el analisis
+completo que sustenta este modelo como ganador tras auditar 5 arquitecturas
+(LR, XGBoost, LSTM, CNN, CNN-LSTM), 150 trials de Optuna, 6 tecnicas
+post-Optuna (Vía 7) y 5 tecnicas de dataset (Vía 8).
 """
 import os
 import pickle
@@ -15,7 +18,7 @@ import numpy as np
 
 from .features import FEATURE_COLUMNS
 
-MODEL_VERSION = "LR-02-elasticnet-all_global_expB"
+MODEL_VERSION = "LR-v8-interactions-produccion"
 
 # Clases del modelo: 0=SELL, 1=HOLD, 2=BUY (ver scripts_opt/common.py -> NOMBRES)
 CLASS_TO_SIGNAL = {0: "sell", 1: "hold", 2: "buy"}

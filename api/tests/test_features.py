@@ -1,9 +1,14 @@
 import numpy as np
 import pytest
 
-from ml.features import calcular_features, build_feature_frame, FEATURE_COLUMNS
+from ml.features import (calcular_features, build_feature_frame,
+                          FEATURE_COLUMNS, FEATURES_BASE)
 
-TECHNICAL_COLUMNS = [c for c in FEATURE_COLUMNS if not c.startswith(("SP500_", "VIX"))]
+# Solo columnas técnicas puras (excluye SPY/VIX que vienen del mercado y las
+# 15 interactions que se calculan en build_feature_frame, no en
+# calcular_features).
+TECHNICAL_COLUMNS = [c for c in FEATURES_BASE
+                     if not c.startswith(("SP500_", "VIX"))]
 
 
 def test_calcular_features_has_all_technical_columns(synthetic_ohlcv):
