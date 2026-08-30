@@ -1,81 +1,110 @@
 # Paper
 
 Todo lo relacionado con el paper académico del proyecto vive aquí. Los
-resultados numéricos que lo respaldan (CSVs, logs, modelos entrenados)
-**no** están aquí — siguen en
+resultados numéricos que lo respaldan (CSVs, logs, modelos entrenados) **no**
+están aquí — siguen en
 [`../RESULTADOS_OPTIMIZADOS/`](../RESULTADOS_OPTIMIZADOS/), que es de donde
 `paper.tex` los cita.
 
 ## Qué documento es cuál
 
-- **[`paper.tex`](paper.tex)** — el documento **canónico**: paper académico
-  en inglés, formato Springer LNCS (MICAI). Usa la evaluación "splits
-  unificados" (v4): F1-macro=0.385, Sharpe=0.755 en Exp B. Es el más
-  reciente y riguroso metodológicamente — si vas a citar un número
-  específico para la defensa, es este, no `PAPER_FINAL.md`.
-- **[`PAPER_FINAL.md`](PAPER_FINAL.md)** — borrador en español (22 de
-  mayo), con los números de la evaluación "v1" (F1-macro=0.417,
-  Sharpe=1.25 en Exp B) — la que efectivamente entrenó el `.pkl` que corre
-  en producción en `api/`. Ver
-  [`../STATUS.md`](../STATUS.md) para por qué ambas evaluaciones son
-  válidas y la conclusión (LR gana) no cambia entre una y otra.
-- **[`borradores/`](borradores/)** — iteraciones previas de
-  `PAPER_FINAL.md` (`PAPER.md`, `PAPER_TESIS.md`), conservadas como
-  historial, no como referencia vigente.
+- **[`paper.tex`](paper.tex)** — el documento **canónico y único**: paper
+  académico en inglés, formato Springer LNCS (MICAI 2026). Contiene la revisión
+  que responde a los revisores #2 y #3 (ver más abajo).
+- **[`paper.pdf`](paper.pdf)** — el PDF **enviado** a MICAI (12 páginas). Es
+  anterior a la revisión: todavía no incluye los cambios de `paper.tex`.
+  Recompilar para regenerarlo.
 
-## Estructura
+> **Nota histórica.** Hubo dos copias del `.tex` en circulación. La de
+> `RESULTADOS_OPTIMIZADOS/paper_latex/paper.tex` (rama `David`, y aún presente en
+> el worktree `project-structure-org`) es **anterior**: `paper_review/paper.tex`
+> la contiene íntegra y además trae las correcciones de revisión. La copia de
+> `paper_latex/` puede borrarse sin perder nada.
 
+## Resultados que cita el paper
+
+| Sección | Fuente |
+|---|---|
+| Tablas 4–7 y figuras (benchmark v4) | `../RESULTADOS_OPTIMIZADOS/v4/resultados_v4.csv` |
+| Sección 8 (protocolo corregido, Optuna simétrico, IC bootstrap) | `../RESULTADOS_OPTIMIZADOS/v5/reportes/tabla{1,2,4,5}*.md` |
+| Justificación del año de test 2025 | `../tesis_ml_stocks/01_raw_datasets/*.parquet` |
+| Expediente completo de la investigación | `../RESULTADOS_OPTIMIZADOS/INVESTIGACION_COMPLETA.md` |
+
+## Figuras
+
+Se generan con **[`../scripts_opt/plots_paper.py`](../scripts_opt/plots_paper.py)**,
+que escribe directamente en `figures/` con los nombres que espera el `.tex`:
+
+```bash
+python scripts_opt/plots_paper.py
 ```
-paper/
-├── paper.tex          ← documento principal (canónico)
-├── figures/            ← figuras .png (7)
-├── PAPER_FINAL.md      ← borrador en español (v1)
-├── borradores/          ← iteraciones previas (historial)
-└── README.md
+
+Ese script existe porque el revisor #3 señaló que el texto de las figuras era
+ilegible. La causa no era el DPI sino la reducción: el `.tex` coloca las figuras
+a `\textwidth` (122 mm ≈ 4.8 in) y se estaban creando a 15–19 in de ancho, así
+que una anotación de 15 pt acababa impresa a menos de 4 pt. `plots_paper.py`
+construye cada figura a un ancho cercano al de la página y calcula los tamaños de
+fuente con `ptsize()` a partir del tamaño **impreso** deseado.
+
+| Archivo | Usada en | Notas |
+|---|---|---|
+| `fig_sharpe_heatmap.png` | §7.3 | Transpuesta (modelos en x, tickers en y) para que las anotaciones quepan |
+| `fig_signal_dist.png` | §7.5 | |
+| `fig_global_metrics.png` | suplementario | Detrás de `\extrafigs` |
+| `fig_sharpe_boxplot.png` | suplementario | Detrás de `\extrafigs` |
+| `fig_train_years.png` | suplementario | Detrás de `\extrafigs` |
+| `fig_f1_heatmap.png` | suplementario | No referenciada en el `.tex` |
+| `fig_model_ranking.png` | — | Sobrante de `plots_extra.py`, no se usa |
+
+### El flag `\extrafigs`
+
+`paper.tex` define en el preámbulo:
+
+```latex
+\newif\ifextrafigs
+\extrafigsfalse
 ```
 
-## Compilación de `paper.tex`
+Tres figuras (métricas globales, boxplot de Sharpe, efecto del tamaño del train)
+son redundantes con las tablas 4–5 y están envueltas en `\ifextrafigs ... \fi`
+para que el paper entre en el límite de páginas. Cambiar a `\extrafigstrue` las
+vuelve a insertar en línea, sin tocar nada más.
 
-El paper usa la clase `llncs.cls` de Springer. Necesitas descargar el template de:
-- https://www.springer.com/gp/computer-science/lncs/conference-proceedings-guidelines
+## Presupuesto de páginas
 
-Descargas el ZIP del template LNCS y copias `llncs.cls` a esta carpeta. Luego:
+El PDF enviado tiene **12 páginas**, que es el máximo de MICAI/LNCS. La revisión
+añade la sección 8 y queda **estimada en ~13 páginas**. Antes de enviar hay que
+compilar y confirmar el número real; si sobra una página, en orden de menor daño:
+
+1. Borrar §7.6 (*Drill-down*) y su Tabla 7 — redundante con §7.3 (≈0.3 pág.)
+2. Mover `fig_signal_dist` detrás de `\extrafigs` (≈0.3 pág.)
+3. Borrar el párrafo *What actually moved the deep models* de §8 (≈0.3 pág.)
+
+## Compilación
+
+`paper.tex` usa la clase `llncs.cls` de Springer, que **no** está en el repo.
+Descargar el template de
+<https://www.springer.com/gp/computer-science/lncs/conference-proceedings-guidelines>,
+copiar `llncs.cls` a esta carpeta y:
 
 ```bash
 pdflatex paper.tex
-pdflatex paper.tex    # segunda pasada para tabla de contenidos / referencias
+pdflatex paper.tex
 ```
 
-O usa Overleaf: subir la carpeta entera + `llncs.cls`. Funciona directo.
+La segunda pasada es necesaria para las referencias cruzadas. En Overleaf: subir
+la carpeta entera junto con `llncs.cls`.
 
 ## Notas sobre MICAI
 
-- MICAI usa formato Springer LNCS/LNAI (single column, 12 páginas máximo).
+- Formato Springer LNCS/LNAI, una columna, 12 páginas máximo.
 - Inglés obligatorio.
-- Bibliografía incluida en el `.tex` (no requiere `.bib` separado).
-- 7 figuras en `figures/` (todas en PNG 150 DPI).
+- Bibliografía embebida en el `.tex` (`thebibliography`), sin `.bib` aparte.
+- El preámbulo **no** carga `caption`/`subcaption`: Springer lo desaconseja con
+  `llncs` y el documento no los necesita.
 
 ## Para enviar a otra conferencia
 
-- **IEEE:** cambiar `\documentclass{llncs}` por `\documentclass[conference]{IEEEtran}` y ajustar referencias.
+- **IEEE:** cambiar `\documentclass{llncs}` por
+  `\documentclass[conference]{IEEEtran}` y ajustar referencias.
 - **ACM:** usar `\documentclass[sigconf]{acmart}`.
-
-## Figuras incluidas
-
-| Archivo | Descripción | Sección |
-|---------|-------------|---------|
-| `fig_global_metrics.png` | F1, Win Rate, Profit Factor, Max DD por modelo×exp (GLOBAL) | §6.1 |
-| `fig_sharpe_heatmap.png` | Heatmap Sharpe modelo × ticker × exp | §6.3 |
-| `fig_f1_heatmap.png` | Heatmap F1 modelo × ticker × exp | Apéndice |
-| `fig_signal_dist.png` | Distribución de señales predichas (BUY/HOLD/SELL) | §6.6 |
-| `fig_train_years.png` | Efecto del tamaño del train (10/6/4 años) | §6.4 |
-| `fig_model_ranking.png` | Ranking de modelos con barras de error | (no usado en paper actual) |
-| `fig_sharpe_boxplot.png` | Boxplot Sharpe por ticker | §6.3 |
-
-## Datos fuente
-
-- Tablas: `../RESULTADOS_OPTIMIZADOS/reportes/v4_final/*.csv`
-- Resultados primarios: `../RESULTADOS_OPTIMIZADOS/v4/resultados_v4.csv`
-- Código: `../scripts_opt/`
-- Bitácora completa del proceso de optimización:
-  `../RESULTADOS_OPTIMIZADOS/docs/GUIA_PROGRESO.md`
