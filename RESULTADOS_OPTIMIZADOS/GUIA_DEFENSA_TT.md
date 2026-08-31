@@ -1539,18 +1539,43 @@ R: RL para trading requiere un entorno simulado con dinámicas de mercado (order
 
 # Cap. 13 — Iteraciones v0 → v8
 
-El TT no fue una sola corrida — fueron 9 iteraciones con distintos enfoques. Aquí el resumen.
+## 13.0 ⚠️ Nota sobre numeración (dos sistemas se cruzan)
+
+En este TT hay **dos numeraciones distintas** que pueden confundir a un sinodal:
+
+**Numeración 1 (versiones del proyecto):** iteraciones temporales del pipeline.
+Existen: v1, v2, v3, v4, v5, v7, v8.
+**NO existe v6** como versión de proyecto.
+
+**Numeración 2 (sub-vías dentro de v5):** cuando reestructuramos v5, la
+planeamos como 7 sub-vías (V0-V6). Están documentadas en
+`docs/PLAN_MAESTRO_BUSQUEDA.md`. Todas son PARTE de v5, no versiones separadas:
+
+| Sub-vía dentro de v5 | Qué hace |
+|:---:|---|
+| V0 | Pipeline nuevo (`run_v5.py`) que replica v4 bit-exact |
+| V1 | Torneo de 6 decisiones de protocolo (criterio época, ventanas alineadas, escalador, pesos clase, pooling, refit) |
+| V2 | Optuna real en deep models (80 trials × 3 arquitecturas) |
+| V3 | Optuna simétrico en LR/XGB (150 trials) |
+| V4 | Más datos y features del dataset v5 (bonos, VVIX, HYG/LQD) |
+| V5 | Threshold económico + análisis de costos |
+| V6 | Walk-forward temporal + intervalos de confianza bootstrap |
+
+**Por eso el paper habla de "under the corrected protocol" en §6** — se refiere
+al resultado agregado de V0-V6 (todas parte de v5 del proyecto).
+
+## 13.1 Tabla de iteraciones del proyecto
 
 | Ver. | Cambio principal | Resultado | Estado |
 |---|---|---|:---:|
-| v0 | Baseline inicial (grid search en 5 modelos) | Estableció pipeline base | Historia |
-| v1 | Todos los modelos + splits originales | LR = 0.380, XGB = 0.386 | Historia |
-| v2 | Threshold calibration | Sin mejora estable | Descartada |
-| v3 | 94 features (yield curve, DXY, gold, oil...) | Sin mejora — overfitting | Descartada |
-| **v4** | **Splits unificados: test=2025 en todos** | **LR = 0.404, XGB = 0.386** | **Paper** |
-| v5 | Protocolo corregido + Optuna 150 trials + IC 95% bootstrap | LR = 0.404 con IC | Paper §6 |
-| **v7** | Refinamiento post-Optuna: isotonic, SWA, blending, etc. | XGB + isotonic mejora (0.371, +0.60 Sharpe) | Adoptado |
-| **v8** | Exploración del dataset: target ablation, interactions, cross-asset | **LR + interactions: F1 = 0.413** | Adoptado |
+| v1 | Baseline inicial (grid search en 5 modelos, splits originales) | LR = 0.380, XGB = 0.386 | Historia |
+| v2 | Threshold calibration por clase | Sin mejora estable | Descartada |
+| v3 | 94 features (yield curve, DXY, gold, oil, XLK/XLF/etc) | Sin mejora — overfitting | Descartada |
+| **v4** | **Splits unificados: test=2025 en los 3 experimentos** | **LR = 0.404, XGB = 0.386** | **Paper original** |
+| v5 | Protocolo corregido + Optuna 150 trials + IC 95% bootstrap (contiene V0-V6 como sub-vías) | LR = 0.404 con IC [0.379, 0.428] | Paper §6 Robustness |
+| ~~v6~~ | No existe como versión de proyecto | — | ⚠️ Confundir con "V6 sub-vía" dentro de v5 |
+| **v7** | Refinamiento post-Optuna (isotonic, SWA, recency, blending) | XGB + isotonic mejora (F1 0.371, Sharpe +0.60) | Adoptado |
+| **v8** | Exploración del dataset (target ablation, interactions, cross-asset) | **LR + interactions: F1 = 0.413** | Adoptado (producción) |
 
 ## 13.1 Por qué tantas iteraciones
 
@@ -1579,7 +1604,10 @@ El TT no fue una sola corrida — fueron 9 iteraciones con distintos enfoques. A
 ## 🎯 Preguntas típicas
 
 **P: ¿Por qué tantas versiones? ¿No se enfocaron desde el principio?**
-R: Cada versión responde a un descubrimiento de la anterior. v0-v2 fueron aprender el problema. v3 refutó la hipótesis "más datos ayudan". v4 corrigió sesgos metodológicos. v5-v6 elevaron el rigor. v7-v8 exploraron mejoras marginales. Es investigación real, no ejecución lineal.
+R: Cada versión responde a un descubrimiento de la anterior. v1-v2 fueron aprender el problema. v3 refutó la hipótesis "más datos ayudan". v4 corrigió sesgos metodológicos (splits unificados). v5 elevó el rigor (Optuna simétrico + bootstrap). v7-v8 exploraron mejoras marginales adoptables. Es investigación real, no ejecución lineal.
+
+**P: Vi las versiones v1, v2, v3, v4, v5, v7, v8... ¿qué pasó con v6?**
+R: v6 NO existe como versión de proyecto. Hay una confusión de numeración: dentro de v5 planeamos 7 SUB-VÍAS (V0-V6) documentadas en `PLAN_MAESTRO_BUSQUEDA.md`. Todas esas V0-V6 son PARTE de v5, no versiones separadas. La sub-vía "V6" hizo walk-forward + bootstrap IC, que es lo que aparece en el paper §6 Robustness. Después de v5 saltamos a v7 (refinamiento) y v8 (dataset). Nunca hubo un "pipeline v6" independiente.
 
 **P: ¿Cuál es la versión "final"?**
 R: Para el paper enviado a MICAI: v4 + v5 (splits unificados + protocolo corregido). Para el modelo de producción del TT: v8 (LR + interactions). Son distintas porque el paper se enviö antes de las Vías 7 y 8.
