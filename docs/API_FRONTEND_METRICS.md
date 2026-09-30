@@ -1,44 +1,60 @@
-# API → Frontend: Métricas esperadas
+# Métricas que la API entrega al frontend
 
-El frontend de la pestaña `Rendimiento` espera recibir un array de objetos (por acción) con las siguientes claves. En la API, enviar estas claves (nombres sugeridos) para cada activo.
+`GET /stocks/:symbol/metrics?days=N` y `GET /metrics?days=N` (N ∈ 30, 60,
+90) devuelven, por acción, las métricas de la ventana de los últimos N días
+hábiles. Se calculan en `generate_metrics()` (`api/main.py`) con la
+metodología de la tesis; el frontend solo las formatea.
 
-- `symbol` : string — Ticker / símbolo del activo
-- `name` : string — Nombre legible del activo
-- `cumulative_return_90d` : number — Retorno acumulado en los últimos 90 días (porcentaje, p. ej. 12.5)
-- `return_vs_bh_90d` : number — Retorno vs Buy&Hold en 90 días (porcentaje)
-- `sharpe_90d` : number — Sharpe ratio calculado en 90 días
-- `max_drawdown_90d` : number — Máxima caída (%) en 90 días (positivo — el frontend muestra con signo "-")
-- `win_rate_90d` : number — Win rate (%) en 90 días
-- `profit_factor_90d` : number — Profit factor en 90 días
-- `f1_macro_last_month` : number — F1 macro del último mes (0..1)
-- `f1_buy_last_month` : number — F1 para señales BUY del último mes (0..1)
-- `f1_sell_last_month` : number — F1 para señales SELL del último mes (0..1)
-- `signal_buy_pct_90d` : number — % de señales BUY en los últimos 90 días (0..100)
-- `signal_hold_pct_90d` : number — % de señales HOLD en los últimos 90 días (0..100)
-- `signal_sell_pct_90d` : number — % de señales SELL en los últimos 90 días (0..100)
+## Cómo se evalúa cada día
 
-Notas:
-- Los nombres de las claves en el frontend están mapeados a campos tipo `cumulativeReturn`, `return_vs_bh`, `sharpeRatio`, `maxDrawdown`, `winRate`, `profitFactor`, `f1_macro`, `f1_buy`, `f1_sell`, `signal_buy_pct`, `signal_hold_pct`, `signal_sell_pct`.
-- Si la API usa nombres distintos, actualizar el mapping en `src/app/pages/Performance.tsx` en la función que procesa la respuesta.
-- Enviar valores numéricos (floats). Para porcentajes, puede enviarse en formato 12.5 (no 0.125), el frontend asumirá la unidad mostrada.
+La señal del día *t* se calcula con el cierre de *t* y apuesta por el
+movimiento del cierre de *t* al cierre de *t+1*:
 
-Ejemplo de objeto por acción:
+- **Etiqueta real** (`actualSignal`): la misma del entrenamiento
+  (`api/ml/target.py`). Con `r = ln(C_{t+1}/C_t)`: BUY si `r` ≥ percentil 70
+  de los 252 retornos previos del mismo activo, SELL si `r` ≤ percentil 30,
+  HOLD en otro caso.
+- **Estrategia**: BUY = posición larga (`+r`), SELL = posición corta (`−r`),
+  HOLD = sin posición (0), abierta al cierre de *t* y cerrada al cierre de
+  *t+1*, sin costos de transacción.
+- El último día de la ventana todavía no tiene cierre siguiente: cuenta en
+  la distribución de señales pero no en las métricas (`pendingPredictions`).
 
-```json
-{
-  "symbol": "AAPL",
-  "name": "Apple Inc.",
-  "cumulative_return_90d": 8.4,
-  "return_vs_bh_90d": 1.2,
-  "sharpe_90d": 1.05,
-  "max_drawdown_90d": 5.3,
-  "win_rate_90d": 62.1,
-  "profit_factor_90d": 1.45,
-  "f1_macro_last_month": 0.78,
-  "f1_buy_last_month": 0.82,
-  "f1_sell_last_month": 0.74,
-  "signal_buy_pct_90d": 25.0,
-  "signal_hold_pct_90d": 50.0,
-  "signal_sell_pct_90d": 25.0
-}
-```
+## Campos
+
+| Campo | Unidad | Definición |
+|---|---|---|
+| `windowDays` | días | N solicitado |
+| `periodStart`, `periodEnd` | fecha | primer y último día de la ventana |
+| `totalPredictions` | n | señales emitidas en la ventana |
+| `evaluatedPredictions` | n | señales con resultado conocido |
+| `pendingPredictions` | n | señales aún sin cierre siguiente |
+| `correctPredictions` | n | `prediction == actualSignal` |
+| `accuracy` | 0–1 | `correctPredictions / evaluatedPredictions` |
+| `f1_buy`, `f1_hold`, `f1_sell` | 0–1 | F1 de cada clase (scikit-learn) |
+| `f1_macro` | 0–1 | promedio de los tres F1 (azar ≈ 0.33) |
+| `cumulativeReturn` | % | `exp(Σ estrategia) − 1` |
+| `bh_return` | % | comprar y mantener en los mismos días: `exp(Σ r) − 1` |
+| `return_vs_bh` | puntos % | `cumulativeReturn − bh_return` |
+| `sharpeRatio` | — | `√252 · media / desv. est.` de la estrategia diaria; `null` si hubo menos de 5 días con posición (no interpretable) |
+| `bh_sharpe` | — | lo mismo para comprar y mantener |
+| `maxDrawdown` | % (positivo) | mayor caída desde un máximo de la curva de capital de la estrategia |
+| `winRate` | % | días con posición y ganancia / días con posición; `null` sin operaciones |
+| `profitFactor` | — | Σ ganancias / Σ pérdidas en días con posición; `null` con menos de 5 días con posición o sin pérdidas |
+| `numberOfTrades` | n | días con posición (cada señal BUY/SELL es una operación de 1 día) |
+| `exposure` | % | días con posición / días evaluados |
+| `finalCapital` | $ | 1000 × (1 + `cumulativeReturn`/100) |
+| `avgConfidence` | 0–1 | confianza media de las señales emitidas |
+| `signal_buy_pct`, `signal_hold_pct`, `signal_sell_pct` | % | distribución de señales emitidas |
+
+Si ninguna señal de la ventana tiene resultado conocido, solo se envían los
+campos de conteo, fechas, confianza y distribución.
+
+## Historia
+
+Hasta septiembre de 2026 estas métricas se calculaban distinto y no
+correspondían a la tesis: la "señal correcta" se comparaba con el movimiento
+del día *anterior* (±1 %), `f1_buy`/`f1_sell` eran en realidad precisiones,
+el Sharpe y el drawdown se calculaban sobre el precio de la acción (no sobre
+la estrategia) y la ventana siempre era de 30 días aunque la interfaz dijera
+90. Ver `RESULTADOS_OPTIMIZADOS/docs/ANALISIS_HOLD_Y_GLOBAL.md` §5.

@@ -1,6 +1,36 @@
 # Estado del proyecto
 
-Última actualización: 2026-07-16.
+Última actualización: 2026-09-30.
+
+## Análisis del modelo actual + plataforma 100 % con datos del modelo (2026-09-30)
+
+- **Modelo (sin cambios, solo medición)** — `scripts_opt/analisis_hold_global.py`,
+  `scripts_opt/evaluar_produccion_2026.py`, informe en
+  `RESULTADOS_OPTIMIZADOS/docs/ANALISIS_HOLD_Y_GLOBAL.md`:
+  - El exceso de HOLD (57 % predicho vs 42 % real en 2025; 95 % en ago–sep 2026)
+    es "voto dividido": en el 100 % de los HOLD, P(BUY)+P(SELL) > P(HOLD). Se
+    concentra cuando el VIX está bajo su media anual.
+  - 40/60 no lo corrige (sigue 53 % HOLD con 20 % real) y baja κ y Sharpe.
+  - Global vs por-ticker: gana el global (significativo en LR, LSTM, CNN; empate
+    en XGBoost; ningún modelo mejor por ticker).
+  - 2026 fuera de muestra: F1 0.313, κ ≈ 0.01. Las interactions de Vía 8 no
+    mejoran en val 2024 (0.325 vs 0.326): se eligieron mirando test 2025, y el
+    `.metrics.json` etiqueta como "val 2024" cifras que son de test 2025.
+  - Existe un walk-forward 2020-2025 de v5 (`v5/log_wf_v5.txt`) no citado en el
+    paper: LR 0.350 y XGBoost 0.356 de F1 medio, ninguno > 0.394 en ningún año.
+- **Escrito de justificación** para la defensa:
+  `RESULTADOS_OPTIMIZADOS/JUSTIFICACION_LIMITE_DEL_MODELO.md`.
+- **Plataforma**: ya no había valores aleatorios, pero la columna "Correcta"
+  comparaba con el día anterior, los "F1" eran precisiones, Sharpe/drawdown se
+  calculaban sobre el precio de la acción, las ventanas 60/90 no existían, el
+  estado del mercado estaba fijo y la vela intradía se trataba como cierre. Todo
+  corregido (detalle en §5 del informe y `docs/API_FRONTEND_METRICS.md`);
+  endpoints de override desactivados por defecto; service worker cambiado a
+  network-first (antes dejaba a los usuarios con la interfaz vieja). Tests de la
+  API: 20/20. Nuevos endpoints `GET /model` y `GET /market-status`.
+- **Pendiente (decisión del equipo)**: ajustar el modelo — mantener LR +
+  interactions, volver al LR de 61 features (equivalente en validación) y/o
+  aplicar el factor de prior de HOLD (k = 0.90, elegido en validación).
 
 ## Modelado (`scripts_opt/` → `RESULTADOS_OPTIMIZADOS/`)
 

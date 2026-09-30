@@ -1,7 +1,19 @@
+import { useEffect, useState } from "react";
 import { Card } from "../components/ui/card";
-import { AlertTriangle, BookOpen, GraduationCap, Code, TrendingUp, Users } from "lucide-react";
+import { AlertTriangle, BookOpen, Code, Cpu, TrendingUp, Users } from "lucide-react";
+import { API_BASE_URL } from "../../config/api";
+import type { ModelInfo } from "../types";
 
 export default function About() {
+  const [model, setModel] = useState<ModelInfo | null>(null);
+
+  useEffect(() => {
+    fetch(`${API_BASE_URL}/model`)
+      .then((r) => r.json())
+      .then((body) => body?.success && setModel(body.data))
+      .catch((e) => console.error("Error fetching model info:", e));
+  }, []);
+
   const stocks = [
     { symbol: "AAPL", name: "Apple Inc.", sector: "Tecnología" },
     { symbol: "MSFT", name: "Microsoft Corporation", sector: "Tecnología" },
@@ -14,14 +26,29 @@ export default function About() {
 
   const technologies = [
     "Python",
-    "TensorFlow",
-    "LSTM",
-    "CNN-LSTM",
+    "scikit-learn",
+    "XGBoost",
+    "PyTorch",
+    "Optuna",
+    "Flask",
+    "SQLite",
     "React",
     "TypeScript",
-    "Flask",
     "Yahoo Finance",
   ];
+
+  const ficha: Array<[string, string]> = model
+    ? [
+        ["Algoritmo", `Regresión Logística multinomial (${model.algorithm})`],
+        ["Regularización", `${model.penalty?.toUpperCase() ?? "—"}, C = ${model.C?.toExponential(2) ?? "—"}, pesos de clase ${model.classWeight ?? "—"}`],
+        ["Variables", `${model.nFeatures} (${model.nFeaturesBase} indicadores técnicos y de mercado + ${model.nInteractions} interacciones)`],
+        ["Escalado", model.scaler],
+        ["Estrategia", model.strategy],
+        ["Datos de entrenamiento", `${model.trainRange ?? "—"}${model.nTrainSamples ? ` · ${model.nTrainSamples.toLocaleString("es-MX")} días-acción` : ""}`],
+        ["Etiqueta", `Retorno a ${model.target.horizonDays} día; COMPRAR ≥ percentil ${model.target.percentileBuy}, VENDER ≤ percentil ${model.target.percentileSell} de los últimos ${model.target.rollingWindowDays} días`],
+        ["Versión", model.version],
+      ]
+    : [];
 
   return (
     <div className="pb-8">
@@ -63,24 +90,24 @@ export default function About() {
               Descripción del Proyecto
             </h3>
             <p className="text-muted-foreground leading-relaxed mb-4">
-              Esta aplicación es el resultado del Trabajo Terminal{" "}
-              <strong>TT 2026-B164</strong>, cuyo objetivo es demostrar la aplicación de
-              técnicas de Deep Learning para la clasificación de tendencias en el mercado
-              bursátil. A través de modelos de redes neuronales (LSTM y CNN-LSTM),
-              entrenados con datos históricos de precios obtenidos de Yahoo Finance, generamos
-              señales de trading diarias para una selección de acciones de alta capitalización.
+              Esta aplicación es el resultado del Trabajo Terminal <strong>TT 2026-B164</strong>, que
+              compara técnicas de Machine Learning y Deep Learning para clasificar la señal de
+              trading del día siguiente en acciones de alta capitalización, usando únicamente
+              datos históricos gratuitos de Yahoo Finance. Las señales que se muestran las genera
+              el modelo ganador de esa comparación.
             </p>
             <div className="space-y-2 text-sm text-muted-foreground">
               <p>
-                <strong>BUY (Comprar):</strong> Se espera que el precio suba en el corto
-                plazo.
+                <strong>COMPRAR:</strong> el modelo espera que el retorno del día siguiente quede
+                entre los más altos de su último año (posición larga).
               </p>
               <p>
-                <strong>SELL (Vender en corto):</strong> Se espera que el precio baje.
+                <strong>VENDER (en corto):</strong> el modelo espera que quede entre los más bajos
+                (posición corta).
               </p>
               <p>
-                <strong>HOLD (Mantener):</strong> No hay una dirección clara o se recomienda
-                esperar.
+                <strong>MANTENER:</strong> el modelo no distingue una dirección clara; no se abre
+                posición. Es más frecuente en periodos de baja volatilidad.
               </p>
             </div>
           </div>
@@ -97,49 +124,58 @@ export default function About() {
 
             <div className="space-y-4">
               <div>
-                <h4 className="font-semibold text-foreground mb-2">Modelos Utilizados</h4>
+                <h4 className="font-semibold text-foreground mb-2">Modelos comparados</h4>
                 <ul className="text-sm text-muted-foreground space-y-2 list-disc list-inside">
-                  <li>
-                    <strong>LSTM (Long Short-Term Memory):</strong> Redes neuronales
-                    recurrentes diseñadas para capturar dependencias temporales en series de
-                    datos, ideales para el análisis de precios históricos.
-                  </li>
-                  <li>
-                    <strong>CNN-LSTM:</strong> Arquitectura híbrida que combina capas
-                    convolucionales para extraer patrones locales relevantes y capas LSTM
-                    para modelar las relaciones temporales de largo plazo.
-                  </li>
+                  <li><strong>Regresión Logística</strong> con regularización (modelo ganador, en producción).</li>
+                  <li><strong>XGBoost</strong>: ensamble de árboles de decisión con gradient boosting.</li>
+                  <li><strong>LSTM</strong>: red neuronal recurrente que lee la secuencia de días previos.</li>
+                  <li><strong>CNN 1D</strong>: red convolucional que detecta patrones locales en la secuencia.</li>
+                  <li><strong>CNN-LSTM</strong>: híbrido convolucional + recurrente.</li>
                 </ul>
+                <p className="text-sm text-muted-foreground mt-2">
+                  Cada modelo se entrenó de forma global (un modelo para las 7 acciones) y por acción,
+                  en tres ventanas de entrenamiento con el mismo año de prueba (2025), con búsqueda de
+                  hiperparámetros con Optuna. La Regresión Logística obtuvo el mejor F1-macro y el mejor
+                  Sharpe; la versión global resultó igual o mejor que entrenar un modelo por acción.
+                </p>
               </div>
 
               <div>
                 <h4 className="font-semibold text-foreground mb-2">
-                  Proceso de Entrenamiento
+                  Proceso
                 </h4>
                 <ol className="text-sm text-muted-foreground space-y-2 list-decimal list-inside">
-                  <li>
-                    <strong>Recolección de datos:</strong> Descarga de precios históricos
-                    desde Yahoo Finance
-                  </li>
-                  <li>
-                    <strong>Preprocesamiento:</strong> Cálculo de indicadores técnicos y
-                    normalización
-                  </li>
-                  <li>
-                    <strong>Etiquetado:</strong> Generación de señales BUY/SELL/HOLD basadas
-                    en volatilidad
-                  </li>
-                  <li>
-                    <strong>División de datos:</strong> Conjuntos de entrenamiento,
-                    validación y prueba
-                  </li>
-                  <li>
-                    <strong>Entrenamiento y evaluación:</strong> Optimización con métricas
-                    como accuracy, precision, recall y F1-score
-                  </li>
+                  <li><strong>Datos:</strong> precios diarios OHLCV de Yahoo Finance, más el S&P 500 (SPY) y el VIX como contexto de mercado.</li>
+                  <li><strong>Variables:</strong> indicadores técnicos (retornos, medias móviles, volatilidad, RSI, MACD, volumen, velas, estacionalidad y mercado).</li>
+                  <li><strong>Etiquetado:</strong> COMPRAR / MANTENER / VENDER según el percentil del retorno del día siguiente respecto a los 252 días previos del mismo activo.</li>
+                  <li><strong>Evaluación:</strong> F1-macro para la clasificación y un backtest de un día (Sharpe, drawdown, win rate) para el valor económico.</li>
+                  <li><strong>Operación diaria:</strong> después del cierre de NYSE la API descarga los datos, recalcula las variables y el modelo emite la señal del siguiente día hábil.</li>
                 </ol>
               </div>
             </div>
+          </div>
+        </div>
+      </Card>
+
+      <Card className="p-6 mb-6">
+        <div className="flex items-start gap-4">
+          <div className="bg-muted p-3 rounded-lg flex-shrink-0">
+            <Cpu className="w-6 h-6 text-[#06b6d4]" />
+          </div>
+          <div className="flex-1 min-w-0">
+            <h3 className="font-bold text-foreground text-lg mb-3">Modelo en producción</h3>
+            {model ? (
+              <dl className="text-sm grid grid-cols-1 sm:grid-cols-[max-content_1fr] gap-x-4 gap-y-2">
+                {ficha.map(([k, v]) => (
+                  <div key={k} className="contents">
+                    <dt className="font-semibold text-foreground">{k}</dt>
+                    <dd className="text-muted-foreground break-words">{v}</dd>
+                  </div>
+                ))}
+              </dl>
+            ) : (
+              <p className="text-sm text-muted-foreground">No se pudo consultar la información del modelo en la API.</p>
+            )}
           </div>
         </div>
       </Card>
@@ -154,9 +190,8 @@ export default function About() {
               Acciones Seleccionadas
             </h3>
             <p className="text-muted-foreground mb-4">
-              Se eligieron 7 acciones de alta capitalización que representan diversos
-              sectores del mercado, garantizando liquidez y disponibilidad de datos
-              históricos:
+              Se eligieron 7 acciones de alta capitalización del sector tecnológico de EE. UU.,
+              con alta liquidez y más de diez años de historial disponible:
             </p>
             <div className="grid gap-2">
               {stocks.map((stock) => (
@@ -210,7 +245,7 @@ export default function About() {
               </div>
 
               <div>
-                <div className="font-semibold text-foreground mb-2">Director</div>
+                <div className="font-semibold text-foreground mb-2">Directores</div>
                 <p className="text-muted-foreground">Abdiel Reyes Vega</p>
                 <p className="text-muted-foreground">Emmanuel Juarez Carvajal</p>
               </div>
@@ -234,8 +269,7 @@ export default function About() {
       </Card>
 
       <div className="mt-6 text-center text-sm text-muted-foreground">
-        <p>Versión 1.0.0 - Marzo 2026</p>
-        <p className="mt-1">Desarrollado con fines académicos</p>
+        <p>Desarrollado con fines académicos</p>
       </div>
     </div>
   );

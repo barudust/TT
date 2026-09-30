@@ -1,19 +1,24 @@
 import os
 import time
-from datetime import datetime, date, timezone
+from datetime import datetime, date, time as dtime, timezone
+from functools import wraps
 from zoneinfo import ZoneInfo
 
+import numpy as np
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from dotenv import load_dotenv
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.cron import CronTrigger
+from sklearn.metrics import f1_score
 import yfinance as yf
 
 import database
 import db_ops
 from ml.features import fetch_ohlcv, fetch_market_context, build_feature_frame
 from ml.model import load_model, MODEL_VERSION
+from ml.target import (etiquetas_reales, HORIZONTE_DIAS, PERCENTIL_BUY,
+                       PERCENTIL_SELL, VENTANA_PERCENTIL)
 
 load_dotenv()
 
@@ -27,10 +32,36 @@ NYSE_TZ = ZoneInfo("America/New_York")
 REFRESH_HOUR = int(os.getenv("REFRESH_HOUR", "16"))
 REFRESH_MINUTE = int(os.getenv("REFRESH_MINUTE", "30"))
 
+# Horario regular y feriados oficiales de NYSE (fuente: calendario publicado por
+# NYSE). Solo se usa para indicar en la interfaz si el mercado esta abierto; las
+# señales no dependen de esto (se calculan con el cierre del ultimo dia habil).
+NYSE_OPEN = dtime(9, 30)
+NYSE_CLOSE = dtime(16, 0)
+NYSE_HOLIDAYS = {
+    date(2026, 1, 1), date(2026, 1, 19), date(2026, 2, 16), date(2026, 4, 3),
+    date(2026, 5, 25), date(2026, 6, 19), date(2026, 7, 3), date(2026, 9, 7),
+    date(2026, 11, 26), date(2026, 12, 25),
+    date(2027, 1, 1), date(2027, 1, 18), date(2027, 2, 15), date(2027, 3, 26),
+    date(2027, 5, 31), date(2027, 6, 18), date(2027, 7, 5), date(2027, 9, 6),
+    date(2027, 11, 25), date(2027, 12, 24),
+}
+
+# Los endpoints POST de "override manual" permiten escribir señales/metricas que
+# NO salen del modelo. Estan desactivados salvo que se pida explicitamente
+# (p.ej. para pruebas locales), para que todo lo que muestra la plataforma
+# provenga del modelo y de datos reales.
+MANUAL_OVERRIDES_ENABLED = os.getenv("ENABLE_MANUAL_OVERRIDES", "0") == "1"
+
+WINDOWS = (30, 60, 90)
+SIGNALS = ("buy", "hold", "sell")
+# Con muy pocos dias con posicion, Sharpe y profit factor no son interpretables
+# (p.ej. 1 sola operacion en 29 dias da Sharpe = sqrt(252/28) = 3.0 siempre).
+MIN_DIAS_CON_POSICION = 5
+
 STOCKS_DATA = {}
 HISTORICAL_DATA = {}
 SIGNALS_DATA = {}
-METRICS_DATA = {}
+METRICS_DATA = {}   # {symbol: {30: {...}, 60: {...}, 90: {...}}}
 COMPANY_INFO = {}
 
 STOCKS_CONFIG = [
@@ -67,6 +98,25 @@ def _with_retries(fn, *, label):
     raise last_exc
 
 
+def _utc_now_iso():
+    return datetime.now(timezone.utc).isoformat().replace("+00:00", "Z")
+
+
+def sin_vela_en_curso(df, now=None):
+    """
+    Mientras NYSE esta abierto, Yahoo Finance devuelve la vela del dia en curso
+    con el precio intradia como "Close". El modelo se entreno con cierres
+    diarios, asi que esa fila se descarta hasta que el mercado cierre; si no,
+    la señal "del dia" saldria de un precio que todavia no es el cierre.
+    """
+    if df is None or df.empty:
+        return df
+    now_ny = (now or datetime.now(timezone.utc)).astimezone(NYSE_TZ)
+    if df.index[-1].date() == now_ny.date() and now_ny.time() < NYSE_CLOSE:
+        return df.iloc[:-1]
+    return df
+
+
 def fetch_company_info(symbol):
     try:
         ticker = yf.Ticker(symbol)
@@ -92,188 +142,146 @@ def fetch_company_info(symbol):
         return {}
 
 
-def rows_from_predictions(feat_df, predictions):
+def rows_from_predictions(feat_df, predictions, reales=None):
     """
-    Combina OHLCV real + predicciones del modelo en la forma que consume
-    el frontend (ver docs/API.md). actualDirection se deriva del cambio de
-    precio real dia a dia (no es informacion futura: para el ultimo dia
-    disponible queda como "neutral" porque aun no hay cierre siguiente).
-    """
-    rows = []
-    closes = feat_df["raw_close"].tolist()
-    dates = feat_df.index
+    Combina OHLCV real + predicciones del modelo + lo que realmente paso al dia
+    siguiente, en la forma que consume el frontend (ver docs/API.md).
 
-    for i, (idx_date, pred) in enumerate(zip(dates, predictions)):
-        close = float(closes[i])
-        if i > 0:
-            prev_close = closes[i - 1]
-            price_change = ((close - prev_close) / prev_close) * 100
-            if price_change > 1:
-                actual_direction = "up"
-            elif price_change < -1:
-                actual_direction = "down"
-            else:
-                actual_direction = "neutral"
-        else:
-            actual_direction = "neutral"
+    La señal del dia t se calcula con el cierre de t y apuesta por el
+    movimiento t -> t+1, asi que se evalua contra la etiqueta real de ESE
+    movimiento, con la misma definicion que en entrenamiento (percentiles
+    30/70 rodantes, ver ml/target.py). El ultimo dia todavia no tiene cierre
+    siguiente: actualSignal, nextReturn y correct quedan en None (pendiente).
+
+    `reales` es la salida de etiquetas_reales() sobre el historial completo de
+    cierres; si no se pasa, se calcula con los cierres de `feat_df`.
+    """
+    if reales is None:
+        reales = etiquetas_reales(feat_df["raw_close"])
+    reales = reales.reindex(feat_df.index)
+
+    rows = []
+    for i, (idx_date, pred) in enumerate(zip(feat_df.index, predictions)):
+        real = reales["real"].iloc[i]
+        r_fwd = reales["r_forward"].iloc[i]
+        known = isinstance(real, str) and not np.isnan(r_fwd)
 
         rows.append({
             "date": idx_date.strftime("%Y-%m-%d"),
             "open": round(float(feat_df["raw_open"].iloc[i]), 2),
-            "close": round(close, 2),
+            "close": round(float(feat_df["raw_close"].iloc[i]), 2),
             "high": round(float(feat_df["raw_high"].iloc[i]), 2),
             "low": round(float(feat_df["raw_low"].iloc[i]), 2),
             "volume": int(feat_df["raw_volume"].iloc[i]),
             "prediction": pred["signal"],
             "confidence": round(pred["confidence"], 4),
-            "actualDirection": actual_direction,
+            "probabilities": {k: round(float(v), 4) for k, v in pred.get("probabilities", {}).items()},
+            "actualSignal": real if known else None,
+            # retorno simple del cierre t al cierre t+1, en %
+            "nextReturn": round(float(np.expm1(r_fwd)) * 100, 4) if known else None,
+            "correct": (pred["signal"] == real) if known else None,
         })
 
     return rows
 
 
 def build_recent_signals(rows, limit=10):
-    """Ultimas `limit` señales con su acierto/error frente al movimiento real."""
-    recent = rows[-limit:]
-    signals = []
-    for r in recent:
-        correct = db_ops.compute_correct(r["prediction"], r["actualDirection"])
-        signals.append({
-            "date": r["date"],
-            "signal": r["prediction"],
-            "actualPrice": r["close"],
-            "correct": correct,
-        })
-    return signals
+    """Ultimas `limit` señales (la mas reciente primero) con su resultado real."""
+    return [{
+        "date": r["date"],
+        "signal": r["prediction"],
+        "confidence": r["confidence"],
+        "actualPrice": r["close"],
+        "actualSignal": r["actualSignal"],
+        "nextReturn": r["nextReturn"],
+        "correct": r["correct"],
+    } for r in reversed(rows[-limit:])]
 
 
-def generate_metrics(historical_data):
-    # Devuelve las métricas esperadas por el frontend (nombres estandarizados)
-    if not historical_data:
+def generate_metrics(rows):
+    """
+    Metricas de la ventana, con la metodologia de la tesis:
+
+    - Clasificacion: F1-macro y F1 por clase contra la etiqueta real
+      (percentiles 30/70), solo sobre dias cuyo resultado ya se conoce.
+    - Estrategia: cada dia BUY = +r, SELL = -r, HOLD = 0, con
+      r = ln(C_{t+1}/C_t) (posicion abierta al cierre de t y cerrada al cierre
+      de t+1, sin costos). Sharpe, drawdown, win rate y profit factor son de
+      ESA estrategia; buy & hold se reporta aparte como referencia.
+    """
+    if not rows:
         return {}
 
-    total = len(historical_data)
-    buy_count = sum(1 for d in historical_data if d["prediction"] == "buy")
-    sell_count = sum(1 for d in historical_data if d["prediction"] == "sell")
-    hold_count = sum(1 for d in historical_data if d["prediction"] == "hold")
-
-    signal_buy_pct = round(buy_count / total * 100, 2) if total > 0 else 0
-    signal_sell_pct = round(sell_count / total * 100, 2) if total > 0 else 0
-    signal_hold_pct = round(hold_count / total * 100, 2) if total > 0 else 0
-
-    correct = 0
-    buy_correct = sell_correct = 0
-    buy_total = sell_total = 0
-
-    for d in historical_data:
-        pred = d["prediction"]
-        actual = d["actualDirection"]
-        ok = (pred == "buy" and actual == "up") or (pred == "sell" and actual == "down") or (pred == "hold" and actual == "neutral")
-        if ok:
-            correct += 1
-        if pred == "buy":
-            buy_total += 1
-            if actual == "up":
-                buy_correct += 1
-        if pred == "sell":
-            sell_total += 1
-            if actual == "down":
-                sell_correct += 1
-
-    accuracy = round(correct / total, 4) if total > 0 else 0
-    f1_buy = round((buy_correct / buy_total) if buy_total > 0 else 0, 4)
-    f1_sell = round((sell_correct / sell_total) if sell_total > 0 else 0, 4)
-    f1_macro = round(((f1_buy + f1_sell) / 2) if (f1_buy or f1_sell) else accuracy, 4)
-
-    capital = 1000.0
-    position = None
-    entry_price = None
-    trades = []
-    trading_days = 0
-
-    for d in historical_data:
-        sig = d["prediction"]
-        price = d["close"]
-        if sig == "buy" and position is None:
-            position = price
-            entry_price = price
-            trading_days += 1
-        elif sig == "sell" and position is not None:
-            exit_price = price
-            profit_pct = ((exit_price - entry_price) / entry_price) * 100
-            trades.append({"entry": entry_price, "exit": exit_price, "profit": profit_pct})
-            capital *= (1 + (exit_price - entry_price) / entry_price)
-            position = None
-            entry_price = None
-            trading_days += 1
-        elif sig == "hold" and position is not None:
-            trading_days += 1
-
-    if position is not None:
-        final_price = historical_data[-1]["close"]
-        capital *= (1 + (final_price - position) / position)
-
-    cumulative_return = round(((capital - 1000.0) / 1000.0) * 100, 2)
-
-    bh_return = 0
-    if total > 1:
-        bh_return = round(((historical_data[-1]["close"] - historical_data[0]["close"]) / historical_data[0]["close"]) * 100, 2)
-
-    return_vs_bh = round(cumulative_return - bh_return, 2)
-
-    win_rate = round((len([t for t in trades if t["profit"] > 0]) / len(trades) * 100) if trades else 0, 2)
-
-    gross_profit = sum([t["profit"] for t in trades if t["profit"] > 0])
-    gross_loss = abs(sum([t["profit"] for t in trades if t["profit"] < 0]))
-    profit_factor = round(gross_profit / gross_loss, 2) if gross_loss > 0 else 0
-
-    daily_returns = []
-    for i in range(1, total):
-        ret = (historical_data[i]["close"] - historical_data[i - 1]["close"]) / historical_data[i - 1]["close"]
-        daily_returns.append(ret)
-
-    if daily_returns:
-        avg = sum(daily_returns) / len(daily_returns)
-        var = sum([(r - avg) ** 2 for r in daily_returns]) / len(daily_returns)
-        std = var ** 0.5
-        sharpe = round((avg / std * (252 ** 0.5)), 2) if std > 0 else 0
-    else:
-        sharpe = 0
-
-    cumulative = 1000.0
-    peak = 1000.0
-    max_dd = 0
-    for i in range(1, total):
-        ret = (historical_data[i]["close"] - historical_data[i - 1]["close"]) / historical_data[i - 1]["close"]
-        cumulative *= (1 + ret)
-        if cumulative > peak:
-            peak = cumulative
-        dd = ((peak - cumulative) / peak) * 100
-        if dd > max_dd:
-            max_dd = dd
-
-    exposure = round((trading_days / total * 100), 2) if total > 0 else 0
-
-    return {
-        "accuracy": round(accuracy, 4),
-        "f1_macro": f1_macro,
-        "f1_buy": f1_buy,
-        "f1_sell": f1_sell,
-        "cumulativeReturn": cumulative_return,
-        "return_vs_bh": return_vs_bh,
-        "sharpeRatio": sharpe,
-        "maxDrawdown": round(max_dd, 2),
-        "winRate": win_rate,
-        "profitFactor": profit_factor,
-        "numberOfTrades": len(trades),
-        "exposure": exposure,
-        "finalCapital": round(capital, 2),
-        "evaluationPeriod": total,
-        "signal_buy_pct": signal_buy_pct,
-        "signal_hold_pct": signal_hold_pct,
-        "signal_sell_pct": signal_sell_pct,
+    total = len(rows)
+    preds_all = [r["prediction"] for r in rows]
+    metrics = {
+        "periodStart": rows[0]["date"],
+        "periodEnd": rows[-1]["date"],
         "totalPredictions": total,
-        "correctPredictions": correct,
+        "avgConfidence": round(float(np.mean([r["confidence"] for r in rows])), 4),
+        **{f"signal_{s}_pct": round(preds_all.count(s) / total * 100, 2) for s in SIGNALS},
+    }
+
+    ev = [r for r in rows if r.get("actualSignal") is not None and r.get("nextReturn") is not None]
+    metrics["evaluatedPredictions"] = len(ev)
+    metrics["pendingPredictions"] = total - len(ev)
+    if not ev:
+        return metrics
+
+    y_true = [r["actualSignal"] for r in ev]
+    y_pred = [r["prediction"] for r in ev]
+    correct = sum(t == p for t, p in zip(y_true, y_pred))
+    f1_por_clase = f1_score(y_true, y_pred, labels=list(SIGNALS), average=None, zero_division=0)
+
+    r = np.log1p(np.array([row["nextReturn"] for row in ev]) / 100)
+    pos = np.array([1 if p == "buy" else -1 if p == "sell" else 0 for p in y_pred])
+    strat = pos * r
+
+    def _sharpe(x):
+        sd = x.std()
+        return float(np.sqrt(252) * x.mean() / sd) if sd > 0 else 0.0
+
+    equity = np.exp(np.concatenate([[0.0], np.cumsum(strat)]))
+    peak = np.maximum.accumulate(equity)
+    max_dd = float(((peak - equity) / peak).max()) * 100
+
+    traded = strat[pos != 0]
+    gains = traded[traded > 0].sum()
+    losses = abs(traded[traded < 0].sum())
+    suficientes = len(traded) >= MIN_DIAS_CON_POSICION
+    cum = float(np.expm1(strat.sum())) * 100
+    bh = float(np.expm1(r.sum())) * 100
+
+    metrics.update({
+        "correctPredictions": int(correct),
+        "accuracy": round(correct / len(ev), 4),
+        "f1_macro": round(float(np.mean(f1_por_clase)), 4),
+        **{f"f1_{s}": round(float(v), 4) for s, v in zip(SIGNALS, f1_por_clase)},
+        "cumulativeReturn": round(cum, 2),
+        "bh_return": round(bh, 2),
+        "return_vs_bh": round(cum - bh, 2),
+        "sharpeRatio": round(_sharpe(strat), 2) if suficientes else None,
+        "bh_sharpe": round(_sharpe(r), 2),
+        "maxDrawdown": round(max_dd, 2),
+        "winRate": round(float((traded > 0).mean()) * 100, 2) if len(traded) else None,
+        "profitFactor": round(float(gains / losses), 2) if suficientes and losses > 0 else None,
+        "numberOfTrades": int(len(traded)),
+        "exposure": round(float((pos != 0).mean()) * 100, 2),
+        "finalCapital": round(1000.0 * (1 + cum / 100), 2),
+    })
+    return metrics
+
+
+def market_status(now=None):
+    now_ny = (now or datetime.now(timezone.utc)).astimezone(NYSE_TZ)
+    trading_day = now_ny.weekday() < 5 and now_ny.date() not in NYSE_HOLIDAYS
+    is_open = trading_day and NYSE_OPEN <= now_ny.time() < NYSE_CLOSE
+    return {
+        "isOpen": is_open,
+        "isTradingDay": trading_day,
+        "nowNewYork": now_ny.isoformat(),
+        "regularHours": "09:30-16:00 America/New_York",
+        "dailyRefresh": f"{REFRESH_HOUR:02d}:{REFRESH_MINUTE:02d} America/New_York (L-V)",
     }
 
 
@@ -289,10 +297,12 @@ def persist_to_db(session, symbol, name, company_info, rows, metrics_by_window):
             open=row["open"], high=row["high"], low=row["low"],
             close=row["close"], volume=row["volume"],
         )
-        correct = db_ops.compute_correct(row["prediction"], row["actualDirection"])
+        probs = row.get("probabilities", {})
         db_ops.upsert_prediction(
             session, asset.id, d, row["prediction"], model_version=MODEL_VERSION,
-            confidence=row["confidence"], actual_price=row["close"], correct=int(correct),
+            prob_buy=probs.get("buy"), prob_hold=probs.get("hold"), prob_sell=probs.get("sell"),
+            confidence=row["confidence"], actual_price=row["close"],
+            correct=None if row["correct"] is None else int(row["correct"]),
         )
 
     for window_days, m in metrics_by_window.items():
@@ -311,7 +321,7 @@ def initialize_data():
     print("[INFO] Descargando contexto de mercado (SPY, VIX)...")
     try:
         market = _with_retries(
-            lambda: fetch_market_context(FEATURE_LOOKBACK_PERIOD),
+            lambda: sin_vela_en_curso(fetch_market_context(FEATURE_LOOKBACK_PERIOD)),
             label="contexto de mercado",
         )
     except Exception as e:
@@ -327,21 +337,24 @@ def initialize_data():
             continue
 
         def _fetch_and_predict(symbol=symbol):
-            ohlcv = fetch_ohlcv(symbol, FEATURE_LOOKBACK_PERIOD)
+            ohlcv = sin_vela_en_curso(fetch_ohlcv(symbol, FEATURE_LOOKBACK_PERIOD))
             feat = build_feature_frame(ohlcv, market)
             if feat.empty:
                 raise ValueError("historial insuficiente tras calcular indicadores")
-            return feat, model.predict_frame(feat)
+            return ohlcv, feat, model.predict_frame(feat)
 
         try:
-            feat, predictions = _with_retries(_fetch_and_predict, label=symbol)
+            ohlcv, feat, predictions = _with_retries(_fetch_and_predict, label=symbol)
         except Exception as e:
             print(f"[WARN] {symbol}: fallo al calcular señales reales tras {FETCH_RETRY_ATTEMPTS} intentos ({e}). Se omite.")
             continue
 
-        rows = rows_from_predictions(feat, predictions)
+        # Etiquetas reales sobre el historial completo de cierres (no solo las
+        # filas que sobreviven al warmup de indicadores) para que los umbrales
+        # rodantes de 252 dias esten completos, igual que en entrenamiento.
+        rows = rows_from_predictions(feat, predictions, etiquetas_reales(ohlcv["Close"]))
 
-        for days in [30, 60, 90]:
+        for days in WINDOWS:
             HISTORICAL_DATA[f"{symbol}:{days}"] = rows[-days:]
 
         last_row = rows[-1]
@@ -352,14 +365,14 @@ def initialize_data():
             "currentPrice": last_row["close"],
             "signal": last_row["prediction"],
             "confidence": last_row["confidence"],
-            "lastUpdate": datetime.now(timezone.utc).isoformat() + "Z",
+            "probabilities": last_row["probabilities"],
+            "dataDate": last_row["date"],
+            "lastUpdate": _utc_now_iso(),
+            "modelVersion": MODEL_VERSION,
         }
 
-        metrics_by_window = {
-            days: generate_metrics(HISTORICAL_DATA[f"{symbol}:{days}"])
-            for days in [30, 60, 90]
-        }
-        METRICS_DATA[symbol] = metrics_by_window[30]
+        metrics_by_window = {days: generate_metrics(rows[-days:]) for days in WINDOWS}
+        METRICS_DATA[symbol] = metrics_by_window
 
         company_info = fetch_company_info(symbol)
         COMPANY_INFO[symbol] = company_info
@@ -376,9 +389,34 @@ def initialize_data():
     print(f"[INFO] Listo. {len(STOCKS_DATA)}/{len(STOCKS_CONFIG)} acciones con señal real del modelo {MODEL_VERSION}.")
 
 
+def _window_arg():
+    days = request.args.get("days", 30, type=int)
+    return days if days in WINDOWS else None
+
+
 @app.route("/health", methods=["GET"])
 def health_check():
     return jsonify({"status": "ok"})
+
+
+@app.route("/model", methods=["GET"])
+def get_model_info():
+    """Describe el modelo cargado (leido del .pkl) y la definicion de la etiqueta."""
+    info = load_model().describe()
+    info["target"] = {
+        "horizonDays": HORIZONTE_DIAS,
+        "percentileSell": PERCENTIL_SELL,
+        "percentileBuy": PERCENTIL_BUY,
+        "rollingWindowDays": VENTANA_PERCENTIL,
+    }
+    info["strategy"] = "global (un solo modelo para los 7 tickers)"
+    info["tickers"] = [c["symbol"] for c in STOCKS_CONFIG]
+    return jsonify({"success": True, "data": info})
+
+
+@app.route("/market-status", methods=["GET"])
+def get_market_status():
+    return jsonify({"success": True, "data": market_status()})
 
 
 @app.route("/stocks", methods=["GET"])
@@ -419,22 +457,26 @@ def get_historical_data(symbol):
 
 @app.route("/stocks/<symbol>/metrics", methods=["GET"])
 def get_performance_metrics(symbol):
-    if symbol not in METRICS_DATA:
-        return jsonify({"success": False, "error": f"Metrics for {symbol} not found"}), 404
+    days = _window_arg()
+    metrics = METRICS_DATA.get(symbol, {}).get(days)
+    if not metrics:
+        return jsonify({"success": False, "error": f"Metrics for {symbol} ({days} days) not found"}), 404
 
-    return jsonify({"success": True, "data": METRICS_DATA[symbol]})
+    return jsonify({"success": True, "data": {**metrics, "windowDays": days}})
 
 
 @app.route("/metrics", methods=["GET"])
 def get_all_metrics():
+    days = _window_arg()
     all_metrics = []
 
     for symbol, stock in STOCKS_DATA.items():
-        metrics = METRICS_DATA.get(symbol)
+        metrics = METRICS_DATA.get(symbol, {}).get(days)
         if metrics:
             all_metrics.append({
                 "symbol": symbol,
                 "name": stock["name"],
+                "windowDays": days,
                 **metrics,
             })
 
@@ -447,6 +489,20 @@ def get_company_info(symbol):
         return jsonify({"success": False, "error": f"Info for {symbol} not found"}), 404
 
     return jsonify({"success": True, "data": COMPANY_INFO[symbol]})
+
+
+def manual_override(fn):
+    """Bloquea los endpoints de override salvo con ENABLE_MANUAL_OVERRIDES=1."""
+    @wraps(fn)
+    def wrapper(*args, **kwargs):
+        if not MANUAL_OVERRIDES_ENABLED:
+            return jsonify({
+                "success": False,
+                "error": "Overrides manuales desactivados: todos los datos provienen del modelo "
+                         "(ENABLE_MANUAL_OVERRIDES=1 para habilitarlos en pruebas locales).",
+            }), 403
+        return fn(*args, **kwargs)
+    return wrapper
 
 
 def _persist_stock_override(session, stock):
@@ -468,6 +524,7 @@ def _persist_stock_override(session, stock):
 
 
 @app.route("/stocks", methods=["POST"])
+@manual_override
 def update_stocks():
     data = request.get_json()
 
@@ -495,6 +552,7 @@ def update_stocks():
 
 
 @app.route("/stocks/<symbol>", methods=["POST"])
+@manual_override
 def update_stock(symbol):
     data = request.get_json()
     STOCKS_DATA[symbol] = data
@@ -517,6 +575,7 @@ def update_stock(symbol):
 
 
 @app.route("/stocks/<symbol>/history", methods=["POST"])
+@manual_override
 def update_historical_data(symbol):
     data = request.get_json()
     days = request.args.get("days", 30, type=int)
@@ -538,12 +597,11 @@ def update_historical_data(symbol):
                         close=row.get("close"), volume=row.get("volume"),
                     )
                 if row.get("prediction"):
-                    correct = None
-                    if row.get("actualDirection"):
-                        correct = int(db_ops.compute_correct(row["prediction"], row["actualDirection"]))
+                    correct = row.get("correct")
                     db_ops.upsert_prediction(
                         session, asset.id, d, row["prediction"], model_version="manual-override",
-                        confidence=row.get("confidence"), actual_price=row.get("close"), correct=correct,
+                        confidence=row.get("confidence"), actual_price=row.get("close"),
+                        correct=int(correct) if correct is not None else None,
                     )
             session.commit()
         except Exception as e:
@@ -560,15 +618,16 @@ def update_historical_data(symbol):
 
 
 @app.route("/stocks/<symbol>/metrics", methods=["POST"])
+@manual_override
 def update_metrics(symbol):
     data = request.get_json()
-    METRICS_DATA[symbol] = data
+    days = _window_arg() or 30
+    METRICS_DATA.setdefault(symbol, {})[days] = data
 
     session = database.get_session()
     try:
         asset = db_ops.get_or_create_asset(session, symbol)
-        # Por convención METRICS_DATA siempre representa la ventana de 30 dias.
-        db_ops.upsert_metric_from_payload(session, asset.id, 30, data, model_version="manual-override")
+        db_ops.upsert_metric_from_payload(session, asset.id, days, data, model_version="manual-override")
         session.commit()
     except Exception as e:
         session.rollback()
@@ -578,12 +637,13 @@ def update_metrics(symbol):
 
     return jsonify({
         "success": True,
-        "message": f"Updated metrics for {symbol}",
+        "message": f"Updated metrics for {symbol} ({days} days)",
         "data": data
     })
 
 
 @app.route("/stocks/<symbol>/signals", methods=["POST"])
+@manual_override
 def update_signals(symbol):
     data = request.get_json()
     SIGNALS_DATA[symbol] = data

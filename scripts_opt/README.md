@@ -31,6 +31,14 @@ fuente de verdad y qué quedó como historial.
   `comparar_baseline.py`.
 - **`analisis_feature_selection.py`** — respaldado por
   `../RESULTADOS_OPTIMIZADOS/docs/ANALISIS_FEATURE_SELECTION.md`.
+- **`analisis_hold_global.py`** (2026-09-30) — mide sin reentrenar nada: por qué
+  el modelo de producción predice tanto HOLD, qué pasa con percentiles 40/60 (y
+  20/80…35/65), el ajuste del prior de HOLD, y global vs por-ticker para los 5
+  modelos con las predicciones de v5. ~20 s, sin red. Respaldado por
+  `../RESULTADOS_OPTIMIZADOS/docs/ANALISIS_HOLD_Y_GLOBAL.md`.
+- **`evaluar_produccion_2026.py`** (2026-09-30) — evalúa el `.pkl` de producción
+  sobre 2026 (fuera de muestra) con el mismo código que la API
+  (`api/ml/features.py`, `model.py`, `target.py`). Requiere red.
 - **`diag_deep.py`** (2026-08-14) — diagnóstico de los modelos profundos de v4:
   costo real por entrenamiento, época que restaura el early stopping, curvas
   train/val sin early stopping, efecto del `MinMaxScaler` y F1 de validación de

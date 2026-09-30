@@ -1,0 +1,6 @@
+modelo,celdas,f1_global_medio,f1_por_ticker_medio,delta_f1_medio,celdas_gana_global_f1,p_signo_f1,p_wilcoxon_f1,sharpe_global_medio,sharpe_por_ticker_medio,celdas_gana_global_sharpe
+CNN,21,0.2927,0.2115,0.0812,19,0.0002,0.0001,-0.214,-0.14,9
+CNN-LSTM,21,0.3048,0.3304,-0.0256,7,0.1892,0.229,0.046,0.159,10
+LR,21,0.3937,0.3752,0.0185,18,0.0015,0.0063,0.882,0.437,11
+LSTM,21,0.3341,0.3136,0.0205,16,0.0266,0.0216,-0.316,-0.428,9
+XGBoost,21,0.3588,0.3639,-0.0051,10,1.0,0.6827,0.384,0.378,10

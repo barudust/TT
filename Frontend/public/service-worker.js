@@ -1,4 +1,9 @@
-const CACHE_NAME = 'trading-signals-v1';
+// Estrategia "network first": siempre se pide a la red (versión más reciente de
+// la interfaz); la caché solo se usa sin conexión. Antes era "cache first" con
+// un nombre de caché fijo, y quien ya tenía la PWA se quedaba con una versión
+// vieja de la interfaz aunque se desplegara otra. Cambiar CACHE_NAME borra la
+// caché anterior al activarse el nuevo service worker.
+const CACHE_NAME = 'trading-signals-v2';
 const urlsToCache = [
   '/',
   '/index.html',
@@ -15,7 +20,7 @@ self.addEventListener('install', (event) => {
   self.skipWaiting();
 });
 
-// Activar el service worker
+// Activar el service worker y borrar cachés de versiones anteriores
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((cacheNames) => {
@@ -33,38 +38,29 @@ self.addEventListener('activate', (event) => {
 
 // Interceptar requests
 self.addEventListener('fetch', (event) => {
-  // Solo cachear GET requests
+  // Solo GET del propio origen (la API vive en otro origen y nunca se cachea:
+  // sus datos cambian cada día y deben venir siempre del modelo)
   if (event.request.method !== 'GET') {
+    return;
+  }
+  if (new URL(event.request.url).origin !== self.location.origin) {
     return;
   }
 
   event.respondWith(
-    caches.match(event.request).then((response) => {
-      // Si está en cache, devolverlo
-      if (response) {
-        return response;
-      }
-
-      // Si no está en cache, intentar fetch de red
-      return fetch(event.request)
-        .then((response) => {
-          // No cachear si la respuesta no es válida
-          if (!response || response.status !== 200 || response.type !== 'basic') {
-            return response;
-          }
-
-          // Cachear la respuesta exitosa
+    fetch(event.request)
+      .then((response) => {
+        if (response && response.status === 200 && response.type === 'basic') {
           const responseToCache = response.clone();
           caches.open(CACHE_NAME).then((cache) => {
             cache.put(event.request, responseToCache);
           });
-
-          return response;
-        })
-        .catch(() => {
-          // Si falla la red, devolver algo del cache
-          return caches.match(event.request);
-        });
-    })
+        }
+        return response;
+      })
+      .catch(() =>
+        // Sin conexión: servir lo último guardado (o la página principal)
+        caches.match(event.request).then((cached) => cached || caches.match('/index.html'))
+      )
   );
 });

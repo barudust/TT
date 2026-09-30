@@ -27,10 +27,33 @@ _DEFAULT_MODEL_PATH = Path(__file__).resolve().parent / "artifacts" / "lr_elasti
 
 
 class SignalModel:
-    def __init__(self, model, scaler, feat_cols):
+    def __init__(self, model, scaler, feat_cols, meta: dict | None = None):
         self.model = model
         self.scaler = scaler
         self.feat_cols = feat_cols
+        # Metadatos del .pkl (hiperparametros, rango de entrenamiento, ...) para
+        # que la API describa el modelo cargado en vez de texto fijo en el frontend.
+        self.meta = meta or {}
+
+    def describe(self) -> dict:
+        hp = self.meta.get("hp", {})
+        n_inter = len(self.meta.get("interaction_pairs", []))
+        return {
+            "version": MODEL_VERSION,
+            "configId": self.meta.get("config_id", MODEL_VERSION),
+            "algorithm": type(self.model).__name__,
+            "penalty": hp.get("penalty", getattr(self.model, "penalty", None)),
+            "C": hp.get("C", getattr(self.model, "C", None)),
+            "classWeight": hp.get("class_weight", getattr(self.model, "class_weight", None)),
+            "scaler": type(self.scaler).__name__,
+            "nFeatures": len(self.feat_cols),
+            "nFeaturesBase": len(self.feat_cols) - n_inter,
+            "nInteractions": n_inter,
+            "classes": [CLASS_TO_SIGNAL[int(c)] for c in self.model.classes_],
+            "trainRange": hp.get("rango_train"),
+            "nTrainSamples": hp.get("n_samples"),
+            "trainedAt": hp.get("fecha_entrenamiento"),
+        }
 
     def predict_row(self, feature_row) -> dict:
         """
@@ -80,5 +103,6 @@ def load_model(path: str | None = None) -> SignalModel:
     if missing:
         raise ValueError(f"El modelo cargado no tiene las features esperadas: {missing}")
 
-    _model_cache = SignalModel(obj["model"], obj["scaler"], obj["feat_cols"])
+    meta = {k: v for k, v in obj.items() if k not in ("model", "scaler", "feat_cols")}
+    _model_cache = SignalModel(obj["model"], obj["scaler"], obj["feat_cols"], meta)
     return _model_cache

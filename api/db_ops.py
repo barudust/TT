@@ -86,11 +86,3 @@ def upsert_metric_from_payload(session, asset_id: int, window_days: int, payload
     """Igual que upsert_metric pero traduce nombres estilo API (cumulativeReturn, ...)."""
     mapped = {col: payload[key] for key, col in METRIC_FIELD_MAP.items() if key in payload}
     return upsert_metric(session, asset_id, window_days, model_version=model_version, **mapped)
-
-
-def compute_correct(signal: str, actual_direction: str) -> bool:
-    return (
-        (signal == "buy" and actual_direction == "up") or
-        (signal == "sell" and actual_direction == "down") or
-        (signal == "hold" and actual_direction == "neutral")
-    )

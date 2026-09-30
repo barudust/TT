@@ -1,84 +1,50 @@
-import { Clock, TrendingUp, TrendingDown, Minus } from "lucide-react";
+import { Clock, CalendarDays } from "lucide-react";
+import { fecha } from "../format";
 
 interface MarketStatusProps {
-  isOpen?: boolean;
+  isOpen?: boolean | null; // null/undefined = estado desconocido (API sin responder)
   lastUpdate?: string;
+  dataDate?: string;
 }
 
-export function MarketStatus({ isOpen = false, lastUpdate }: MarketStatusProps) {
-  const now = new Date();
-  const updateTime = lastUpdate ? new Date(lastUpdate) : now;
-  
-  // Calcular tiempo desde última actualización
-  const minutesSinceUpdate = Math.floor((now.getTime() - updateTime.getTime()) / 60000);
-  
-  let updateText = "Hace unos momentos";
-  if (minutesSinceUpdate > 60) {
-    const hours = Math.floor(minutesSinceUpdate / 60);
-    updateText = `Hace ${hours} hora${hours > 1 ? "s" : ""}`;
-  } else if (minutesSinceUpdate > 0) {
-    updateText = `Hace ${minutesSinceUpdate} min`;
-  }
+function tiempoDesde(iso?: string): string | null {
+  if (!iso) return null;
+  const t = new Date(iso).getTime();
+  if (Number.isNaN(t)) return null;
+  const minutos = Math.floor((Date.now() - t) / 60000);
+  if (minutos < 1) return "hace unos momentos";
+  if (minutos < 60) return `hace ${minutos} min`;
+  const horas = Math.floor(minutos / 60);
+  if (horas < 48) return `hace ${horas} hora${horas > 1 ? "s" : ""}`;
+  const dias = Math.floor(horas / 24);
+  return `hace ${dias} días`;
+}
+
+export function MarketStatus({ isOpen, lastUpdate, dataDate }: MarketStatusProps) {
+  const actualizado = tiempoDesde(lastUpdate);
 
   return (
-    <div className="flex items-center gap-3 text-xs">
-      <div className="flex items-center gap-1.5">
-        <div className={`w-2 h-2 rounded-full ${isOpen ? "bg-[#10b981] animate-pulse" : "bg-muted"}`} />
-        <span className="text-muted-foreground font-medium">
-          {isOpen ? "Mercado abierto" : "Mercado cerrado"}
-        </span>
-      </div>
-      <div className="flex items-center gap-1.5 text-muted-foreground">
-        <Clock className="w-3.5 h-3.5" />
-        <span>{updateText}</span>
-      </div>
-    </div>
-  );
-}
-
-interface SignalBadgeProps {
-  signal: "buy" | "sell" | "hold";
-  size?: "sm" | "md" | "lg";
-}
-
-export function SignalBadge({ signal, size = "md" }: SignalBadgeProps) {
-  const configs = {
-    buy: {
-      icon: TrendingUp,
-      label: "COMPRAR",
-      colors: "bg-muted text-emerald-600 dark:text-emerald-400 border-current",
-    },
-    sell: {
-      icon: TrendingDown,
-      label: "VENDER",
-      colors: "bg-muted text-red-600 dark:text-red-400 border-current",
-    },
-    hold: {
-      icon: Minus,
-      label: "MANTENER",
-      colors: "bg-muted text-amber-600 dark:text-amber-400 border-current",
-    },
-  };
-
-  const sizes = {
-    sm: "px-2 py-0.5 text-[10px]",
-    md: "px-2.5 py-1 text-xs",
-    lg: "px-3 py-1.5 text-sm",
-  };
-
-  const iconSizes = {
-    sm: "w-3 h-3",
-    md: "w-3.5 h-3.5",
-    lg: "w-4 h-4",
-  };
-
-  const config = configs[signal];
-  const Icon = config.icon;
-
-  return (
-    <div className={`inline-flex items-center gap-1 rounded-full border font-bold ${config.colors} ${sizes[size]}`}>
-      <Icon className={iconSizes[size]} />
-      {config.label}
+    <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs">
+      {isOpen !== null && isOpen !== undefined && (
+        <div className="flex items-center gap-1.5">
+          <div className={`w-2 h-2 rounded-full ${isOpen ? "bg-[#10b981] animate-pulse" : "bg-muted-foreground/40"}`} />
+          <span className="text-muted-foreground font-medium">
+            {isOpen ? "Mercado abierto (NYSE)" : "Mercado cerrado (NYSE)"}
+          </span>
+        </div>
+      )}
+      {dataDate && (
+        <div className="flex items-center gap-1.5 text-muted-foreground">
+          <CalendarDays className="w-3.5 h-3.5" />
+          <span>Señales con el cierre del {fecha(dataDate)}</span>
+        </div>
+      )}
+      {actualizado && (
+        <div className="flex items-center gap-1.5 text-muted-foreground">
+          <Clock className="w-3.5 h-3.5" />
+          <span>Recalculadas {actualizado}</span>
+        </div>
+      )}
     </div>
   );
 }

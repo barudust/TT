@@ -1,0 +1,6 @@
+quintil_VIX_norm,n,pred_hold_pct,real_hold_pct,abs_ret_medio_pct
+Q1 (VIX bajo),350,92.0,54.86,1.16
+Q2,343,88.34,46.94,1.46
+Q3,350,74.29,47.14,1.51
+Q4,343,28.86,32.94,1.9
+Q5 (VIX alto),343,0.58,27.7,2.57

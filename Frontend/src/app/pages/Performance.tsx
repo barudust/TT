@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Card } from "../components/ui/card";
+import { Button } from "../components/ui/button";
 import { toast } from "sonner";
 import {
   BarChart,
@@ -9,71 +10,58 @@ import {
   CartesianGrid,
   Tooltip,
   Legend,
+  ReferenceLine,
   ResponsiveContainer,
-  PieChart,
-  Pie,
-  Cell,
 } from "recharts";
-import { ArrowUpDown, TrendingUp } from "lucide-react";
+import { Target, Wallet } from "lucide-react";
 import { API_BASE_URL } from "../../config/api";
-
-interface StockMetrics {
-  symbol: string;
-  name: string;
-  // clasificación
-  accuracy: number;
-  f1Score: number;
-  f1_buy?: number;
-  f1_sell?: number;
-  f1_macro?: number;
-  // estrategia
-  cumulativeReturn: number; // porcentaje
-  return_vs_bh?: number; // porcentaje
-  sharpeRatio: number;
-  winRate: number; // porcentaje
-  profitFactor?: number;
-  maxDrawdown: number; // porcentaje
-  // señal
-  signal_buy_pct?: number;
-  signal_hold_pct?: number;
-  signal_sell_pct?: number;
-}
-
-type SortKey = keyof StockMetrics;
+import { SIGNAL_CONFIG, dd, fecha, frac, num, pct } from "../format";
+import type { StockMetrics } from "../types";
 
 interface MetricCardProps {
   label: string;
   value: string;
+  hint?: string;
   color?: string;
 }
 
-function MetricCard({ label, value, color = "" }: MetricCardProps) {
+function MetricCard({ label, value, hint, color = "text-foreground" }: MetricCardProps) {
   return (
     <div className="bg-muted p-4 rounded-lg">
       <div className="text-sm text-muted-foreground mb-1">{label}</div>
       <div className={`text-2xl font-bold ${color}`}>{value}</div>
+      {hint && <div className="text-xs text-muted-foreground mt-1">{hint}</div>}
     </div>
   );
 }
 
+type SortKey = "symbol" | "f1_macro" | "accuracy" | "cumulativeReturn" | "bh_return" | "sharpeRatio" | "maxDrawdown" | "winRate" | "signal_hold_pct";
+
+const tooltipStyle = {
+  backgroundColor: "var(--color-background)",
+  border: "1px solid var(--color-border)",
+  borderRadius: "8px",
+  color: "var(--color-foreground)",
+};
+
 export default function Performance() {
   const [metrics, setMetrics] = useState<StockMetrics[]>([]);
   const [loading, setLoading] = useState(true);
-  const [sortBy, setSortBy] = useState<SortKey>("symbol" as SortKey);
-  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("desc");
+  const [days, setDays] = useState(30);
+  const [sortBy, setSortBy] = useState<SortKey>("symbol");
+  const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
 
   useEffect(() => {
     fetchMetrics();
-  }, []);
+  }, [days]);
 
   const fetchMetrics = async () => {
     try {
       setLoading(true);
-      const res = await fetch(`${API_BASE_URL}/metrics`);
+      const res = await fetch(`${API_BASE_URL}/metrics?days=${days}`);
       if (!res.ok) throw new Error("Error al obtener métricas");
       const data = await res.json();
       if (data && data.success) setMetrics(data.data || []);
-      else if (data && Array.isArray(data)) setMetrics(data as StockMetrics[]);
       else throw new Error("Respuesta de métricas inválida");
     } catch (err) {
       console.error(err);
@@ -99,13 +87,11 @@ export default function Performance() {
     return 0;
   });
 
-  const chartData = metrics.map((m) => ({
-    symbol: m.symbol,
-    Precisión: parseFloat((m.accuracy * 100).toFixed(1)),
-    Retorno: parseFloat(m.cumulativeReturn?.toFixed(1) ?? "0"),
-    Sharpe: parseFloat(m.sharpeRatio?.toFixed(2) ?? "0"),
-    "Win Rate": parseFloat(m.winRate?.toFixed(1) ?? "0"),
-  }));
+  const avg = (fn: (m: StockMetrics) => number | null | undefined): number | undefined => {
+    const vals = metrics.map(fn).filter((v): v is number => typeof v === "number" && Number.isFinite(v));
+    if (vals.length === 0) return undefined;
+    return vals.reduce((s, v) => s + v, 0) / vals.length;
+  };
 
   if (loading)
     return (
@@ -115,105 +101,116 @@ export default function Performance() {
       </div>
     );
 
-  const avg = (fn: (m: StockMetrics) => number, decimals = 1) => {
-    if (metrics.length === 0) return "0";
-    const v = metrics.reduce((s, m) => s + fn(m), 0) / metrics.length;
-    return v.toFixed(decimals);
-  };
+  const ref = metrics[0];
+  const returnData = metrics.map((m) => ({
+    symbol: m.symbol,
+    Estrategia: m.cumulativeReturn ?? 0,
+    "Buy & hold": m.bh_return ?? 0,
+  }));
+  const f1Data = metrics.map((m) => ({ symbol: m.symbol, "F1-macro": +((m.f1_macro ?? 0) * 100).toFixed(1) }));
+
+  const header = (key: SortKey, label: string, align = "text-right") => (
+    <th className={`${align} py-3 px-2 font-semibold text-foreground cursor-pointer select-none whitespace-nowrap`} onClick={() => handleSort(key)}>
+      {label}{sortBy === key ? (sortOrder === "asc" ? " ▲" : " ▼") : ""}
+    </th>
+  );
 
   return (
     <div>
-      <div className="mb-6">
+      <div className="mb-4">
         <h2 className="text-2xl font-bold text-foreground">Rendimiento Global</h2>
-        <p className="text-sm text-muted-foreground mt-1">Análisis completo de métricas de clasificación y estrategia para todas las acciones</p>
+        <p className="text-sm text-muted-foreground mt-1">
+          Señales del modelo evaluadas contra lo que realmente pasó al día siguiente
+          {ref ? ` · ${fecha(ref.periodStart)} – ${fecha(ref.periodEnd)}` : ""}
+        </p>
       </div>
 
-      {/* Chart */}
+      <div className="flex gap-2 mb-6">
+        {[30, 60, 90].map((d) => (
+          <Button key={d} onClick={() => setDays(d)} variant={days === d ? "default" : "outline"} size="sm">
+            {d} días
+          </Button>
+        ))}
+      </div>
+
+      <Card className="p-6 mb-6">
+        <h3 className="text-lg font-bold text-foreground mb-4">Promedio de las 7 acciones</h3>
+        <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
+          <MetricCard label="F1-macro" value={frac(avg((m) => m.f1_macro))} hint="Azar ≈ 33 %" color="text-[#8b5cf6]" />
+          <MetricCard label="Aciertos" value={frac(avg((m) => m.accuracy))} />
+          <MetricCard label="Retorno estrategia" value={pct(avg((m) => m.cumulativeReturn), 1, true)} hint={`Buy & hold: ${pct(avg((m) => m.bh_return), 1, true)}`} />
+          <MetricCard label="Sharpe estrategia" value={num(avg((m) => m.sharpeRatio), 2, true)} hint={`${metrics.filter((m) => typeof m.sharpeRatio === "number").length} de ${metrics.length} acciones con ≥5 días con posición · Buy & hold: ${num(avg((m) => m.bh_sharpe), 2, true)}`} color="text-[#06b6d4]" />
+          <MetricCard label="Máx. drawdown" value={dd(avg((m) => m.maxDrawdown))} color="text-red-600 dark:text-red-400" />
+          <MetricCard label="Win rate" value={pct(avg((m) => m.winRate), 1)} />
+          <MetricCard label="Exposición" value={pct(avg((m) => m.exposure), 1)} hint="Días con posición abierta" />
+          <div className="bg-muted p-4 rounded-lg">
+            <div className="text-sm text-muted-foreground mb-2">Señales emitidas</div>
+            <div className="flex flex-wrap gap-1">
+              {(["buy", "hold", "sell"] as const).map((s) => (
+                <span key={s} className="text-white px-2 py-0.5 rounded text-xs font-semibold" style={{ backgroundColor: SIGNAL_CONFIG[s].hex }}>
+                  {SIGNAL_CONFIG[s].short} {pct(avg((m) => m[`signal_${s}_pct` as const]), 0)}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </Card>
+
       <Card className="p-6 mb-6">
         <div className="flex items-center gap-2 mb-4">
-          <TrendingUp className="w-5 h-5 text-[#3b82f6]" />
-          <h3 className="text-lg font-bold text-foreground">Comparación de Métricas (Clasificación y Estrategia)</h3>
+          <Wallet className="w-5 h-5 text-[#06b6d4]" />
+          <h3 className="text-lg font-bold text-foreground">Retorno de la estrategia vs. buy & hold (%)</h3>
         </div>
-        <div className="h-80">
+        <div className="h-72">
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={chartData}>
+            <BarChart data={returnData}>
               <CartesianGrid strokeDasharray="3 3" stroke="currentColor" opacity={0.2} />
               <XAxis dataKey="symbol" tick={{ fontSize: 12 }} stroke="currentColor" opacity={0.5} />
-              <YAxis tick={{ fontSize: 12 }} stroke="currentColor" opacity={0.5} />
-              <Tooltip
-                contentStyle={{
-                  backgroundColor: "var(--color-background)",
-                  border: "1px solid var(--color-border)",
-                  borderRadius: "8px",
-                  color: "var(--color-foreground)",
-                }}
-                formatter={(value: any) => `${value}%`}
-              />
+              <YAxis tick={{ fontSize: 12 }} stroke="currentColor" opacity={0.5} unit="%" />
+              <Tooltip contentStyle={tooltipStyle} formatter={(v: any) => `${Number(v).toFixed(1)} %`} />
               <Legend />
-              <Bar dataKey="Precisión" fill="#3b82f6" radius={[4, 4, 0, 0]} />
-              <Bar dataKey="Retorno" fill="#f59e0b" radius={[4, 4, 0, 0]} />
-              <Bar dataKey="Sharpe" fill="#06b6d4" radius={[4, 4, 0, 0]} />
-              <Bar dataKey="Win Rate" fill="#10b981" radius={[4, 4, 0, 0]} />
+              <ReferenceLine y={0} stroke="currentColor" opacity={0.4} />
+              <Bar dataKey="Estrategia" fill="#06b6d4" radius={[4, 4, 0, 0]} />
+              <Bar dataKey="Buy & hold" fill="#94a3b8" radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
       </Card>
 
-      {/* Métricas Unificadas (Clasificación + Estrategia) */}
       <Card className="p-6 mb-6">
-        <h3 className="text-lg font-bold text-foreground">Métricas Unificadas (90d / Último mes)</h3>
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-3 lg:grid-cols-5">
-          <MetricCard label="Retorno Acumulado (90d)" value={`${avg((m)=>m.cumulativeReturn,1)}%`} color="text-[#f59e0b]" />
-          <MetricCard label="Return vs Buy&Hold (90d)" value={`${avg((m)=>m.return_vs_bh||0,1)}%`} color="text-[#3b82f6]" />
-          <MetricCard label="Sharpe (90d)" value={`${avg((m)=>m.sharpeRatio,2)}`} color="text-[#06b6d4]" />
-          <MetricCard label="Max Drawdown (90d)" value={`${avg((m)=>m.maxDrawdown,2)}%`} color="text-[#ef4444]" />
-          <MetricCard label="Win Rate (90d)" value={`${avg((m)=>m.winRate,1)}%`} color="text-[#10b981]" />
-          <MetricCard label="Profit Factor (90d)" value={`${avg((m)=>m.profitFactor||0,2)}`} color="text-[#06b6d4]" />
-          <MetricCard label="F1 Macro (último mes)" value={`${(parseFloat(avg((m)=>m.f1_macro||0,3))*100).toFixed(1)}%`} color="text-[#8b5cf6]" />
-          <MetricCard label="F1 Buy+Sell (últ. mes)" value={`${(parseFloat(avg((m)=>((m.f1_buy||0)+(m.f1_sell||0))/1,3))*100).toFixed(1)}%`} color="text-[#3b82f6]" />
-          <div className="bg-muted p-4 rounded-lg">
-            <div className="text-sm text-muted-foreground mb-1">Signal Distribution (90d)</div>
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="inline-flex items-center gap-2 bg-emerald-600 text-white px-1 py-0.5 rounded text-xs">
-                <span className="w-2 h-2 rounded-full bg-white/30" />
-                <span className="font-semibold">BUY</span>
-                <span className="ml-1 font-medium">{avg((m) => m.signal_buy_pct || 0, 1)}%</span>
-              </span>
-
-              <span className="inline-flex items-center gap-2 bg-amber-500 text-white px-1 py-0.5 rounded text-xs">
-                <span className="w-2 h-2 rounded-full bg-white/30" />
-                <span className="font-semibold">HOLD</span>
-                <span className="ml-1 font-medium">{avg((m) => m.signal_hold_pct || 0, 1)}%</span>
-              </span>
-
-              <span className="inline-flex items-center gap-2 bg-red-600 text-white px-1 py-0.5 rounded text-xs">
-                <span className="w-2 h-2 rounded-full bg-white/30" />
-                <span className="font-semibold">SELL</span>
-                <span className="ml-1 font-medium">{avg((m) => m.signal_sell_pct || 0, 1)}%</span>
-              </span>
-            </div>
-            <div className="text-xs text-muted-foreground mt-2">BUY / HOLD / SELL (promedio %)</div>
-          </div>
+        <div className="flex items-center gap-2 mb-4">
+          <Target className="w-5 h-5 text-[#8b5cf6]" />
+          <h3 className="text-lg font-bold text-foreground">F1-macro por acción (%)</h3>
+        </div>
+        <div className="h-64">
+          <ResponsiveContainer width="100%" height="100%">
+            <BarChart data={f1Data}>
+              <CartesianGrid strokeDasharray="3 3" stroke="currentColor" opacity={0.2} />
+              <XAxis dataKey="symbol" tick={{ fontSize: 12 }} stroke="currentColor" opacity={0.5} />
+              <YAxis tick={{ fontSize: 12 }} stroke="currentColor" opacity={0.5} unit="%" domain={[0, 60]} />
+              <Tooltip contentStyle={tooltipStyle} formatter={(v: any) => `${v} %`} />
+              <ReferenceLine y={33.3} stroke="#ef4444" strokeDasharray="4 4" label={{ value: "azar", position: "right", fontSize: 11, fill: "#ef4444" }} />
+              <Bar dataKey="F1-macro" fill="#8b5cf6" radius={[4, 4, 0, 0]} />
+            </BarChart>
+          </ResponsiveContainer>
         </div>
       </Card>
 
-      {/* Tabla Detallada */}
       <Card className="p-6">
-        <h3 className="text-lg font-bold text-foreground mb-4">Tabla de Métricas Detalladas (Todas las Acciones)</h3>
+        <h3 className="text-lg font-bold text-foreground mb-4">Detalle por acción</h3>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-border">
-                <th className="text-left py-3 px-2 font-semibold text-foreground">Acción</th>
-                <th className="text-right py-3 px-2 font-semibold text-foreground">Retorno (90d)</th>
-                <th className="text-right py-3 px-2 font-semibold text-foreground">Return vs BH (90d)</th>
-                <th className="text-right py-3 px-2 font-semibold text-foreground">Sharpe (90d)</th>
-                <th className="text-right py-3 px-2 font-semibold text-foreground">Max Drawdown (90d)</th>
-                <th className="text-right py-3 px-2 font-semibold text-foreground">Win Rate (90d)</th>
-                <th className="text-right py-3 px-2 font-semibold text-foreground">Profit Factor (90d)</th>
-                <th className="text-right py-3 px-2 font-semibold text-foreground">F1 Macro (últ. mes)</th>
-                <th className="text-right py-3 px-2 font-semibold text-foreground">F1 Buy+Sell (últ. mes)</th>
-                <th className="text-right py-3 px-2 font-semibold text-foreground">Signal (B/H/S)</th>
+                {header("symbol", "Acción", "text-left")}
+                {header("f1_macro", "F1-macro")}
+                {header("accuracy", "Aciertos")}
+                {header("cumulativeReturn", "Retorno")}
+                {header("bh_return", "Buy & hold")}
+                {header("sharpeRatio", "Sharpe")}
+                {header("maxDrawdown", "Máx. DD")}
+                {header("winRate", "Win rate")}
+                {header("signal_hold_pct", "C / M / V")}
               </tr>
             </thead>
             <tbody>
@@ -223,24 +220,27 @@ export default function Performance() {
                     <div className="font-semibold text-foreground">{stock.symbol}</div>
                     <div className="text-xs text-muted-foreground truncate max-w-[120px]">{stock.name}</div>
                   </td>
-                  <td className="text-right py-3 px-2 text-foreground">{(stock.cumulativeReturn ?? 0).toFixed(1)}%</td>
-                  <td className="text-right py-3 px-2 text-foreground">{(stock.return_vs_bh ?? 0).toFixed(1)}%</td>
-                  <td className="text-right py-3 px-2 text-foreground">{(stock.sharpeRatio ?? 0).toFixed(2)}</td>
-                  <td className="text-right py-3 px-2 text-[#ef4444]">-{(stock.maxDrawdown ?? 0).toFixed(2)}%</td>
-                  <td className="text-right py-3 px-2 text-foreground">{(stock.winRate ?? 0).toFixed(1)}%</td>
-                  <td className="text-right py-3 px-2 text-foreground">{(stock.profitFactor ?? 0).toFixed(2)}</td>
-                  <td className="text-right py-3 px-2 text-foreground">{((stock.f1_macro ?? 0) * 100).toFixed(1)}%</td>
-                  <td className="text-right py-3 px-2 text-foreground">{(((stock.f1_buy ?? 0) + (stock.f1_sell ?? 0)) * 100).toFixed(1)}%</td>
-                  <td className="text-right py-3 px-2 text-foreground">
-                    <div className="text-xs">B:{(stock.signal_buy_pct ?? 0).toFixed(1)}%</div>
-                    <div className="text-xs">H:{(stock.signal_hold_pct ?? 0).toFixed(1)}%</div>
-                    <div className="text-xs">S:{(stock.signal_sell_pct ?? 0).toFixed(1)}%</div>
+                  <td className="text-right py-3 px-2 text-foreground">{frac(stock.f1_macro)}</td>
+                  <td className="text-right py-3 px-2 text-foreground">{frac(stock.accuracy)}</td>
+                  <td className="text-right py-3 px-2 text-foreground">{pct(stock.cumulativeReturn, 1, true)}</td>
+                  <td className="text-right py-3 px-2 text-muted-foreground">{pct(stock.bh_return, 1, true)}</td>
+                  <td className="text-right py-3 px-2 text-foreground">{num(stock.sharpeRatio, 2, true)}</td>
+                  <td className="text-right py-3 px-2 text-red-600 dark:text-red-400">{dd(stock.maxDrawdown)}</td>
+                  <td className="text-right py-3 px-2 text-foreground">{pct(stock.winRate, 1)}<div className="text-xs text-muted-foreground">{stock.numberOfTrades ?? 0} op.</div></td>
+                  <td className="text-right py-3 px-2 text-foreground whitespace-nowrap text-xs">
+                    {pct(stock.signal_buy_pct, 0)} / {pct(stock.signal_hold_pct, 0)} / {pct(stock.signal_sell_pct, 0)}
                   </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
+        <p className="text-xs text-muted-foreground mt-4">
+          C / M / V = porcentaje de señales COMPRAR / MANTENER / VENDER emitidas en el periodo. La estrategia abre
+          una posición larga (COMPRAR) o corta (VENDER) al cierre y la cierra al cierre del día siguiente; MANTENER
+          no opera. Sin costos de transacción. Las métricas se calculan solo con las señales cuyo resultado ya se conoce;
+          el Sharpe se omite (—) cuando hubo menos de 5 días con posición, porque con tan pocas operaciones no es interpretable.
+        </p>
       </Card>
     </div>
   );
