@@ -163,6 +163,21 @@ def test_sin_vela_en_curso_descarta_el_dia_mientras_nyse_esta_abierto():
     assert len(main.sin_vela_en_curso(df, datetime(2026, 10, 1, 10, 0, tzinfo=ny))) == 2
 
 
+def test_completar_catalogo_reintenta_solo_si_falta(monkeypatch):
+    llamadas = []
+    monkeypatch.setattr(main, "_initialize_data", lambda: llamadas.append(1))
+
+    main.STOCKS_DATA.clear()
+    main.completar_catalogo_si_falta()
+    assert llamadas == [1]
+
+    for cfg in main.STOCKS_CONFIG:
+        main.STOCKS_DATA[cfg["symbol"]] = {}
+    main.completar_catalogo_si_falta()
+    assert llamadas == [1]          # catalogo completo: no recalcula
+    main.STOCKS_DATA.clear()
+
+
 def test_overrides_desactivados_por_defecto():
     client = main.app.test_client()
     resp = client.post("/stocks/AAPL", json={"signal": "buy"})

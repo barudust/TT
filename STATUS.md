@@ -28,6 +28,12 @@
   endpoints de override desactivados por defecto; service worker cambiado a
   network-first (antes dejaba a los usuarios con la interfaz vieja). Tests de la
   API: 20/20. Nuevos endpoints `GET /model` y `GET /market-status`.
+- **Render con catálogo vacío tras el deploy (2026-09-30)**: el código nuevo sí
+  se desplegó (desde `main`, aunque `render.yaml` diga `branch: dev`: manda la
+  rama configurada en el dashboard), pero Yahoo falló en el arranque en frío y
+  `/stocks` quedó en `[]` hasta un `POST /admin/refresh`. Ahora el scheduler
+  reintenta cada `CATALOG_RETRY_MINUTES` (2) mientras falten acciones, y
+  `/health` reporta `stocksLoaded`/`stocksExpected`.
 - **Pendiente (decisión del equipo)**: ajustar el modelo — mantener LR +
   interactions, volver al LR de 61 features (equivalente en validación) y/o
   aplicar el factor de prior de HOLD (k = 0.90, elegido en validación).

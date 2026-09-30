@@ -1,4 +1,5 @@
 import os
+import threading
 import time
 from datetime import datetime, date, time as dtime, timezone
 from functools import wraps
@@ -10,6 +11,7 @@ from flask_cors import CORS
 from dotenv import load_dotenv
 from apscheduler.schedulers.background import BackgroundScheduler
 from apscheduler.triggers.cron import CronTrigger
+from apscheduler.triggers.interval import IntervalTrigger
 from sklearn.metrics import f1_score
 import yfinance as yf
 
@@ -82,6 +84,14 @@ FEATURE_LOOKBACK_PERIOD = "3y"
 # falla la primera llamada tras despertar).
 FETCH_RETRY_ATTEMPTS = int(os.getenv("FETCH_RETRY_ATTEMPTS", "3"))
 FETCH_RETRY_DELAY_SECONDS = int(os.getenv("FETCH_RETRY_DELAY_SECONDS", "5"))
+
+# Si tras un refresco faltan acciones (tipicamente: Yahoo falla justo en el
+# arranque en frio de Render), el scheduler vuelve a intentar cada N minutos
+# hasta completar el catalogo, sin esperar a que alguien pulse "Actualizar".
+CATALOG_RETRY_MINUTES = int(os.getenv("CATALOG_RETRY_MINUTES", "2"))
+
+# Evita dos recalculos simultaneos (arranque, /admin/refresh, scheduler).
+_INIT_LOCK = threading.Lock()
 
 
 def _with_retries(fn, *, label):
@@ -314,6 +324,25 @@ def persist_to_db(session, symbol, name, company_info, rows, metrics_by_window):
 
 
 def initialize_data():
+    with _INIT_LOCK:
+        _initialize_data()
+
+
+def completar_catalogo_si_falta():
+    """Reintenta la carga si el catalogo quedo incompleto; si ya hay otro
+    recalculo en curso, no hace nada."""
+    if len(STOCKS_DATA) >= len(STOCKS_CONFIG):
+        return
+    if not _INIT_LOCK.acquire(blocking=False):
+        return
+    try:
+        print(f"[RETRY] Catalogo incompleto ({len(STOCKS_DATA)}/{len(STOCKS_CONFIG)}). Reintentando carga...")
+        _initialize_data()
+    finally:
+        _INIT_LOCK.release()
+
+
+def _initialize_data():
     database.init_db()
     model = load_model()
     session = database.get_session()
@@ -396,7 +425,9 @@ def _window_arg():
 
 @app.route("/health", methods=["GET"])
 def health_check():
-    return jsonify({"status": "ok"})
+    # Siempre 200 (Render solo necesita saber que el proceso responde); el
+    # conteo permite ver desde fuera si la carga de datos ya se completo.
+    return jsonify({"status": "ok", "stocksLoaded": len(STOCKS_DATA), "stocksExpected": len(STOCKS_CONFIG)})
 
 
 @app.route("/model", methods=["GET"])
@@ -707,6 +738,12 @@ def start_scheduler():
         scheduled_refresh,
         CronTrigger(day_of_week="mon-fri", hour=REFRESH_HOUR, minute=REFRESH_MINUTE, timezone=NYSE_TZ),
         id="daily_refresh",
+        replace_existing=True,
+    )
+    scheduler.add_job(
+        completar_catalogo_si_falta,
+        IntervalTrigger(minutes=CATALOG_RETRY_MINUTES),
+        id="completar_catalogo",
         replace_existing=True,
     )
     scheduler.start()
