@@ -8,18 +8,25 @@ están aquí — siguen en
 
 ## Qué documento es cuál
 
-- **[`paper.tex`](paper.tex)** — el documento **canónico y único**: paper
-  académico en inglés, formato Springer LNCS (MICAI 2026). Contiene la revisión
-  que responde a los revisores #2 y #3 (ver más abajo).
-- **[`paper.pdf`](paper.pdf)** — el PDF **enviado** a MICAI (12 páginas). Es
-  anterior a la revisión: todavía no incluye los cambios de `paper.tex`.
-  Recompilar para regenerarlo.
+- **[`paper.tex`](paper.tex)** — el documento **canónico**: paper académico en
+  inglés, formato Springer LNCS (MICAI 2026), con la revisión que responde a
+  los revisores #2 y #3 y reducido a 12 páginas (commit `44a93ae`).
+- **[`camera_ready/`](camera_ready/)** — el **paquete final** para Springer /
+  Overleaf: `paper.tex` (idéntico byte a byte al de esta carpeta),
+  `llncs.cls` y las 5 figuras que usa. Compilar desde aquí.
+- **[`paper.pdf`](paper.pdf)** — PDF de 12 páginas compilado desde `paper.tex`
+  en el commit `44a93ae`.
+- **[`figures/`](figures/)** — todas las figuras generadas por
+  `scripts_opt/plots_paper.py` (incluye dos que el `.tex` no usa).
 
-> **Nota histórica.** Hubo dos copias del `.tex` en circulación. La de
-> `RESULTADOS_OPTIMIZADOS/paper_latex/paper.tex` (rama `David`, y aún presente en
-> el worktree `project-structure-org`) es **anterior**: `paper_review/paper.tex`
-> la contiene íntegra y además trae las correcciones de revisión. La copia de
-> `paper_latex/` puede borrarse sin perder nada.
+> Los borradores (`PAPER_FINAL.md`, `paper_latex/`) se eliminaron después del
+> envío (commit `da2906d`); siguen en el historial de git si hicieran falta.
+>
+> **Lo que el paper no incluye** (se hizo después y está en el TT): el
+> walk-forward 2020–2025, el análisis del exceso de HOLD y el ajuste del peso
+> de clase, la comparación global vs por-ticker sobre las mismas filas y la
+> evaluación 2026 fuera de muestra. Ver
+> `../RESULTADOS_OPTIMIZADOS/docs/ANALISIS_HOLD_Y_GLOBAL.md`.
 
 ## Resultados que cita el paper
 
@@ -70,30 +77,27 @@ son redundantes con las tablas 4–5 y están envueltas en `\ifextrafigs ... \fi
 para que el paper entre en el límite de páginas. Cambiar a `\extrafigstrue` las
 vuelve a insertar en línea, sin tocar nada más.
 
-## Presupuesto de páginas
+## Páginas
 
-El PDF enviado tiene **12 páginas**, que es el máximo de MICAI/LNCS. La revisión
-añade la sección 8 y queda **estimada en ~13 páginas**. Antes de enviar hay que
-compilar y confirmar el número real; si sobra una página, en orden de menor daño:
+El límite de MICAI/LNCS es **12 páginas**. La revisión añadió la sección 8 y
+el commit `44a93ae` la compactó (espaciado de flotantes, bibliografía a dos
+columnas, tablas convertidas en párrafos) hasta quedar en 12 sin quitar
+contenido técnico. Si una edición futura se pasa, en orden de menor daño:
 
-1. Borrar §7.6 (*Drill-down*) y su Tabla 7 — redundante con §7.3 (≈0.3 pág.)
-2. Mover `fig_signal_dist` detrás de `\extrafigs` (≈0.3 pág.)
-3. Borrar el párrafo *What actually moved the deep models* de §8 (≈0.3 pág.)
+1. Borrar §7.6 (*Drill-down*) — redundante con §7.3.
+2. Mover `fig_signal_dist` detrás de `\extrafigs`.
+3. Borrar el párrafo *What actually moved the deep models* de §8.
 
 ## Compilación
 
-`paper.tex` usa la clase `llncs.cls` de Springer, que **no** está en el repo.
-Descargar el template de
-<https://www.springer.com/gp/computer-science/lncs/conference-proceedings-guidelines>,
-copiar `llncs.cls` a esta carpeta y:
-
 ```bash
+cd paper_review/camera_ready
 pdflatex paper.tex
 pdflatex paper.tex
 ```
 
-La segunda pasada es necesaria para las referencias cruzadas. En Overleaf: subir
-la carpeta entera junto con `llncs.cls`.
+La segunda pasada resuelve las referencias cruzadas. En Overleaf: subir el
+contenido de `camera_ready/` (ya trae `llncs.cls`).
 
 ## Notas sobre MICAI
 

@@ -6,45 +6,38 @@ heurística ni datos simulados.
 
 ## Modelo elegido
 
-**Regresión Logística con elasticnet, entrenamiento global (los 7 tickers
-juntos), Experimento B (train 2018-2023, val 2024, test 2025).**
+**Regresión Logística multinomial, global (los 7 tickers juntos):** L2 con
+C = 0.000165 (ganador de Optuna en v5), RobustScaler, 61 indicadores + 15
+interacciones (Vía 8) y pesos de clase "balanced" con el de HOLD × 0.90.
+Entrenada con 2018-2025. `config_id`: `LR-v8-interactions-holdw090`.
+Se regenera con `python scripts_opt/entrenar_produccion.py`.
 
-Config id: `LR-02-elasticnet-all`, artefacto original:
-`RESULTADOS_OPTIMIZADOS/modelos_optimizados/lr/LR-02-elasticnet-all/experimento_B/modelo_global.pkl`.
+| Evaluación | F1-macro | κ | Sharpe | Fuente |
+|---|---:|---:|---:|---|
+| Test 2025, Exp B (LR v5, 61 features) | 0.404 | — | +0.89 | `RESULTADOS_OPTIMIZADOS/v5/resultados_finales.csv` |
+| Test 2025, Exp B (+ interacciones, Vía 8) | 0.413 | 0.14 | +0.92 | `RESULTADOS_OPTIMIZADOS/v8/interactions.csv` |
+| Walk-forward 2020-2025 (LR v5, media) | 0.350 | — | +0.22 | `RESULTADOS_OPTIMIZADOS/analisis_hold/5_walk_forward_v5_resumen.csv` |
+| Origen rodante 2019-2024, pipeline de producción (media) | 0.365 | 0.068 | +0.54 | `analisis_hold/7_reglas_alternativas_resumen.csv` |
+| **2026 fuera de muestra, modelo desplegado** | **0.354** | **0.035** | +0.29 | `scripts_opt/evaluar_produccion_2026.py` |
 
-Es el ganador declarado en `RESULTADOS_OPTIMIZADOS/docs/GUIA_PROGRESO.md` tras
-comparar contra XGBoost, LightGBM, LSTM y CNN-LSTM en los tres experimentos
-temporales:
+Por qué este modelo y no los de deep learning, y por qué no se puede mejorar
+más con datos de Yahoo Finance: `RESULTADOS_OPTIMIZADOS/JUSTIFICACION_LIMITE_DEL_MODELO.md`.
+Por qué el peso de HOLD: `RESULTADOS_OPTIMIZADOS/docs/ANALISIS_HOLD_Y_GLOBAL.md` §8
+(sin él, el modelo predecía HOLD el 60 % de los días de 2026 con 35 % real).
 
-| Métrica (test, Exp B GLOBAL) | Valor |
-|---|---|
-| F1-macro | 0.4167 |
-| Accuracy | 0.4407 |
-| Sharpe (backtest simple) | 1.25 |
-| Retorno acumulado | +20.6% |
-| Retorno vs Buy&Hold | +17.4% |
+> **Historia.** Hasta agosto de 2026 corría el `LR-02-elasticnet-all` de la
+> evaluación v1 (F1 0.417 / Sharpe 1.25, cifras de un protocolo anterior que
+> no son comparables con v4/v5). Se reemplazó por el ganador de la Vía 8 y,
+> el 2026-09-30, por esta versión con el peso de HOLD ajustado.
 
-> **Nota sobre las métricas citadas arriba**: son las de la evaluación
-> "v1" (la que efectivamente entrenó el `.pkl` que corre en producción,
-> vía `scripts_opt/opt_lr.py`). Existe una evaluación posterior ("v4",
-> splits unificados, `paper/paper.tex`) con
-> números distintos (F1-macro=0.385, Sharpe=0.755 en Exp B) que nunca se
-> integró a `GUIA_PROGRESO.md`. v4 no guardó modelos entrenables, solo
-> métricas — no cambia qué modelo corre aquí, pero sí qué número es más
-> correcto citar en la tesis. Ver `STATUS.md` en la raíz del repo.
+El `.pkl` (modelo + `RobustScaler` + lista de 76 features + pares de
+interacción + hiperparámetros, ~6 KB) vive dentro del propio API en
+`api/ml/artifacts/lr_elasticnet_global_expB.pkl` (el nombre del archivo se
+conservó por compatibilidad) para que el servicio no dependa de la carpeta
+`RESULTADOS_OPTIMIZADOS/` en tiempo de ejecución. `GET /model` describe el
+modelo cargado leyendo ese `.pkl`.
 
-Razones documentadas para elegirlo sobre los modelos de deep learning:
-gana en Exp B y Exp C, pierde por solo +0.012 F1 frente a XGBoost en Exp A,
-es más interpretable, no requiere GPU, y las arquitecturas más complejas
-(LSTM, CNN-LSTM) no superaron el techo de ~0.42 F1-macro pese a más
-esfuerzo de optimización (ver sección 7 de `GUIA_PROGRESO.md`).
-
-El `.pkl` (modelo + `StandardScaler` + lista de 61 features, ~5KB) está
-copiado dentro del propio API en `api/ml/artifacts/lr_elasticnet_global_expB.pkl`
-para que el servicio no dependa de la carpeta `RESULTADOS_OPTIMIZADOS/`
-en tiempo de ejecución (útil si se despliega la API sola, p. ej. a Azure).
-
-## Features (61 columnas)
+## Features (61 columnas + 15 interacciones)
 
 `api/ml/features.py` reimplementa **exactamente** el cálculo de
 `scripts_v1/01_build_raw_dataset.py` (raíz del repo): retornos log, momentum,
@@ -71,7 +64,7 @@ from ml.model import load_model
 
 market = fetch_market_context("3y")          # SPY + VIX, una sola vez
 ohlcv  = fetch_ohlcv("AAPL", "3y")
-feat   = build_feature_frame(ohlcv, market)   # 61 features + OHLCV crudo
+feat   = build_feature_frame(ohlcv, market)   # 61 features + 15 interacciones + OHLCV crudo
 model  = load_model()                         # carga una vez (cache en proceso)
 
 pred = model.predict_row(feat.iloc[-1])
@@ -97,12 +90,12 @@ quien usa la app o evalúa la tesis.
 
 ## Confianza baja, ¿es un bug?
 
-No. El modelo tiene F1-macro ≈ 0.42 sobre 3 clases (el azar sería
-≈0.33), por lo que sus `predict_proba` suelen quedar entre 0.35 y 0.45
-para la clase ganadora — es el techo de información real que hay en
-datos OHLCV de 1 día (ver el análisis "Conclusión definitiva sobre el
-ceiling" en `GUIA_PROGRESO.md`). Confianzas artificialmente altas
-serían la señal de alarma, no lo contrario.
+No. Con la regularización fuerte que eligió Optuna y la poca señal que hay
+en datos OHLCV de 1 día, sus `predict_proba` quedan entre 0.33 y 0.45 para
+la clase ganadora (azar = 0.33). Aun así la confianza es informativa: en
+2025 la tasa de acierto sube de 39 % a 56 % cuando la confianza pasa de
+≤ 0.36 a 0.40–0.45. Confianzas artificialmente altas serían la señal de
+alarma, no lo contrario.
 
 ## Modelos alternativos disponibles
 

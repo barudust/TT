@@ -9,7 +9,7 @@
 > alcance del TT es más amplio: incluye las Vías 7 y 8 (refinamiento y
 > exploración de dataset) que no fueron al paper por límite de páginas.
 >
-> Última actualización: 2026-08-30.
+> Última actualización: 2026-09-30 (Cap. 17 nuevo; correcciones en Cap. 5, 12, 14, 15 y 16).
 
 ---
 
@@ -20,6 +20,7 @@
 3. **Cap. 9-14** — Qué se probó y qué no, con justificación.
 4. **Cap. 15** — **Banco de preguntas típicas + respuestas.** Estudia esto la noche antes.
 5. **Cap. 16** — Trabajo futuro (para preguntas de "¿qué sigue?").
+6. **Cap. 17** — **Preguntas de una sinodal experta** (teoría de decisión, estadística, validación, exceso de MANTENER, plataforma). Estúdialo junto con el Cap. 15.
 
 Cada capítulo termina con **⚠️ Puntos débiles** (dónde te van a picar) y **🎯 Preguntas que podrían hacer**.
 
@@ -43,6 +44,7 @@ Cada capítulo termina con **⚠️ Puntos débiles** (dónde te van a picar) y 
 - [Cap. 14 — Ganador y por qué](#cap-14--ganador-y-por-qué)
 - [Cap. 15 — Banco de preguntas de defensa](#cap-15--banco-de-preguntas-de-defensa)
 - [Cap. 16 — Trabajo futuro](#cap-16--trabajo-futuro)
+- [Cap. 17 — Preguntas de una sinodal experta](#cap-17--preguntas-de-una-sinodal-experta-análisis-de-datos-ml-y-dl)
 
 ---
 
@@ -590,14 +592,14 @@ Todo estadístico ajustado se hace **solo con train**:
 
 ## ⚠️ Puntos débiles
 
-- **Un solo año de test**. Es la limitación más grande. Un buen protocolo sería walk-forward con 5+ ventanas.
+- **Un solo año de test en el paper**. Mitigado: el walk-forward de v5 prueba 6 años (2020–2025) y muestra que el ranking cambia de año a año (LR 0.31–0.39); ver Cap. 17.
 - **2025 es un año particular**. Aunque el paper argumenta que es representativo (§3), no cubre todos los regímenes posibles.
 - **Los 3 experimentos comparten Val (2024)**. Eso significa que Val no es una muestra independiente entre experimentos.
 
 ## 🎯 Preguntas típicas
 
 **P: ¿Por qué no usan cross-validation?**
-R: En series temporales, k-fold clásico rompe el orden temporal y mete leakage del futuro. Existen variantes (walk-forward, purged k-fold de López de Prado), pero requieren 10× más compute. Se documenta como trabajo futuro; el paper usa bootstrap block-resampling (§6) para atacar el mismo problema sin recomputar.
+R: Sí lo hicimos: en v5 corrimos un **walk-forward de 6 ventanas** (entrenar 5 años, validar 1, probar el siguiente, con test 2020, 2021, …, 2025; `v5/log_wf_v5.txt`, consolidado en `analisis_hold/5_walk_forward_v5_resumen.csv`). F1 medio: XGBoost 0.356, LR 0.350, CNN-LSTM 0.328, LSTM 0.314, CNN 0.292; ningún modelo pasa de 0.394 en ningún año. Además, la regla de decisión de HOLD se evaluó por origen rodante 2019–2026 (`scripts_opt/ajuste_hold_rolling.py`). Lo que no usamos es k-fold aleatorio, porque mezcla futuro con pasado (leakage).
 
 **P: ¿Por qué elegir 2025 como test y no otro año?**
 R: Es el más reciente completo, cubre un régimen no visto por el modelo (post-COVID recovery + expectativa Trump 2.0), y tiene volatilidad arriba de la mediana histórica — no es el año fácil que flatterearía a un modelo largo-biased. El paper analiza en §3 si 2025 es representativo.
@@ -1469,23 +1471,27 @@ R: Sí, siempre. Cada modelo se entrena con 3 (deep) o 5 (LR) semillas y las pre
 
 Otras arquitecturas probadas o consideradas y por qué NO se adoptaron.
 
+> **Corrección (2026-09-30):** en el repositorio solo hay código y resultados de **LightGBM** (`scripts_opt/opt_lgbm.py`). CatBoost, GRU, TabNet, Extra-Trees y Transformer **no se corrieron**; antes aparecían como "probados". Se dejan como alternativas consideradas, con la razón por la que no se esperaba que cambiaran el resultado.
+
+**Cómo decirlo en la defensa:** "Probamos LightGBM como alternativa a XGBoost. CatBoost, GRU, TabNet y Transformers los consideramos pero no los corrimos: el brief fijaba cinco modelos, y el diagnóstico mostró que el límite viene de la falta de señal en los datos, no de la arquitectura (los cinco modelos convergen a la misma franja)." Nunca digas que se probaron.
+
 ## 12.1 LightGBM (probado)
 
 Otro gradient boosting como XGBoost. Diferencia: usa histogramas y leaf-wise splits (más rápido).
 
 **Resultado**: F1 similar a XGBoost. No aporta variedad ni ventaja.
 
-## 12.2 CatBoost (probado)
+## 12.2 CatBoost (considerado, no corrido)
 
-Gradient boosting de Yandex. Fortalezas: maneja features categóricas de forma nativa.
+Gradient boosting de Yandex. Su ventaja principal es el manejo nativo de variables categóricas (target statistics ordenadas); aquí las 61 variables son numéricas, así que esa ventaja no aplica.
 
-**Resultado**: F1 similar a XGBoost, 3× más lento en Windows. Descartado por costo/beneficio.
+**Por qué no se corrió**: es el mismo sesgo inductivo (árboles con boosting) que XGBoost y LightGBM, que ya empataron entre sí.
 
-## 12.3 GRU (probado)
+## 12.3 GRU (considerado, no corrido)
 
-Alternativa a LSTM más simple (2 compuertas en vez de 3).
+Alternativa a LSTM más simple (2 compuertas —reset y update— en vez de 3, sin cell state separado).
 
-**Resultado**: F1 similar a LSTM. No aporta.
+**Por qué no se corrió**: el diagnóstico de la LSTM mostró que su pérdida de validación no baja del nivel de azar (ln 3); una recurrente con menos parámetros no cambia la falta de señal.
 
 ## 12.4 Transformer (considerado, no viable)
 
@@ -1498,11 +1504,11 @@ Arquitecturas: Vanilla Transformer, Informer, PatchTST, TimeSeries Transformer.
 
 **Referencias**: Vaswani et al. (2017) "Attention is All You Need".
 
-## 12.5 TabNet (probado)
+## 12.5 TabNet (considerado, no corrido)
 
-Arquitectura DL diseñada específicamente para datos tabulares (Arik & Pfister 2020).
+Arquitectura DL para datos tabulares con atención secuencial sobre variables (Arik & Pfister 2020).
 
-**Resultado**: Peor que XGBoost. Diseñado para tabular grande, no series financieras.
+**Por qué no se corrió**: en tabulares de tamaño mediano los modelos de árboles suelen igualar o superar a las redes para tabulares (Grinsztajn et al. 2022), y fuera de los 5 modelos del brief.
 
 ## 12.6 N-BEATS / N-HiTS (considerado, no viable)
 
@@ -1516,9 +1522,9 @@ Arquitecturas DL para forecasting de series temporales.
 
 | Modelo | Por qué NO se probó |
 |---|---|
-| **Random Forest** | Muy similar a XGBoost, más lento, menos regularización |
-| **SVM multiclase** | O(n²) en muestras, lento con 10K+ datos |
-| **Naive Bayes** | Asunción de independencia entre features rota |
+| **Random Forest** | Bagging de árboles profundos; mismo sesgo inductivo (árboles) que XGBoost/LightGBM, que en tabulares suele igualarlo o superarlo |
+| **SVM** | Con kernel, el entrenamiento escala entre O(n²) y O(n³); la SVM lineal tiene la misma frontera que la LR (cambia la pérdida: hinge vs logística) y no da probabilidades nativas |
+| **Naive Bayes** | Asume independencia condicional entre variables; con 61 indicadores muy correlacionados (p. ej. 5 distancias a medias móviles) sus probabilidades quedan mal calibradas. Es la contraparte generativa de la LR (Ng & Jordan 2002) |
 | **k-NN** | O(n) por predicción, muy lento; sensible a curse of dimensionality con 61 features |
 
 ## 🎯 Preguntas típicas
@@ -1527,10 +1533,10 @@ Arquitecturas DL para forecasting de series temporales.
 R: Los Transformers requieren datasets grandes (10K-100K+ muestras) para no overfittear. Aquí tenemos 10,500 (global) o 1,500 (per-ticker). Sin pre-training en un dataset externo masivo (que no está disponible en Yahoo Finance), sobreajustan. Se documenta como trabajo futuro con Transfer Learning.
 
 **P: ¿Por qué no LightGBM o CatBoost?**
-R: LightGBM lo probamos: F1 muy similar a XGBoost, no aporta diversidad al ensemble. CatBoost también lo probamos: F1 similar, 3× más lento en nuestro setup Windows+CUDA. Descartados por costo/beneficio.
+R: LightGBM sí lo probamos (`opt_lgbm.py`): F1 muy similar a XGBoost, no aporta diversidad. CatBoost no lo corrimos: es el mismo tipo de modelo (boosting de árboles) y su ventaja —variables categóricas— no aplica porque las 61 son numéricas.
 
 **P: ¿Y modelos clásicos como SVM o Random Forest?**
-R: SVM tiene complejidad O(n²) en muestras — lento con 10K+ datos. Random Forest es esencialmente lo mismo que XGBoost pero sin boosting (peor generalmente). Naive Bayes rompe la asunción de independencia entre features correlacionadas.
+R: No se corrieron porque el brief fijaba cinco modelos y ya cubrimos sus sesgos inductivos: una SVM lineal tiene la misma frontera lineal que la LR (solo cambia la pérdida), y Random Forest es otro ensamble de árboles como XGBoost (bagging en vez de boosting). Una SVM con kernel RBF sí sería distinta, pero su costo crece entre O(n²) y O(n³) con ~10 500 filas y no da probabilidades sin calibración extra.
 
 **P: ¿Consideraron modelos de reinforcement learning?**
 R: RL para trading requiere un entorno simulado con dinámicas de mercado (order book, latencia, slippage) y no simplemente clasificación. Salía del scope del TT (metodología comparativa de clasificadores). Trabajo futuro.
@@ -1626,13 +1632,17 @@ R: Agregar 33 features de contexto de mercado (bonos, VIX derivados, sectores) e
 - Penalty L2, C = 0.000165
 - RobustScaler
 - 61 features base + 15 interactions (productos entre pares de las top-10 features)
-- Class weight balanced, multi-seed averaging con 5 semillas
+- Pesos de clase "balanced" con el de MANTENER × 0.90 (ver P17.4)
+- Un solo modelo, entrenado con 2018–2025 (es determinista: no hace falta promediar semillas)
 
-**Métricas** (test 2025 Exp B GLOBAL):
-- F1-macro: **0.413**
+**Métricas del procedimiento** (test 2025 Exp B GLOBAL, pesos "balanced" puros, Vía 8):
+- F1-macro: **0.413** (elegido viendo 2025; en validación 2024 empata con el LR sin interacciones)
 - Sharpe: **+0.92**
 - Win Rate: 0.53
 - Max DD: -0.52
+
+**Modelo final en 2026, fuera de muestra:** F1 0.354, κ 0.035, Sharpe +0.29
+(portafolio +0.60 contra +0.49 de comprar y mantener), MANTENER 40 % (real 35 %).
 
 ## 14.2 Por qué LR ganó (tres razones)
 
@@ -1646,7 +1656,7 @@ Los 61 indicadores son transformaciones no lineales ricas de la historia (RSI es
 
 ### Razón 3: Pocas muestras para modelos complejos
 
-10,500 muestras (global) o 1,500 (por ticker) es pequeño para modelos con 10⁵-10⁶ parámetros. Los deep models entran en régimen de overfitting; LR con 186 parámetros es apropiado.
+10,500 muestras (global) o 1,500 (por ticker) es pequeño para modelos con 10⁵-10⁶ parámetros. Los deep models entran en régimen de overfitting; la LR tiene 3 × 76 + 3 = 231 parámetros (186 con las 61 variables base).
 
 ### Confirmación en la literatura
 
@@ -1656,7 +1666,7 @@ Los 61 indicadores son transformaciones no lineales ricas de la historia (RSI es
 
 ## 14.3 Cuándo cambiaría el ganador
 
-- **Con datasets grandes** (>100K muestras): los deep models empezarían a ganar.
+- **Con datasets grandes** (>100K muestras): los deep models podrían empezar a ganar.
 - **Con features crudos** (sin RSI/MACD calculados): CNN/LSTM tendrían ventaja al aprenderlos.
 - **Con horizonte mayor** (5-10 días): el ratio señal/ruido mejora, quizás XGBoost ganaría.
 - **Con datos externos** (sentiment, macro, opciones): los deep models podrían aprovechar mejor.
@@ -1667,13 +1677,13 @@ Los 61 indicadores son transformaciones no lineales ricas de la historia (RSI es
 R: Tres razones. (1) El ratio señal/ruido en retornos diarios es bajo, y modelos complejos con >100K parámetros memorizan ruido con 10,500 muestras. (2) Los 61 features ya son transformaciones no lineales ricas (RSI, MACD, ATR), la LR solo combina linealmente esas transformaciones ricas. (3) Es consistente con literatura sobre datos tabulares (Grinsztajn 2022).
 
 **P: ¿Estarían de acuerdo con esta conclusión si tuvieran más datos?**
-R: No necesariamente. Con >100K muestras y features crudos, los deep models superarían a LR (evidencia de Gu-Kelly-Xiu 2020 con 30K stocks × 60 años). Nuestra conclusión está scoped a este régimen: 7 tickers × ~1500 días con features engineered.
+R: No necesariamente. Con >100K muestras y features crudos, los deep models podrían superar a LR (evidencia de Gu-Kelly-Xiu 2020 con 30K stocks × 60 años). Nuestra conclusión está scoped a este régimen: 7 tickers × ~1500 días con features engineered.
 
 **P: ¿Qué pasaría con horizonte mayor de predicción?**
 R: Vía 8 (target ablation) muestra que h=5-7 días es más aprendible (F1 sube a 0.43). Pero cambiar el horizonte cambia el problema definido ("señal diaria" → "señal semanal"). Se documenta como trabajo futuro con las mejoras acumuladas.
 
 **P: ¿Hay un intervalo de confianza para esa F1 = 0.413?**
-R: Sí, en el paper §6 usamos bootstrap block-resampling (95% CI). Para LR con protocolo estricto v5: [0.379, 0.428]. LR es significativamente mejor que todos los otros 4 modelos; las diferencias entre los otros 4 no son significativas.
+R: El intervalo bootstrap por bloques del paper (§6) es para el LR de v5 sin interacciones, F1 0.404: [0.379, 0.428]; con él, LR es significativamente mejor que los otros 4 modelos y las diferencias entre esos 4 no son significativas. El 0.413 de las interacciones cae dentro de ese intervalo, así que la diferencia entre ambos no es significativa (ver P17.12).
 
 ---
 
@@ -1796,7 +1806,7 @@ R: Peor caída porcentual desde el pico. `MaxDD = min((equity_t - peak_t)/peak_t
 R: `PF = Σ ganancias / |Σ pérdidas|`. PF > 1 = rentable. PF = 2 significa que ganas $2 por cada $1 perdido.
 
 **P35: ¿Por qué no incluyen costos de transacción?**
-R: Es una simplificación intencional para comparación pura entre modelos. Costos realistas (5-10 bp por trade) reducirían Sharpe en 0.3-0.5 pero afectarían a todos los modelos, manteniendo el ranking. Trabajo futuro.
+R: Las cifras principales van sin costos para comparar modelos en igualdad, pero sí los calculamos en v5 (`v5/resultados_finales.csv`, Exp B global): con 5 y 10 puntos base por operación, LR pasa de Sharpe +0.89 a +0.76 y +0.62; XGBoost de +0.46 a +0.23 y +0.01. Los costos **no** afectan igual a todos: castigan la rotación (cambio medio de posición por día |pos_t − pos_t−1|: 0.38 en LR contra 0.65 en XGBoost; pasar de corto a largo cuenta 2), y por eso amplían la ventaja de LR.
 
 ## 15.8 Preguntas sobre metodología / experimentos
 
@@ -1810,7 +1820,7 @@ R: Para que las diferencias entre experimentos sean solo por # años de train, n
 R: (1) Media de N semillas por trial (reduce ruido puntual). (2) Regla R1 del protocolo: nunca tocar test hasta que la config esté congelada. (3) Bootstrap IC en test (§6 paper) para reportar honestamente la incertidumbre.
 
 **P39: ¿Por qué NO cross-validation?**
-R: K-fold clásico rompe orden temporal en series financieras (leakage del futuro). Existen variantes correctas (walk-forward, purged k-fold de López de Prado) pero requieren 10× más compute. Se documenta como trabajo futuro. El paper usa bootstrap block-resampling que ataca el mismo problema sin recomputar.
+R: Sí lo hicimos: en v5 corrimos un **walk-forward de 6 ventanas** (entrenar 5 años, validar 1, probar el siguiente, con test 2020, 2021, …, 2025; `v5/log_wf_v5.txt`, consolidado en `analisis_hold/5_walk_forward_v5_resumen.csv`). F1 medio: XGBoost 0.356, LR 0.350, CNN-LSTM 0.328, LSTM 0.314, CNN 0.292; ningún modelo pasa de 0.394 en ningún año. Además, la regla de decisión de HOLD se evaluó por origen rodante 2019–2026 (`scripts_opt/ajuste_hold_rolling.py`). Lo que no usamos es k-fold aleatorio, porque mezcla futuro con pasado (leakage).
 
 **P40: Explique bootstrap.**
 R: Método no paramétrico para estimar la distribución de un estadístico. Consiste en re-muestrear el dataset con reemplazo B veces (aquí B=1000). En cada re-muestra se calcula el estadístico (F1); la distribución de esas B copias da un intervalo de confianza (percentiles 2.5 y 97.5). Nosotros usamos block-bootstrap para preservar autocorrelación temporal.
@@ -1824,7 +1834,7 @@ R: La probamos con Pearson, VIF, Spearman y SHAP. En 11 de 15 casos, usar las 61
 R: Un LR meta sobre los 4 modelos base da F1 igual a LR solo (~0.40). Cuando un modelo (LR) domina claramente, apilar peores solo añade ruido.
 
 **P43: ¿Por qué descartaron LightGBM y CatBoost?**
-R: F1 similar a XGBoost, no aportan diversidad. CatBoost además 3× más lento en Windows+CUDA.
+R: LightGBM se corrió y dio F1 similar a XGBoost (mismo tipo de modelo). CatBoost no se corrió, por la misma razón.
 
 **P44: ¿Por qué descartaron Transformer?**
 R: Necesita 10K-100K muestras para no overfittear. Aquí tenemos 10,500 (global) o 1,500 (per-ticker). Sin pre-training en un dataset masivo (no disponible en Yahoo Finance), sobreajusta.
@@ -1847,10 +1857,10 @@ R: Como sistema completo, NO — falta: (1) costos y slippage, (2) infra de ejec
 R: Porque a priori no sabíamos. La contribución empírica es precisamente demostrar que LR gana en este régimen (10K samples, features engineered, target ruidoso). Si hubiéramos comparado solo LR con XGBoost habríamos perdido la evidencia contra deep models.
 
 **P50: Si tuvieras 6 meses más, ¿qué harías?**
-R: (1) Walk-forward validation con 5+ años consecutivos como test (rota el protocolo). (2) Agregar features macro de FRED (gratis). (3) Adaptar a horizonte multi-step (predecir 5 días juntos). (4) Position sizing dinámico (Kelly o vol-targeted). (5) Probar Transformer con pre-training en un dataset externo grande (transfer learning). (6) Sentimiento con FinBERT sobre RSS de noticias financieras.
+R: (1) Llevar el walk-forward de 6 años y los costos de transacción al cuerpo de la tesis como evaluación principal (ya están calculados). (2) Agregar features macro de FRED (gratis). (3) Adaptar a horizonte multi-step (predecir 5 días juntos). (4) Position sizing dinámico (Kelly o vol-targeted). (5) Probar Transformer con pre-training en un dataset externo grande (transfer learning). (6) Sentimiento con FinBERT sobre RSS de noticias financieras.
 
 **P51: ¿Cuál es la limitación más grave de tu trabajo?**
-R: Un solo test year (2025). Aunque el paper argumenta que 2025 es representativo (§3, no anómalo en volatilidad ni retorno), no cubre todos los regímenes. Walk-forward sobre 5+ años consecutivos daría intervalos de confianza más honestos.
+R: Que la señal es débil e inestable entre años. El paper usa un solo año de test (2025), que resultó ser el mejor año del modelo: en el walk-forward de 6 años LR va de 0.31 a 0.39 de F1 (media 0.35) y en 2026, ya en producción, cae a 0.31. La conclusión que sí se sostiene es relativa: los clásicos quedan arriba de los profundos en todos los protocolos.
 
 **P52: ¿Qué harías distinto si empezaras hoy?**
 R: (1) Empezar con protocolo v5 (Optuna simétrico, IC bootstrap) desde el día uno. (2) Diseñar el target con Vía 8 ablation antes de comprometerse a h=1d/q=30/70. (3) Establecer costos de transacción como métrica primaria. (4) Considerar horizontes múltiples desde el inicio.
@@ -1864,9 +1874,9 @@ R: Con honestidad. Diría: "Este es un TT de metodología comparativa con datos 
 
 ## 16.1 Extensiones inmediatas (sin datos nuevos)
 
-### 16.1.1 Walk-forward validation
+### 16.1.1 Walk-forward validation (hecho en v5; falta llevarlo a la tesis)
 
-Rotar el test year sobre 5-10 años consecutivos. Da intervalos de confianza más honestos. Coste: 10× compute actual.
+Ya se corrió con 6 años de test (2020–2025): ver P39 y Cap. 17. Pendiente solo citarlo en el documento de tesis.
 
 ### 16.1.2 Position sizing dinámico
 
@@ -1876,13 +1886,13 @@ Reemplazar posición binaria ±1 por sizing basado en:
 
 Mejora esperada: Sharpe +0.3-0.5.
 
-### 16.1.3 Modelo de costos
+### 16.1.3 Modelo de costos (calculado en v5)
 
-Añadir 5-10 bp por trade y refit. Selección de modelo cambiaría hacia estrategias con menor turnover.
+Ya están las cifras con 5 y 10 pb (ver P35). Lo que faltaría es optimizar los modelos *con* costos (p. ej. penalizar la rotación al elegir hiperparámetros).
 
-### 16.1.4 Ensemble por-ticker
+### 16.1.4 Modelos por ticker (hecho)
 
-En vez de un modelo global, entrenar 7 modelos LR + interactions específicos por ticker y comparar contra el global. Vía 8 mostró que interactions ayudan; extender a per-ticker.
+Se comparó para los 5 modelos (v4 y v5) y para LR + interactions (2026-09-30): el global gana o empata en todos. Ver Cap. 17 y `docs/ANALISIS_HOLD_Y_GLOBAL.md` §4.
 
 ## 16.2 Extensiones con datos gratuitos adicionales
 
@@ -1941,6 +1951,493 @@ Cambio de paradigma: en vez de clasificar señales, un agente RL aprende una pol
 - **Otros sectores**: comparar tech vs finance vs energy — ¿el modelo generaliza?
 - **Otros mercados**: replicar en LATAM (BOVESPA, S&P/BMV IPC), Europa (FTSE 100), Asia (Nikkei 225).
 - **Otros horizontes**: multi-step (predecir vector de 5 días), horizonte largo (5d, 20d, 60d).
+
+---
+
+# Cap. 17 — Preguntas de una sinodal experta (análisis de datos, ML y DL)
+
+> Añadido el 2026-09-30. Pensado para una sinodal con maestría en análisis de
+> datos y en ML/DL, que va a preguntar por **teoría de decisión, estadística
+> y validación**, no solo por "qué modelo ganó". Cada pregunta tiene:
+>
+> - **Respuesta corta**: lo que dices (30–60 segundos).
+> - **Para entenderlo**: la explicación de fondo, para que puedas responder
+>   la repregunta.
+> - **Evidencia**: el archivo que respalda la cifra.
+>
+> Los análisis nuevos están en `docs/ANALISIS_HOLD_Y_GLOBAL.md` y en los
+> scripts `analisis_hold_global.py`, `ajuste_hold_rolling.py`,
+> `ajuste_hold_2026.py` y `evaluar_produccion_2026.py`.
+
+---
+
+## 17.1 El exceso de MANTENER (HOLD)
+
+### P17.1 ¿Por qué el modelo predice tanto MANTENER?
+
+**Respuesta corta.** Porque no sabe la dirección. En los días en que dice
+MANTENER, la probabilidad de que haya un movimiento fuerte (COMPRAR + VENDER)
+es mayor que la de MANTENER, pero se reparte entre las dos direcciones y,
+como se elige la clase con mayor probabilidad, gana MANTENER. Además pasa
+más cuando la volatilidad del mercado está baja.
+
+**Para entenderlo.**
+
+1. El modelo produce tres probabilidades con softmax,
+   `p_c = exp(z_c) / Σ_j exp(z_j)`, y la señal es `argmax_c p_c`.
+2. Un día típico de MANTENER en 2025: `p_SELL = 0.32`, `p_HOLD = 0.38`,
+   `p_BUY = 0.30`. Movimiento fuerte = 0.62 > 0.38, pero ni 0.32 ni 0.30
+   superan 0.38. Es el efecto "voto dividido" de una elección: dos
+   candidatos parecidos se reparten el voto y gana un tercero con minoría.
+3. ¿Por qué el modelo separa "movimiento sí/no" pero no "sube/baja"? Porque
+   la **magnitud** de los retornos es predecible (la volatilidad se agrupa en
+   el tiempo: días agitados siguen a días agitados, el fenómeno que modelan
+   ARCH/GARCH, Engle 1982; Bollerslev 1986), pero el **signo** casi no lo es
+   (eficiencia débil del mercado). Por eso el modelo aprende sobre todo el eje
+   HOLD contra no-HOLD, y BUY/SELL quedan casi empatados.
+4. Medido: en el 100 % de los días MANTENER de 2025 y de 2026 se cumple
+   `p_BUY + p_SELL > p_HOLD`.
+5. Las variables con más peso son de volatilidad **del mercado** (VIX contra
+   su media anual, volatilidad del S&P 500), iguales para las 7 acciones. Por
+   eso MANTENER llega "en bloque": en 2025 el modelo dijo MANTENER el 92 % de
+   los días con VIX bajo y el 0.6 % con VIX alto.
+
+**Evidencia.** `ANALISIS_HOLD_Y_GLOBAL.md` §2; `analisis_hold/2c_hold_vs_vix.csv`.
+
+### P17.2 ¿No es simplemente desbalance de clases?
+
+**Respuesta corta.** No. Ya entrenamos con pesos de clase "balanced", que
+le **bajan** el peso a MANTENER porque es la clase mayoritaria. Y cuando
+cambiamos la etiqueta a 40/60 (MANTENER pasa a ser minoritaria, 20 %), el
+modelo siguió prediciendo MANTENER el 53 % de los días.
+
+**Para entenderlo.** `class_weight="balanced"` usa `w_c = n / (K · n_c)`.
+Con 30/40/30: `w_HOLD = 1/(3·0.40) = 0.83` y `w_BUY = w_SELL = 1/(3·0.30) = 1.11`.
+Cada ejemplo de MANTENER pesa 25 % menos en la pérdida. Si la causa fuera el
+desbalance (el *prior*), eso lo corregiría. No lo corrige porque la causa es
+la forma de la distribución posterior (voto dividido), no la proporción de
+clases.
+
+**Evidencia.** `analisis_hold/3a_percentiles_target.csv`.
+
+### P17.3 Si el modelo da probabilidades, ¿por qué no movieron el umbral de decisión?
+
+**Respuesta corta.** Lo probamos con validación de 6 años y un factor fijo
+sobre la probabilidad de MANTENER empeora el modelo fuera de muestra: el
+mejor factor fue prácticamente 1 (no tocar nada). Lo que sí funcionó fue
+ajustar el peso de MANTENER al entrenar (P17.4).
+
+**Para entenderlo.**
+
+- *Teoría de decisión.* Elegir `argmax p_c` minimiza la pérdida 0-1
+  esperada: es el clasificador de Bayes para **accuracy**. Para **F1-macro**
+  el óptimo en general no es el argmax sino umbrales por clase (Lipton, Elkan
+  y Naryanaswamy 2014). Así que mover el umbral es legítimo.
+- *La regla.* `ŷ = argmax_c w_c · p_c` con `w = (1, k, 1)`. Como
+  `p_c ∝ exp(z_c)`, multiplicar `p_HOLD` por `k` equivale a sumar `log k` al
+  logit de HOLD: es cambiar su intercepto, o lo que es lo mismo, decirle al
+  modelo que MANTENER es a priori menos probable (ajuste de *priors*,
+  Saerens et al. 2002; decisión sensible a costos, Elkan 2001).
+- *Por qué un k pequeño mueve tanto.* Las probabilidades están comprimidas
+  cerca de 1/3, así que `k = 0.90` (`log k = −0.105`) basta para pasar el
+  HOLD predicho de 47 % a 23 % en promedio.
+- *Cómo se validó (origen rodante).* Para cada año Y de 2019 a 2024 se
+  entrena el pipeline de producción con [Y−6, Y−1] y se predice Y completo.
+  Se prueba k de 0.80 a 1.00 y se elige el que maximiza el F1 **medio** de
+  esos 6 años. 2025 y 2026 solo confirman.
+- *Resultado.* Mejor k = 0.99 (≈ sin cambio). Con k = 0.90: F1 0.357 → 0.334,
+  κ 0.063 → 0.050, Sharpe 0.52 → 0.37. En el primer análisis, que miraba solo
+  2024, k = 0.90 parecía lo mejor: es un ejemplo de libro de **sobreajustar a
+  un solo año de validación**.
+- *Por qué falla.* El sesgo no es constante. HOLD predicho vs real por año:
+  2022 → 13 % vs 32 % (predice de menos), 2023 → 74 % vs 48 % (de más). Un
+  desplazamiento fijo arregla los años tranquilos y descompone los volátiles.
+
+**Evidencia.** `scripts_opt/ajuste_hold_rolling.py`;
+`analisis_hold/7_ajuste_hold_rolling_detalle.csv`.
+
+### P17.4 ¿Qué ajuste aplicaron entonces, y por qué ese?
+
+**Respuesta corta.** Reentrenamos el modelo de producción con el peso de
+clase de MANTENER multiplicado por 0.90 sobre "balanced". El valor se eligió
+solo con 2019–2024. En 2026, que ninguna decisión vio, el MANTENER predicho
+baja de 60 % a 40 % (real: 35 %) y el F1 sube de 0.313 a 0.354, a cambio de
+algo de Sharpe. No es una mejora estadísticamente significativa: es un modelo
+equivalente con una proporción de MANTENER más realista.
+
+**Para entenderlo.**
+
+- *En qué se distingue del umbral.* El peso entra en la **pérdida** de
+  entrenamiento, `Σ_i w_{y_i} · (−log p_{y_i}(x_i))`. El optimizador vuelve a
+  ajustar interceptos **y** pendientes; no es un simple corrimiento del
+  intercepto, por eso su efecto es más suave y distinto al de k.
+- *Selección (media 2019–2024, origen rodante):*
+
+| Peso de MANTENER | F1 | κ | Sharpe | MANTENER predicho (real ≈ 40 %) |
+|---|---:|---:|---:|---:|
+| 1.00 ("balanced" puro, modelo anterior) | 0.357 | 0.063 | +0.52 | 47 % |
+| 0.95 | 0.360 | 0.062 | +0.53 | 42 % |
+| **0.90 (elegido)** | **0.365** | **0.068** | **+0.54** | 36 % |
+| 0.85 | 0.360 | 0.062 | +0.46 | 30 % |
+| 0.80 | 0.352 | 0.061 | +0.41 | 24 % |
+
+  0.90 es el mejor en las tres métricas a la vez, lo que hace la elección poco
+  discutible: no hubo que escoger entre F1 y Sharpe.
+
+- *Confirmación:*
+
+| Año | Modelo | F1 | κ | Sharpe | MANTENER pred. / real |
+|---|---|---:|---:|---:|---:|
+| 2025 | balanced | 0.411 | 0.130 | +0.89 | 53 % / 42 % |
+| 2025 | MANTENER ×0.90 | 0.395 | 0.102 | +0.93 | 29 % / 42 % |
+| 2026 | balanced (modelo anterior) | 0.313 | 0.010 | +0.38 | 60 % / 35 % |
+| 2026 | MANTENER ×0.90 (modelo actual) | **0.354** | **0.035** | +0.29 | **40 % / 35 %** |
+
+  En 2025 el ajuste se pasa al otro lado (29 % contra 42 % real) y pierde
+  F1; en 2026 lo gana. Es lo esperable de un efecto pequeño frente a la
+  variación entre años, y por eso no se presenta como mejora significativa.
+
+- *Honestidad estadística.* Mejora el F1 en 4 de 6 años de desarrollo
+  (Wilcoxon p ≈ 0.31); con 6 años no hay potencia para declarar una mejora.
+  Lo que se buscaba era una proporción de MANTENER realista sin perder
+  desempeño, y eso sí se cumple.
+- *¿Cambia el target?* No. Las etiquetas siguen siendo 30/70 a un día; solo
+  cambia cuánto pesa cada clase en la pérdida.
+- *¿Hay fuga de información?* No. El peso se eligió con modelos que nunca
+  vieron el año que se evaluaba, y 2025/2026 solo se usaron para confirmar.
+
+**Evidencia.** `analisis_hold/7_reglas_alternativas_resumen.csv`,
+`analisis_hold/8_confirmacion_2026.csv`, `scripts_opt/entrenar_produccion.py`
+(`PESO_HOLD`).
+
+### P17.5 ¿Y una regla que se adapte al régimen de mercado?
+
+**Respuesta corta.** La probamos: un umbral que cada día mantiene alrededor
+de 40 % de MANTENER en la ventana del último año, sin usar información
+futura. Sube un poco el F1, pero baja el Sharpe en 2025 y en 2026, así que no
+la adoptamos.
+
+**Para entenderlo.** Se define el margen `s = log p_HOLD − log max(p_BUY, p_SELL)`
+(el argmax normal es `s > 0`). Cada día `t` el umbral `τ_t` es el cuantil 60 %
+de los márgenes de los 252 días hábiles anteriores (7 acciones juntas), y se
+dice MANTENER si `s > τ_t`. Es *causal*: solo usa el pasado. Resultados: F1
+medio 2019–2024 0.367 (contra 0.357), 2025 igual (0.410), 2026 F1 0.350 pero
+Sharpe +0.16 contra +0.38.
+
+**Evidencia.** `analisis_hold/7_reglas_alternativas_resumen.csv`, `8_confirmacion_2026.csv`.
+
+### P17.6 ¿Por qué no calibraron las probabilidades?
+
+**Respuesta corta.** Calibrar cambia cuánto confía el modelo, no a qué clase
+elige. La escala de temperatura no cambia el argmax, y la calibración
+isotónica, que sí puede cambiarlo, la probamos en la Vía 7 y empeoró la LR.
+
+**Para entenderlo.** *Calibración* (que un 40 % ocurra el 40 % de las veces)
+y *discriminación* (ordenar bien los casos) son cosas distintas. La escala de
+temperatura divide los logits entre `T > 0`, así que conserva el orden de las
+clases. La isotónica ajusta una función monótona **por clase** y
+renormaliza, y eso sí puede cambiar la decisión; en la Vía 7 bajó el F1 de LR
+en 0.05. La regresión logística ya optimiza log-loss, que suele dar
+probabilidades razonablemente calibradas.
+
+**Evidencia.** `docs/VIA7_REFINAMIENTO.md`.
+
+### P17.7 ¿Por qué no hacerlo binario (sube/baja)?
+
+**Respuesta corta.** Sin MANTENER el modelo estaría obligado a operar todos
+los días aunque no tenga información. Medimos esa estrategia: en 2025 da el
+mismo Sharpe con peor drawdown, y en 2024 pierde más.
+
+**Para entenderlo.** Un clasificador binario necesitaría de todos modos una
+opción de abstenerse cuando la probabilidad es baja (*reject option*, Chow
+1970), y esa abstención es exactamente MANTENER. Con el modelo de tres
+clases: 2025 Sharpe +0.92 (con HOLD) contra +0.89 (sin HOLD) y drawdown −52 %
+contra −61 %; 2024 −0.49 contra −0.71.
+
+**Evidencia.** `ANALISIS_HOLD_Y_GLOBAL.md` §2.4.
+
+### P17.8 ¿Por qué no cambiar los percentiles a 40/60?
+
+**Respuesta corta.** Lo probamos: el modelo siguió prediciendo MANTENER el
+53 % de los días aunque solo el 20 % lo era, y el kappa bajó 45 % en 2025.
+El problema no es dónde se corta la etiqueta, sino que la dirección casi no
+es predecible.
+
+**Para entenderlo.** El F1-macro **no** es comparable entre etiquetas con
+distinta proporción de clases, porque su nivel de azar cambia. Por eso
+comparamos con kappa (P17.10): 30/70 → κ 0.140; 40/60 → κ 0.077 (2025).
+
+**Evidencia.** `analisis_hold/3a_percentiles_target.csv`.
+
+---
+
+## 17.2 Estadística y validación
+
+### P17.9 ¿Cómo saben que el resultado no es suerte?
+
+**Respuesta corta.** Con tres pruebas. Una prueba de permutación: en 2025
+solo el 0.4 % de 500 reordenamientos aleatorios de las señales supera al
+modelo. Intervalos bootstrap por bloques: el F1 de LR en 2025 está en
+[0.379, 0.428] y supera a los otros cuatro modelos. Y un walk-forward de 6
+años. La conclusión honesta: hay señal, pero es débil y depende del año (en
+2024 el 79 % de las permutaciones supera al modelo).
+
+**Para entenderlo.**
+
+- *Permutación.* Se barajan las señales del modelo entre los días: se
+  conserva cuántas COMPRAR/MANTENER/VENDER hay, pero se rompe su relación con
+  lo que pasó. Repetido 500 veces da la distribución del Sharpe bajo la
+  hipótesis nula "las señales no tienen información". El p-valor es la
+  fracción de permutaciones que igualan o superan al modelo.
+- *Bootstrap por bloques.* Se remuestrean bloques de días consecutivos (no
+  días sueltos) para conservar la autocorrelación de la serie; cada
+  remuestra da un F1 y los percentiles 2.5/97.5 dan el intervalo.
+- *Walk-forward.* Entrenar 5 años, validar 1, probar el siguiente, para
+  2020–2025: LR promedia 0.350 y XGBoost 0.356.
+
+**Evidencia.** `ANALISIS_HOLD_Y_GLOBAL.md` §2.4 y §7; paper §6.
+
+### P17.10 ¿Qué es el kappa de Cohen y por qué lo usan además del F1?
+
+**Respuesta corta.** Es la concordancia entre predicción y realidad
+**descontando la que se esperaría por azar**. Lo usamos porque es comparable
+entre etiquetas con distintas proporciones de clases, y porque dice
+directamente cuánto por encima del azar estamos: 0.14 en 2025, ≈ 0.01 en 2026.
+
+**Para entenderlo.** `κ = (p_o − p_e) / (1 − p_e)`, con `p_o` la accuracy y
+`p_e = Σ_c P(real = c) · P(pred = c)` la concordancia por azar. En 2025:
+`p_o = 0.453`; `p_e = 0.297·0.270 + 0.420·0.570 + 0.283·0.160 = 0.365`;
+`κ = (0.453 − 0.365) / (1 − 0.365) = 0.14`. En la escala de Landis y Koch
+(1977), por debajo de 0.20 es "concordancia leve".
+
+### P17.11 ¿Un Sharpe de 1.4 en un año es significativo?
+
+**Respuesta corta.** Por sí solo no. Con un año de datos el error estándar
+del Sharpe anualizado es de aproximadamente 1, así que el intervalo de 95 % de
+un Sharpe de 1.4 va de −0.6 a 3.4. Por eso la métrica principal de la tesis
+es la de clasificación y las conclusiones son comparativas.
+
+**Para entenderlo.** Con retornos aproximadamente independientes (Lo 2002),
+el error estándar del Sharpe diario es `√((1 + SR_d²/2) / T)`. Anualizando
+(× √252) con `T = 252` días queda ≈ 1.0. En el walk-forward, el Sharpe medio
+de LR en 6 años es +0.22 con desviación 0.50 entre años: `t = 0.22 / (0.50/√6) ≈ 1.1`,
+no significativo.
+
+### P17.12 Probaron unas 30 técnicas sobre el mismo año de prueba. ¿No es *data snooping*?
+
+**Respuesta corta.** Es un riesgo real y lo tratamos así: los
+hiperparámetros se eligen en validación, el ajuste de MANTENER se eligió con
+6 años de origen rodante, 2026 es un año que nadie usó para decidir, y
+señalamos explícitamente que la mejora de las interacciones de la Vía 8
+(+0.023 en 2025) no se sostiene en validación.
+
+**Para entenderlo.** Si se prueban muchas variantes y se reporta la mejor
+sobre el mismo test, el máximo del ruido parece una mejora (*winner's curse*;
+"jardín de senderos que se bifurcan"). Con un error estándar del F1 de ≈ 0.0125
+(el intervalo [0.379, 0.428] tiene semiancho 0.0245) y unas 10 variantes, el
+máximo esperado de 10 normales estándar es ≈ 1.54 σ ≈ +0.019: del tamaño de la
+"mejora" de las interacciones. Por eso en origen rodante quedaron empatadas
+con el modelo sin interacciones (F1 medio 0.357 contra 0.354).
+
+**Evidencia.** `analisis_hold/7_interactions_vs_base_rolling.csv`.
+
+### P17.13 ¿Por qué no k-fold? ¿Y la purga o el embargo?
+
+**Respuesta corta.** El k-fold aleatorio mezcla días futuros en el
+entrenamiento y la serie tiene autocorrelación, así que inflaría los
+resultados. Usamos cortes por año en orden temporal (walk-forward y origen
+rodante). Como la etiqueta mira solo un día adelante, el traslape entre
+entrenamiento y prueba es de un día.
+
+**Para entenderlo.** La purga (López de Prado 2018) quita del entrenamiento
+las observaciones cuya etiqueta se calcula con datos del periodo de prueba.
+Aquí la etiqueta del 31 de diciembre usa el cierre del primer día hábil del
+año siguiente: es un solo día por corte y no revela etiquetas de prueba,
+pero en rigor habría que purgarlo. Si preguntan, reconócelo: el efecto es
+despreciable (1 de ≈ 250 días). Además: las variables solo usan pasado, los
+umbrales de la etiqueta usan `shift(1)` y el escalador se ajusta solo con
+entrenamiento.
+
+### P17.14 ¿Por qué el modelo de producción se entrenó con 2018–2025, incluido el año de prueba?
+
+**Respuesta corta.** Es la práctica estándar: la evaluación se hace con el
+protocolo de entrenamiento/validación/prueba y, una vez elegido el modelo, se
+reentrena con todos los datos disponibles para usarlo. La prueba honesta del
+modelo final es 2026, que nunca vio.
+
+**Para entenderlo.** Lo que se evalúa es el *procedimiento*, no el
+artefacto; reentrenar con más datos no cambia la configuración elegida
+(Hastie, Tibshirani y Friedman, *The Elements of Statistical Learning*, cap. 7).
+En 2026 el modelo final da F1 0.354 (κ 0.035), contra 0.313 del modelo
+anterior.
+
+### P17.15 ¿Cómo compararon modelo global contra uno por acción, y con qué prueba?
+
+**Respuesta corta.** Con un diseño pareado: el modelo global y el de cada
+acción se evalúan sobre exactamente los mismos días de esa acción. Son 21
+comparaciones por modelo (3 experimentos × 7 acciones), y usamos la prueba de
+signo y la de rangos con signo de Wilcoxon. El global gana en LR (18 de 21,
+p = 0.002), LSTM y CNN; empata en XGBoost; y en ningún modelo el de por
+acción es significativamente mejor.
+
+**Para entenderlo.**
+
+- *Prueba de signo:* bajo H0 cada comparación tiene 50 % de favorecer al
+  global; 18 de 21 da p = 0.002 (binomial).
+- *Wilcoxon:* además del signo usa el tamaño de las diferencias (sus
+  rangos).
+- *Advertencia:* las 21 celdas no son independientes (mismo año de prueba,
+  mismo mercado), así que los p-valores son optimistas. Lo que da confianza
+  es que la dirección se repite en dos protocolos distintos (v4 y v5).
+
+**Evidencia.** `analisis_hold/4a_global_vs_porticker_por_modelo.csv`.
+
+---
+
+## 17.3 Modelos
+
+### P17.16 ¿Por qué un modelo lineal le gana a deep learning?
+
+**Respuesta corta.** Por el balance sesgo-varianza: con poca señal y unas
+10 500 filas, el error de un modelo flexible está dominado por la varianza
+(aprende ruido). Y las variables ya son agregados temporales (medias, RSI,
+MACD), así que las redes secuenciales no reciben información que la LR no
+tenga.
+
+**Para entenderlo.** Error esperado = sesgo² + varianza + ruido irreducible.
+Aquí el ruido irreducible es enorme (κ ≈ 0.1). Un modelo con 10⁵–10⁶
+parámetros reduce un sesgo que casi no importa y paga mucha varianza. La LR
+con regularización fuerte acepta sesgo a cambio de varianza casi nula.
+Coincide con Grinsztajn et al. (2022) en datos tabulares. La literatura donde
+las redes ganan (Gu, Kelly y Xiu 2020) usa ~30 000 acciones y 60 años.
+
+### P17.17 ¿Qué significa que la pérdida de validación de las redes no baje de ln 3?
+
+**Respuesta corta.** Que no aprenden nada más allá de la proporción de clases.
+`ln 3 ≈ 1.099` es la entropía cruzada de predecir 1/3 para cada clase, y
+predecir la proporción 30/40/30 da 1.089. Por eso el *early stopping* se
+quedaba en las épocas 1–2: todo lo que aprendían después era ruido.
+
+**Para entenderlo.** Entropía cruzada media `−(1/n) Σ log p_{y_i}`. Si
+`p = 1/3` siempre, vale `−log(1/3) = ln 3`. La entropía de la distribución
+30/40/30 es `−(2·0.3 ln 0.3 + 0.4 ln 0.4) = 1.089`. Una red cuya pérdida de
+validación queda en ≈ 1.09 no supera al "modelo" que solo conoce las
+proporciones.
+
+**Evidencia.** `docs/DIAGNOSTICO_MODELOS_PROFUNDOS.md`.
+
+### P17.18 ¿Por qué C = 0.000165, y qué implica?
+
+**Respuesta corta.** Optuna eligió una regularización muy fuerte porque, con
+tan poca señal, alejarse poco de "no sé nada" es lo que mejor generaliza. La
+consecuencia es que las probabilidades quedan cerca de 1/3 (confianza de
+35–45 %).
+
+**Para entenderlo.** scikit-learn minimiza `½‖w‖² + C · Σ_i ℓ_i`; un C
+pequeño hace dominar la penalización. En lectura bayesiana es la estimación
+MAP con un prior gaussiano `w ~ N(0, C·I)` sobre los coeficientes, muy
+concentrado en cero. Resultado: normas de coeficientes de 0.06–0.09 por
+clase, logits que difieren en décimas y probabilidades de 0.30–0.45. Es la
+misma intuición del encogimiento de James-Stein: con datos ruidosos,
+encoger hacia el prior reduce el error.
+
+### P17.19 ¿Las 15 interacciones no son sobreajuste?
+
+**Respuesta corta.** Su supuesta mejora sí lo era: se eligieron viendo 2025.
+En origen rodante 2019–2024 empatan con el modelo sin interacciones (F1 0.357
+contra 0.354; Sharpe 0.52 contra 0.53). Las mantuvimos porque no empeoran,
+pero no las presentamos como mejora.
+
+**Para entenderlo.** Las 15 parejas se sortearon (semilla 42) entre las 10
+variables con mayor |coeficiente| en entrenamiento: la elección de variables
+no usó la prueba, pero la decisión de adoptarlas sí. Un producto `x_a · x_b`
+permite que el efecto de una variable dependa de la otra, algo que una LR
+sola no puede representar.
+
+### P17.20 ¿Por qué RobustScaler? ¿Escalan por acción o global?
+
+**Respuesta corta.** RobustScaler usa mediana y rango intercuartílico, que no
+se distorsionan con las colas pesadas de los retornos. En la evaluación de
+la Vía 8 se escaló por acción; producción usa un escalador global. Medimos la
+diferencia: F1 0.4125 contra 0.4086 en 2025, despreciable.
+
+**Para entenderlo.** `x' = (x − mediana) / IQR`. Con StandardScaler, días
+como el desplome de marzo de 2020 inflan la desviación estándar y aplastan al
+resto de los días.
+
+### P17.21 ¿Cuántos parámetros tiene la LR? ¿Es multinomial?
+
+**Respuesta corta.** Es multinomial (softmax sobre 3 clases) con 3 × 76 + 3
+= 231 parámetros: un vector de coeficientes y un intercepto por clase.
+
+**Para entenderlo.** El softmax es invariante a sumar la misma constante a
+los tres logits, así que en rigor hay 2 × 77 = 154 grados de libertad; la
+penalización L2 elige la solución de norma mínima.
+
+---
+
+## 17.4 La plataforma
+
+### P17.22 ¿Las métricas de la página son las mismas que las de la tesis?
+
+**Respuesta corta.** Sí. Cada señal del día *t* se compara con lo que pasó
+del cierre de *t* al cierre de *t*+1, con la misma etiqueta de percentiles
+30/70 del entrenamiento, y la estrategia es la misma: COMPRAR largo, VENDER
+corto, MANTENER fuera, un día y sin costos.
+
+**Para entenderlo.** La etiqueta en vivo (`api/ml/target.py`) coincide al
+100 % con la del dataset de entrenamiento una vez llena la ventana de 252
+días (hay un test que lo verifica). Si preguntan por versiones anteriores de
+la página: antes "correcta" se comparaba contra el día anterior y el Sharpe
+se calculaba sobre el precio de la acción; se corrigió el 2026-09-30.
+
+### P17.23 ¿Cómo evitan mirar el futuro en vivo?
+
+**Respuesta corta.** Las variables solo usan datos hasta el cierre del día;
+mientras NYSE está abierto se descarta la vela del día en curso (su "cierre"
+es un precio intradía), y el acierto de una señal solo se calcula cuando
+existe el cierre del día siguiente; antes aparece como "Pendiente".
+
+### P17.24 ¿Por qué la confianza es de 35–45 %?
+
+**Respuesta corta.** Por la regularización fuerte y la poca señal (P17.18).
+Al azar sería 33 %. Aun así es informativa: cuando la confianza pasa de 0.36
+a 0.40–0.45, la tasa de acierto sube de 39 % a 56 %.
+
+**Evidencia.** `analisis_hold/2d_accuracy_por_confianza.csv`.
+
+### P17.25 ¿Por qué hoy casi todo dice MANTENER?
+
+**Respuesta corta.** Porque el VIX está por debajo de su media anual desde
+agosto de 2026, y en volatilidad baja el modelo espera movimientos chicos.
+Con el ajuste de peso el efecto se reduce, pero en meses muy tranquilos sigue
+predominando MANTENER (agosto de 2026: 86 %).
+
+---
+
+## 17.5 Preguntas trampa
+
+**P17.26 "Su modelo es apenas mejor que una moneda. ¿Qué aportaron?"**
+Que se midió con rigor cuánto se puede extraer de datos públicos diarios con
+cinco familias de modelos: poco, y de forma inestable entre años. Y que en ese
+régimen un modelo lineal bien regularizado iguala o supera a redes profundas,
+con dos protocolos y un walk-forward de seis años. Un resultado negativo bien
+medido es un resultado.
+
+**P17.27 "Si 2025 fue el mejor año del modelo, ¿no eligieron el test a conveniencia?"**
+No: 2025 se fijó en v4 como el último año completo disponible, para que los
+tres experimentos compartieran el mismo test, antes de saber cómo saldría. Y
+justamente por eso reportamos el walk-forward (2020–2025) y 2026 en vivo,
+donde el modelo rinde menos.
+
+**P17.28 "¿Usarían este modelo con su dinero?"**
+No. κ ≈ 0.01 en 2026, Sharpe con error estándar de ~1 por año y sin costos
+reales. La plataforma es demostrativa y lo dice en su aviso legal.
+
+**P17.29 "¿Qué cambiarían primero?"**
+El horizonte a 5 días (ya medido: F1 ≈ 0.43), más acciones para que los
+modelos complejos tengan datos, y optimizar con costos de transacción
+incluidos.
 
 ---
 

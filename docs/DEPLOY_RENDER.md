@@ -13,10 +13,11 @@ Render no lo necesita para servir la app.
 ## Primer despliegue
 
 1. En el dashboard de Render: **New → Blueprint**, conectar el repo de GitHub
-   (`barudust/TT` o el que corresponda) y la rama **`dev`** (es la que
-   `render.yaml` tiene configurada en ambos servicios — cada push a `dev`
-   dispara un deploy nuevo). Si más adelante cambias de rama, actualiza el
-   campo `branch` en los dos servicios para que sigan coincidiendo.
+   (`barudust/TT`) y la rama **`main`** (la que `render.yaml` tiene
+   configurada en ambos servicios y la que Render despliega hoy; cada push a
+   `main` dispara un deploy nuevo). `dev` existe como rama de trabajo y no se
+   despliega. Si cambias la rama en el dashboard, actualiza también el campo
+   `branch` de `render.yaml` para que no se contradigan.
 2. Render crea `tt-api` y `tt-frontend`. Esperar a que `tt-api` termine su
    primer deploy y copiar su URL pública (`https://tt-api-XXXX.onrender.com`).
 3. En el servicio `tt-frontend` → **Environment**, fijar `VITE_API_URL` con
@@ -41,9 +42,12 @@ ambos servicios (`autoDeploy: true`).
   la API cayera — el `/health` seguía respondiendo "ok" porque no depende
   de los datos. `initialize_data()` ahora reintenta (`FETCH_RETRY_ATTEMPTS`,
   default 3, con `FETCH_RETRY_DELAY_SECONDS` entre intentos, default 5) el
-  contexto de mercado y cada ticker antes de darse por vencido, para
-  autorrecuperarse de este tipo de falla sin intervención manual. Si aun así
-  pasa, `POST /admin/refresh` fuerza un reintento inmediato.
+  contexto de mercado y cada ticker antes de darse por vencido. Si aun así
+  el catálogo queda incompleto (pasó el 2026-09-30 tras un deploy), el
+  scheduler reintenta solo cada `CATALOG_RETRY_MINUTES` (default 2) hasta
+  completar las 7 acciones, y `GET /health` reporta `stocksLoaded` /
+  `stocksExpected` para verlo desde fuera. `POST /admin/refresh` fuerza un
+  reintento inmediato.
 - **El refresco automático diario** (`REFRESH_HOUR`/`REFRESH_MINUTE`, scheduler
   en `main.py`) solo corre si la instancia está despierta a esa hora. En plan
   free esto no está garantizado. Opciones si hace falta que sea confiable:
@@ -56,9 +60,9 @@ ambos servicios (`autoDeploy: true`).
   `initialize_data()` recalcula y sobrescribe (upsert) toda la ventana de
   3 años con el modelo actual en cada arranque/refresco, así que no hay
   ningún dato en la BD que no sea reproducible desde Yahoo Finance + el
-  `.pkl` (ver `docs/DATABASE.md`). Lo único que se pierde al reiniciar son
-  los overrides manuales de `POST /stocks*`, que existen solo para
-  pruebas/demos puntuales. No hace falta Postgres ni disco persistente
+  `.pkl` (ver `docs/DATABASE.md`). Los endpoints de override manual
+  (`POST /stocks*`) están desactivados en producción (`403` salvo
+  `ENABLE_MANUAL_OVERRIDES=1`). No hace falta Postgres ni disco persistente
   para este proyecto tal como está diseñado.
 - **`numInstances: 1` es obligatorio en `tt-api`**, no solo el default del
   plan free: el scheduler de refresco diario vive en memoria de un solo

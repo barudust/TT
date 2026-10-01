@@ -1,6 +1,6 @@
 {
-  "modelo": "LR + interactions (V\u00eda 8, ganador post-investigaci\u00f3n)",
-  "config_id": "LR-v8-interactions-produccion",
+  "modelo": "LR + interactions (Vía 8) con peso de HOLD ajustado",
+  "config_id": "LR-v8-interactions-holdw090",
   "n_features": 76,
   "n_features_base": 61,
   "n_interactions": 15,
@@ -8,10 +8,16 @@
     "penalty": "l2",
     "C": 0.00016491236228800314,
     "class_weight": "balanced",
+    "peso_hold": 0.9,
+    "class_weight_efectivo": {
+      "0": 1.1029803921568626,
+      "1": 0.7618093174431203,
+      "2": 1.0965302144249514
+    },
     "escalador": "robust",
     "solver": "saga"
   },
-  "metricas_val_2024_honestas_via8_exp_b_global": {
+  "metricas_test_2025_via8_exp_b_global": {
     "f1_macro": 0.4133,
     "sharpe": 0.914,
     "win_rate": 0.532,
@@ -21,13 +27,73 @@
     "signal_hold_pct": null,
     "signal_sell_pct": null
   },
-  "baseline_lr_sin_interactions_val_2024": {
+  "baseline_lr_sin_interactions_test_2025": {
     "f1_macro": 0.3907,
     "sharpe": 0.683
   },
   "delta_vs_baseline": {
     "f1_macro": 0.0226,
     "sharpe": 0.231
+  },
+  "nota_test_2025": "Las cifras de Vía 8 son de TEST 2025 y con pesos 'balanced' puros. En validación 2024 el LR con y sin interactions empatan (F1 0.325 vs 0.326).",
+  "ajuste_hold": {
+    "peso_hold": 0.9,
+    "seleccion": "max F1-macro medio 2019-2024 por origen rodante (ajuste_hold_rolling.py)",
+    "balanced": {
+      "dev_2019_2024": {
+        "f1_macro": 0.3567,
+        "kappa": 0.0633,
+        "sharpe": 0.5197,
+        "pred_hold_pct": 47.4209,
+        "real_hold_pct": 40.3606
+      },
+      "test_2025": {
+        "f1_macro": 0.4105,
+        "kappa": 0.1296,
+        "sharpe": 0.8926,
+        "pred_hold_pct": 52.8802,
+        "real_hold_pct": 42.1659
+      }
+    },
+    "hold_x0.9": {
+      "dev_2019_2024": {
+        "f1_macro": 0.3654,
+        "kappa": 0.0675,
+        "sharpe": 0.5409,
+        "pred_hold_pct": 36.3976,
+        "real_hold_pct": 40.3606
+      },
+      "test_2025": {
+        "f1_macro": 0.3948,
+        "kappa": 0.1019,
+        "sharpe": 0.9273,
+        "pred_hold_pct": 28.5138,
+        "real_hold_pct": 42.1659
+      }
+    },
+    "oos_2026": {
+      "balanced, argmax (modelo anterior)": {
+        "f1_macro": 0.3127,
+        "kappa": 0.0098,
+        "sharpe": 0.3817,
+        "pred_hold_pct": 59.6774,
+        "real_hold_pct": 34.7158
+      },
+      "balanced + proporción móvil causal (π=0.4, N=252)": {
+        "f1_macro": 0.3498,
+        "kappa": 0.0274,
+        "sharpe": 0.1628,
+        "pred_hold_pct": 37.02,
+        "real_hold_pct": 34.7158
+      },
+      "reentrenado con peso HOLD x0.9": {
+        "f1_macro": 0.3536,
+        "kappa": 0.035,
+        "sharpe": 0.2943,
+        "pred_hold_pct": 39.7081,
+        "real_hold_pct": 34.7158
+      }
+    }
   },
   "entrenamiento": {
     "rango": "2018-01-01 a 2025-12-31",
@@ -42,7 +108,7 @@
       "META"
     ],
     "estrategia": "global (un modelo para los 7)",
-    "fecha": "2026-08-26T06:54:00.503913"
+    "fecha": "2026-09-30T21:13:44.583771"
   },
   "referencia_investigacion": "RESULTADOS_OPTIMIZADOS/INVESTIGACION_COMPLETA.md"
 }

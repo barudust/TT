@@ -3,7 +3,8 @@ Carga del modelo ganador (Regresion Logistica L2 + interactions, global, Exp B)
 y su uso para inferencia de señales BUY/SELL/HOLD.
 
 Actualizado 2026-08-25 al ganador de Vía 8 (LR + 15 interactions), que mejora
-al baseline LR elasticnet en F1 (+0.023) y Sharpe (+0.23) sobre val 2024.
+al baseline LR elasticnet en F1 (+0.023) y Sharpe (+0.23) sobre TEST 2025
+(en validacion 2024 empatan; ver RESULTADOS_OPTIMIZADOS/docs/ANALISIS_HOLD_Y_GLOBAL.md).
 
 Ver RESULTADOS_OPTIMIZADOS/INVESTIGACION_COMPLETA.md §7 para el analisis
 completo que sustenta este modelo como ganador tras auditar 5 arquitecturas
@@ -18,7 +19,7 @@ import numpy as np
 
 from .features import FEATURE_COLUMNS
 
-MODEL_VERSION = "LR-v8-interactions-produccion"
+MODEL_VERSION = "LR-v8-interactions-holdw090"  # debe coincidir con config_id del .pkl
 
 # Clases del modelo: 0=SELL, 1=HOLD, 2=BUY (ver scripts_opt/common.py -> NOMBRES)
 CLASS_TO_SIGNAL = {0: "sell", 1: "hold", 2: "buy"}
@@ -35,6 +36,15 @@ class SignalModel:
         # que la API describa el modelo cargado en vez de texto fijo en el frontend.
         self.meta = meta or {}
 
+    @staticmethod
+    def _describir_pesos(hp: dict) -> str | None:
+        """'balanced' o 'balanced, HOLD ×0.9' (el .pkl guarda los pesos efectivos)."""
+        peso = hp.get("peso_hold")
+        if peso is not None and peso != 1.0:
+            return f"balanced, HOLD ×{peso:g}"
+        cw = hp.get("class_weight")
+        return cw if isinstance(cw, str) or cw is None else "personalizados"
+
     def describe(self) -> dict:
         hp = self.meta.get("hp", {})
         n_inter = len(self.meta.get("interaction_pairs", []))
@@ -44,7 +54,7 @@ class SignalModel:
             "algorithm": type(self.model).__name__,
             "penalty": hp.get("penalty", getattr(self.model, "penalty", None)),
             "C": hp.get("C", getattr(self.model, "C", None)),
-            "classWeight": hp.get("class_weight", getattr(self.model, "class_weight", None)),
+            "classWeight": self._describir_pesos(hp),
             "scaler": type(self.scaler).__name__,
             "nFeatures": len(self.feat_cols),
             "nFeaturesBase": len(self.feat_cols) - n_inter,

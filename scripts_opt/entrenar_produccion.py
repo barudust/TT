@@ -8,6 +8,10 @@ actual de la investigación (después de v0-v8):
   - LR con penalty=l2, C=0.000165 (ganador Optuna v5)
   - RobustScaler (ganador Optuna v5)
   - 61 features base + 15 productos (interactions, Vía 8)
+  - Pesos de clase "balanced" con el de HOLD multiplicado por PESO_HOLD
+    (elegido en scripts_opt/ajuste_hold_rolling.py con los años 2019-2024 y
+    confirmado en 2025/2026; ver docs/ANALISIS_HOLD_Y_GLOBAL.md §8). No cambia
+    el target: solo cuánto pesa cada clase al entrenar.
   - Entrenado sobre TODO 2018-2025 (para producción, no evaluación)
 
 Salidas actualizadas:
@@ -59,6 +63,45 @@ LR_HP = {
     "random_state": 42,
     "n_jobs": -1,
 }
+
+# Peso extra de la clase HOLD al entrenar (1.0 = "balanced" puro). Ver docstring.
+PESO_HOLD = 0.90
+CONFIG_ID = f"LR-v8-interactions-holdw{int(round(PESO_HOLD * 100)):03d}"
+
+ANALISIS = Path("RESULTADOS_OPTIMIZADOS/analisis_hold")
+
+
+def pesos_de_clase(y: np.ndarray, peso_hold: float) -> dict:
+    """'balanced' de scikit-learn (n / (3·n_c)) con HOLD (clase 1) × peso_hold."""
+    frec = np.bincount(y, minlength=3) / len(y)
+    return {c: float(1 / (3 * frec[c]) * (peso_hold if c == 1 else 1.0)) for c in range(3)}
+
+
+def evidencia_ajuste_hold() -> dict:
+    """Resume la evidencia del peso de HOLD desde los CSV de los análisis."""
+    out = {"peso_hold": PESO_HOLD,
+           "seleccion": "max F1-macro medio 2019-2024 por origen rodante (ajuste_hold_rolling.py)"}
+    det = ANALISIS / "7_reglas_alternativas_detalle.csv"
+    if det.exists():
+        d = pd.read_csv(det)
+        regla = f"reentrenar con peso HOLD x{PESO_HOLD:g}"
+        for nombre, r in [("balanced", "argmax normal (k=1)"), (f"hold_x{PESO_HOLD:g}", regla)]:
+            sub = d[d.regla == r]
+            dev = sub[sub.anio.between(2019, 2024)]
+            out[nombre] = {
+                "dev_2019_2024": {k: round(float(dev[k].mean()), 4)
+                                  for k in ["f1_macro", "kappa", "sharpe", "pred_hold_pct", "real_hold_pct"]},
+                "test_2025": {k: round(float(sub[sub.anio == 2025][k].iloc[0]), 4)
+                              for k in ["f1_macro", "kappa", "sharpe", "pred_hold_pct", "real_hold_pct"]},
+            }
+    conf = ANALISIS / "8_confirmacion_2026.csv"
+    if conf.exists():
+        c = pd.read_csv(conf)
+        out["oos_2026"] = {row.regla: {k: round(float(getattr(row, k)), 4)
+                                       for k in ["f1_macro", "kappa", "sharpe", "pred_hold_pct", "real_hold_pct"]}
+                           for row in c.itertuples()}
+    return out
+
 
 # Features base (61) — deben coincidir con api/ml/features.py::FEATURE_COLUMNS
 FEATURES_BASE = [
@@ -155,8 +198,9 @@ def main():
     # 5) Entrenar LR (con TODOS los datos disponibles, sin validación separada
     #    porque es el modelo de PRODUCCIÓN — la evaluación honesta está en v8)
     print("\n[5] Entrenando LR con TODOS los datos 2018-2025...")
-    print(f"    Hiperparámetros: {LR_HP}")
-    model = LogisticRegression(**LR_HP)
+    hp = {**LR_HP, "class_weight": pesos_de_clase(y, PESO_HOLD)}
+    print(f"    Hiperparámetros: {hp}")
+    model = LogisticRegression(**hp)
     model.fit(X_scaled, y)
 
     # 6) F1 in-sample (referencia — no es evaluación honesta)
@@ -171,28 +215,29 @@ def main():
         "model": model,
         "scaler": scaler,
         "hp": {
-            **LR_HP,
+            **hp,
+            "peso_hold": PESO_HOLD,
             "escalador": "robust",
-            "config_id": "LR-v8-interactions-produccion",
+            "config_id": CONFIG_ID,
             "fecha_entrenamiento": datetime.now().isoformat(),
             "n_features_base": len(FEATURES_BASE),
             "n_features_total": len(feat_cols),
             "n_pares_interactions": len(pares_inter),
             "rango_train": "2018-01-01 a 2025-12-31 (todos los datos)",
             "n_samples": int(len(y)),
-            "f1_macro_val_2024_honesto": 0.4133,  # de via8/interactions.csv
-            "sharpe_val_2024_honesto": 0.914,
-            "notas": "Ganador de Vía 8. Ver RESULTADOS_OPTIMIZADOS/docs/VIA8_DATASET.md",
+            "f1_macro_test_2025_via8": 0.4133,  # de via8/interactions.csv (evalua sobre 2025)
+            "sharpe_test_2025_via8": 0.914,
+            "notas": "Ganador de Vía 8 + peso de HOLD. Ver RESULTADOS_OPTIMIZADOS/docs/ANALISIS_HOLD_Y_GLOBAL.md",
         },
         "feat_cols": feat_cols,
-        "config_id": "LR-v8-interactions-produccion",
+        "config_id": CONFIG_ID,
         "interaction_pairs": pares_inter,   # para inferencia
     }
 
     pkl_path = OUT_ARTIFACTS / "lr_elasticnet_global_expB.pkl"
     # Backup del anterior
     if pkl_path.exists():
-        backup = OUT_ARTIFACTS / "lr_elasticnet_global_expB_v5.pkl.bak"
+        backup = OUT_ARTIFACTS / f"lr_elasticnet_global_expB_{datetime.now():%Y%m%d_%H%M%S}.pkl.bak"
         pkl_path.rename(backup)
         print(f"    Backup del anterior: {backup}")
 
@@ -212,19 +257,21 @@ def main():
     # 9) Actualizar metrics.json
     metrics_path = OUT_ARTIFACTS / "lr_elasticnet_global_expB.metrics.json"
     metrics = {
-        "modelo": "LR + interactions (Vía 8, ganador post-investigación)",
-        "config_id": "LR-v8-interactions-produccion",
+        "modelo": "LR + interactions (Vía 8) con peso de HOLD ajustado",
+        "config_id": CONFIG_ID,
         "n_features": len(feat_cols),
         "n_features_base": len(FEATURES_BASE),
         "n_interactions": len(pares_inter),
         "hp": {
             "penalty": LR_HP["penalty"],
             "C": LR_HP["C"],
-            "class_weight": LR_HP["class_weight"],
+            "class_weight": "balanced",
+            "peso_hold": PESO_HOLD,
+            "class_weight_efectivo": hp["class_weight"],
             "escalador": "robust",
             "solver": LR_HP["solver"],
         },
-        "metricas_val_2024_honestas_via8_exp_b_global": {
+        "metricas_test_2025_via8_exp_b_global": {
             "f1_macro": 0.4133,
             "sharpe": 0.914,
             "win_rate": 0.532,
@@ -234,11 +281,14 @@ def main():
             "signal_hold_pct": None,
             "signal_sell_pct": None,
         },
-        "baseline_lr_sin_interactions_val_2024": {
+        "baseline_lr_sin_interactions_test_2025": {
             "f1_macro": 0.3907,
             "sharpe": 0.683,
         },
         "delta_vs_baseline": {"f1_macro": +0.0226, "sharpe": +0.231},
+        "nota_test_2025": ("Las cifras de Vía 8 son de TEST 2025 y con pesos 'balanced' puros. En "
+                           "validación 2024 el LR con y sin interactions empatan (F1 0.325 vs 0.326)."),
+        "ajuste_hold": evidencia_ajuste_hold(),
         "entrenamiento": {
             "rango": "2018-01-01 a 2025-12-31",
             "n_samples": int(len(y)),
@@ -255,9 +305,9 @@ def main():
     print("\n" + "=" * 70)
     print("✓ ENTRENAMIENTO COMPLETO")
     print("=" * 70)
-    print(f"  Ganador: LR + 15 interactions (76 features total)")
-    print(f"  F1 val 2024 (via8): 0.4133 vs baseline 0.3907 (+0.023)")
-    print(f"  Sharpe val 2024 (via8): +0.914 vs baseline +0.683 (+0.231)")
+    print(f"  Ganador: LR + 15 interactions (76 features total), peso HOLD x{PESO_HOLD}")
+    print(f"  F1 test 2025 (via8): 0.4133 vs baseline 0.3907 (+0.023)")
+    print(f"  Sharpe test 2025 (via8): +0.914 vs baseline +0.683 (+0.231)")
     print(f"  Modelo listo en {pkl_path}")
 
 

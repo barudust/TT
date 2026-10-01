@@ -58,7 +58,7 @@ exactamente lo que un revisor busca.
 | **R5** | **Una decisión se adopta solo si mejora ≥ 0.005 de F1 *y* la mejora supera 1 desviación estándar entre semillas.** Si empata, gana la opción más simple. | Evita perseguir ruido |
 | **R6** | **El escalador, los percentiles del target y cualquier estadístico se ajustan solo con train.** Nunca con val ni test. | Ya se cumple; no romperlo |
 | **R7** | **Todo run se escribe en el registro maestro** (`v5/registro_runs.csv`), aunque salga mal. | Sin registro no hay bitácora |
-| **R8** | **Cualquier cambio que altere una cifra ya citada en `paper/paper.tex` se documenta en una tabla "antes / después"** antes de tocar el `.tex`. | El paper ya está enviado a MICAI |
+| **R8** | **Cualquier cambio que altere una cifra ya citada en `paper_review/paper.tex` se documenta en una tabla "antes / después"** antes de tocar el `.tex`. | El paper ya está enviado a MICAI |
 
 ### Convención de carpetas y nombres
 

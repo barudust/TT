@@ -1,0 +1,20 @@
+# Dependencias del pipeline de investigación (scripts_opt/, scripts_v1/).
+# La API tiene las suyas en api/requirements.txt.
+#
+# Fijadas: las versiones con las que se corrieron los análisis de
+# 2026-09-30 (analisis_hold_global.py, ajuste_hold_rolling.py,
+# entrenar_produccion.py). Los resultados de LR no dependen de la GPU.
+pandas==2.3.2
+numpy==2.3.3
+scikit-learn==1.7.2
+scipy==1.16.2
+pyarrow
+yfinance
+
+# Sin versión registrada: solo las necesitan los scripts de XGBoost, LightGBM,
+# los modelos profundos y Optuna (opt_*.py, run_v5.py, via7/via8). XGBoost y
+# PyTorch se usaron con CUDA.
+xgboost
+lightgbm
+torch
+optuna

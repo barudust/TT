@@ -13,8 +13,8 @@ Requiere red (Yahoo Finance). Los números cambian conforme pasan los días.
 Uso (desde la raíz del repo):
     python scripts_opt/evaluar_produccion_2026.py
 
-Salida: RESULTADOS_OPTIMIZADOS/analisis_hold/6_produccion_2026.csv (una fila por
-día y ticker) y un resumen en consola.
+Salida: RESULTADOS_OPTIMIZADOS/analisis_hold/6_produccion_2026_<MODEL_VERSION>.csv
+(una fila por día y ticker) y un resumen en consola.
 """
 import sys
 from datetime import datetime, timezone
@@ -33,12 +33,12 @@ from sklearn.metrics import cohen_kappa_score, f1_score
 API = Path(__file__).resolve().parents[1] / "api"
 sys.path.insert(0, str(API))
 from ml.features import build_feature_frame, fetch_market_context, fetch_ohlcv  # noqa: E402
-from ml.model import load_model  # noqa: E402
+from ml.model import MODEL_VERSION, load_model  # noqa: E402
 from ml.target import etiquetas_reales  # noqa: E402
 
 TICKERS = ["AAPL", "MSFT", "GOOGL", "AMZN", "TSLA", "META", "NVDA"]
 INICIO = "2026-01-01"
-OUT = Path("RESULTADOS_OPTIMIZADOS/analisis_hold/6_produccion_2026.csv")
+OUT = Path(f"RESULTADOS_OPTIMIZADOS/analisis_hold/6_produccion_2026_{MODEL_VERSION}.csv")
 NY = ZoneInfo("America/New_York")
 
 

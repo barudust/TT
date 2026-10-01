@@ -35,18 +35,21 @@ proyecto); es SQLAlchemy declarativo simple con sesiones manuales.
 - **`ohlcv_daily`**: `id`, `asset_id` (FK), `date`, `open`, `high`, `low`,
   `close`, `volume`. Único por (`asset_id`, `date`).
 - **`predictions`**: `id`, `asset_id` (FK), `date`, `signal`
-  (`buy`/`sell`/`hold`), `confidence`, `prob_buy`/`prob_hold`/`prob_sell`,
-  `actual_price`, `model_version`, `created_at`. Único por
-  (`asset_id`, `date`).
+  (`buy`/`sell`/`hold`), `confidence`, `prob_buy`/`prob_hold`/`prob_sell`
+  (las tres probabilidades del modelo), `actual_price` (cierre de ese día),
+  `correct` (1/0 si la señal coincidió con la etiqueta real del día
+  siguiente; vacío mientras no exista ese cierre), `model_version`,
+  `created_at`. Único por (`asset_id`, `date`).
 - **`metrics`**: `id`, `asset_id` (FK), `window_days` (30/60/90),
   `model_version` y las métricas de clasificación (`accuracy`,
-  `f1_macro`, `f1_buy`, `f1_sell`) + financieras (`cumulative_return`,
+  `f1_macro`, `f1_buy`, `f1_sell`; definiciones en
+  `docs/API_FRONTEND_METRICS.md`) + financieras de la estrategia (`cumulative_return`,
   `return_vs_bh`, `sharpe_ratio`, `max_drawdown`, `win_rate`,
   `profit_factor`, `number_of_trades`, `exposure`, `final_capital`) +
   distribución de señales (`signal_buy_pct`, `signal_hold_pct`,
   `signal_sell_pct`). Único por (`asset_id`, `window_days`).
 
-No hay una tabla de *features* técnicas: las 61 columnas que usa el
+No hay una tabla de *features* técnicas: las 76 columnas que usa el
 modelo (ver `docs/MODEL_INTEGRATION.md`) son derivadas del OHLCV y se
 recalculan en memoria con `api/ml/features.py` cada vez que se refrescan
 los datos — persistirlas sería redundante (se pueden reconstruir desde
@@ -79,12 +82,9 @@ de lectura.
 
 ## Consideraciones
 
-- Fechas en UTC, sin zona horaria de mercado (NYSE) todavía — ver
-  limitaciones en `docs/THESIS_QA.md`.
-- Los endpoints `POST /stocks*` (actualización manual/testing) sí
-  persisten en la base de datos además de la caché en memoria (upsert
-  best-effort vía `_persist_stock_override` en `api/main.py`), pero
-  siguen siendo para pruebas/demos puntuales, no el flujo real de datos
-  (que viene de `initialize_data()`/Yahoo Finance). En un despliegue con
-  almacenamiento efímero (ver `docs/DEPLOY_RENDER.md`) estos overrides no
-  sobreviven un reinicio — aceptable dado su propósito.
+- `date` es el día de mercado de NYSE que reporta Yahoo Finance; los
+  timestamps (`created_at`, `updated_at`) están en UTC.
+- Los endpoints `POST /stocks*` (override manual) están **desactivados por
+  defecto** (`403`) para que todo lo que se guarda y se muestra provenga del
+  modelo. Con `ENABLE_MANUAL_OVERRIDES=1` (solo pruebas locales) escriben con
+  `model_version="manual-override"`, para distinguirlos.

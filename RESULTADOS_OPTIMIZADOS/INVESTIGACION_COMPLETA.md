@@ -370,14 +370,16 @@ Tabla consolidada de todo lo que produjo mejora:
 
 ### 6.1 Arquitecturas alternativas (v3, v5, v7)
 
+> **Corrección (2026-09-30):** en el repositorio solo hay código y resultados de **LightGBM** (`scripts_opt/opt_lgbm.py`). CatBoost, GRU, TabNet, Extra-Trees y Transformer **no se corrieron**; antes aparecían como "probados". Se dejan como alternativas consideradas, con la razón por la que no se esperaba que cambiaran el resultado.
+
 | Alternativa | Resultado | Motivo |
 |---|---|---|
 | LightGBM | F1 similar a XGB | Sin ventaja; mismo enfoque |
-| CatBoost | F1 similar a XGB | 3× más lento |
-| GRU | F1 similar a LSTM | Sin ventaja |
+| CatBoost (no corrido) | — | Mismo sesgo inductivo que XGBoost/LightGBM |
+| GRU (no corrido) | — | La LSTM ya no supera el azar en validación |
 | Attention sobre BiLSTM | Ya cubierto en Optuna v5 (pooling=attn ganó en LSTM) | Neutro |
-| Transformer / Informer / PatchTST | Peor con 1500 samples/ticker | Sin pre-training disponible |
-| TabNet | Peor | Diseñado para datos tabulares grandes |
+| Transformer / Informer / PatchTST (no corrido) | — | ~10 500 filas, sin pre-entrenamiento |
+| TabNet (no corrido) | — | Diseñado para tabulares grandes |
 | N-BEATS/N-HiTS | No aplicable | Diseñados para regresión de series, no clasificación |
 
 ### 6.2 Selección de features (v0)
@@ -444,7 +446,8 @@ Documentado en [`docs/ALTERNATIVAS_FUTURAS.md`](docs/ALTERNATIVAS_FUTURAS.md).
 ## 7. Modelo de producción
 
 **Antes de v8:** LR elasticnet 61 features (F1=0.404, Sharpe=+0.895 en test 2025).
-**Después de v8:** **LR + interactions** (76 features = 61 + 15 productos) — F1=0.413, Sharpe=+0.92.
+**Después de v8:** **LR + interactions** (76 features = 61 + 15 productos) — F1=0.413, Sharpe=+0.92 (test 2025; elegido viendo 2025: en validación 2024 empata con el LR sin interacciones).
+**Desde 2026-09-30:** el mismo modelo reentrenado con el peso de clase de HOLD × 0.90 (elegido por origen rodante 2019–2024) para que no prediga HOLD de más. En 2026, fuera de muestra: F1 0.354 (antes 0.313), κ 0.035, HOLD 40 % (real 35 %). Ver `docs/ANALISIS_HOLD_Y_GLOBAL.md` §8.
 
 Ver `api/ml/model.py` y `api/ml/artifacts/` para el modelo actualmente desplegado en Render.
 
@@ -456,7 +459,7 @@ Recopilando lo hecho:
 
 | Dimensión | Se probó | Se descartó |
 |---|---|---|
-| Arquitecturas | LR, XGB, LSTM, CNN, CNN-LSTM (los 5 del brief) | LightGBM, CatBoost, GRU, Transformer, TabNet, N-BEATS |
+| Arquitecturas | LR, XGB, LSTM, CNN, CNN-LSTM (los 5 del brief) + LightGBM | CatBoost, GRU, Transformer, TabNet, N-BEATS solo se consideraron (no se corrieron) |
 | Hyperparams | Optuna 150+80+80+80+80 trials | — |
 | Feature selection | Pearson, VIF, Spearman, SHAP | Descartada (usar todas mejor) |
 | Feature engineering | 94-feat v3, 32-feat v5, lag, multi-tf, cross-asset, interactions | Solo interactions ayuda |
@@ -504,7 +507,7 @@ Las tres están documentadas en `docs/ALTERNATIVAS_FUTURAS.md`.
 | [`docs/ALTERNATIVAS_FUTURAS.md`](docs/ALTERNATIVAS_FUTURAS.md) | Todo lo fuera de scope |
 | [`docs/VIA7_REFINAMIENTO.md`](docs/VIA7_REFINAMIENTO.md) | 6 técnicas post-Optuna |
 | [`docs/VIA8_DATASET.md`](docs/VIA8_DATASET.md) | 5 técnicas de dataset |
-| `paper/paper.tex` (LOCAL) | Paper enviado a MICAI 2026 |
+| `paper_review/paper.tex` (idéntico a `paper_review/camera_ready/paper.tex`) | Paper MICAI 2026, versión camera-ready |
 
 ### Datos primarios
 

@@ -23,7 +23,8 @@ fuente de verdad y qué quedó como historial.
   corre en producción en `api/ml/artifacts/`. Es el script a
   re-ejecutar si algún día hay que reentrenar el modelo de producción.
 - **`consolidar_120.py`** — produce la tabla maestra de 120 corridas citada
-  literalmente en `../paper/PAPER_FINAL.md` (líneas 470 y 483). Es el
+  literalmente en el borrador `PAPER_FINAL.md` (eliminado en el commit
+  `da2906d`; se recupera con `git show da2906d^:paper_review/PAPER_FINAL.md`). Es el
   consolidador "oficial" citado en el paper (superset de `consolidar.py`,
   que solo cubre 4 de los 5 modelos).
 - **`reporte_final.py`** — reporte completo baseline-vs-optimizado (tablas
@@ -36,6 +37,15 @@ fuente de verdad y qué quedó como historial.
   20/80…35/65), el ajuste del prior de HOLD, y global vs por-ticker para los 5
   modelos con las predicciones de v5. ~20 s, sin red. Respaldado por
   `../RESULTADOS_OPTIMIZADOS/docs/ANALISIS_HOLD_Y_GLOBAL.md`.
+- **`ajuste_hold_rolling.py`** (2026-09-30) — elige cómo reducir el exceso de
+  HOLD sin cambiar el target, por validación de origen rodante 2019–2024
+  (factor fijo, reglas adaptativas y pesos de clase). Eligió reentrenar con el
+  peso de HOLD × 0.90 (`PESO_HOLD` en `entrenar_produccion.py`). ~45 min, sin red.
+- **`ajuste_hold_2026.py`** (2026-09-30) — confirma esa elección en 2026 (fuera
+  de muestra) con datos reales; requiere red.
+- **`entrenar_produccion.py`** — regenera el `.pkl` de producción (LR + 15
+  interactions, pesos "balanced" con HOLD × `PESO_HOLD`). Si se cambia algo,
+  actualizar `MODEL_VERSION` en `api/ml/model.py` (hay un test que lo exige).
 - **`evaluar_produccion_2026.py`** (2026-09-30) — evalúa el `.pkl` de producción
   sobre 2026 (fuera de muestra) con el mismo código que la API
   (`api/ml/features.py`, `model.py`, `target.py`). Requiere red.

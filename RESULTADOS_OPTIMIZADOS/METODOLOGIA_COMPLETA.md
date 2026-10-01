@@ -176,9 +176,8 @@ Cada modelo se entrenó bajo el mismo protocolo:
 
 **Tuning específico probado:**
 - Con SHAP top-25 features vs. todas las 61: mejor con todas.
-- Comparación GBDT vs. Extra-Trees: XGB gana consistentemente.
 - LightGBM (`opt_lgbm.py`) probado como alternativa: rendimiento similar, XGBoost más estable en Windows con GPU CUDA.
-- CatBoost probado: sin ventaja sobre XGB, mucho más lento.
+- CatBoost: no se corrió (es otro gradient boosting de árboles, como XGBoost y LightGBM).
 
 **Resultado (F1 promedio 0.385, 2º global; empatado con LR en Exp B).**
 
@@ -204,8 +203,7 @@ Cada modelo se entrenó bajo el mismo protocolo:
 - Hidden 64/128/256: 128 es óptimo (256 sobreajusta con 1500 samples/ticker).
 - Dropout 0.2/0.3/0.5: 0.3 es óptimo.
 - Attention layer añadida al final: sin mejora significativa, se descarta por simplicidad.
-- Comparación con **GRU** (`opt_lstm.py` con flag): resultados similares, se mantuvo BiLSTM por ser el estándar.
-- Comparación con **Transformer 2 layers**: no cabe en 1500 samples/ticker; requiere pre-training que no está disponible aquí.
+- GRU y Transformer: no se corrieron (ver §7).
 
 **Resultado (F1 promedio 0.376, 3º global; mejor Sharpe fuera del top-2 en Exp B).**
 
@@ -275,16 +273,18 @@ Buscar pesos `w_i` que maximicen F1 en validación (constraint suma=1). El ópti
 
 ## 7. Alternativas de arquitectura probadas y no adoptadas
 
-Documentadas en `docs/ALTERNATIVAS_FUTURAS.md`. Cada una probada empíricamente:
+Documentadas en `docs/ALTERNATIVAS_FUTURAS.md`.
+
+> **Corrección (2026-09-30):** en el repositorio solo hay código y resultados de **LightGBM** (`scripts_opt/opt_lgbm.py`). CatBoost, GRU, TabNet, Extra-Trees y Transformer **no se corrieron**; antes aparecían como "probados". Se dejan como alternativas consideradas, con la razón por la que no se esperaba que cambiaran el resultado.
 
 | Arquitectura | Resultado | Motivo de descarte |
 |---|---|---|
 | **LightGBM** (`opt_lgbm.py`) | F1 similar a XGB | No aporta variedad, mismo enfoque |
-| **CatBoost** | F1 similar a XGB | 3× más lento, sin ventaja |
-| **GRU** | F1 similar a LSTM | Sin ventaja significativa |
+| **CatBoost** (no corrido) | — | Mismo sesgo inductivo que XGBoost/LightGBM, que ya empatan entre sí |
+| **GRU** (no corrido) | — | Recurrente más simple que la LSTM; la LSTM ya no aprende más allá del azar en validación |
 | **Attention** sobre BiLSTM | Neutro | Ya cubierto en Optuna v5 (pooling=attn ganó en LSTM) |
-| **Transformer** | Peor con 1500 samples | Sin pre-training disponible |
-| **TabNet** | Peor | Diseñado para datos tabulares grandes |
+| **Transformer** (no corrido) | — | ~10 500 filas y sin pre-entrenamiento disponible |
+| **TabNet** (no corrido) | — | Red para tabulares grandes; en tabulares medianos los árboles suelen ganarle (Grinsztajn et al. 2022) |
 | **N-BEATS/N-HiTS** | No aplicable | Diseñados para regresión de series, no clasificación |
 | **XGBoost + threshold calibration** (v2) | Marginal | No estable entre folds |
 | **Feature engineering avanzado** (v2) | Neutro | Nuevas features linealmente dependientes |
@@ -432,7 +432,7 @@ TT_Proyecto/
 │   ├── ANALISIS_FEATURE_SELECTION.md # detalle sección 4
 │   ├── ALTERNATIVAS_FUTURAS.md       # detalle sección 7
 │   └── GUIA_PROGRESO.md              # bitácora cronológica
-└── paper/                            # LaTeX del paper (NO incluido en este commit)
+└── paper_review/                     # LaTeX del paper MICAI (camera_ready/ = paquete final)
     ├── paper.tex
     ├── paper.pdf
     └── figures/

@@ -82,14 +82,15 @@ muestran por qué.
 ### 2.2 La medición directa: casi toda la señal es ruido
 
 El kappa de Cohen mide cuánto se acierta **por encima del azar** (0 = azar,
-1 = perfecto). Para el modelo en producción
-([`docs/ANALISIS_HOLD_Y_GLOBAL.md`](docs/ANALISIS_HOLD_Y_GLOBAL.md) §1 y §6):
+1 = perfecto). Para el modelo de producción antes del ajuste de MANTENER
+([`docs/ANALISIS_HOLD_Y_GLOBAL.md`](docs/ANALISIS_HOLD_Y_GLOBAL.md) §1, §6 y §8):
 
 | Periodo | F1-macro | κ |
 |---|---:|---:|
 | Validación 2024 | 0.325 | 0.03 |
 | Test 2025 | 0.413 | 0.14 |
-| 2026 real, fuera de muestra (ene–sep, 1 295 días-acción) | 0.313 | 0.01 |
+| 2026 real, fuera de muestra (ene–sep, 1 302 días-acción) | 0.313 | 0.01 |
+| 2026, modelo actual (peso de MANTENER × 0.90, §6.1) | 0.354 | 0.035 |
 
 En dos de los tres años el modelo está prácticamente en el azar, y el año
 bueno (2025) es el que se usó como test. Con 500 permutaciones aleatorias de
@@ -173,11 +174,11 @@ aprender cuando hay más señal; el día siguiente simplemente tiene muy poca.
 
 ### 5.1 Los números
 
-| Periodo | MANTENER real | MANTENER predicho |
-|---|---:|---:|
-| Test 2025 | 42 % | 57 % |
-| 2026 fuera de muestra | 35 % | 60 % |
-| Últimos 30 días hábiles (ago–sep 2026) | 38 % | 95 % |
+| Periodo | MANTENER real | Predicho (modelo anterior) | Predicho (modelo actual, §6.1) |
+|---|---:|---:|---:|
+| Test 2025 | 42 % | 57 % | — |
+| 2026 fuera de muestra | 35 % | 60 % | 40 % |
+| Últimos 30 días hábiles (ago–sep 2026) | 38 % | 95 % | 70 % |
 
 ### 5.2 La explicación ("voto dividido")
 
@@ -231,12 +232,32 @@ probado en Vía 8 y se repitió con el modelo actual, en dos años:
   Con el mejor modelo empeorando, el resultado esperado es peor que el
   actual.
 
-Si se quiere que la interfaz muestre menos MANTENER sin reentrenar, basta con
-bajar el peso de MANTENER al decidir (multiplicar su probabilidad por 0.90,
-valor elegido en validación): MANTENER predicho baja al nivel real (≈ 40 %),
-el F1 sube un poco en 2024, 2025 y 2026, pero el Sharpe de 2026 baja
-(+0.38 → +0.27). Es un ajuste de presentación, no una mejora de fondo
-([`docs/ANALISIS_HOLD_Y_GLOBAL.md`](docs/ANALISIS_HOLD_Y_GLOBAL.md) §3.1).
+### 6.1 Lo que sí se hizo sin tocar la etiqueta: ajustar el peso de MANTENER
+
+Se probaron cinco formas de reducir MANTENER sin cambiar la etiqueta,
+eligiendo **solo con 2019–2024** (validación por origen rodante: entrenar
+6 años, predecir el siguiente) y confirmando en 2025 y 2026
+([`docs/ANALISIS_HOLD_Y_GLOBAL.md`](docs/ANALISIS_HOLD_Y_GLOBAL.md) §8):
+
+- **Un factor fijo sobre la probabilidad de MANTENER no sirve:** el mejor
+  factor resultó ≈ 1 (no tocar nada). El sesgo cambia de signo entre años
+  (2022: 13 % predicho contra 32 % real; 2023: 74 % contra 48 %), así que un
+  corrimiento fijo arregla unos años y descompone otros.
+- **Reentrenar con el peso de clase de MANTENER × 0.90** fue el mejor en F1,
+  κ y Sharpe a la vez en 2019–2024 y es el que quedó en producción:
+
+| | F1 | κ | MANTENER pred. / real | Sharpe |
+|---|---:|---:|---:|---:|
+| 2019–2024, antes | 0.357 | 0.063 | 47 % / 40 % | +0.52 |
+| 2019–2024, después | 0.365 | 0.068 | 36 % / 40 % | +0.54 |
+| 2026, antes | 0.313 | 0.010 | 60 % / 35 % | +0.38 |
+| 2026, después | 0.354 | 0.035 | 40 % / 35 % | +0.29 |
+
+La proporción de MANTENER queda realista sin perder desempeño de forma
+medible; no es una mejora estadísticamente significativa (mejora el F1 en 4
+de 6 años, Wilcoxon p = 0.31). En meses muy tranquilos MANTENER sigue
+predominando (agosto de 2026: 86 %), porque el modelo sigue sin conocer la
+dirección: el ajuste mueve el umbral, no crea información.
 
 ## 7. ¿Modelo global o un modelo por acción?
 
@@ -286,7 +307,7 @@ En walk-forward LR y XGBoost empatan en F1 (0.350 contra 0.356) y en Sharpe
 - **En el experimento principal (test 2025, Exp B)** LR gana en F1 (0.404
   contra 0.359) y Sharpe (+0.89 contra +0.46), y el bootstrap por bloques lo
   separa significativamente de los otros cuatro en 2025 (paper, §6).
-- **Opera menos.** Rotación media 0.38 contra 0.65 de XGBoost; con costos de
+- **Opera menos.** Cambio medio de posición por día 0.38 contra 0.65 de XGBoost; con costos de
   10 puntos base por operación, LR conserva Sharpe +0.62 y XGBoost cae a
   +0.01 ([`v5/resultados_finales.csv`](v5/resultados_finales.csv)).
 - **Es interpretable, estable y barato.** Coeficientes legibles, no cambia
@@ -304,8 +325,9 @@ En walk-forward LR y XGBoost empatan en F1 (0.350 contra 0.356) y en Sharpe
 - **Sin costos en las cifras principales.** Con 10 pb el orden LR > XGBoost
   se mantiene; los profundos, que ya tenían Sharpe negativo, empeoran.
 - **La plataforma evalúa en vivo con el mismo criterio que la tesis**, y en
-  2026 muestra lo que este documento dice: clasificación en nivel de azar y
-  mucho MANTENER en épocas de volatilidad baja.
+  2026 muestra lo que este documento dice: clasificación apenas arriba del
+  azar (κ 0.035 con el modelo actual) y más MANTENER en épocas de volatilidad
+  baja.
 
 ## 10. Qué haría falta para ir más allá (fuera del alcance)
 
@@ -333,8 +355,10 @@ sobre el mismo año de prueba solo habría sobreajustado a ese año.
 Porque no distingue si el precio subirá o bajará: espera un movimiento, pero
 esa probabilidad se divide entre COMPRAR y VENDER y MANTENER gana. Pasa más
 cuando el VIX está por debajo de su media anual, como desde agosto de 2026.
-No operar cuando no hay dirección es lo correcto; forzar COMPRAR/VENDER no
-mejora el Sharpe y empeora el drawdown.
+Lo redujimos sin tocar la etiqueta: reentrenando con el peso de MANTENER ×
+0.90, elegido con 2019–2024, en 2026 baja de 60 % a 40 % (real 35 %) y el F1
+sube de 0.313 a 0.354. Un factor fijo sobre la probabilidad, en cambio, empeora
+el modelo porque el sesgo no es constante entre años.
 
 **¿Por qué no usaron 40/60 para que hubiera menos MANTENER?**
 Lo probamos: el modelo siguió diciendo MANTENER el 53 % de los días aunque

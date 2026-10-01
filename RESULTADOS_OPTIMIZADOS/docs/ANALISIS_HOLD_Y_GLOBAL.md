@@ -160,7 +160,7 @@ esperado de esa inversión es negativo.
 ### 3.1 Alternativa sin reentrenar: bajar el peso de HOLD al decidir
 
 Multiplicar P(HOLD) por *k* < 1 antes del argmax (equivale a un umbral por
-clase). *k* se puede elegir en validación 2024 sin tocar test:
+clase). Primer análisis, eligiendo *k* solo con validación 2024:
 
 | k | HOLD val / test / 2026 | F1 val | F1 test | F1 2026 | Sharpe val | Sharpe test | Sharpe 2026 |
 |---:|---|---:|---:|---:|---:|---:|---:|
@@ -169,10 +169,11 @@ clase). *k* se puede elegir en validación 2024 sin tocar test:
 | 0.90 (mejor F1 en val) | 44 / 39 / 40 % | 0.348 | 0.416 | 0.352 | −0.34 | +0.92 | +0.27 |
 | 0.85 | 32 / 28 / — | 0.347 | 0.397 | — | −0.47 | +0.95 | — |
 
-Con k = 0.90 el HOLD predicho queda igual al real y el F1 sube en los tres
-años, pero el Sharpe de 2026 baja. Es un ajuste de presentación con costo
-casi nulo, no una mejora de fondo; queda como opción para "ajustar el
-modelo" (no se aplicó).
+> **Superado por §8.** Esta tabla elige *k* mirando un solo año (2024). Al
+> repetirlo con validación por origen rodante en 6 años (2019–2024), el mejor
+> factor fijo es k ≈ 0.99, es decir, ninguno: con k = 0.90 el F1 medio baja de
+> 0.357 a 0.334. Lo que parecía una mejora era sobreajuste a 2024. El ajuste
+> que sí se adoptó es otro (peso de HOLD al entrenar, §8).
 
 ## 4. Global vs por-ticker
 
@@ -272,3 +273,78 @@ val 1, test el año siguiente, 2020–2025) que no está citada en
 Ningún modelo supera 0.394 en ningún año; LR y XGBoost empatan en
 promedio (≈0.35, apenas arriba del azar) y son los únicos con Sharpe medio
 positivo. El ranking cambia de año a año.
+
+## 8. Ajuste aplicado: peso de HOLD × 0.90 al entrenar
+
+Pedido: que el modelo no caiga tanto en HOLD **sin cambiar el target**.
+Scripts: [`ajuste_hold_rolling.py`](../../scripts_opt/ajuste_hold_rolling.py)
+(sin red, ~45 min por los reentrenamientos) y
+[`ajuste_hold_2026.py`](../../scripts_opt/ajuste_hold_2026.py) (con red).
+
+### 8.1 Protocolo: validación por origen rodante
+
+Para cada año Y de 2019 a 2025 se entrena el **pipeline de producción**
+(61 + 15 features, RobustScaler global, LR L2 C = 0.000165) con los 6 años
+previos y se predice Y completo. Las alternativas se eligen **solo con
+2019–2024**; 2025 y 2026 (modelo entrenado con 2018–2025, datos reales de
+Yahoo) se usan únicamente para confirmar.
+
+### 8.2 Qué se probó (media 2019–2024 | 2025)
+
+| Alternativa | F1 | κ | HOLD pred. | Sharpe |
+|---|---|---|---|---|
+| Argmax con pesos "balanced" (modelo anterior) | 0.357 \| 0.411 | 0.063 \| 0.130 | 47 % \| 53 % | +0.52 \| +0.89 |
+| Factor fijo k = 0.90 sobre P(HOLD) | 0.334 \| — | 0.050 \| — | 23 % \| — | +0.37 \| — |
+| Proporción fija por año (40 %) | 0.337 \| 0.403 | 0.062 \| 0.110 | 45 % \| 35 % | +0.58 \| +0.88 |
+| Proporción móvil causal, 63 días | 0.365 \| 0.389 | 0.061 \| 0.086 | 43 % \| 40 % | +0.42 \| +0.68 |
+| Proporción móvil causal, 252 días | 0.367 \| 0.410 | 0.070 \| 0.122 | 41 % \| 44 % | +0.51 \| +0.81 |
+| Reentrenar, peso HOLD × 0.95 | 0.360 \| 0.411 | 0.062 \| 0.122 | 42 % \| 43 % | +0.53 \| +0.88 |
+| **Reentrenar, peso HOLD × 0.90** | **0.365 \| 0.395** | **0.068 \| 0.102** | **36 % \| 29 %** | **+0.54 \| +0.93** |
+| Reentrenar, peso HOLD × 0.85 | 0.360 \| 0.365 | 0.062 \| 0.088 | 30 % \| 15 % | +0.46 \| +0.92 |
+| Reentrenar, peso HOLD × 0.80 | 0.352 \| 0.304 | 0.061 \| 0.060 | 24 % \| 3 % | +0.41 \| +0.90 |
+
+HOLD real: 40 % en promedio 2019–2024 y 42 % en 2025.
+
+- **Un factor fijo no sirve**: el sesgo de HOLD cambia de signo entre años
+  (2022: 13 % predicho contra 32 % real; 2023: 74 % contra 48 %).
+- Entre los pesos de reentrenamiento, **× 0.90 es el mejor en F1, κ y
+  Sharpe a la vez** en 2019–2024, así que la elección no depende de qué
+  métrica se privilegie.
+- La regla de proporción móvil (252 días) da un F1 parecido, pero menos
+  Sharpe en 2025 y en 2026 (abajo).
+
+### 8.3 Confirmación en 2026 (1 302 días-acción, ninguna decisión los vio)
+
+| Modelo | F1 | κ | HOLD pred. (real 34.7 %) | Sharpe | Sharpe portafolio |
+|---|---:|---:|---:|---:|---:|
+| Pesos "balanced" (modelo anterior) | 0.313 | 0.010 | 59.7 % | +0.38 | +0.71 |
+| "Balanced" + proporción móvil causal | 0.350 | 0.027 | 37.0 % | +0.16 | +0.33 |
+| **Peso HOLD × 0.90 (modelo actual)** | **0.354** | **0.035** | **39.7 %** | +0.29 | +0.60 |
+
+Comprar y mantener en el mismo periodo: Sharpe de portafolio +0.49.
+HOLD por mes en 2026 con el modelo actual: 35, 5, 1, 46, 64, 16, 44, 86 y
+61 % (enero–septiembre); en los meses más tranquilos sigue predominando.
+
+### 8.4 Lectura
+
+- Ninguna alternativa es **estadísticamente** mejor que la anterior
+  (peso × 0.90: mejora el F1 en 4 de 6 años de desarrollo, Wilcoxon
+  p = 0.31). Con 6 años no hay potencia para afirmarlo.
+- Lo que sí se consigue es el objetivo pedido: la proporción de HOLD pasa a
+  ser realista (error medio contra el real de 13 a 9 puntos en 2019–2024;
+  60 % → 40 % en 2026 con 35 % real) sin perder desempeño de forma medible.
+  En 2025 se pasa al otro lado (29 % contra 42 %).
+- No cambia el target (30/70 a un día): solo cuánto pesa cada clase en la
+  pérdida de entrenamiento.
+
+### 8.5 Qué se cambió
+
+- `scripts_opt/entrenar_produccion.py`: `PESO_HOLD = 0.90`; pesos
+  efectivos {SELL 1.103, HOLD 0.762, BUY 1.097}; `config_id`
+  `LR-v8-interactions-holdw090`. El `.metrics.json` guarda la evidencia de
+  esta sección.
+- `api/ml/model.py`: `MODEL_VERSION` actualizado (hay un test que exige que
+  coincida con el `.pkl`); `GET /model` reporta "balanced, HOLD ×0.9".
+- Reentrenar con pesos "balanced" (peso 1.0) reproduce exactamente el
+  modelo anterior: el pipeline es determinista.
+

@@ -1,5 +1,7 @@
 # Estado del proyecto
 
+> Punto de entrada para retomar el proyecto desde cero: **[`CONTEXTO.md`](CONTEXTO.md)**.
+
 Última actualización: 2026-09-30.
 
 ## Análisis del modelo actual + plataforma 100 % con datos del modelo (2026-09-30)
@@ -29,14 +31,51 @@
   network-first (antes dejaba a los usuarios con la interfaz vieja). Tests de la
   API: 20/20. Nuevos endpoints `GET /model` y `GET /market-status`.
 - **Render con catálogo vacío tras el deploy (2026-09-30)**: el código nuevo sí
-  se desplegó (desde `main`, aunque `render.yaml` diga `branch: dev`: manda la
+  se desplegó (desde `main`, aunque `render.yaml` decía `branch: dev` —ya corregido—: manda la
   rama configurada en el dashboard), pero Yahoo falló en el arranque en frío y
   `/stocks` quedó en `[]` hasta un `POST /admin/refresh`. Ahora el scheduler
   reintenta cada `CATALOG_RETRY_MINUTES` (2) mientras falten acciones, y
   `/health` reporta `stocksLoaded`/`stocksExpected`.
-- **Pendiente (decisión del equipo)**: ajustar el modelo — mantener LR +
-  interactions, volver al LR de 61 features (equivalente en validación) y/o
-  aplicar el factor de prior de HOLD (k = 0.90, elegido en validación).
+- **Ajuste de HOLD aplicado (2026-09-30, segunda parte)**: sin cambiar el
+  target. Un factor fijo sobre P(HOLD) empeora en validación de 6 años (el
+  k = 0.90 de antes era sobreajuste a 2024). Se reentrenó el modelo con el peso
+  de clase de HOLD × 0.90 (`PESO_HOLD`), elegido por origen rodante 2019–2024
+  y confirmado en 2026: HOLD 60 % → 40 % (real 35 %), F1 0.313 → 0.354, Sharpe
+  +0.38 → +0.29. `MODEL_VERSION` = `LR-v8-interactions-holdw090`. Detalle en
+  `ANALISIS_HOLD_Y_GLOBAL.md` §8. Las interactions se mantienen: en origen
+  rodante empatan con el LR sin ellas (F1 0.357 vs 0.354).
+- **Guía de defensa**: Cap. 17 nuevo (preguntas de una sinodal experta en ML/DL
+  y estadística). Corregido: CatBoost, GRU, TabNet, Extra-Trees y Transformer
+  aparecían como "probados" en la guía, `INVESTIGACION_COMPLETA.md` y
+  `METODOLOGIA_COMPLETA.md` sin código ni resultados en el repo; el
+  walk-forward y los costos de transacción aparecían como "trabajo futuro"
+  aunque ya estaban hechos en v5.
+
+## Qué falta para dar el TT por terminado (2026-09-30)
+
+1. ~~Subir lo de hoy~~ — hecho (push a `main`, 2026-09-30). Comprobar en
+   Render, tras el deploy, que `GET /model` diga `LR-v8-interactions-holdw090`
+   y `/health` `stocksLoaded: 7`.
+2. **Llevar al documento de tesis** (no está en este repo): walk-forward
+   2020–2025, el análisis del exceso de HOLD y su ajuste, global vs por-ticker
+   comparado sobre las mismas filas, y la evaluación 2026 fuera de muestra.
+3. **Presentación de la defensa** (diapositivas) y ensayo con el Cap. 17.
+4. ~~Limpieza de ramas~~ — hecho: quedan solo `main` (la que despliega
+   Render) y `dev` (recreada desde `main`); `Baru` y `David` se borraron
+   (estaban contenidas en `main`; el único commit local no fusionado de `Baru`
+   quedó en la etiqueta local `respaldo/baru-local-2026-08-08`).
+5. Opcional: `docker compose up` local nunca se verificó (Render sí construye
+   el `Dockerfile` de la API sin problema).
+
+---
+
+# Historial
+
+> Entradas anteriores, en orden cronológico inverso por bloque. Pueden citar
+> rutas o estados ya superados: `paper/` hoy es `paper_review/`, `Proyecto/`
+> hoy es `api/` + `Frontend/`, y el modelo de producción cambió dos veces
+> (elasticnet v1 → LR + interactions de Vía 8 → la misma con peso de HOLD).
+> Para el estado actual, leer las secciones de arriba y `CONTEXTO.md`.
 
 ## Modelado (`scripts_opt/` → `RESULTADOS_OPTIMIZADOS/`)
 
@@ -233,10 +272,9 @@ descartado a propósito (queda como app web/PWA).
 
 ## Huecos conocidos / no abordados
 
-- No existe un `requirements.txt` para el pipeline de entrenamiento
-  (`scripts_opt/`, `scripts_v1/`) — solo para `api/`. Reproducir
-  el entrenamiento requiere instalar manualmente pandas, numpy,
-  scikit-learn, xgboost, lightgbm, torch, optuna, pyarrow.
+- ~~No existe un `requirements.txt` para el pipeline~~ — agregado en
+  `scripts_opt/requirements.txt` (2026-09-30); xgboost/lightgbm/torch/optuna
+  quedan sin versión registrada.
 - Sin control de versiones previo de los datos (`tesis_ml_stocks/*.parquet`)
   más allá de este primer commit — son snapshots de Yahoo Finance del
   momento en que se corrieron los scripts.

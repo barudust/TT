@@ -6,14 +6,16 @@
 - Enrutamiento y estado en el cliente: elección de React Router 7.
 
 ## Modelado
-- Selección final: Regresión Logística elasticnet (global, Exp B) por
-  encima de XGBoost, LightGBM, LSTM y CNN-LSTM — ver comparación completa
-  y justificación en `RESULTADOS_OPTIMIZADOS/docs/GUIA_PROGRESO.md` y
-  `docs/MODEL_INTEGRATION.md`. Los modelos de deep learning se probaron y
-  quedaron documentados, pero no superaron a LR en Exp B/C.
+- Selección final: Regresión Logística regularizada (global) por encima de
+  XGBoost, LightGBM, LSTM, CNN y CNN-LSTM. Banco completo de preguntas y
+  respuestas: `RESULTADOS_OPTIMIZADOS/GUIA_DEFENSA_TT.md` (Cap. 15 y 17);
+  por qué no se puede mejorar más:
+  `RESULTADOS_OPTIMIZADOS/JUSTIFICACION_LIMITE_DEL_MODELO.md`; modelo
+  desplegado: `docs/MODEL_INTEGRATION.md`.
 - Etiquetado de clases (buy/sell/hold) y umbrales.
 - Preprocesamiento: ventanas temporales, normalización.
-- Métricas: accuracy, precision por clase, F1-Score; métricas financieras (retorno, Sharpe, drawdown).
+- Métricas: F1-macro y F1 por clase, kappa; estrategia de un día (retorno, Sharpe, drawdown, win rate). En la plataforma cada señal se evalúa contra el día siguiente con la misma etiqueta del entrenamiento (`docs/API_FRONTEND_METRICS.md`).
+- Por qué tanto MANTENER y cómo se ajustó: `GUIA_DEFENSA_TT.md` P17.1–P17.8.
 - Limitaciones: no considera costes de deslizamiento reales, latencias, ni eventos exógenos.
 
 ## Datos
@@ -24,7 +26,7 @@
 ## API
 - Endpoints y contratos de datos.
 - Estrategia de actualización: inicialización y refresco.
-- CORS y seguridad básica.
+- CORS y seguridad básica; overrides manuales desactivados (todo dato mostrado sale del modelo o de Yahoo Finance).
 
 ## Frontend
 - Tokens de tema y accesibilidad (contraste).

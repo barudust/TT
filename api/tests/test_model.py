@@ -2,7 +2,7 @@ import pandas as pd
 import pytest
 
 from ml.features import FEATURE_COLUMNS
-from ml.model import load_model, CLASS_TO_SIGNAL
+from ml.model import load_model, CLASS_TO_SIGNAL, MODEL_VERSION
 
 
 def test_load_model_matches_feature_columns():
@@ -33,3 +33,15 @@ def test_predict_frame_matches_row_count():
 
     assert len(preds) == 5
     assert all(p["signal"] in CLASS_TO_SIGNAL.values() for p in preds)
+
+
+def test_model_version_coincide_con_el_pkl():
+    """MODEL_VERSION se guarda en cada predicción de la BD; si se reentrena el
+    .pkl hay que actualizarlo (lo escribe scripts_opt/entrenar_produccion.py)."""
+    assert load_model().meta["config_id"] == MODEL_VERSION
+
+
+def test_describe_reporta_el_peso_de_hold():
+    info = load_model().describe()
+    assert info["classWeight"].startswith("balanced")
+    assert info["nFeatures"] == 76

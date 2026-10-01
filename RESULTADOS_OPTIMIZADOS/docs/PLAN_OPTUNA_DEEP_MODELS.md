@@ -26,7 +26,7 @@
 
 > **Estado original: documentado, no ejecutado.** Este plan responde al punto (b)
 > del Revisor #2 de MICAI. No se relanzó ningún entrenamiento — solo se dejó
-> constancia de la asimetría como limitación honesta en `paper/paper.tex`
+> constancia de la asimetría como limitación honesta en `paper_review/paper.tex`
 > (sección Limitations).
 
 ## El comentario del revisor
@@ -131,7 +131,7 @@ siendo válidos y citados en el paper mientras esto no termine).
 - **Si el F1-macro del mejor modelo profundo sigue por debajo de LR/XGBoost**:
   la conclusión del paper se refuerza — ya no es "no se buscó lo
   suficiente", sino "se buscó a fondo y aun así pierde". Actualizar el
-  párrafo de Limitations en `paper/paper.tex` para decirlo así de fuerte
+  párrafo de Limitations en `paper_review/paper.tex` para decirlo así de fuerte
   (con la cifra concreta).
 - **Si mejora y supera a LR**: hay que revisar la narrativa del paper
   (Abstract, Tabla de F1 global, sección de Discusión) — sería un cambio

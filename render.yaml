@@ -13,7 +13,7 @@
 # corren en Render.
 
 services:
-  # --- API: Flask + gunicorn, modelo LR-elasticnet (docs/MODEL_INTEGRATION.md) ---
+  # --- API: Flask + gunicorn, Regresion Logistica (docs/MODEL_INTEGRATION.md) ---
   - type: web
     name: tt-api
     env: docker
@@ -21,7 +21,7 @@ services:
     dockerContext: ./api
     plan: free
     numInstances: 1 # obligatorio: el scheduler in-process (main.py) se duplicaria con mas de 1
-    branch: dev
+    branch: main # la rama que Render despliega hoy (configurada en el dashboard)
     autoDeploy: true
     healthCheckPath: /health
     envVars:
@@ -49,7 +49,7 @@ services:
     env: static
     buildCommand: cd Frontend && npm ci && npm run build
     staticPublishPath: Frontend/dist
-    branch: dev
+    branch: main # la rama que Render despliega hoy (configurada en el dashboard)
     autoDeploy: true
     envVars:
       - key: VITE_API_URL
