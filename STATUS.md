@@ -53,9 +53,9 @@
 
 ## Qué falta para dar el TT por terminado (2026-09-30)
 
-1. ~~Subir lo de hoy~~ — hecho (push a `main`, 2026-09-30). Comprobar en
-   Render, tras el deploy, que `GET /model` diga `LR-v8-interactions-holdw090`
-   y `/health` `stocksLoaded: 7`.
+1. ~~Subir lo de hoy y verificar Render~~ — hecho (2026-09-30): `/model` sirve
+   `LR-v8-interactions-holdw090`; tras el arranque en frío Yahoo volvió a fallar
+   y el reintento automático completó las 7 acciones en ~2 minutos.
 2. **Llevar al documento de tesis** (no está en este repo): walk-forward
    2020–2025, el análisis del exceso de HOLD y su ajuste, global vs por-ticker
    comparado sobre las mismas filas, y la evaluación 2026 fuera de muestra.

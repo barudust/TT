@@ -186,7 +186,10 @@ agosto, superado) quedó en la etiqueta **local** `respaldo/baru-local-2026-08-0
 
 ## 10. Pendientes
 
-1. Tras el deploy, verificar en Render `/model` y `/health` (§8).
+1. ~~Verificar el deploy en Render~~ — hecho el 2026-09-30: `/model` sirve
+   `LR-v8-interactions-holdw090`. El arranque volvió a quedar sin datos (Yahoo
+   falla en el arranque en frío) y el reintento automático cargó las 7 acciones
+   en ~2 minutos sin intervención.
 2. Documento escrito de la tesis: incorporar walk-forward 2020–2025, exceso de
    HOLD y su ajuste, global vs por-ticker sobre las mismas filas y la
    evaluación 2026 (guía: `docs/THESIS_DOCUMENTATION.md`).
