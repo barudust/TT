@@ -35,7 +35,7 @@ Emmanuel Juarez Carvajal.
 |---|---|
 | Modelado | **Cerrado.** Ganador: Regresión Logística global. Justificación de que no se puede mejorar más: `RESULTADOS_OPTIMIZADOS/JUSTIFICACION_LIMITE_DEL_MODELO.md` |
 | Modelo en producción | LR L2 (C = 0.000165), RobustScaler, 61 indicadores + 15 interacciones, pesos de clase "balanced" con HOLD × 0.90. `MODEL_VERSION = LR-v8-interactions-holdw090`. Entrenado con 2018–2025 |
-| Paper MICAI | Camera-ready en `paper_review/camera_ready/` (12 páginas, LNCS). No incluye lo hecho después (walk-forward, HOLD, 2026) |
+| Paper MICAI | Capítulo 171490174 (LNAI). Camera-ready enviado el 8 sep 2026 en `paper_review/camera_ready/` (12 páginas). Sus resultados del §7 son la corrida **v4**; el §8 (Robustness) es la **v5**. Springer pidió el 2 oct el material suplementario que el paper cita y faltaba: `paper_review/supplementary/MICAI2026_ch171490174_supplementary.pdf` |
 | Plataforma | Terminada: todo lo que muestra sale de Yahoo Finance o del modelo; métricas con la metodología de la tesis. Desplegada en Render desde `main` |
 | Documentación | Revisada y corregida el 2026-09-30 |
 | Pendiente | Documento escrito de la tesis (no está en el repo), diapositivas y ensayo de la defensa (§10) |
@@ -185,6 +185,13 @@ agosto, superado) quedó en la etiqueta **local** `respaldo/baru-local-2026-08-0
 | Estado y pendientes | `STATUS.md` |
 
 ## 10. Pendientes
+
+0. **Enviar a Springer (Atchaya) el material suplementario**
+   `paper_review/supplementary/MICAI2026_ch171490174_supplementary.pdf` y
+   **confirmar la grafía de los autores**: el paper y el formulario de copyright
+   dicen "Polvo Cuatiaquiz", "Abdiel Reyes Vera" y "Emmanuel Juárez Carbajal",
+   mientras el repo y los reportes dicen "Cuatianquiz", "Reyes Vega" y
+   "Juarez Carvajal".
 
 1. ~~Verificar el deploy en Render~~ — hecho el 2026-09-30: `/model` sirve
    `LR-v8-interactions-holdw090`. El arranque volvió a quedar sin datos (Yahoo

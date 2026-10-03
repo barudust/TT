@@ -8,16 +8,54 @@ están aquí — siguen en
 
 ## Qué documento es cuál
 
-- **[`paper.tex`](paper.tex)** — el documento **canónico**: paper académico en
-  inglés, formato Springer LNCS (MICAI 2026), con la revisión que responde a
-  los revisores #2 y #3 y reducido a 12 páginas (commit `44a93ae`).
-- **[`camera_ready/`](camera_ready/)** — el **paquete final** para Springer /
-  Overleaf: `paper.tex` (idéntico byte a byte al de esta carpeta),
-  `llncs.cls` y las 5 figuras que usa. Compilar desde aquí.
-- **[`paper.pdf`](paper.pdf)** — PDF de 12 páginas compilado desde `paper.tex`
-  en el commit `44a93ae`.
+- **[`paper.tex`](paper.tex)** — el documento **canónico**: la versión
+  camera-ready **enviada a Springer el 8 de septiembre de 2026** (paquete
+  `078.zip`; capítulo 171490174 de MICAI 2026, LNAI). Idéntico a
+  `camera_ready/paper.tex`.
+- **[`camera_ready/`](camera_ready/)** — el paquete enviado: `paper.tex`,
+  `llncs.cls` (v2.26) y las 5 figuras. Compilar desde aquí.
+- **[`paper.pdf`](paper.pdf)** — el PDF de 12 páginas de ese envío (`078.pdf`).
+- **[`supplementary/`](supplementary/)** — el **material suplementario** que el
+  paper cita y que Springer pidió el 2 de octubre de 2026 porque faltaba en el
+  paquete (ver abajo).
 - **[`figures/`](figures/)** — todas las figuras generadas por
   `scripts_opt/plots_paper.py` (incluye dos que el `.tex` no usa).
+
+### Cambios de la versión enviada (8 sep) respecto a la del 26 de agosto
+
+Para caber en 12 páginas: se quitó la tabla de variables de §3.3 y el mapa de
+calor de Sharpe de §7.3 (ambos pasaron al material suplementario), la
+bibliografía volvió a una columna (sin `multicol`) y los flotantes usan
+`[htbp]`. El resto del texto es igual.
+
+### Material suplementario
+
+El paper lo cita en cinco lugares: §3.3 (tabla completa de las 61 variables),
+§5.1 (F1 por clase de las 120 corridas), §7.1 (métricas económicas de Exp A y
+Exp C), §7.3 (mapa de calor del Sharpe) y §11 (código, manifiesto de datos,
+semillas y versiones). El archivo para Springer es
+`supplementary/MICAI2026_ch171490174_supplementary.pdf` (7 páginas): una
+sección por mención, y nada más (las figuras que el `.tex` oculta con
+`\extrafigsfalse` no se citan en el texto publicado, así que no van). Se genera
+con:
+
+```bash
+python paper_review/supplementary/build_supplementary.py
+```
+
+El script escribe el `.tex` y lo compila con `pdflatex` (MiKTeX:
+`winget install MiKTeX.MiKTeX`). Usa la corrida **v4**
+(`RESULTADOS_OPTIMIZADOS/v4/resultados_v4.csv`), que es la de las tablas del §7
+del paper (la v5 solo aparece en §8), con la misma selección del mejor
+look-back, y **se detiene si no reproduce las Tablas 4, 5 y 6 del paper** o si
+LaTeX deja referencias sin resolver. El suplementario cita la etiqueta de git
+`micai2026` como instantánea del código.
+
+**Verificación del paper (2026-10-02):** `camera_ready/paper.tex` compilado con
+MiKTeX (pdfTeX 4.23) da 12 páginas con el mismo texto y los mismos saltos de
+página que el `paper.pdf` enviado; no hay referencias ni citas sin resolver.
+Quedan tres renglones que se salen del margen (0.8, 9.1 y 15.9 pt, en §3.3, §4
+y §8), igual que en el PDF enviado.
 
 > Los borradores (`PAPER_FINAL.md`, `paper_latex/`) se eliminaron después del
 > envío (commit `da2906d`); siguen en el historial de git si hicieran falta.

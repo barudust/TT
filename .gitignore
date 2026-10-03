@@ -98,6 +98,12 @@ tesis_ml_stocks/_cache_mercado_v5.parquet
 
 # Excepcion: paper_review/paper.pdf SI se sube (revision temporal)
 !paper_review/paper.pdf
+# Excepcion: el material suplementario enviado a Springer (MICAI 2026) tambien se sube
+!paper_review/supplementary/MICAI2026_ch171490174_supplementary.pdf
 
 # Backups locales de modelos
 *.pkl.bak
+
+# Paquete de Springer (MICAI 2026): contiene el formulario de copyright firmado; no subir al repo publico
+/078.zip
+*_copyright.pdf
