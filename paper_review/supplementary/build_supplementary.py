@@ -278,6 +278,9 @@ def construir_tex(d: pd.DataFrame) -> str:
         (r"\S8 Robustness study", [r"scripts_opt/run_v5.py", r"scripts_opt/common_v5.py",
                                      r"scripts_opt/reporte_v5.py", r"RESULTADOS_OPTIMIZADOS/v5/ (results)"]),
         ("Figures", [r"scripts_opt/plots_paper.py"]),
+        ("Reproduction checks", [r"RESULTADOS_OPTIMIZADOS/v5/g0_replicacion.csv (results)",
+                                 r"scripts_opt/replicar_lr_v4.py",
+                                 r"RESULTADOS_OPTIMIZADOS/v4/replica_lr_v4.csv (results)"]),
         ("This document", [r"paper_review/supplementary/build_supplementary.py"]),
     ]
     def _ruta(r):
@@ -382,10 +385,14 @@ XGBoost uses a TPE sampler with seed~42. Robustness study (\S8): Optuna TPE samp
 (25 random start-up trials) and a median pruner for the deep models; every frozen configuration is
 evaluated on the test year with seeds $\{{42, 1, 7, 2024, 100\}}$.
 
-\paragraph{{Library versions and hardware.}} The robustness study (\S8) was run with PyTorch~2.12
-(CUDA~12.8), scikit-learn~1.7.2, XGBoost~3.2.0 and Optuna~4.8 on an NVIDIA GeForce RTX~5060~Ti.
-The benchmark of Section~7 used the same code base; its library versions were not logged
-separately.
+\paragraph{{Library versions and hardware.}} PyTorch~2.12 (CUDA~12.8), scikit-learn~1.7.2,
+XGBoost~3.2.0 and Optuna~4.8, on an NVIDIA GeForce RTX~5060~Ti. These versions were recorded for
+the robustness study (\S8). The same environment reproduces the published benchmark of Section~7
+exactly: re-running the 18 global sequence-model runs (LSTM, CNN~1D and CNN-LSTM; three
+experiments; look-backs 20 and 60) gives the same F1-macro as the original runs in 18 of 18 cases, and
+re-running the 24 LR runs (Python~3.13.5, scikit-learn~1.7.2) gives identical F1, per-class F1,
+Sharpe, win rate, profit factor and maximum drawdown in 24 of 24 cases (Table~\ref{{tab:code}},
+``Reproduction checks'').
 
 \end{{document}}
 """

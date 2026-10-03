@@ -10,11 +10,13 @@ scikit-learn==1.7.2
 scipy==1.16.2
 pyarrow
 yfinance
+pypdf            # paper_review/compilar_paper.py
 
-# Sin versión registrada: solo las necesitan los scripts de XGBoost, LightGBM,
-# los modelos profundos y Optuna (opt_*.py, run_v5.py, via7/via8). XGBoost y
-# PyTorch se usaron con CUDA.
-xgboost
-lightgbm
-torch
-optuna
+# Versiones registradas en el estudio de robustez (v5, RTX 5060 Ti); con ellas
+# el benchmark v4 del paper se reproduce exacto (ver scripts_opt/replicar_lr_v4.py
+# y RESULTADOS_OPTIMIZADOS/v5/g0_replicacion.csv). PyTorch con CUDA 12.8:
+#   pip install torch==2.12.* --index-url https://download.pytorch.org/whl/cu128
+xgboost==3.2.0
+optuna==4.8.*
+torch==2.12.*
+lightgbm         # sin versión registrada (solo opt_lgbm.py)

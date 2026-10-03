@@ -10,11 +10,15 @@ están aquí — siguen en
 
 - **[`paper.tex`](paper.tex)** — el documento **canónico**: la versión
   camera-ready **enviada a Springer el 8 de septiembre de 2026** (paquete
-  `078.zip`; capítulo 171490174 de MICAI 2026, LNAI). Idéntico a
-  `camera_ready/paper.tex`.
-- **[`camera_ready/`](camera_ready/)** — el paquete enviado: `paper.tex`,
-  `llncs.cls` (v2.26) y las 5 figuras. Compilar desde aquí.
-- **[`paper.pdf`](paper.pdf)** — el PDF de 12 páginas de ese envío (`078.pdf`).
+  `078.zip`; capítulo 171490174 de MICAI 2026, LNAI), con una sola corrección
+  posterior (2 oct): el apellido del autor de correspondencia decía
+  "Cuatiaquiz" y es **Cuatianquiz**. Idéntico a `camera_ready/paper.tex`.
+- **[`camera_ready/`](camera_ready/)** — el paquete: `paper.tex`,
+  `llncs.cls` (v2.26) y las 5 figuras. Compilar desde aquí con
+  `compilar_paper.py` (abajo).
+- **[`paper.pdf`](paper.pdf)** — la **copia pública** de los 12 páginas: el
+  mismo PDF que va a Springer más el aviso que exige la licencia al pie de la
+  primera página (ver "Licencia").
 - **[`supplementary/`](supplementary/)** — el **material suplementario** que el
   paper cita y que Springer pidió el 2 de octubre de 2026 porque faltaba en el
   paquete (ver abajo).
@@ -51,11 +55,63 @@ look-back, y **se detiene si no reproduce las Tablas 4, 5 y 6 del paper** o si
 LaTeX deja referencias sin resolver. El suplementario cita la etiqueta de git
 `micai2026` como instantánea del código.
 
-**Verificación del paper (2026-10-02):** `camera_ready/paper.tex` compilado con
-MiKTeX (pdfTeX 4.23) da 12 páginas con el mismo texto y los mismos saltos de
-página que el `paper.pdf` enviado; no hay referencias ni citas sin resolver.
-Quedan tres renglones que se salen del margen (0.8, 9.1 y 15.9 pt, en §3.3, §4
-y §8), igual que en el PDF enviado.
+La Sección S5 incluye las versiones de las bibliotecas (PyTorch 2.12 con CUDA
+12.8, scikit-learn 1.7.2, XGBoost 3.2.0, Optuna 4.8) y dos verificaciones de
+que ese entorno reproduce exacto el benchmark del §7: las 18 corridas globales
+de modelos secuenciales (`RESULTADOS_OPTIMIZADOS/v5/g0_replicacion.csv`) y las
+24 corridas de LR (`python scripts_opt/replicar_lr_v4.py` →
+`RESULTADOS_OPTIMIZADOS/v4/replica_lr_v4.csv`, ~10 min en CPU, no toca
+`resultados_v4.csv`).
+
+## Compilar el paper
+
+```bash
+python paper_review/compilar_paper.py
+```
+
+Requiere MiKTeX (`winget install MiKTeX.MiKTeX`) con el paquete `cm-super`
+(`miktex packages install cm-super`; sin él las fuentes salen como mapas de
+bits) y `pypdf`. Hace dos cosas:
+
+1. Escribe `_envio_springer/078_corrected.zip` (`078.pdf`, `paper.tex`,
+   `llncs.cls`, `figures/`), con la misma estructura que el `078.zip`
+   original. **La carpeta `_envio_springer/` está en `.gitignore`**: ahí también
+   se deja el PDF suplementario y el borrador del correo, y nunca se sube.
+2. Escribe `paper.pdf` (la copia pública) con el aviso de la licencia.
+
+Se detiene si hay referencias sin resolver o si el paper pasa de 12 páginas.
+
+**Verificación (2026-10-02):** compilado con MiKTeX (pdfTeX 4.23) da 12
+páginas con el mismo texto y los mismos saltos de página que el `078.pdf`
+enviado; la única diferencia es el apellido corregido (página 1 y cabeceras de
+las páginas pares) y que las fuentes son vectoriales (Type 1), así que el texto
+se puede buscar y copiar. Quedan tres renglones que se salen del margen (0.8,
+9.1 y 15.9 pt, en §3.3, §4 y §8), igual que en el PDF enviado; Springer
+re-compone el texto, así que no hace falta tocarlos.
+
+## Licencia (Springer Licence to Publish)
+
+El formulario firmado (`*_copyright.pdf`) y el `078.zip` original **no se
+suben** (el repo es público; están en `.gitignore`). La cláusula 4(c) permite
+publicar el *Accepted Manuscript* en el sitio propio del autor desde la
+aceptación, **sin** licencia Creative Commons ni de acceso abierto, sin
+reformatearlo y con este aviso y el enlace a la *Version of Record*:
+
+> This version of the contribution has been accepted for publication, after
+> peer review (when applicable) but is not the Version of Record and does not
+> reflect post-acceptance improvements, or any corrections. The Version of
+> Record is available online at: http://dx.doi.org/[insert DOI]. Use of this
+> Accepted Version is subject to the publisher's Accepted Manuscript terms of
+> use https://www.springernature.com/gp/open-research/policies/accepted-manuscript-terms
+
+`paper.pdf` ya lo lleva con el DOI pendiente. **Cuando Springer publique el
+capítulo** (el DOI viene en la página del libro en link.springer.com):
+
+```bash
+python paper_review/compilar_paper.py --doi 10.1007/978-3-XXX-XXXXX-X_XX
+```
+
+y subir el `paper.pdf` resultante.
 
 > Los borradores (`PAPER_FINAL.md`, `paper_latex/`) se eliminaron después del
 > envío (commit `da2906d`); siguen en el historial de git si hicieran falta.

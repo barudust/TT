@@ -2,7 +2,21 @@
 
 > Punto de entrada para retomar el proyecto desde cero: **[`CONTEXTO.md`](CONTEXTO.md)**.
 
-Última actualización: 2026-09-30.
+Última actualización: 2026-10-02.
+
+## Paper MICAI: material suplementario y corrección de autor (2026-10-02)
+
+- Springer pidió el suplementario que el paper cita (§3.3, §5.1, §7.1, §7.3,
+  §11). Generado en `paper_review/supplementary/` (7 páginas, datos v4,
+  verificado contra las Tablas 4–6).
+- Apellido corregido en el paper: "Cuatiaquiz" → "Cuatianquiz". Directores en
+  la web: Abdiel Reyes Vera, Emmanuel Juárez Carbajal.
+- `scripts_opt/replicar_lr_v4.py`: las 24 corridas de LR del §7 se reproducen
+  exactas con scikit-learn 1.7.2 (`v4/replica_lr_v4.csv`).
+- `paper_review/compilar_paper.py`: arma el zip corregido para Springer (fuera
+  de git) y la copia pública `paper.pdf` con el aviso de la licencia.
+- **Pendiente:** responder a Springer con los dos adjuntos (ver
+  `CONTEXTO.md` §10, punto 0) y, al salir el DOI, regenerar `paper.pdf`.
 
 ## Análisis del modelo actual + plataforma 100 % con datos del modelo (2026-09-30)
 

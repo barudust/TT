@@ -246,8 +246,8 @@ export default function About() {
 
               <div>
                 <div className="font-semibold text-foreground mb-2">Directores</div>
-                <p className="text-muted-foreground">Abdiel Reyes Vega</p>
-                <p className="text-muted-foreground">Emmanuel Juarez Carvajal</p>
+                <p className="text-muted-foreground">Abdiel Reyes Vera</p>
+                <p className="text-muted-foreground">Emmanuel Juárez Carbajal</p>
               </div>
 
               <div>

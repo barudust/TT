@@ -3,7 +3,7 @@
 > **Para qué sirve este archivo:** retomar el proyecto sin el historial del
 > chat. Resume qué es, en qué estado está, qué se decidió y por qué, las
 > cifras que hay que citar, los errores conocidos que no hay que repetir y
-> dónde está cada cosa. Última actualización: **2026-09-30**.
+> dónde está cada cosa. Última actualización: **2026-10-02**.
 >
 > Si algo aquí contradice a otro documento, este y `STATUS.md` son los más
 > recientes; los demás se corrigieron el mismo día (ver §9).
@@ -13,8 +13,10 @@
 ## 1. Qué es
 
 Trabajo Terminal **TT 2026-B164** (ESCOM-IPN). Desarrolladores: Reyes Ramos
-David y Polvo Cuatianquiz Jesús Baruc. Directores: Abdiel Reyes Vega y
-Emmanuel Juarez Carvajal.
+David y Polvo Cuatianquiz Jesús Baruc. Directores: Abdiel Reyes Vera y
+Emmanuel Juárez Carbajal (grafía confirmada el 2026-10-02; documentos viejos
+decían "Reyes Vega" y "Juarez Carvajal", y el paper enviado el 8 sep decía
+"Cuatiaquiz").
 
 - **Problema:** clasificar cada día COMPRAR / MANTENER / VENDER (BUY / HOLD /
   SELL) para el día siguiente en 7 acciones tecnológicas de EE. UU. (AAPL,
@@ -186,12 +188,16 @@ agosto, superado) quedó en la etiqueta **local** `respaldo/baru-local-2026-08-0
 
 ## 10. Pendientes
 
-0. **Enviar a Springer (Atchaya) el material suplementario**
-   `paper_review/supplementary/MICAI2026_ch171490174_supplementary.pdf` y
-   **confirmar la grafía de los autores**: el paper y el formulario de copyright
-   dicen "Polvo Cuatiaquiz", "Abdiel Reyes Vera" y "Emmanuel Juárez Carbajal",
-   mientras el repo y los reportes dicen "Cuatianquiz", "Reyes Vega" y
-   "Juarez Carvajal".
+0. **Responder el correo de Springer (Atchaya)** con dos adjuntos que están en
+   `paper_review/_envio_springer/` (carpeta fuera de git): el suplementario
+   `MICAI2026_ch171490174_supplementary.pdf` y `078_corrected.zip` (el mismo
+   paquete del 8 sep con el apellido corregido a "Cuatianquiz"). Borrador del
+   correo: `paper_review/_envio_springer/correo.txt`. Preguntar si hace falta
+   un formulario de licencia nuevo (el firmado también dice "Cuatiaquiz").
+   Después, cuando salga el DOI: `python paper_review/compilar_paper.py --doi
+   <DOI>` y subir `paper_review/paper.pdf` (aviso de la licencia, ver
+   `paper_review/README.md`). La etiqueta `micai2026` que cita el
+   suplementario ya no se debe mover una vez enviado.
 
 1. ~~Verificar el deploy en Render~~ — hecho el 2026-09-30: `/model` sirve
    `LR-v8-interactions-holdw090`. El arranque volvió a quedar sin datos (Yahoo
@@ -223,3 +229,19 @@ agosto, superado) quedó en la etiqueta **local** `respaldo/baru-local-2026-08-0
    Render, base de datos, frontend, guía de tesis, diagrama de arquitectura
    nuevo), este archivo, push a `main`, `dev` recreada desde `main` y borrado
    de las ramas `Baru` y `David`.
+
+### Sesión del 2026-10-02 (paper MICAI)
+
+1. El `078.zip` (8 sep) es la versión más reciente del paper; el repo se
+   igualó a él. El §7 usa la corrida v4 y el §8 la v5.
+2. Springer pidió el suplementario citado en §3.3, §5.1, §7.1, §7.3 y §11. Se
+   generó en LaTeX (7 páginas, una sección por cita, verificado contra las
+   Tablas 4–6) con `paper_review/supplementary/build_supplementary.py`.
+3. Se instaló MiKTeX (+ `cm-super`) y se verificó que el paper compila igual
+   al PDF enviado. Se corrigió el apellido "Cuatiaquiz" → "Cuatianquiz" y los
+   nombres de los directores en la página "Acerca de".
+4. Versiones de bibliotecas: además de la réplica G0 (18/18 corridas
+   secuenciales exactas), `scripts_opt/replicar_lr_v4.py` reproduce las 24
+   corridas de LR del §7 sin diferencias (Python 3.13.5, scikit-learn 1.7.2).
+5. Licencia: `paper_review/paper.pdf` (público) lleva el aviso de la cláusula
+   4(c); el formulario firmado y el zip quedan fuera del repo.

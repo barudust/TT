@@ -106,4 +106,5 @@ tesis_ml_stocks/_cache_mercado_v5.parquet
 
 # Paquete de Springer (MICAI 2026): contiene el formulario de copyright firmado; no subir al repo publico
 /078.zip
+paper_review/_envio_springer/
 *_copyright.pdf
