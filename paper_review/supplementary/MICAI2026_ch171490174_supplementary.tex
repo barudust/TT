@@ -20,7 +20,7 @@
 \begin{center}
 {\Large\bfseries Supplementary Material\par}\vspace{4pt}
 {\itshape A Benchmark of Five Machine-Learning Architectures for Daily Trading-Signal Classification on US Tech Equities\par}\vspace{3pt}
-{\small MICAI 2026 --- Lecture Notes in Artificial Intelligence --- Chapter 171490174\par}
+{\small MICAI 2026 --- Lecture Notes in Artificial Intelligence\par}
 \end{center}
 \vspace{4pt}
 
@@ -30,7 +30,7 @@ come from the benchmark reported in Section~7 of the paper (120 runs, test year 
 (LSTM, CNN~1D and CNN-LSTM) the reported run is the better of the two look-backs (20 or 60 days)
 by test F1-macro, as in the paper. They reproduce Tables~4, 5 and~6 of the paper.
 
-\section{Full list of the 61 input features (paper \S3.3)}
+\section{Full list of the 61 input features (cited in Section~3.3)}
 All features are computed per ticker from daily OHLCV data adjusted for splits and dividends
 ($O,H,L,C,V$) and, for the last family, from SPY and the CBOE VIX, using only information
 available at the close of day~$t$. Column names are those used in the code.
@@ -120,7 +120,7 @@ available at the close of day~$t$. Column names are those used in the code.
 61 & \texttt{VIX\_norm} & $(\mathrm{VIX}-\mathrm{MA}_{252}(\mathrm{VIX}))/\mathrm{std}_{252}(\mathrm{VIX})$ \\
 \end{longtable}
 
-\section{Per-class F1 for every run (paper \S5.1)}
+\section{Per-class F1 for every run (cited in Section~5.1)}
 F1-macro and per-class F1 on the 2025 test set for the 120 runs (5 models $\times$
 3 experiments $\times$ (1 global + 7 per-ticker)). ``Global'' models are trained on the seven
 tickers together and scored on all of them; per-ticker models are trained and scored on one
@@ -257,7 +257,7 @@ CNN 1D & META & B & 20 & 0.304 & 0.000 & 0.556 & 0.357 \\
 CNN 1D & META & C & 20 & 0.297 & 0.355 & 0.424 & 0.111 \\
 \end{longtable}}
 
-\section{Economic metrics for Exps A and C (paper \S7.1)}
+\section{Economic metrics for Exps A and C (cited in Section~7.1)}
 Same metrics as Table~5 of the paper (which reports Exp~B) for the global models of the other two
 experiments: long on BUY, short on SELL, flat on HOLD, one-day holding period, no transaction
 costs; Sharpe is annualized. Best value per column in bold.
@@ -283,7 +283,7 @@ CNN-LSTM & 0.371 & 0.508 & 1.182 & $-0.463$ & $+0.624$ \\
 CNN 1D & 0.373 & 0.494 & 0.924 & $-0.666$ & $-0.317$ \\
 \bottomrule\end{tabular}\end{table}
 
-\section{Sharpe ratio by model and ticker (paper \S7.3)}
+\section{Sharpe ratio by model and ticker (cited in Section~7.3)}
 \begin{figure}[H]\centering
 \includegraphics[width=0.92\textwidth]{fig_sharpe_heatmap.png}
 \caption{Annualized Sharpe ratio of the per-ticker models, per model and ticker, for the three
@@ -291,20 +291,20 @@ experiments (test = 2025). These are the 105 values whose variance decomposition
 Section~7.3 of the paper.}\label{fig:s1}
 \end{figure}
 
-\section{Code, data manifest, random seeds and library versions (paper \S11)}
+\section{Code, data manifest, random seeds and library versions (cited in Section~11)}
 \paragraph{Code.} The complete pipeline is publicly available at \url{https://github.com/barudust/TT}; a snapshot
 of the repository for this paper is tagged \texttt{micai2026} (\url{https://github.com/barudust/TT/tree/micai2026}).
 Table~\ref{tab:code} lists where each part of the paper is implemented.
 
 \begin{table}[H]\centering\small
 \caption{Where each part of the paper is implemented (paths relative to the repository root).}\label{tab:code}
-\begin{tabular}{@{}p{0.34\textwidth}p{0.6\textwidth}@{}}\toprule
+\begin{tabular}{@{}>{\raggedright\arraybackslash}p{0.34\textwidth}p{0.6\textwidth}@{}}\toprule
 Part of the paper & Files \\ \midrule
-\S3 Data download, features and label & \path{scripts_v1/01_build_raw_dataset.py} \\
-\S3.4 Temporal splits & \path{scripts_opt/common_v4.py} \\
-\S6 Statistical feature pre-selection & \path{scripts_opt/analisis_feature_selection.py} \\
-\S7 Benchmark of 120 runs & \path{scripts_opt/train_all_v4.py} \newline \path{scripts_opt/consolidar_v4.py} \newline \path{RESULTADOS_OPTIMIZADOS/v4/resultados_v4.csv} (results) \\
-\S8 Robustness study & \path{scripts_opt/run_v5.py} \newline \path{scripts_opt/common_v5.py} \newline \path{scripts_opt/reporte_v5.py} \newline \path{RESULTADOS_OPTIMIZADOS/v5/} (results) \\
+Data download, features and label (Section~3) & \path{scripts_v1/01_build_raw_dataset.py} \\
+Temporal splits (Section~3.4) & \path{scripts_opt/common_v4.py} \\
+Statistical feature pre-selection (Section~6) & \path{scripts_opt/analisis_feature_selection.py} \\
+Benchmark of 120 runs (Section~7) & \path{scripts_opt/train_all_v4.py} \newline \path{scripts_opt/consolidar_v4.py} \newline \path{RESULTADOS_OPTIMIZADOS/v4/resultados_v4.csv} (results) \\
+Robustness study (Section~8) & \path{scripts_opt/run_v5.py} \newline \path{scripts_opt/common_v5.py} \newline \path{scripts_opt/reporte_v5.py} \newline \path{RESULTADOS_OPTIMIZADOS/v5/} (results) \\
 Figures & \path{scripts_opt/plots_paper.py} \\
 Reproduction checks & \path{RESULTADOS_OPTIMIZADOS/v5/g0_replicacion.csv} (results) \newline \path{scripts_opt/replicar_lr_v4.py} \newline \path{RESULTADOS_OPTIMIZADOS/v4/replica_lr_v4.csv} (results) \\
 This document & \path{paper_review/supplementary/build_supplementary.py} \\
@@ -335,16 +335,16 @@ GOOGL & 2013-12-31 & 2025-12-29 & 3,017 & {\scriptsize\texttt{fc19f91c45c0c524eb
 META & 2013-12-31 & 2025-12-29 & 3,017 & {\scriptsize\texttt{9fc4d44cc1913040225335329b332102f19bb3ddd97a7646fdf0b68318e69780}} \\
 \bottomrule\end{tabular}\end{table}
 
-\paragraph{Random seeds.} Benchmark (\S7): LR is trained with seeds $\{42, 1, 7, 2024, 100\}$ and
+\paragraph{Random seeds.} Benchmark (Section~7): LR is trained with seeds $\{42, 1, 7, 2024, 100\}$ and
 the final class is the majority vote of the five models; XGBoost, LSTM, CNN~1D and CNN-LSTM are
 trained with seeds $\{42, 1, 7\}$ and their class probabilities are averaged; the Optuna search of
-XGBoost uses a TPE sampler with seed~42. Robustness study (\S8): Optuna TPE sampler with seed~42
+XGBoost uses a TPE sampler with seed~42. Robustness study (Section~8): Optuna TPE sampler with seed~42
 (25 random start-up trials) and a median pruner for the deep models; every frozen configuration is
 evaluated on the test year with seeds $\{42, 1, 7, 2024, 100\}$.
 
 \paragraph{Library versions and hardware.} PyTorch~2.12 (CUDA~12.8), scikit-learn~1.7.2,
 XGBoost~3.2.0 and Optuna~4.8, on an NVIDIA GeForce RTX~5060~Ti. These versions were recorded for
-the robustness study (\S8). Two checks show that this environment reproduces the benchmark of
+the robustness study (Section~8). Two checks show that this environment reproduces the benchmark of
 Section~7. The 18 global sequence-model runs (LSTM, CNN~1D and CNN-LSTM; three experiments;
 look-backs 20 and 60), re-run with the code of Section~8 set to the protocol of Section~7, give the
 same test F1-macro as the published runs, to the four decimals stored, in 18 of 18 cases. The 24 LR
