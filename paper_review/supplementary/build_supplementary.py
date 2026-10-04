@@ -190,7 +190,7 @@ def tabla_variables() -> str:
     assert n == 61, n
     cab = r"\# & Column & Definition \\"
     return "\n".join([
-        r"\begin{longtable}{@{}r l p{0.66\textwidth}@{}}",
+        r"\begin{longtable}{@{}r l >{\raggedright\arraybackslash}p{0.66\textwidth}@{}}",
         r"\caption{Input features, grouped by family (count in parentheses).}\label{tab:s1}\\",
         r"\toprule " + cab + r" \midrule \endfirsthead",
         r"\toprule " + cab + r" \midrule \endhead",
@@ -237,7 +237,8 @@ def tabla_economica(d: pd.DataFrame, exp: str, etiqueta: str, titulo: str) -> st
         for c in cols:
             v = sub.loc[m, c]
             txt = f3(v, signo=(c == "sharpe_test")) if c != "max_drawdown_test" else f"${v:.3f}$"
-            celdas.append(rf"\textbf{{{txt}}}" if v == mejor[c] else txt)
+            # \boldmath: \textbf solo no engruesa los valores en modo matemático ($-0.365$, $+1.067$)
+            celdas.append(rf"{{\boldmath\textbf{{{txt}}}}}" if v == mejor[c] else txt)
         filas.append(f"{NOMBRE_MODELO[m]} & " + " & ".join(celdas) + r" \\")
     return "\n".join([
         r"\begin{table}[H]\centering",
@@ -260,7 +261,8 @@ def manifiesto() -> str:
     return "\n".join([
         r"\begin{table}[H]\centering",
         r"\caption{Stored datasets \texttt{tesis\_ml\_stocks/01\_raw\_datasets/\textless TICKER\textgreater\_raw.parquet} "
-        r"(61 features, raw OHLCV and label per trading day) and their SHA-256 checksums.}\label{tab:s5}",
+        r"(one row per trading day: the 61 features, the raw OHLCV, and the label with its forward return "
+        r"and percentile thresholds) and their SHA-256 checksums.}\label{tab:s5}",
         r"\begin{tabular}{@{}lcccl@{}}\toprule",
         r"Ticker & First day & Last day & Rows & SHA-256 \\ \midrule",
         *filas,
@@ -302,7 +304,7 @@ def construir_tex(d: pd.DataFrame) -> str:
 \usepackage[utf8]{{inputenc}}
 \usepackage[letterpaper,margin=2.3cm]{{geometry}}
 \usepackage{{amsmath,amssymb}}
-\usepackage{{booktabs,longtable,graphicx,caption}}
+\usepackage{{array,booktabs,longtable,graphicx,caption}}
 \usepackage{{xurl}}
 \usepackage[hidelinks]{{hyperref}}
 \captionsetup{{font=small,labelfont=bf}}
@@ -310,6 +312,7 @@ def construir_tex(d: pd.DataFrame) -> str:
 \renewcommand{{\thefigure}}{{S\arabic{{figure}}}}
 \renewcommand{{\thesection}}{{S\arabic{{section}}}}
 \setlength{{\LTcapwidth}}{{\textwidth}}
+\binoppenalty=10000 \relpenalty=10000 % no partir fórmulas en + o = (S1)
 \pagestyle{{plain}}
 \begin{{document}}
 
@@ -321,8 +324,8 @@ def construir_tex(d: pd.DataFrame) -> str:
 \vspace{{4pt}}
 
 \noindent This document contains the material that the paper refers to as ``supplementary
-material''. Each section corresponds to one reference in the paper. All numbers come from the
-benchmark reported in Section~7 of the paper (120 runs, test year 2025); for the sequence models
+material''. Each section corresponds to one reference in the paper. The results in Sections S2--S4
+come from the benchmark reported in Section~7 of the paper (120 runs, test year 2025); for the sequence models
 (LSTM, CNN~1D and CNN-LSTM) the reported run is the better of the two look-backs (20 or 60 days)
 by test F1-macro, as in the paper. They reproduce Tables~4, 5 and~6 of the paper.
 
@@ -387,12 +390,14 @@ evaluated on the test year with seeds $\{{42, 1, 7, 2024, 100\}}$.
 
 \paragraph{{Library versions and hardware.}} PyTorch~2.12 (CUDA~12.8), scikit-learn~1.7.2,
 XGBoost~3.2.0 and Optuna~4.8, on an NVIDIA GeForce RTX~5060~Ti. These versions were recorded for
-the robustness study (\S8). The same environment reproduces the published benchmark of Section~7
-exactly: re-running the 18 global sequence-model runs (LSTM, CNN~1D and CNN-LSTM; three
-experiments; look-backs 20 and 60) gives the same F1-macro as the original runs in 18 of 18 cases, and
-re-running the 24 LR runs (Python~3.13.5, scikit-learn~1.7.2) gives identical F1, per-class F1,
-Sharpe, win rate, profit factor and maximum drawdown in 24 of 24 cases (Table~\ref{{tab:code}},
-``Reproduction checks'').
+the robustness study (\S8). Two checks show that this environment reproduces the benchmark of
+Section~7. The 18 global sequence-model runs (LSTM, CNN~1D and CNN-LSTM; three experiments;
+look-backs 20 and 60), re-run with the code of Section~8 set to the protocol of Section~7, give the
+same test F1-macro as the published runs, to the four decimals stored, in 18 of 18 cases. The 24 LR
+runs, re-run with the original code (Python~3.13.5, scikit-learn~1.7.2), give identical F1-macro,
+per-class F1, Sharpe, win rate, profit factor and maximum drawdown in 24 of 24 cases
+(Table~\ref{{tab:code}}, ``Reproduction checks''). The XGBoost runs and the per-ticker
+sequence-model runs were not re-run.
 
 \end{{document}}
 """

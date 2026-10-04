@@ -188,12 +188,15 @@ agosto, superado) quedó en la etiqueta **local** `respaldo/baru-local-2026-08-0
 
 ## 10. Pendientes
 
-0. **Responder el correo de Springer (Atchaya)** con dos adjuntos que están en
-   `paper_review/_envio_springer/` (carpeta fuera de git): el suplementario
-   `MICAI2026_ch171490174_supplementary.pdf` y `078_corrected.zip` (el mismo
-   paquete del 8 sep con el apellido corregido a "Cuatianquiz"). Borrador del
-   correo: `paper_review/_envio_springer/correo.txt`. Preguntar si hace falta
-   un formulario de licencia nuevo (el firmado también dice "Cuatiaquiz").
+0. **Responder el correo de Springer (Atchaya)** con el texto de
+   `paper_review/correo_springer.txt` y dos adjuntos: el suplementario
+   `paper_review/supplementary/MICAI2026_ch171490174_supplementary.pdf` y
+   `078_corrected.zip` (el mismo paquete del 8 sep con el apellido corregido a
+   "Cuatianquiz"). El zip no está en el repo (lleva el PDF sin el aviso de la
+   licencia): está en el release **borrador** `envio-springer` de GitHub (solo
+   colaboradores; no publicarlo) y se regenera con `compilar_paper.py`. Al
+   enviarlo, borrar ese release. Preguntar si hace falta un formulario de
+   licencia nuevo (el firmado también dice "Cuatiaquiz").
    Después, cuando salga el DOI: `python paper_review/compilar_paper.py --doi
    <DOI>` y subir `paper_review/paper.pdf` (aviso de la licencia, ver
    `paper_review/README.md`). La etiqueta `micai2026` que cita el

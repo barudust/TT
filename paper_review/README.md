@@ -57,11 +57,28 @@ LaTeX deja referencias sin resolver. El suplementario cita la etiqueta de git
 
 La Sección S5 incluye las versiones de las bibliotecas (PyTorch 2.12 con CUDA
 12.8, scikit-learn 1.7.2, XGBoost 3.2.0, Optuna 4.8) y dos verificaciones de
-que ese entorno reproduce exacto el benchmark del §7: las 18 corridas globales
-de modelos secuenciales (`RESULTADOS_OPTIMIZADOS/v5/g0_replicacion.csv`) y las
-24 corridas de LR (`python scripts_opt/replicar_lr_v4.py` →
+que ese entorno reproduce el benchmark del §7: las 18 corridas globales de
+modelos secuenciales dan el mismo F1 a 4 decimales
+(`RESULTADOS_OPTIMIZADOS/v5/g0_replicacion.csv`) y las 24 de LR salen idénticas
+(`python scripts_opt/replicar_lr_v4.py` →
 `RESULTADOS_OPTIMIZADOS/v4/replica_lr_v4.csv`, ~10 min en CPU, no toca
-`resultados_v4.csv`).
+`resultados_v4.csv`). XGBoost y los secuenciales por ticker no se volvieron a
+correr, y el suplementario lo dice.
+
+**Revisión final del suplementario (2026-10-03):** las 61 definiciones se
+cotejaron con `scripts_v1/01_build_raw_dataset.py`; filas, fechas y SHA-256 con
+los parquet; semillas y Optuna con `train_all_v4.py` y `run_v5.py`; el mapa de
+calor con los 105 Sharpe del CSV (da la misma descomposición del §7.3: ticker
+15.5 %, modelo 3.4 %, experimento 7.0 %). Compila sin advertencias.
+
+### Envío a Springer (pendiente)
+
+Responder el correo de Atchaya con el texto de
+[`correo_springer.txt`](correo_springer.txt) y dos adjuntos: el PDF
+suplementario y `078_corrected.zip`. El zip lleva el PDF del paper **sin** el
+aviso de la licencia, así que no va en el repo público: se genera con
+`compilar_paper.py` (abajo) y una copia está en el release **borrador**
+`envio-springer` de GitHub (solo lo ven los colaboradores; **no publicarlo**).
 
 ## Compilar el paper
 
@@ -75,8 +92,8 @@ bits) y `pypdf`. Hace dos cosas:
 
 1. Escribe `_envio_springer/078_corrected.zip` (`078.pdf`, `paper.tex`,
    `llncs.cls`, `figures/`), con la misma estructura que el `078.zip`
-   original. **La carpeta `_envio_springer/` está en `.gitignore`**: ahí también
-   se deja el PDF suplementario y el borrador del correo, y nunca se sube.
+   original. **La carpeta `_envio_springer/` está en `.gitignore`** y nunca
+   se sube.
 2. Escribe `paper.pdf` (la copia pública) con el aviso de la licencia.
 
 Se detiene si hay referencias sin resolver o si el paper pasa de 12 páginas.

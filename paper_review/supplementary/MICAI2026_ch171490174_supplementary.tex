@@ -5,7 +5,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage[letterpaper,margin=2.3cm]{geometry}
 \usepackage{amsmath,amssymb}
-\usepackage{booktabs,longtable,graphicx,caption}
+\usepackage{array,booktabs,longtable,graphicx,caption}
 \usepackage{xurl}
 \usepackage[hidelinks]{hyperref}
 \captionsetup{font=small,labelfont=bf}
@@ -13,6 +13,7 @@
 \renewcommand{\thefigure}{S\arabic{figure}}
 \renewcommand{\thesection}{S\arabic{section}}
 \setlength{\LTcapwidth}{\textwidth}
+\binoppenalty=10000 \relpenalty=10000 % no partir fórmulas en + o = (S1)
 \pagestyle{plain}
 \begin{document}
 
@@ -24,8 +25,8 @@
 \vspace{4pt}
 
 \noindent This document contains the material that the paper refers to as ``supplementary
-material''. Each section corresponds to one reference in the paper. All numbers come from the
-benchmark reported in Section~7 of the paper (120 runs, test year 2025); for the sequence models
+material''. Each section corresponds to one reference in the paper. The results in Sections S2--S4
+come from the benchmark reported in Section~7 of the paper (120 runs, test year 2025); for the sequence models
 (LSTM, CNN~1D and CNN-LSTM) the reported run is the better of the two look-backs (20 or 60 days)
 by test F1-macro, as in the paper. They reproduce Tables~4, 5 and~6 of the paper.
 
@@ -34,7 +35,7 @@ All features are computed per ticker from daily OHLCV data adjusted for splits a
 ($O,H,L,C,V$) and, for the last family, from SPY and the CBOE VIX, using only information
 available at the close of day~$t$. Column names are those used in the code.
 
-\begin{longtable}{@{}r l p{0.66\textwidth}@{}}
+\begin{longtable}{@{}r l >{\raggedright\arraybackslash}p{0.66\textwidth}@{}}
 \caption{Input features, grouped by family (count in parentheses).}\label{tab:s1}\\
 \toprule \# & Column & Definition \\ \midrule \endfirsthead
 \toprule \# & Column & Definition \\ \midrule \endhead
@@ -265,18 +266,18 @@ costs; Sharpe is annualized. Best value per column in bold.
 \caption{Economic metrics, Exp A (10 training years) GLOBAL, test = 2025.}\label{tab:s3}
 \begin{tabular}{@{}lccccc@{}}\toprule
 Model & F1 & Win rate & Profit factor & Max drawdown & Sharpe \\ \midrule
-LR & \textbf{0.411} & \textbf{0.528} & \textbf{1.296} & $-0.551$ & \textbf{$+1.067$} \\
+LR & {\boldmath\textbf{0.411}} & {\boldmath\textbf{0.528}} & {\boldmath\textbf{1.296}} & $-0.551$ & {\boldmath\textbf{$+1.067$}} \\
 XGBoost & 0.396 & 0.505 & 1.143 & $-0.464$ & $+0.575$ \\
 LSTM & 0.389 & 0.510 & 1.284 & $-0.392$ & $+0.965$ \\
 CNN-LSTM & 0.376 & 0.502 & 1.187 & $-0.460$ & $+0.686$ \\
-CNN 1D & 0.361 & 0.467 & 1.007 & \textbf{$-0.365$} & $+0.025$ \\
+CNN 1D & 0.361 & 0.467 & 1.007 & {\boldmath\textbf{$-0.365$}} & $+0.025$ \\
 \bottomrule\end{tabular}\end{table}
 \begin{table}[H]\centering
 \caption{Economic metrics, Exp C (4 training years) GLOBAL, test = 2025.}\label{tab:s4}
 \begin{tabular}{@{}lccccc@{}}\toprule
 Model & F1 & Win rate & Profit factor & Max drawdown & Sharpe \\ \midrule
-LR & \textbf{0.401} & \textbf{0.513} & \textbf{1.297} & $-0.445$ & \textbf{$+1.023$} \\
-XGBoost & 0.373 & 0.500 & 1.090 & \textbf{$-0.428$} & $+0.377$ \\
+LR & {\boldmath\textbf{0.401}} & {\boldmath\textbf{0.513}} & {\boldmath\textbf{1.297}} & $-0.445$ & {\boldmath\textbf{$+1.023$}} \\
+XGBoost & 0.373 & 0.500 & 1.090 & {\boldmath\textbf{$-0.428$}} & $+0.377$ \\
 LSTM & 0.370 & 0.496 & 1.039 & $-0.631$ & $+0.163$ \\
 CNN-LSTM & 0.371 & 0.508 & 1.182 & $-0.463$ & $+0.624$ \\
 CNN 1D & 0.373 & 0.494 & 0.924 & $-0.666$ & $-0.317$ \\
@@ -322,7 +323,7 @@ look-back window (1,596 rows at look-back 20 and 1,316 at 60), which the protoco
 aligns to the same 1,736 rows. Table~\ref{tab:s5} lists the stored datasets.
 
 \begin{table}[H]\centering
-\caption{Stored datasets \texttt{tesis\_ml\_stocks/01\_raw\_datasets/\textless TICKER\textgreater\_raw.parquet} (61 features, raw OHLCV and label per trading day) and their SHA-256 checksums.}\label{tab:s5}
+\caption{Stored datasets \texttt{tesis\_ml\_stocks/01\_raw\_datasets/\textless TICKER\textgreater\_raw.parquet} (one row per trading day: the 61 features, the raw OHLCV, and the label with its forward return and percentile thresholds) and their SHA-256 checksums.}\label{tab:s5}
 \begin{tabular}{@{}lcccl@{}}\toprule
 Ticker & First day & Last day & Rows & SHA-256 \\ \midrule
 AAPL & 2013-12-31 & 2025-12-29 & 3,017 & {\scriptsize\texttt{fe020d29efa861c96dad12a5d7e2070bcc876e5db3146ec6b8083ec69df3d2eb}} \\
@@ -343,11 +344,13 @@ evaluated on the test year with seeds $\{42, 1, 7, 2024, 100\}$.
 
 \paragraph{Library versions and hardware.} PyTorch~2.12 (CUDA~12.8), scikit-learn~1.7.2,
 XGBoost~3.2.0 and Optuna~4.8, on an NVIDIA GeForce RTX~5060~Ti. These versions were recorded for
-the robustness study (\S8). The same environment reproduces the published benchmark of Section~7
-exactly: re-running the 18 global sequence-model runs (LSTM, CNN~1D and CNN-LSTM; three
-experiments; look-backs 20 and 60) gives the same F1-macro as the original runs in 18 of 18 cases, and
-re-running the 24 LR runs (Python~3.13.5, scikit-learn~1.7.2) gives identical F1, per-class F1,
-Sharpe, win rate, profit factor and maximum drawdown in 24 of 24 cases (Table~\ref{tab:code},
-``Reproduction checks'').
+the robustness study (\S8). Two checks show that this environment reproduces the benchmark of
+Section~7. The 18 global sequence-model runs (LSTM, CNN~1D and CNN-LSTM; three experiments;
+look-backs 20 and 60), re-run with the code of Section~8 set to the protocol of Section~7, give the
+same test F1-macro as the published runs, to the four decimals stored, in 18 of 18 cases. The 24 LR
+runs, re-run with the original code (Python~3.13.5, scikit-learn~1.7.2), give identical F1-macro,
+per-class F1, Sharpe, win rate, profit factor and maximum drawdown in 24 of 24 cases
+(Table~\ref{tab:code}, ``Reproduction checks''). The XGBoost runs and the per-ticker
+sequence-model runs were not re-run.
 
 \end{document}

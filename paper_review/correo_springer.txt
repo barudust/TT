@@ -1,0 +1,40 @@
+Respuesta al correo de Springer (Atchaya, Springer Nature Production) que pidió el
+material suplementario del capítulo 171490174. Responder en el MISMO hilo.
+
+Adjuntar dos archivos:
+  1. MICAI2026_ch171490174_supplementary.pdf
+     (en el repo: paper_review/supplementary/)
+  2. 078_corrected.zip
+     (se genera con: python paper_review/compilar_paper.py  ->  paper_review/_envio_springer/;
+      también está en el release BORRADOR "envio-springer" de GitHub, que solo ven los
+      colaboradores: https://github.com/barudust/TT/releases )
+No adjuntar el 078.zip viejo ni el formulario de copyright (no lo piden).
+
+----------------------------------------------------------------------
+Dear Atchaya,
+
+Thank you for your message, and apologies for the missing file.
+
+Please find attached the supplementary material for Chapter 171490174,
+"A Benchmark of Five Machine-Learning Architectures for Daily Trading-Signal
+Classification on US Tech Equities":
+
+  - MICAI2026_ch171490174_supplementary.pdf (7 pages)
+
+It contains the material that the chapter refers to as supplementary material
+(Sections 3.3, 5.1, 7.1, 7.3 and 11).
+
+We would also like to request one correction to the author list. The surname of
+the first author is misspelled in the package we submitted: it appears as
+"Cuatiaquiz", and the correct spelling is "Cuatianquiz" (full name: Jesus Baruc
+Polvo Cuatianquiz; running head: "J. B. Polvo Cuatianquiz et al."). The attached
+078_corrected.zip contains the same source files as the original package with
+only this correction in paper.tex (two lines), and the PDF recompiled from them;
+no other text, figure, table or reference has changed. The same misspelling
+appears on the signed Licence to Publish form; please let us know whether a new
+form is needed.
+
+Best regards,
+Jesus Baruc Polvo Cuatianquiz
+On behalf of all authors
+----------------------------------------------------------------------
