@@ -47,7 +47,7 @@ Estado y pendientes: [`STATUS.md`](STATUS.md).
 ## Requisitos
 
 - Node.js 18+
-- Python 3.9+
+- Python 3.11+ (pandas 3 y numpy 2.4 lo exigen; probado con 3.13)
 
 ## Instalación y ejecución
 

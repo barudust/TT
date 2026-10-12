@@ -9,7 +9,7 @@
     },
     {
       "name": "api",
-      "runtimeExecutable": "python",
+      "runtimeExecutable": ".venv/Scripts/python.exe",
       "runtimeArgs": ["api/main.py"],
       "port": 8000
     }

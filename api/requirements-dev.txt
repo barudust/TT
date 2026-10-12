@@ -1,2 +1,3 @@
 -r requirements.txt
 pytest==9.1.1
+pyarrow==26.0.0   # solo tests: test_main.py lee el dataset de entrenamiento (.parquet)
