@@ -1,7 +1,7 @@
 {
   "name": "TT 2026-B164",
   "short_name": "TT",
-  "description": "Clasificación bursátil con Deep Learning - LSTM y CNN-LSTM",
+  "description": "Señales diarias de compra, mantener o venta para 7 acciones tecnológicas, generadas por Regresión Logística",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",

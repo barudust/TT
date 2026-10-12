@@ -173,7 +173,8 @@ agosto, superado) quedó en la etiqueta **local** `respaldo/baru-local-2026-08-0
 
 | Para | Leer |
 |---|---|
-| Defensa: estudiar | `RESULTADOS_OPTIMIZADOS/GUIA_DEFENSA_TT.md` (Cap. 15 banco de preguntas; **Cap. 17 sinodal experta**) |
+| **Estudiar el TT en orden (general → particular) y preparar la defensa** | **`ESTUDIO_TT/00_INDICE.md`** (2026-10-12: panorama, glosario, modelo, sistema, paper y bancos de preguntas; corrige cifras de documentos anteriores) |
+| Defensa: guía extensa | `RESULTADOS_OPTIMIZADOS/GUIA_DEFENSA_TT.md` (Cap. 15 banco de preguntas; **Cap. 17 sinodal experta**) |
 | Defensa: argumento central | `RESULTADOS_OPTIMIZADOS/JUSTIFICACION_LIMITE_DEL_MODELO.md` |
 | Redactar la tesis | `docs/THESIS_DOCUMENTATION.md` (qué documento usar por capítulo + cifras) |
 | Análisis más reciente (HOLD, 40/60, global, 2026, auditoría web) | `RESULTADOS_OPTIMIZADOS/docs/ANALISIS_HOLD_Y_GLOBAL.md` |

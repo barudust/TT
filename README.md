@@ -14,12 +14,14 @@ en `RESULTADOS_OPTIMIZADOS/JUSTIFICACION_LIMITE_DEL_MODELO.md`.
 
 **Para retomar el proyecto desde cero (contexto completo, decisiones y cifras): [`CONTEXTO.md`](CONTEXTO.md).**
 Estado y pendientes: [`STATUS.md`](STATUS.md).
+**Para estudiar el TT y preparar la defensa, en orden de lo general a lo particular: [`ESTUDIO_TT/00_INDICE.md`](ESTUDIO_TT/00_INDICE.md).**
 
 ## Estructura del repositorio
 
 ```
 .
 ├── CONTEXTO.md                 # Punto de entrada: todo el contexto del proyecto
+├── ESTUDIO_TT/                 # Serie de estudio y defensa (general → particular, con glosario y preguntas)
 ├── paper_review/               # Paper MICAI 2026 (camera_ready/ = paquete final)
 ├── api/                        # API Flask (endpoints, modelo ML, SQLite)
 ├── Frontend/                   # SPA React + TypeScript (Vite, Tailwind, PWA)
