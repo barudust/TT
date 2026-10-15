@@ -1,5 +1,5 @@
 import { Outlet, Link, useLocation } from "react-router";
-import { TrendingUp, BarChart3, Info, Moon, Sun } from "lucide-react";
+import { TrendingUp, BarChart3, Info, Moon, Sun, HelpCircle } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 
@@ -12,10 +12,19 @@ export default function Root() {
     setMounted(true);
   }, []);
 
-  const stocks = ["AAPL", "MSFT", "GOOGL", "AMZN", "TSLA", "META", "NVDA"];
+  const stocks = [
+    { symbol: "AAPL", name: "Apple" },
+    { symbol: "MSFT", name: "Microsoft" },
+    { symbol: "GOOGL", name: "Google" },
+    { symbol: "AMZN", name: "Amazon" },
+    { symbol: "TSLA", name: "Tesla" },
+    { symbol: "META", name: "Meta" },
+    { symbol: "NVDA", name: "NVIDIA" },
+  ];
   const navItems = [
-    { path: "/", icon: TrendingUp, label: "Acciones" },
-    { path: "/performance", icon: BarChart3, label: "Rendimiento" },
+    { path: "/", icon: TrendingUp, label: "Hoy" },
+    { path: "/performance", icon: BarChart3, label: "Resultados" },
+    { path: "/ayuda", icon: HelpCircle, label: "Ayuda" },
     { path: "/about", icon: Info, label: "Acerca de" },
   ];
 
@@ -30,7 +39,7 @@ export default function Root() {
               </div>
               <div>
                 <h1 className="text-xl font-bold text-foreground">TT 2026-B164</h1>
-                <p className="text-xs text-muted-foreground">Clasificación bursátil con Machine Learning y Deep Learning</p>
+                <p className="text-xs text-muted-foreground">Recomendaciones diarias para 7 acciones tecnológicas</p>
               </div>
             </div>
             {mounted && (
@@ -54,19 +63,20 @@ export default function Root() {
         <div className="max-w-4xl mx-auto px-4 py-3">
           <div className="overflow-x-auto">
             <div className="flex gap-2 min-w-max">
-              {stocks.map((symbol) => {
+              {stocks.map(({ symbol, name }) => {
                 const isActive = location.pathname === `/stock/${symbol}`;
                 return (
                   <Link
                     key={symbol}
                     to={`/stock/${symbol}`}
+                    title={`${name} (${symbol})`}
                     className={`px-4 py-2 rounded-lg font-semibold text-sm whitespace-nowrap transition-all ${
                       isActive
                         ? "bg-blue-500 text-white shadow-md"
                         : "bg-muted text-foreground hover:bg-card"
                     }`}
                   >
-                    {symbol}
+                    {name}
                   </Link>
                 );
               })}
@@ -92,7 +102,7 @@ export default function Root() {
                 <Link
                   key={item.path}
                   to={item.path}
-                  className={`flex flex-col items-center justify-center gap-1 px-4 py-2 rounded-lg transition-colors ${
+                  className={`flex flex-col items-center justify-center gap-1 px-3 py-2 rounded-lg transition-colors ${
                     isActive
                       ? "text-blue-500"
                       : "text-muted-foreground hover:text-foreground"

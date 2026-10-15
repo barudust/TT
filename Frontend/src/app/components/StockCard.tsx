@@ -1,5 +1,7 @@
 import { Link } from "react-router";
-import { SIGNAL_CONFIG, frac } from "../format";
+import { ChevronRight } from "lucide-react";
+import { SIGNAL_CONFIG, usd } from "../format";
+import { SeguridadBadge } from "./SeguridadBadge";
 import type { Stock } from "../types";
 
 export type { Stock };
@@ -13,33 +15,27 @@ export function StockCard({ stock }: StockCardProps) {
   const Icon = config.icon;
 
   return (
-    <Link to={`/stock/${stock.symbol}`}>
+    <Link to={`/stock/${stock.symbol}`} aria-label={`Ver detalle de ${stock.name}`}>
       <div className="bg-card rounded-xl shadow-sm border border-border p-4 hover:shadow-md transition-all hover:border-border/80 cursor-pointer">
         <div className="flex items-center justify-between gap-3">
-          {/* Stock Info */}
           <div className="flex-1 min-w-0">
-            <div className="flex items-baseline gap-2 mb-1">
-              <h3 className="text-lg font-bold text-foreground">{stock.symbol}</h3>
-              <span className="text-xs text-muted-foreground truncate max-w-[180px]">
-                {stock.name}
-              </span>
-            </div>
-            <div className="text-2xl font-bold text-foreground mb-2">
-              ${stock.currentPrice.toFixed(2)}
-            </div>
-            <div className="text-xs text-muted-foreground">
-              Confianza del modelo: {frac(stock.confidence, 0)}
+            <h3 className="text-lg font-bold text-foreground leading-tight">{stock.name}</h3>
+            <div className="text-xs text-muted-foreground mb-2">Clave en bolsa: {stock.symbol}</div>
+            <div className="text-xs text-muted-foreground">Precio al cierre</div>
+            <div className="text-2xl font-bold text-foreground mb-2">{usd(stock.currentPrice)}</div>
+            <div className="text-xs text-muted-foreground mb-0.5">Seguridad de la recomendación</div>
+            <div className="text-sm">
+              <SeguridadBadge confianza={stock.confidence} />
             </div>
           </div>
 
-          {/* Signal Badge */}
-          <div
-            className={`flex flex-col items-center gap-1 px-4 py-3 rounded-lg bg-muted border ${config.borderColor}`}
-          >
-            <Icon className={`w-6 h-6 ${config.color}`} />
-            <span className={`text-xs font-bold ${config.color}`}>
-              {config.label}
-            </span>
+          <div className="flex items-center gap-2">
+            <div className={`flex flex-col items-center gap-1 px-3 py-3 rounded-lg bg-muted border w-32 text-center ${config.borderColor}`}>
+              <Icon className={`w-6 h-6 ${config.color}`} />
+              <span className={`text-sm font-bold ${config.color}`}>{config.label}</span>
+              <span className="text-[11px] leading-tight text-muted-foreground">{config.frase}</span>
+            </div>
+            <ChevronRight className="w-5 h-5 text-muted-foreground flex-shrink-0" />
           </div>
         </div>
       </div>

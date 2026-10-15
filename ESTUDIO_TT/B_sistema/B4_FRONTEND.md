@@ -3,9 +3,12 @@
 > **Resumen.** Aplicación de una sola página (SPA) en **React 18 +
 > TypeScript**, compilada con **Vite**, con estilos de **Tailwind CSS 4** y
 > gráficas de **Recharts**. Es una **PWA**: se puede instalar en el celular
-> como una app. Tiene 4 páginas: señales del día, detalle por acción,
-> desempeño global y "acerca de". No tiene ningún dato fijo ni simulado:
-> todo lo pide a la API.
+> como una app. Tiene 5 pantallas: «Hoy» (recomendación de cada empresa),
+> detalle por empresa, «Resultados», «Ayuda» (guía de uso y glosario) y
+> «Acerca de». Está escrita para un usuario sin conocimientos de finanzas:
+> la confianza se muestra en palabras, cada métrica tiene un «?» que lleva a
+> su definición y las gráficas tienen sus ejes rotulados. No tiene ningún dato
+> fijo ni simulado: todo lo pide a la API.
 >
 > Código: `Frontend/src/`. Documento técnico: `docs/FRONTEND.md`.
 
@@ -29,22 +32,35 @@
 
 ## 2. Páginas
 
-| Ruta | Página | Qué muestra | Endpoints que usa |
+| Ruta | Pantalla | Qué muestra | Endpoints que usa |
 |---|---|---|---|
-| `/` | **Señales del día** (`Home.tsx`) | Una tarjeta por acción con la señal para el siguiente día hábil y su confianza; estado del mercado, fecha del cierre usado y hace cuánto se recalculó | `GET /stocks`, `GET /market-status` |
-| `/stock/:symbol` | **Detalle** (`StockDetail.tsx`) | Precio y señal diaria en una gráfica; las 3 probabilidades; métricas de la ventana elegida (30/60/90 días); últimas 10 señales con su resultado real | `GET /stocks/:s`, `.../history?days=`, `.../metrics?days=` |
-| `/performance` | **Rendimiento global** (`Performance.tsx`) | Promedio de las 7 acciones, retorno de la estrategia contra buy & hold, F1-macro por acción con la línea del azar, tabla ordenable | `GET /metrics?days=` |
-| `/about` | **Acerca de** (`About.tsx`) | Descripción del proyecto, metodología, ficha del modelo en producción (leída de la API), aviso legal y créditos | `GET /model` |
+| `/` | **Hoy** (`Home.tsx`): «¿Qué hacer hoy con cada acción?» | Una tarjeta por empresa con su recomendación (y una frase que la explica), precio y seguridad en palabras; para qué sesión es la recomendación y con qué cierre se calculó | `GET /stocks`, `GET /market-status` |
+| `/stock/:symbol` | **Detalle** (`StockDetail.tsx`) | Recomendación y seguridad; probabilidades; gráfica de precio con un punto de color por recomendación; gráfica «¿Qué habría pasado con $1,000?»; qué tan seguido acertó y cuánto habría ganado (ROI y en dinero); últimas 10 recomendaciones | `GET /stocks/:s`, `.../history?days=`, `.../metrics?days=` |
+| `/performance` | **Resultados** (`Performance.tsx`): «¿Qué tan bien le ha ido al modelo?» | Resumen de las 7 empresas, ganancia por empresa contra comprar y esperar, calificación F1 por empresa contra el azar, tabla ordenable con unidades | `GET /metrics?days=` |
+| `/ayuda` | **Ayuda** (`Help.tsx`) | Pestaña **Guía de uso** (manual corto por pantalla, escala de seguridad, cuándo se actualiza, cómo instalarla) y pestaña **Glosario** (buscable, por categorías) | — |
+| `/about` | **Acerca de** (`About.tsx`) | Descripción, metodología, ficha del modelo (leída de la API), aviso legal y créditos | `GET /model` |
 
 ### Componentes
 
-- `Root.tsx`: encabezado, navegación inferior (estilo app móvil), cambio de
-  tema.
-- `StockCard.tsx`: tarjeta de una acción.
-- `MarketStatus.tsx`: mercado abierto/cerrado (de la API, no fijo).
+- `Root.tsx`: encabezado, barra con las 7 empresas por nombre, navegación
+  inferior (Hoy, Resultados, Ayuda, Acerca de) y cambio de tema.
+- `StockCard.tsx`: tarjeta de una empresa.
+- `SeguridadBadge.tsx`: nivel de seguridad en palabras con barras azules.
+- `MetricCard.tsx` + `InfoLink.tsx`: tarjeta de métrica con su «?» al glosario.
+- `MarketStatus.tsx`: para qué sesión es la recomendación, con qué cierre se
+  calculó y si la bolsa está abierta.
 - `LoadingStates.tsx`, `ErrorState.tsx`: estados de carga y error.
-- `format.ts`: colores y textos de cada señal, formato de porcentajes y
-  fechas (centralizado para que toda la app los muestre igual).
+- `format.ts`: textos y colores de cada recomendación, escala de seguridad y
+  formato de porcentajes, dinero y fechas. `glosario.ts`: las definiciones.
+
+### ¿Por qué la guía y el glosario están dentro de la app?
+
+La revisión observó que un usuario sin contexto no entendería términos como
+«confianza», «Sharpe» o «drawdown». Un manual aparte (PDF) casi nadie lo
+abre; dentro de la app, cada «?» lleva justo a la definición del término que
+se está viendo, y la guía explica cada pantalla con los mismos nombres que
+aparecen en ella. Se mantuvo corta (6 secciones) para leerse en un par de
+minutos.
 
 ---
 
@@ -52,13 +68,17 @@
 
 | Qué | Cómo | Por qué |
 |---|---|---|
-| Confianza | Probabilidad de la señal elegida, con la aclaración de que el azar es 33 % | Que el usuario no lea "38 %" como "baja confianza" sin contexto, ni "45 %" como "casi segura" |
-| Las 3 probabilidades | Barras por señal | Muestra cuándo la decisión fue reñida |
-| Resultado de una señal | Se compara con el movimiento del cierre de ese día al siguiente, con la etiqueta de la tesis; el último día dice "Pendiente" | Mismo criterio que la evaluación de la tesis; no se inventa el resultado |
-| Sharpe | "—" con menos de 5 días con posición | Con tan pocas operaciones no es interpretable |
-| F1 por acción | Con la línea del azar | Para ver si el modelo supera al azar |
-| Buy & hold | Junto al retorno de la estrategia | Referencia honesta |
-| Aviso legal | En "Acerca de" | La plataforma es demostrativa, no una recomendación de inversión |
+| Recomendación | «COMPRAR / VENDER / MANTENER» con una frase («Se espera que el precio suba», «Sin dirección clara: no operar») y para qué sesión es | «Señal» es jerga; el usuario necesita saber qué hacer y cuándo |
+| **Seguridad** (antes «confianza») | Tres niveles con palabras: **Nada segura** (acertó 37 de cada 100), **Poco segura** (38), **Medianamente segura** (42); azar 33 | Un porcentaje como «36 %» no se entiende. Los cortes salen de 7 años de datos (`calibrar_niveles_confianza.py`). No hay nivel «Segura» porque ningún tramo acierta ni la mitad de las veces: llamarlo así engañaría |
+| Colores de la seguridad | Barras azules | Para no confundirla con el verde/rojo/amarillo de COMPRAR/VENDER/MANTENER |
+| Las 3 probabilidades | Barra repartida | Muestra cuándo la decisión fue reñida |
+| Rendimiento | ROI en % y su equivalente con $1,000 («$1,000 → $1,043.97») | El porcentaje solo no dice cuánto dinero es |
+| Gráficas | Ejes con título y unidades; fechas «15 oct»; puntos grandes; leyenda en texto; líneas rectas entre días | Que se entiendan sin explicación y no dibujen valores que no existieron |
+| Tablas | Encabezados con unidades; aciertos como «12 de 29 (41 %)» | El porcentaje con su conteo se entiende mejor |
+| Fechas | «jueves 15 de octubre de 2026» en encabezados | Sin ambigüedad sobre a qué día se refiere |
+| Resultado de una recomendación | Contra el movimiento al día siguiente, con la etiqueta de la tesis; el último día dice «Pendiente» | Mismo criterio que la evaluación de la tesis |
+| Sharpe | «—» con menos de 5 días invertidos | Con tan pocas operaciones no es interpretable |
+| Aviso legal | En «Hoy», «Ayuda» y «Acerca de» | La plataforma es demostrativa, no asesoría |
 
 ---
 
@@ -114,14 +134,14 @@ de uso y una interfaz de **tres niveles**:
 | CU-03 comparar el rendimiento del portafolio y contra el S&P 500 | Página de rendimiento (contra comprar y mantener **cada acción**, no contra el S&P 500) |
 | Nivel 1: panel general del portafolio | Página de rendimiento |
 | Nivel 2: tarjetas por activo (retorno 90 d, Sharpe, win rate, señal) | Tarjetas con señal y confianza; las métricas están en el detalle |
-| Nivel 3: detalle expandible con **curva de capital** (estrategia vs buy & hold), historial de 30 días, F1 por clase y **matriz de confusión** | Detalle con gráfica de precio y señal, 3 probabilidades, métricas 30/60/90, últimas 10 señales con su resultado. **No se implementaron** la curva de capital ni la matriz de confusión |
+| Nivel 3: detalle expandible con **curva de capital** (estrategia vs buy & hold), historial de 30 días, F1 por clase y **matriz de confusión** | Detalle con gráfica de precio, **curva de capital** («¿Qué habría pasado con $1,000?», agregada el 14 de octubre), 3 probabilidades, métricas 30/60/90 y últimas 10 recomendaciones. **No se implementó** la matriz de confusión |
 | Gráfica de pastel con la distribución de señales | No implementada (la distribución se muestra como porcentajes) |
 | **Consulta automática a la API cada hora** | No implementada: la página pide los datos al abrirse o al pulsar "Actualizar"; como la señal cambia una vez al día, no hace falta |
 | Requerimientos no funcionales: carga < 2 s, navegadores modernos, responsivo | Responsivo y PWA instalable. La primera carga después de que Render duerme el servicio tarda 20–40 s; después es inmediata |
 | Puerto 3000, sin autenticación | Sitio estático en Render, sin autenticación |
 
-**Si preguntan por lo que falta:** la curva de capital y la matriz de
-confusión se pueden construir con datos que la API ya calcula (el historial
+**Si preguntan por lo que falta:** la matriz de confusión se puede
+construir con datos que la API ya calcula (el historial
 de señales con su resultado); se priorizó mostrar el resultado de cada
 señal contra el día siguiente y la comparación contra el azar, que es lo que
 permite al usuario juzgar el modelo.

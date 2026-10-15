@@ -17,6 +17,7 @@ export interface Stock {
   confidence: number;
   probabilities?: Probabilities;
   dataDate?: string; // fecha del cierre con el que se calculó la señal
+  nextTradingDay?: string; // sesión a la que se refiere la recomendación
   lastUpdate: string; // momento (UTC) en que la API recalculó las señales
   modelVersion?: string;
 }

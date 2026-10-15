@@ -92,9 +92,10 @@ quien usa la app o evalúa la tesis.
 
 No. Con la regularización fuerte que eligió Optuna y la poca señal que hay
 en datos OHLCV de 1 día, sus `predict_proba` quedan entre 0.33 y 0.45 para
-la clase ganadora (azar = 0.33). Aun así la confianza es informativa: en
-2025 la tasa de acierto sube de 39 % a 56 % cuando la confianza pasa de
-≤ 0.36 a 0.40–0.45. Confianzas artificialmente altas serían la señal de
+la clase ganadora (azar = 0.33). La confianza informa, pero poco: con el modelo actual, en 7 años evaluados sin haberlos visto (2019–2025), acierta 37 % en el 30 % de días con menos confianza y 42 % en el 40 % con más confianza (azar ≈ 34 %); el nivel alto supera al bajo en los 7 años. La cifra anterior (39 % → 56 %) era de un solo año, 2025, con el modelo previo, y no se sostiene
+(`scripts_opt/calibrar_niveles_confianza.py`). Por eso la plataforma la
+muestra en tres niveles con palabras (Nada / Poco / Medianamente segura) en
+lugar de un porcentaje. Confianzas artificialmente altas serían la señal de
 alarma, no lo contrario.
 
 ## Modelos alternativos disponibles

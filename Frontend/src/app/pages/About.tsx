@@ -67,7 +67,7 @@ export default function About() {
               Aviso Legal Importante
             </h3>
             <p className="text-sm text-muted-foreground leading-relaxed">
-              Las señales de trading generadas por esta aplicación son{" "}
+              Las recomendaciones generadas por esta aplicación son{" "}
               <strong>exclusivamente con fines educativos y de investigación</strong>. Este
               proyecto forma parte de un trabajo de tesis académico en la Escuela Superior de
               Cómputo del Instituto Politécnico Nacional (ESCOM-IPN) y{" "}
@@ -91,10 +91,10 @@ export default function About() {
             </h3>
             <p className="text-muted-foreground leading-relaxed mb-4">
               Esta aplicación es el resultado del Trabajo Terminal <strong>TT 2026-B164</strong>, que
-              compara técnicas de Machine Learning y Deep Learning para clasificar la señal de
-              trading del día siguiente en acciones de alta capitalización, usando únicamente
-              datos históricos gratuitos de Yahoo Finance. Las señales que se muestran las genera
-              el modelo ganador de esa comparación.
+              compara técnicas de Machine Learning y Deep Learning para decidir qué hacer al día
+              siguiente (comprar, mantener o vender) en acciones de alta capitalización, usando únicamente
+              datos históricos gratuitos de Yahoo Finance. Las recomendaciones que se muestran las genera
+              el modelo ganador de esa comparación. Para saber cómo leerlas, consulta la sección Ayuda.
             </p>
             <div className="space-y-2 text-sm text-muted-foreground">
               <p>
@@ -149,7 +149,7 @@ export default function About() {
                   <li><strong>Variables:</strong> indicadores técnicos (retornos, medias móviles, volatilidad, RSI, MACD, volumen, velas, estacionalidad y mercado).</li>
                   <li><strong>Etiquetado:</strong> COMPRAR / MANTENER / VENDER según el percentil del retorno del día siguiente respecto a los 252 días previos del mismo activo.</li>
                   <li><strong>Evaluación:</strong> F1-macro para la clasificación y un backtest de un día (Sharpe, drawdown, win rate) para el valor económico.</li>
-                  <li><strong>Operación diaria:</strong> después del cierre de NYSE la API descarga los datos, recalcula las variables y el modelo emite la señal del siguiente día hábil.</li>
+                  <li><strong>Operación diaria:</strong> después del cierre de NYSE la API descarga los datos, recalcula las variables y el modelo emite la recomendación del siguiente día hábil.</li>
                 </ol>
               </div>
             </div>

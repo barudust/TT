@@ -77,8 +77,9 @@ coeficientes ya son diminutos.
 - **Consecuencia visible:** las probabilidades quedan cerca de 1/3 (la
   confianza típica está entre 0.36 y 0.45). En el 28 % de los días la señal
   se decide por menos de 2 puntos porcentuales.
-- **Aun así la confianza informa:** con confianza ≤ 0.36 acierta 39 % de
-  las veces; entre 0.40 y 0.45 acierta 56 %.
+- **La confianza informa, pero poco:** con el modelo actual, en 7 años evaluados sin haberlos visto (2019–2025), acierta 37 % en el 30 % de días con menos confianza y 42 % en el 40 % con más confianza (azar ≈ 34 %); el nivel alto supera al bajo en los 7 años. La cifra anterior (39 % → 56 %) era de un solo año, 2025, con el modelo previo, y no se sostiene. Por eso la
+  plataforma la muestra en tres niveles con palabras (ver
+  [B4](../B_sistema/B4_FRONTEND.md)).
 
 ### 1.5 Pesos de clase
 

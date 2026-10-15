@@ -55,7 +55,7 @@ decían "Reyes Vega" y "Juarez Carvajal", y el paper enviado el 8 sep decía
 | Etiqueta 40/60 ("60/40") | Peor: κ 0.077 vs 0.140 en 2025; sigue prediciendo HOLD 53 % con 20 % real | `analisis_hold/3a_percentiles_target.csv` |
 | Ajuste de HOLD (origen rodante 2019–2024) | Peso HOLD × 0.90: F1 0.365 vs 0.357, κ 0.068 vs 0.063, Sharpe +0.54 vs +0.52, HOLD predicho 36 % (real 40 %) | `analisis_hold/7_reglas_alternativas_resumen.csv` |
 | **Producción, 2026 fuera de muestra** | Antes (balanced): F1 0.313, κ 0.010, HOLD 60 % (real 35 %), Sharpe +0.38. **Ahora (HOLD × 0.90): F1 0.354, κ 0.035, HOLD 40 %, Sharpe +0.29** (portafolio +0.60 vs buy & hold +0.49) | `analisis_hold/8_confirmacion_2026.csv` |
-| Confianza del modelo | 0.33–0.45 (azar 0.33); la tasa de acierto sube de 39 % a 56 % con más confianza | `analisis_hold/2d_accuracy_por_confianza.csv` |
+| Confianza del modelo | 0.33–0.45 (azar 0.33). Con el modelo actual, en 2019–2025: 37 % de acierto en el 30 % de días menos seguros, 42 % en el 40 % más seguros (azar 34 %). El "39 % → 56 %" anterior era solo 2025 con el modelo previo. La plataforma lo muestra en 3 niveles con palabras | `analisis_hold/9_niveles_seguridad.json` (antes `2d_accuracy_por_confianza.csv`) |
 
 ## 4. Decisiones tomadas y por qué
 

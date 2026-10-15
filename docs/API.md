@@ -63,6 +63,7 @@ contra el precio real del día siguiente.
       "confidence": 0.384,
       "probabilities": { "buy": 0.3008, "hold": 0.384, "sell": 0.3151 },
       "dataDate": "2026-09-29",
+      "nextTradingDay": "2026-09-30",
       "lastUpdate": "2026-09-30T18:52:03.120546Z",
       "modelVersion": "LR-v8-interactions-produccion"
     }
@@ -71,6 +72,9 @@ contra el precio real del día siguiente.
 ```
   - `confidence` = probabilidad que el modelo da a la señal elegida
     (máximo de `probabilities`). Con tres clases, azar = 0.33.
+  - `nextTradingDay` = sesión de NYSE a la que se refiere la recomendación
+    (el siguiente día hábil después de `dataDate`, saltando fines de semana y
+    feriados de `NYSE_HOLIDAYS`).
   - `dataDate` = fecha del cierre con el que se calculó la señal. Mientras
     NYSE está abierto, Yahoo devuelve la vela del día en curso con precio
     intradía; esa fila se descarta (`sin_vela_en_curso`) para no calcular

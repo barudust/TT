@@ -221,9 +221,14 @@ que suele dar probabilidades razonablemente calibradas.
 ### E22. ¿Por qué la confianza del modelo es tan baja (35–45 %)?
 
 **Respuesta corta.** Por la regularización muy fuerte y la poca señal: los
-coeficientes son diminutos y las probabilidades quedan cerca de 1/3. Aun
-así es informativa: con confianza ≤ 0.36 acierta 39 % y entre 0.40 y 0.45
-acierta 56 %.
+coeficientes son diminutos y las probabilidades quedan cerca de 1/3. Informa,
+pero poco: en 2019–2025 (modelos que no vieron el año evaluado) acierta 37 %
+en el 30 % de días menos seguros y 42 % en el 40 % más seguros; azar ≈ 34 %.
+Por eso la plataforma no muestra el porcentaje sino tres niveles con palabras,
+y ninguno se llama «Segura»: ningún nivel acierta ni la mitad de las veces.
+
+**Si te citan el 56 %:** esa cifra era de un solo año (2025) y del modelo
+anterior; con 7 años y el modelo actual no se sostiene.
 
 ### E23. Si 2025 fue el mejor año del modelo, ¿no eligieron la prueba a conveniencia?
 

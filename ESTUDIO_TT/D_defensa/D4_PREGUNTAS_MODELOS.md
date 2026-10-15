@@ -32,8 +32,8 @@ C = 0.000165**, que es la que está en producción.
 que 0.000165 es regularización muy fuerte. Optuna lo eligió porque con tan
 poca señal lo que mejor generaliza es alejarse poco de "no sé nada". La
 consecuencia es que las probabilidades quedan cerca de 1/3 (confianza de
-0.36 a 0.45). Aun así la confianza es informativa: con confianza baja
-acierta 39 % y con confianza entre 0.40 y 0.45 acierta 56 %.
+0.36 a 0.45). La confianza informa, pero poco: en 7 años evaluados, el 40 %
+de días con más confianza acierta 42 % y el 30 % con menos, 37 % (azar ≈ 34 %).
 
 **Si repreguntan (lectura bayesiana):** equivale a una estimación MAP con
 un prior gaussiano muy concentrado en cero sobre los coeficientes.

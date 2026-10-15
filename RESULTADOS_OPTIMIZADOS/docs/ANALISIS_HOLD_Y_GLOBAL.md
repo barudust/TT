@@ -117,8 +117,16 @@ anual, y por eso la plataforma muestra MANTENER en casi todo.
 Mediana 0.378 (p25 0.360, p75 0.399); en 2026, 0.367. Con C = 0.000165 los
 coeficientes son diminutos (norma 0.06–0.09 por clase), así que las
 probabilidades quedan cerca de 1/3; en el 28 % de los días la señal se
-decide por menos de 2 puntos porcentuales. Aun así la confianza **sí es
-informativa**: accuracy 39 % con confianza ≤ 0.36 vs 56 % entre 0.40 y 0.45.
+decide por menos de 2 puntos porcentuales. En 2025, con este modelo, el
+accuracy era 39 % con confianza ≤ 0.36 vs 56 % entre 0.40 y 0.45.
+
+> **Actualización (2026-10-14):** con el modelo actual (peso HOLD × 0.90) y
+> 7 años de origen rodante (2019–2025) la relación es mucho más débil: 37 %
+> en el 30 % de días con menos confianza, 38 % en el 30 % siguiente y 42 % en
+> el 40 % con más confianza (azar ≈ 34 %). El 56 % de un solo año no se
+> sostiene. Ver `scripts_opt/calibrar_niveles_confianza.py` y
+> `analisis_hold/9_niveles_seguridad.json`; de ahí salen los tres niveles
+> de seguridad de la plataforma.
 
 ## 3. ¿Conviene 40/60 ("60/40") en vez de 30/70?
 

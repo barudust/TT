@@ -295,6 +295,17 @@ def market_status(now=None):
     }
 
 
+def siguiente_dia_habil(fecha_iso):
+    """Siguiente sesión de NYSE después de `fecha_iso` (salta fines de semana y
+    feriados de NYSE_HOLIDAYS). Es el día al que se refiere la recomendación
+    calculada con el cierre de `fecha_iso`."""
+    d = date.fromisoformat(fecha_iso[:10])
+    while True:
+        d = date.fromordinal(d.toordinal() + 1)
+        if d.weekday() < 5 and d not in NYSE_HOLIDAYS:
+            return d.isoformat()
+
+
 def persist_to_db(session, symbol, name, company_info, rows, metrics_by_window):
     asset = db_ops.get_or_create_asset(session, symbol, name)
     asset.sector = company_info.get("sector")
@@ -396,6 +407,8 @@ def _initialize_data():
             "confidence": last_row["confidence"],
             "probabilities": last_row["probabilities"],
             "dataDate": last_row["date"],
+            # sesión a la que se refiere la recomendación (la que sigue al cierre usado)
+            "nextTradingDay": siguiente_dia_habil(last_row["date"]),
             "lastUpdate": _utc_now_iso(),
             "modelVersion": MODEL_VERSION,
         }

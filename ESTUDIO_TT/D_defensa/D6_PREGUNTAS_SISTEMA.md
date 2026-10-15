@@ -321,13 +321,33 @@ miles de acciones convendría volver a un esquema incremental.
 
 ### ST4. ¿Dónde están la curva de capital, la matriz de confusión y la actualización cada hora que describía el TT1?
 
-**Respuesta corta.** No se implementaron. Priorizamos mostrar el resultado
-de cada señal contra el día siguiente, las tres probabilidades y el F1
-contra el azar, que es lo que permite juzgar el modelo. La actualización cada
-hora no hace falta porque la señal cambia una vez al día; la página pide los
-datos al abrirse y tiene un botón de actualizar. La curva de capital y la
-matriz de confusión se pueden construir con datos que la API ya calcula y
-quedan como mejora.
+**Respuesta corta.** La curva de capital sí está: en el detalle de cada
+empresa, «¿Qué habría pasado con $1,000?», con la misma fórmula que la API
+(coincide al centavo con el capital final). La matriz de confusión no se
+implementó: para un usuario sin contexto se priorizó el resultado de cada
+recomendación y la comparación contra el azar. La actualización cada hora no
+hace falta porque la recomendación cambia una vez al día; la página pide los
+datos al abrirse y tiene un botón de actualizar.
+
+### ST4b. ¿Por qué la «confianza» aparece en palabras y no en porcentaje?
+
+**Respuesta corta.** Porque un porcentaje como «36 %» no le dice nada a un
+usuario: con tres opciones el azar es 33 % y el modelo casi nunca pasa de
+45 %. Medimos qué tan seguido acierta el modelo actual según su confianza en
+7 años que no había visto: 37 % en el 30 % de días menos seguros, 38 % en el
+30 % siguiente y 42 % en el 40 % más seguros (azar ≈ 34 %). Con eso hicimos
+tres niveles: Nada segura, Poco segura y Medianamente segura. No pusimos
+«Segura» porque ningún nivel acierta ni la mitad de las veces y sería
+engañoso.
+
+### ST4c. ¿Cómo entiende un usuario sin conocimientos los términos?
+
+**Respuesta corta.** Cada métrica tiene un «?» que lleva a su definición en
+un glosario dentro de la app, escrito en lenguaje sencillo y con ejemplos; hay
+una guía de uso por pantalla; los nombres técnicos se reemplazaron por
+descripciones («peor caída» en vez de drawdown, «comprar y esperar» en vez de
+buy & hold), dejando el nombre técnico entre paréntesis; y el rendimiento se
+muestra también en dinero sobre $1,000.
 
 ### ST5. En TT1 había endpoints POST para el ETL. ¿Por qué los desactivaron?
 

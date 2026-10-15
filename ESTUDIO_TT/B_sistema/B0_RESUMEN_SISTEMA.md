@@ -56,12 +56,15 @@ Yahoo Finance ──► API Flask ──► SQLite
 ## B4. Frontend
 
 - **React 18 + TypeScript + Vite + Tailwind + Recharts**, **PWA** instalable.
-- **4 páginas:** señales del día, detalle por acción, rendimiento global,
-  acerca de (ficha del modelo leída de la API).
+- **5 pantallas:** Hoy (recomendación de cada empresa), detalle, Resultados,
+  Ayuda (guía de uso + glosario) y Acerca de.
+- **Para usuarios sin contexto:** seguridad en palabras (Nada / Poco /
+  Medianamente segura, con su acierto real), «?» junto a cada métrica,
+  ejes rotulados, rendimiento en % y en dinero sobre $1,000.
 - Muestra las 3 probabilidades (azar 33 %), el resultado de cada señal y el
   F1 contra el azar; aviso legal.
-- **Vs TT1:** no se hicieron la curva de capital, la matriz de confusión ni
-  la consulta cada hora.
+- **Vs TT1:** la curva de capital sí se agregó; no se hicieron la matriz de
+  confusión ni la consulta cada hora.
 
 → [B4 completo](B4_FRONTEND.md)
 

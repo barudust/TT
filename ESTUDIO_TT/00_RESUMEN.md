@@ -124,7 +124,8 @@ Nada es simulado: todo sale de Yahoo o del modelo.
 
 ### B4. Frontend → [detalle](B_sistema/B4_FRONTEND.md)
 - **React + TypeScript + Vite + Tailwind**, instalable como app (**PWA**).
-- 4 páginas: señales del día, detalle por acción, rendimiento, acerca de.
+- 5 pantallas: Hoy, detalle por empresa, Resultados, Ayuda (guía + glosario) y Acerca de.
+- Seguridad de cada recomendación en palabras (Nada / Poco / Medianamente segura).
 - Muestra las 3 probabilidades, el resultado real de cada señal y el F1
   contra el azar.
 

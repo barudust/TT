@@ -4,6 +4,7 @@ import Home from "./pages/Home";
 import StockDetail from "./pages/StockDetail";
 import Performance from "./pages/Performance";
 import About from "./pages/About";
+import Help from "./pages/Help";
 
 export const router = createBrowserRouter([
   {
@@ -13,6 +14,7 @@ export const router = createBrowserRouter([
       { index: true, Component: Home },
       { path: "stock/:symbol", Component: StockDetail },
       { path: "performance", Component: Performance },
+      { path: "ayuda", Component: Help },
       { path: "about", Component: About },
     ],
   },

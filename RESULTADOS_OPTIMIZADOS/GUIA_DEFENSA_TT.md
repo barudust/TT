@@ -2401,10 +2401,14 @@ existe el cierre del día siguiente; antes aparece como "Pendiente".
 ### P17.24 ¿Por qué la confianza es de 35–45 %?
 
 **Respuesta corta.** Por la regularización fuerte y la poca señal (P17.18).
-Al azar sería 33 %. Aun así es informativa: cuando la confianza pasa de 0.36
-a 0.40–0.45, la tasa de acierto sube de 39 % a 56 %.
+Al azar sería 33 %. Informa, pero poco: con el modelo actual, en 2019–2025
+(sin ver el año evaluado) acierta 37 % en el 30 % de días menos seguros y 42 %
+en el 40 % más seguros (azar ≈ 34 %). Por eso la plataforma la muestra en tres
+niveles con palabras. (Una versión anterior de esta respuesta decía «de 39 % a
+56 %»: era un solo año, 2025, con el modelo previo.)
 
-**Evidencia.** `analisis_hold/2d_accuracy_por_confianza.csv`.
+**Evidencia.** `analisis_hold/9_niveles_seguridad.json`
+(`scripts_opt/calibrar_niveles_confianza.py`).
 
 ### P17.25 ¿Por qué hoy casi todo dice MANTENER?
 

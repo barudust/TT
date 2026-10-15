@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import { StockCard } from "../components/StockCard";
 import { StockCardSkeleton } from "../components/LoadingStates";
 import { MarketStatus } from "../components/MarketStatus";
-import { RefreshCw } from "lucide-react";
+import { RefreshCw, HelpCircle } from "lucide-react";
+import { Link } from "react-router";
 import { Button } from "../components/ui/button";
 import { toast } from "sonner";
 import { API_BASE_URL } from "../../config/api";
@@ -94,8 +95,8 @@ export default function Home() {
     return (
       <div>
         <div className="mb-6">
-          <h2 className="text-2xl font-bold text-foreground">Señales del Día</h2>
-          <p className="text-sm text-muted-foreground mt-1">Cargando predicciones...</p>
+          <h2 className="text-2xl font-bold text-foreground">¿Qué hacer hoy con cada acción?</h2>
+          <p className="text-sm text-muted-foreground mt-1">Cargando recomendaciones… (la primera carga puede tardar hasta 1 minuto)</p>
         </div>
         <div className="space-y-3">
           {Array.from({ length: 7 }).map((_, i) => (
@@ -113,9 +114,9 @@ export default function Home() {
       <div className="mb-6">
         <div className="flex items-center justify-between mb-2">
           <div>
-            <h2 className="text-2xl font-bold text-foreground">Señales del Día</h2>
+            <h2 className="text-2xl font-bold text-foreground">¿Qué hacer hoy con cada acción?</h2>
             <p className="text-sm text-muted-foreground mt-1">
-              Predicciones para el siguiente día hábil, calculadas con el cierre del mercado
+              Recomendación diaria del modelo para cada una de las 7 empresas. Toca una tarjeta para ver su detalle.
             </p>
           </div>
           <Button
@@ -130,7 +131,7 @@ export default function Home() {
           </Button>
         </div>
         <div className="mt-3">
-          <MarketStatus isOpen={market?.isOpen} lastUpdate={ref?.lastUpdate} dataDate={ref?.dataDate} />
+          <MarketStatus isOpen={market?.isOpen} lastUpdate={ref?.lastUpdate} dataDate={ref?.dataDate} nextTradingDay={ref?.nextTradingDay} />
         </div>
       </div>
       <div className="space-y-3">
@@ -138,18 +139,20 @@ export default function Home() {
           <StockCard key={stock.symbol} stock={stock} />
         ))}
       </div>
-      <div className="mt-8 bg-muted border border-border rounded-lg p-4 space-y-2">
-        <p className="text-sm text-muted-foreground">
-          <span className="font-semibold">Nota:</span> Las señales las genera un modelo de
-          Regresión Logística entrenado con datos históricos de Yahoo Finance
-          {ref?.modelVersion ? ` (versión ${ref.modelVersion})` : ""}. No constituyen
-          asesoramiento financiero.
+      <div className="mt-8 bg-muted border border-border rounded-lg p-4 space-y-2 text-sm text-muted-foreground">
+        <p>
+          <span className="font-semibold text-foreground">Cómo leer cada tarjeta:</span> a la derecha está la
+          recomendación (COMPRAR, VENDER o MANTENER) para la próxima sesión de la bolsa; abajo del precio, qué tan
+          segura es, según qué tan seguido acertó el modelo en el pasado en situaciones parecidas.
         </p>
-        <p className="text-sm text-muted-foreground">
-          <span className="font-semibold">Confianza:</span> es la probabilidad que el modelo
-          asigna a la señal elegida. Con tres señales posibles, elegir al azar daría 33 %;
-          MANTENER aparece cuando el modelo no distingue una dirección clara entre subir y bajar.
+        <p>
+          Las recomendaciones las genera un modelo de Regresión Logística entrenado con datos de 2018 a 2025
+          {ref?.modelVersion ? ` (versión ${ref.modelVersion})` : ""}. Se actualizan una vez al día, después del
+          cierre de la bolsa. <strong>Son un ejercicio académico, no asesoría financiera.</strong>
         </p>
+        <Link to="/ayuda" className="inline-flex items-center gap-1.5 text-blue-600 dark:text-blue-400 font-medium hover:underline">
+          <HelpCircle className="w-4 h-4" /> Guía de uso y glosario de términos
+        </Link>
       </div>
     </div>
   );

@@ -155,6 +155,13 @@ def test_market_status_horario_y_feriados():
     assert main.market_status(sabado)["isOpen"] is False
 
 
+def test_siguiente_dia_habil_salta_fines_de_semana_y_feriados():
+    assert main.siguiente_dia_habil("2026-09-29") == "2026-09-30"   # martes -> miércoles
+    assert main.siguiente_dia_habil("2026-10-02") == "2026-10-05"   # viernes -> lunes
+    assert main.siguiente_dia_habil("2026-09-04") == "2026-09-08"   # viernes antes de Labor Day
+    assert main.siguiente_dia_habil("2026-11-25") == "2026-11-27"   # Thanksgiving
+
+
 def test_sin_vela_en_curso_descarta_el_dia_mientras_nyse_esta_abierto():
     ny = main.NYSE_TZ
     df = pd.DataFrame({"Close": [1.0, 2.0]}, index=pd.to_datetime(["2026-09-29", "2026-09-30"]))
@@ -216,6 +223,7 @@ def test_initialize_data_end_to_end(monkeypatch):
         assert 0.0 <= stock["confidence"] <= 1.0
         assert stock["confidence"] == pytest.approx(max(stock["probabilities"].values()))
         assert stock["lastUpdate"].endswith("Z") and "+00:00" not in stock["lastUpdate"]
+        assert stock["nextTradingDay"] > stock["dataDate"]
 
     client = main.app.test_client()
     resp = client.get("/stocks")
