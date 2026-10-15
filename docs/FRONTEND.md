@@ -11,7 +11,7 @@ hay valores fijos ni simulados en las páginas.
 - next-themes para el tema vía `class` en `<html>`.
 
 Entradas clave:
-- `index.html` — contenedor y registro del Service Worker.
+- `index.html` — contenedor de la aplicación. Incluye un script que da de baja el service worker que registraban versiones anteriores (la aplicación ya no es instalable).
 - `src/main.tsx` — arranque de React, ThemeProvider y App.
 - `src/app/App.tsx` — Toaster y RouterProvider.
 - `src/app/routes.ts` — definición de rutas.
@@ -42,7 +42,7 @@ Entradas clave:
   `GET /metrics?days=`.
 - `Help.tsx` (`/ayuda`, pestaña «Ayuda») — dos pestañas: **Guía de uso**
   (manual corto por pantalla, escala de seguridad, cuándo se actualiza,
-  instalación en el celular) y **Glosario** (buscable, por categorías). Los
+  y **Glosario** (buscable, por categorías). Los
   íconos «?» enlazan a `/ayuda?tab=glosario#<término>`.
 - `About.tsx` (`/about`) — descripción del proyecto y ficha del modelo en
   producción, leída de `GET /model`.
@@ -102,11 +102,3 @@ Entradas clave:
 - En Render, `VITE_API_URL` se fija en el dashboard del static site
   (`docs/DEPLOY_RENDER.md`).
 
-## PWA
-- `public/manifest.json` y `public/service-worker.js`.
-- El service worker es **network-first** con caché `trading-signals-v2`:
-  siempre pide la versión nueva y solo usa la caché sin conexión. La versión
-  anterior era cache-first con nombre fijo y dejaba a los usuarios con la
-  interfaz vieja después de cada despliegue. Si se vuelve a cambiar su
-  estrategia, cambiar también `CACHE_NAME` para que se borre la caché previa.
-- Las respuestas de la API (otro origen) nunca se cachean.

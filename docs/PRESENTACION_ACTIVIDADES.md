@@ -52,7 +52,7 @@ después del cierre del mercado y responde JSON a cualquier cliente."
 | 3 | [api/main.py:728](../api/main.py) | `start_scheduler`: L–V 16:30 Nueva York y reintento cada 2 minutos |
 | 4 | [api/ml/model.py](../api/ml/model.py) | `load_model` y `predict_row`: carga del `.pkl` y predicción |
 | 5 | [api/Dockerfile](../api/Dockerfile) y [render.yaml](../render.yaml) | Configuración del despliegue (gunicorn, 1 worker, rama `main`) |
-| 6 | [api/tests/](../api/tests/) | Las 23 pruebas automáticas |
+| 6 | [api/tests/](../api/tests/) | Las 24 pruebas automáticas |
 
 **Demostración en vivo** (en el navegador):
 - `https://tt-api-jc7n.onrender.com/health` → `stocksLoaded: 7`
@@ -66,7 +66,7 @@ Si piden pruebas: `cd api && pytest` → 23 en verde.
 ## Actividad 3. Programación de componentes visuales y navegación interactiva
 
 **Qué decir:** "Aplicación de una sola página en React con TypeScript, con
-componentes reutilizables y rutas; instalable en el celular como PWA."
+componentes reutilizables y rutas."
 
 | # | Archivo | Qué señalar |
 |---|---|---|
@@ -75,12 +75,11 @@ componentes reutilizables y rutas; instalable en el celular como PWA."
 | 3 | [Frontend/src/app/components/StockCard.tsx:16](../Frontend/src/app/components/StockCard.tsx) | Componente reutilizable: tarjeta que lleva al detalle con `Link` |
 | 4 | [Frontend/src/app/pages/Home.tsx](../Frontend/src/app/pages/Home.tsx) | Consumo de la API (`fetch`), estados de carga y error, botón de actualizar |
 | 5 | [Frontend/src/app/types.ts](../Frontend/src/app/types.ts) | Tipos de las respuestas de la API (TypeScript) |
-| 6 | [Frontend/public/manifest.json](../Frontend/public/manifest.json) y [service-worker.js](../Frontend/public/service-worker.js) | Lo que la hace instalable como PWA |
 
-**Demostración en vivo:** `https://tt-frontend-womf.onrender.com` → inicio →
-clic en una tarjeta → detalle → cambiar ventana 30/60/90 días → rendimiento →
-acerca de → modo oscuro. Si se puede, abrirla también en el celular (o con
-la vista móvil del navegador).
+**Demostración en vivo:** `https://tt-frontend-womf.onrender.com` → Hoy →
+clic en una tarjeta → detalle → cambiar ventana 30/60/90 días → Resultados →
+Ayuda (guía y glosario) → Acerca de → modo oscuro. Para mostrar que el
+diseño es responsivo, reducir el ancho de la ventana del navegador.
 
 ---
 

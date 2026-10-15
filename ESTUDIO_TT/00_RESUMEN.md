@@ -104,7 +104,7 @@ cada día. Parte del trabajo se publicó en **MICAI 2026**.
 ```
 Investigación (offline) ──► modelo .pkl
 Yahoo Finance ──► API Flask (calcula variables, predice, evalúa) ──► SQLite
-                     └──► JSON ──► App web React (PWA) ──► navegador / celular
+                     └──► JSON ──► App web React ──► navegador
 ```
 Nada es simulado: todo sale de Yahoo o del modelo.
 
@@ -112,7 +112,7 @@ Nada es simulado: todo sale de Yahoo o del modelo.
 - **Flask** con ~10 rutas de lectura (`/stocks`, `/metrics`, `/model`…).
 - Se actualiza sola lunes a viernes a las 16:30 de Nueva York (y reintenta
   cada 2 min si falla Yahoo); recalcula ~3 años con el mismo código del
-  entrenamiento. **23 pruebas automáticas.**
+  entrenamiento. **24 pruebas automáticas.**
 
 ### B3. Base de datos → [detalle](B_sistema/B3_BASE_DE_DATOS.md)
 - **SQLite**, 4 tablas: `assets`, `ohlcv_daily`, `predictions`, `metrics`.
@@ -123,7 +123,7 @@ Nada es simulado: todo sale de Yahoo o del modelo.
   compatible con PostgreSQL).
 
 ### B4. Frontend → [detalle](B_sistema/B4_FRONTEND.md)
-- **React + TypeScript + Vite + Tailwind**, instalable como app (**PWA**).
+- **React + TypeScript + Vite + Tailwind**, aplicación web.
 - 5 pantallas: Hoy, detalle por empresa, Resultados, Ayuda (guía + glosario) y Acerca de.
 - Seguridad de cada recomendación en palabras (Nada / Poco / Medianamente segura).
 - Muestra las 3 probabilidades, el resultado real de cada señal y el F1
@@ -132,8 +132,7 @@ Nada es simulado: todo sale de Yahoo o del modelo.
 ### B5. Despliegue → [detalle](B_sistema/B5_DESPLIEGUE.md)
 - **Render**: API en Docker con gunicorn (1 worker) + sitio estático;
   despliegue automático con cada cambio en `main`.
-- Problemas reales resueltos: arranque en frío, fallas de Yahoo, caché vieja
-  de la PWA.
+- Problemas reales resueltos: arranque en frío y fallas de Yahoo.
 
 ---
 

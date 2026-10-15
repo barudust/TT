@@ -5,7 +5,7 @@
 > sitio estático. Ambos se definen en `render.yaml` y se despliegan solos
 > con cada `push` a la rama `main` de GitHub. En local se levanta todo con
 > `docker compose`. Se resolvieron problemas reales de operación: arranque
-> en frío, fallas de Yahoo, caché vieja de la PWA.
+> en frío y fallas de Yahoo.
 >
 > Documento técnico: `docs/DEPLOY_RENDER.md`.
 
@@ -56,8 +56,7 @@ que llame `POST /admin/refresh` una vez, y entonces sí usar varios workers.
 
 Describe ambos servicios: tipo, rama (`main`), despliegue automático,
 ruta de salud (`/health`), variables de entorno, la regla de reescritura del
-frontend (todas las rutas → `index.html`) y la cabecera `no-cache` del
-*service worker*. Solo se despliegan `api/` y `Frontend/`; el código de
+frontend (todas las rutas → `index.html`). Solo se despliegan `api/` y `Frontend/`; el código de
 investigación no se sube a producción porque no es un servicio.
 
 ### 2.4 `docker-compose.yml` (local)
@@ -84,7 +83,6 @@ el código.
 |---|---|---|
 | La API tarda 20–40 s la primera vez | El plan gratuito "duerme" el servicio tras ~15 min sin tráfico; al despertar recalcula todo | Esperado; se documenta. El frontend muestra estado de carga |
 | Catálogo vacío después de desplegar (`/stocks` = `[]`) | Yahoo falló justo en el arranque en frío | Reintentos (3 por descarga) + reintento automático cada 2 min mientras falten acciones + `stocksLoaded` en `/health` + el frontend dispara `POST /admin/refresh` si llega vacío. Verificado el 30 de septiembre: se reparó solo en ~2 min |
-| Usuarios con interfaz vieja | *Service worker* cache-first con nombre fijo | Network-first + nueva caché + `no-cache` |
 | `render.yaml` decía `branch: dev` pero se desplegaba `main` | Manda la rama configurada en el panel | Se corrigió el archivo para que coincidan |
 | La actualización diaria no corre si el servicio está dormido | Plan gratuito | Documentado; solución: plan pago o un cron job externo que llame `POST /admin/refresh` |
 | Base de datos se pierde al reiniciar | Sin disco persistente en el plan gratuito | Aceptable: la base es reconstruible (ver [B3](B3_BASE_DE_DATOS.md)) |

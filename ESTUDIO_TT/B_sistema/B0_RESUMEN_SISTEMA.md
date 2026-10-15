@@ -9,7 +9,7 @@
 ```
 Investigación (offline, scripts_opt/) ──► modelo .pkl
 Yahoo Finance ──► API Flask ──► SQLite
-                     └──► JSON ──► App React (PWA) ──► navegador / celular
+                     └──► JSON ──► App web React ──► navegador
 ```
 
 - **Dos mundos:** entrenar (pesado, una vez) y servir (ligero, diario). Solo
@@ -35,7 +35,7 @@ Yahoo Finance ──► API Flask ──► SQLite
   abierto; la última señal queda "pendiente".
 - **Auditoría (30 sep):** se corrigieron métricas mal calculadas; ahora mide
   igual que la tesis. Los POST de carga manual están desactivados (403).
-- **23 pruebas** automáticas.
+- **24 pruebas** automáticas.
 
 → [B2 completo](B2_API.md)
 
@@ -55,7 +55,7 @@ Yahoo Finance ──► API Flask ──► SQLite
 
 ## B4. Frontend
 
-- **React 18 + TypeScript + Vite + Tailwind + Recharts**, **PWA** instalable.
+- **React 18 + TypeScript + Vite + Tailwind + Recharts**, aplicación web.
 - **5 pantallas:** Hoy (recomendación de cada empresa), detalle, Resultados,
   Ayuda (guía de uso + glosario) y Acerca de.
 - **Para usuarios sin contexto:** seguridad en palabras (Nada / Poco /
@@ -72,8 +72,8 @@ Yahoo Finance ──► API Flask ──► SQLite
 
 - **Render:** API en Docker (1 worker por el programador de tareas) +
   frontend como sitio estático; despliegue automático desde `main`.
-- **Problemas reales resueltos:** arranque en frío (20–40 s), Yahoo fallando
-  al arrancar (reintentos), PWA con interfaz vieja (network-first).
+- **Problemas reales resueltos:** arranque en frío (20–40 s) y Yahoo fallando
+  al arrancar (reintentos).
 - **Vs TT1:** antes solo corría en local.
 
 → [B5 completo](B5_DESPLIEGUE.md)

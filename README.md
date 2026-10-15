@@ -24,7 +24,7 @@ Estado y pendientes: [`STATUS.md`](STATUS.md).
 ├── ESTUDIO_TT/                 # Serie de estudio y defensa (general → particular, con glosario y preguntas)
 ├── paper_review/               # Paper MICAI 2026 (camera_ready/ = paquete final)
 ├── api/                        # API Flask (endpoints, modelo ML, SQLite)
-├── Frontend/                   # SPA React + TypeScript (Vite, Tailwind, PWA)
+├── Frontend/                   # SPA React + TypeScript (Vite, Tailwind)
 ├── docs/                       # Documentación técnica de la plataforma web
 ├── scripts_opt/                # Pipeline de optimización que generó RESULTADOS_OPTIMIZADOS/
 ├── RESULTADOS_OPTIMIZADOS/     # Resultados + documentos de tesis/defensa (ver su docs/README.md)
@@ -42,7 +42,6 @@ Estado y pendientes: [`STATUS.md`](STATUS.md).
 - Backend: Flask + CORS, Yahoo Finance (datos históricos reales), scikit-learn
   para inferencia (`api/`)
 - Base de datos: SQLite vía SQLAlchemy 2.0 (`docs/DATABASE.md`)
-- PWA: Manifest y Service Worker
 
 ## Requisitos
 
@@ -139,12 +138,6 @@ VITE_API_URL=http://localhost:8000
 - Despliegue en Render (auto-deploy por push a `main`): `docs/DEPLOY_RENDER.md`
 - Diagrama de arquitectura: `docs/system_architecture_diagram.svg`
   (`docs/system_architecture_diagram_propuesta_inicial.svg` es el de la propuesta original)
-
-## PWA y Android
-El proyecto conserva manifest y service worker (`Frontend/public/`). Para
-Android puedes evaluar:
-- Trusted Web Activity (TWA) si empaquetas la PWA
-- Capacitor si requieres APIs nativas
 
 ## Resumen del hallazgo principal
 

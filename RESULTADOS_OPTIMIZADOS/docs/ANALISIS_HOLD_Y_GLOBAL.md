@@ -239,7 +239,6 @@ mal o mal etiquetados**. Todos se corrigieron:
 | Confianza | Real (probabilidad del modelo), pero sin contexto | Se muestran las 3 probabilidades y la referencia de azar (33 %) |
 | "Acerca de": señales por LSTM/CNN-LSTM, TensorFlow | Falso: las genera la Regresión Logística | Texto corregido + ficha del modelo leída de `GET /model` |
 | Endpoints `POST` de override | Permitían escribir señales/métricas que no salen del modelo | Desactivados (403) salvo `ENABLE_MANUAL_OVERRIDES=1` |
-| Service worker de la PWA | *Cache-first* con caché fija: quien ya abrió la app se quedaba con la interfaz vieja | *Network-first* y caché `v2` |
 | Sharpe con 1 operación | Daba siempre 3.00 (= √(252/28)) | Se omite con menos de 5 días con posición |
 
 Todo lo visible sale ahora de Yahoo Finance, del modelo o de cálculos

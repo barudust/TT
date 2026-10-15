@@ -1,9 +1,8 @@
-# B4 — El frontend (aplicación web / PWA)
+# B4 — El frontend (aplicación web)
 
 > **Resumen.** Aplicación de una sola página (SPA) en **React 18 +
 > TypeScript**, compilada con **Vite**, con estilos de **Tailwind CSS 4** y
-> gráficas de **Recharts**. Es una **PWA**: se puede instalar en el celular
-> como una app. Tiene 5 pantallas: «Hoy» (recomendación de cada empresa),
+> gráficas de **Recharts**. Tiene 5 pantallas: «Hoy» (recomendación de cada empresa),
 > detalle por empresa, «Resultados», «Ayuda» (guía de uso y glosario) y
 > «Acerca de». Está escrita para un usuario sin conocimientos de finanzas:
 > la confianza se muestra en palabras, cada métrica tiene un «?» que lleva a
@@ -26,7 +25,6 @@
 | **Recharts** | Gráficas | Gráficas de precio, retorno y F1 declarativas en React |
 | **next-themes** | Tema claro/oscuro | |
 | **sonner** | Notificaciones (*toasts*) | Avisos de error o actualización |
-| **PWA** (`manifest.json` + *service worker*) | App instalable | El TT1 pedía que funcionara en celulares (requerimiento no funcional de diseño responsivo); la PWA además se instala como app sin hacer una app nativa |
 
 ---
 
@@ -37,7 +35,7 @@
 | `/` | **Hoy** (`Home.tsx`): «¿Qué hacer hoy con cada acción?» | Una tarjeta por empresa con su recomendación (y una frase que la explica), precio y seguridad en palabras; para qué sesión es la recomendación y con qué cierre se calculó | `GET /stocks`, `GET /market-status` |
 | `/stock/:symbol` | **Detalle** (`StockDetail.tsx`) | Recomendación y seguridad; probabilidades; gráfica de precio con un punto de color por recomendación; gráfica «¿Qué habría pasado con $1,000?»; qué tan seguido acertó y cuánto habría ganado (ROI y en dinero); últimas 10 recomendaciones | `GET /stocks/:s`, `.../history?days=`, `.../metrics?days=` |
 | `/performance` | **Resultados** (`Performance.tsx`): «¿Qué tan bien le ha ido al modelo?» | Resumen de las 7 empresas, ganancia por empresa contra comprar y esperar, calificación F1 por empresa contra el azar, tabla ordenable con unidades | `GET /metrics?days=` |
-| `/ayuda` | **Ayuda** (`Help.tsx`) | Pestaña **Guía de uso** (manual corto por pantalla, escala de seguridad, cuándo se actualiza, cómo instalarla) y pestaña **Glosario** (buscable, por categorías) | — |
+| `/ayuda` | **Ayuda** (`Help.tsx`) | Pestaña **Guía de uso** (manual corto por pantalla, escala de seguridad, cuándo se actualiza) y pestaña **Glosario** (buscable, por categorías) | — |
 | `/about` | **Acerca de** (`About.tsx`) | Descripción, metodología, ficha del modelo (leída de la API), aviso legal y créditos | `GET /model` |
 
 ### Componentes
@@ -59,7 +57,7 @@ La revisión observó que un usuario sin contexto no entendería términos como
 «confianza», «Sharpe» o «drawdown». Un manual aparte (PDF) casi nadie lo
 abre; dentro de la app, cada «?» lleva justo a la definición del término que
 se está viendo, y la guía explica cada pantalla con los mismos nombres que
-aparecen en ella. Se mantuvo corta (6 secciones) para leerse en un par de
+aparecen en ella. Se mantuvo corta (5 secciones) para leerse en un par de
 minutos.
 
 ---
@@ -94,23 +92,7 @@ minutos.
 
 ---
 
-## 5. La PWA y el *service worker*
-
-- `public/manifest.json`: nombre, ícono, colores, modo "standalone" (se abre
-  sin barra del navegador). Permite "Agregar a la pantalla de inicio".
-- `public/service-worker.js`: estrategia **network-first** — siempre pide
-  la versión nueva y solo usa la copia guardada si no hay conexión. Las
-  respuestas de la API nunca se guardan (siempre datos frescos).
-- **Problema que se corrigió:** la versión anterior era *cache-first* con un
-  nombre de caché fijo; quien ya había abierto la app se quedaba con la
-  interfaz vieja después de cada despliegue. Se cambió a network-first y se
-  renombró la caché (`trading-signals-v2`) para borrar la anterior.
-- El servidor envía `service-worker.js` con `Cache-Control: no-cache` para
-  que las actualizaciones lleguen.
-
----
-
-## 6. Compilación y despliegue
+## 5. Compilación y despliegue
 
 - `npm run dev`: servidor de desarrollo (http://localhost:5173).
 - `npm run build`: genera archivos estáticos en `Frontend/dist/`.
@@ -137,7 +119,7 @@ de uso y una interfaz de **tres niveles**:
 | Nivel 3: detalle expandible con **curva de capital** (estrategia vs buy & hold), historial de 30 días, F1 por clase y **matriz de confusión** | Detalle con gráfica de precio, **curva de capital** («¿Qué habría pasado con $1,000?», agregada el 14 de octubre), 3 probabilidades, métricas 30/60/90 y últimas 10 recomendaciones. **No se implementó** la matriz de confusión |
 | Gráfica de pastel con la distribución de señales | No implementada (la distribución se muestra como porcentajes) |
 | **Consulta automática a la API cada hora** | No implementada: la página pide los datos al abrirse o al pulsar "Actualizar"; como la señal cambia una vez al día, no hace falta |
-| Requerimientos no funcionales: carga < 2 s, navegadores modernos, responsivo | Responsivo y PWA instalable. La primera carga después de que Render duerme el servicio tarda 20–40 s; después es inmediata |
+| Requerimientos no funcionales: carga < 2 s, navegadores modernos, responsivo | Diseño responsivo (se adapta a pantallas pequeñas). La primera carga después de que Render duerme el servicio tarda 20–40 s; después es inmediata |
 | Puerto 3000, sin autenticación | Sitio estático en Render, sin autenticación |
 
 **Si preguntan por lo que falta:** la matriz de confusión se puede
@@ -154,11 +136,11 @@ permite al usuario juzgar el modelo.
   usan (varios componentes de Radix UI, Material UI, etc.). Vite solo
   empaqueta lo que se importa, así que no afectan al tamaño final, pero
   sobran.
-- No hay pruebas automáticas del frontend (las 23 pruebas son de la API).
+- No hay pruebas automáticas del frontend (las 24 pruebas son de la API).
 - El texto "Acerca de" y el encabezado describen el proyecto como una
   comparación de Machine Learning y Deep Learning, lo cual es correcto; la
-  descripción de la PWA (`manifest.json` e `index.html`) decía "Deep
-  Learning - LSTM y CNN-LSTM" y se corrigió el 2026-10-12.
+  descripción de `index.html` decía "Deep Learning - LSTM y CNN-LSTM" y se
+  corrigió el 2026-10-12.
 
 ---
 

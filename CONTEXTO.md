@@ -123,14 +123,12 @@ Definición de cada métrica: `docs/API_FRONTEND_METRICS.md`.
 anteriores): "Correcta" comparaba con el día anterior; los "F1" eran
 precisiones; Sharpe y drawdown se calculaban sobre el precio de la acción; las
 ventanas 60/90 no existían; "mercado cerrado" estaba fijo; la vela intradía se
-trataba como cierre; el service worker dejaba a los usuarios con la interfaz
-vieja; Sharpe de 1 operación daba siempre 3.00; "Acerca de" decía que las
+trataba como cierre; Sharpe de 1 operación daba siempre 3.00; "Acerca de" decía que las
 señales las generaba una LSTM. Antes de julio la API usaba `random`.
 
 **Trampas técnicas conocidas:**
 - Si se reentrena el `.pkl`, actualizar `MODEL_VERSION` en `api/ml/model.py`
   (un test falla si no coinciden).
-- Si se cambia la estrategia del service worker, cambiar `CACHE_NAME`.
 - Render free: la API se duerme; el primer request tarda; si Yahoo falla al
   arrancar, el reintento cada 2 min lo repara solo.
 - `ajuste_hold_rolling.py` tarda ~45 min (cada reentrenamiento del pipeline de

@@ -20,7 +20,7 @@
    varias pruebas que no es casualidad del año evaluado ni falta de
    ajuste de las redes: con estos datos, la señal que se puede extraer es
    débil y los modelos complejos aprenden ruido.
-3. **Construimos una plataforma web** (API + aplicación web instalable) que
+3. **Construimos una plataforma web** (API + aplicación web) que
    descarga los datos reales cada día, corre el modelo ganador y muestra las
    señales y qué tan bien le ha ido, con la misma metodología de la tesis.
 
@@ -221,7 +221,7 @@ Yahoo Finance ──► API (Flask, Python) ──► Base de datos (SQLite)
                      │  descarga datos, calcula 76 variables,
                      │  corre el modelo, evalúa contra el día siguiente
                      ▼
-              Aplicación web (React, PWA) ──► usuario (navegador o celular)
+              Aplicación web (React) ──► usuario (navegador)
 ```
 
 - **API (backend):** Flask. Al arrancar, cada día hábil a las 16:30 de Nueva
@@ -233,9 +233,9 @@ Yahoo Finance ──► API (Flask, Python) ──► Base de datos (SQLite)
   predicciones, métricas). Es reconstruible desde Yahoo + el modelo, por eso
   basta una base efímera. Detalle y análisis de normalización:
   [B3](B_sistema/B3_BASE_DE_DATOS.md).
-- **Frontend:** React + TypeScript + Vite + Tailwind, instalable como app
-  (PWA). Cuatro páginas: señales del día, detalle por acción, desempeño y
-  "acerca de". Detalle: [B4](B_sistema/B4_FRONTEND.md).
+- **Frontend:** React + TypeScript + Vite + Tailwind. Cinco pantallas: Hoy
+  (recomendación de cada empresa), detalle por empresa, Resultados, Ayuda
+  (guía de uso y glosario) y Acerca de. Detalle: [B4](B_sistema/B4_FRONTEND.md).
 - **Despliegue:** Docker + gunicorn en Render (API) y sitio estático en
   Render (frontend), con despliegue automático desde la rama `main`.
   Detalle: [B5](B_sistema/B5_DESPLIEGUE.md).
@@ -295,7 +295,7 @@ justificado en [D1](D_defensa/D1_TT1_VS_TT2.md)):
 | Un año de prueba, sin pruebas de significancia | + Intervalos bootstrap, permutación, walk-forward 2020–2025, 2026 en vivo |
 | Ganador en F1: XGBoost | Ganador: Regresión Logística (y empate con XGBoost en 6 años) |
 | PostgreSQL con 9 tablas, ETL incremental en proceso aparte | SQLite con 4 tablas, recálculo completo dentro de la API |
-| Aplicación "en desarrollo", local | Plataforma terminada y desplegada (PWA) |
+| Aplicación "en desarrollo", local | Plataforma web terminada y desplegada |
 
 Lo que **no cambió**: el problema, la etiqueta 30/70, las 7 acciones, los 5
 modelos, la metodología CRISP-DM y la conclusión de fondo (los clásicos

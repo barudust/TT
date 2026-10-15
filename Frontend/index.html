@@ -7,27 +7,20 @@
     <meta name="color-scheme" content="light dark" />
     <meta name="supported-color-schemes" content="light dark" />
     <meta name="description" content="Señales diarias de compra, mantener o venta para 7 acciones tecnológicas, generadas por Regresión Logística" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-    <meta name="apple-mobile-web-app-title" content="TradingSignals" />
-    <link rel="manifest" href="/manifest.json" />
-    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect fill='%231e40af' width='192' height='192'/><text x='50%' y='50%' font-size='80' font-weight='bold' fill='white' text-anchor='middle' dominant-baseline='central'>TS</text></svg>" />
     <title>TT 2026-B164 · Recomendaciones diarias</title>
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
     <script>
+      // La aplicación ya no es instalable (se quitó el service worker). Los
+      // navegadores que la abrieron antes todavía lo tienen registrado: se da
+      // de baja y se borra su caché para que siempre carguen la versión actual.
       if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/service-worker.js')
-            .then((registration) => {
-              console.log('Service Worker registered:', registration);
-            })
-            .catch((error) => {
-              console.log('Service Worker registration failed:', error);
-            });
-        });
+        navigator.serviceWorker.getRegistrations().then((regs) => regs.forEach((r) => r.unregister()));
+      }
+      if ('caches' in window) {
+        caches.keys().then((keys) => keys.forEach((k) => caches.delete(k)));
       }
     </script>
   </body>

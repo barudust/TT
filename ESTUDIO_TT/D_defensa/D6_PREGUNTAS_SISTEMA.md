@@ -14,7 +14,7 @@ y produce un archivo `.pkl` con el ganador. **En línea**, una API en Flask
 descarga cada día los datos de Yahoo Finance, calcula las 76 variables con el
 mismo código del entrenamiento, corre el modelo, evalúa cada señal contra el
 día siguiente, guarda todo en SQLite y lo sirve en JSON; una aplicación web
-en React, instalable como app (PWA), lo muestra. La API corre en Docker en
+en React lo muestra. La API corre en Docker en
 Render y el frontend como sitio estático; se despliegan solos con cada
 cambio en la rama `main`.
 
@@ -107,7 +107,7 @@ el precio de la acción).
 
 ### S12. ¿Cómo probaron la API?
 
-**Respuesta corta.** 23 pruebas automáticas con pytest: cálculo de
+**Respuesta corta.** 24 pruebas automáticas con pytest: cálculo de
 variables (RSI acotado, retornos, calentamiento), carga y forma de la
 predicción del modelo, versión del modelo, métricas con valores conocidos,
 evaluación contra el día siguiente, coincidencia de la etiqueta en vivo con
@@ -209,30 +209,15 @@ detectan errores antes de ejecutar; Vite por compilación rápida a archivos
 estáticos; Tailwind por consistencia y modo oscuro sin hojas de estilo
 enormes.
 
-### S22. ¿Funciona en el celular?
+### S24. ¿Qué pantallas tiene?
 
-**Respuesta corta.** Es una PWA (*Progressive Web App*): una aplicación web
-con manifiesto y *service worker* que se instala en el celular desde el
-navegador, se abre como app (sin barra del navegador) y tiene navegación
-inferior estilo móvil. Elegimos PWA en vez de una app nativa porque es una
-sola base de código para web y celular y no requiere tiendas de apps.
-
-### S23. ¿Qué es el service worker y qué problema tuvieron?
-
-**Respuesta corta.** Es un script del navegador que controla la caché de la
-app. La primera versión guardaba primero en caché con un nombre fijo, y los
-usuarios se quedaban con la interfaz vieja después de cada despliegue. Lo
-cambiamos a "primero la red" (solo usa la caché sin conexión), renombramos
-la caché para borrar la anterior y el servidor manda el *service worker* sin
-caché.
-
-### S24. ¿Qué páginas tiene?
-
-**Respuesta corta.** Señales del día (una tarjeta por acción), detalle por
-acción (precio, señal, las tres probabilidades, métricas de 30/60/90 días y
-las últimas 10 señales con su resultado), rendimiento global (promedio de
-las 7, estrategia contra comprar y mantener, F1 por acción contra el azar) y
-"acerca de" (metodología, ficha del modelo leída de la API, aviso legal).
+**Respuesta corta.** Cinco: **Hoy** (una tarjeta por empresa con su
+recomendación, precio y seguridad en palabras); **detalle** de cada empresa
+(recomendación, probabilidades, gráfica de precio con la recomendación de
+cada día, gráfica de qué habría pasado con $1,000, resultados de 30/60/90
+días y últimas 10 recomendaciones); **Resultados** (las 7 empresas
+comparadas); **Ayuda** (guía de uso y glosario) y **Acerca de** (metodología,
+ficha del modelo leída de la API, aviso legal).
 
 ### S25. ¿Cómo comunican la incertidumbre al usuario?
 

@@ -2,7 +2,6 @@
 
 ## Arquitectura
 - Separación Frontend/Backend: justificación, ventajas para despliegue y escalabilidad.
-- PWA: motivos y beneficios para Android.
 - Enrutamiento y estado en el cliente: elección de React Router 7.
 
 ## Modelado
@@ -35,7 +34,6 @@
 
 ## Despliegue
 - Variables de entorno (`VITE_API_URL`).
-- Opciones futuras: TWA/Capacitor para Android.
 
 ## Ética y Riesgos
 - Este sistema es educativo; no constituye asesoría financiera.
@@ -49,6 +47,4 @@
 - ~~Tests automatizados~~ — hecho, `api/tests/` (pytest, sin red real).
 - ~~Empaquetado de despliegue~~ — hecho, `Dockerfile`(s) + `docker-compose.yml`.
 - Entrenamiento incremental y evaluación en producción.
-- Empaquetado Android nativo (se decidió no perseguirlo; el proyecto queda
-  como aplicación web/PWA).
 

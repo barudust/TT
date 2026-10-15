@@ -50,7 +50,7 @@
 | B1 | [Arquitectura](B_sistema/B1_ARQUITECTURA.md) | El sistema completo de punta a punta y por qué está dividido así |
 | B2 | [API](B_sistema/B2_API.md) | El backend en Flask: endpoints, flujo de datos, inferencia, programación de tareas |
 | B3 | [Base de datos](B_sistema/B3_BASE_DE_DATOS.md) | Esquema, normalización (1FN–3FN), por qué SQLite, qué guarda y qué no |
-| B4 | [Frontend](B_sistema/B4_FRONTEND.md) | La aplicación web/PWA: páginas, tecnologías, qué muestra y cómo |
+| B4 | [Frontend](B_sistema/B4_FRONTEND.md) | La aplicación web: páginas, tecnologías, qué muestra y cómo |
 | B5 | [Despliegue](B_sistema/B5_DESPLIEGUE.md) | Docker, gunicorn, Render, pruebas automáticas y problemas reales que se resolvieron |
 
 ### Parte C — El paper (producto extra)

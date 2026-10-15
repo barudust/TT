@@ -6,7 +6,7 @@
 > señal con lo que pasó el día siguiente, calcula métricas de 30/60/90 días,
 > guarda todo en SQLite y lo sirve en JSON. Todo lo que responde sale del
 > modelo o de datos reales; los endpoints de escritura manual están
-> desactivados. Tiene 23 pruebas automáticas.
+> desactivados. Tiene 24 pruebas automáticas.
 >
 > Código: `api/main.py`, `api/ml/` (`features.py`, `model.py`,
 > `target.py`), `api/database.py`, `api/models.py`, `api/db_ops.py`,

@@ -47,7 +47,7 @@
 ║            JSON por HTTP (GET /stocks, /stocks/:s/history, /metrics…)       ║
 ║                     │                                                       ║
 ║                     ▼                                                       ║
-║  Aplicación web (Frontend/) React + TypeScript, PWA ──► navegador / celular ║
+║  Aplicación web (Frontend/) React + TypeScript ──► navegador                ║
 ╚═════════════════════════════════════════════════════════════════════════════╝
 ```
 
@@ -61,7 +61,7 @@
 | Artefacto del modelo | `.pkl` (pickle) + `.metrics.json` + `interaction_pairs.json` | Modelo entrenado y su evidencia | [B2 §4](B2_API.md#4-el-modelo-dentro-de-la-api) |
 | API | Flask, gunicorn, APScheduler, yfinance, SQLAlchemy | Datos en vivo, inferencia, evaluación, servir JSON | [B2](B2_API.md) |
 | Base de datos | SQLite (compatible con PostgreSQL) | Registro persistente de precios, señales y métricas | [B3](B3_BASE_DE_DATOS.md) |
-| Frontend | React 18, TypeScript, Vite, Tailwind, Recharts, PWA | Mostrar señales y desempeño | [B4](B4_FRONTEND.md) |
+| Frontend | React 18, TypeScript, Vite, Tailwind, Recharts | Mostrar recomendaciones y resultados | [B4](B4_FRONTEND.md) |
 | Despliegue | Docker, Render (Blueprint), GitHub | Publicar API y frontend; despliegue automático | [B5](B5_DESPLIEGUE.md) |
 
 ---
@@ -98,8 +98,7 @@
 | **Caché en memoria + SQLite** | Leer siempre de la base | Las respuestas salen de memoria (rápido); la base es el registro persistente y auditable |
 | **SQLite** | PostgreSQL | La base es pequeña y reconstruible desde Yahoo + el modelo; cero configuración. El esquema funciona igual en PostgreSQL (hay un perfil en `docker-compose.yml`) |
 | **Actualización programada dentro del proceso (APScheduler)** | Cron externo | Un solo servicio que se encarga de todo; en Render gratuito no hay cron sin pagar. Exige 1 solo worker (ver B5) |
-| **Frontend separado (SPA) que consume la API** | Páginas generadas por Flask | Separa responsabilidades; el frontend se sirve como sitio estático gratuito y siempre disponible; permite instalarlo como app (PWA) |
-| **PWA en vez de app nativa** | Android/iOS nativo | El TT1 pedía una aplicación web responsiva que funcionara en celulares; la PWA además se instala como app, con una sola base de código y sin tiendas de apps |
+| **Frontend separado (SPA) que consume la API** | Páginas generadas por Flask | Separa responsabilidades; el frontend se sirve como sitio estático gratuito y siempre disponible |
 | **Contenedor Docker** | Instalar en el servidor | La API corre igual en local y en la nube |
 
 ---
@@ -141,7 +140,7 @@ precios intermedios.
 | **Sin mirar el futuro** | Se descarta la vela en curso; el acierto de una señal solo se calcula con el cierre siguiente |
 | **Mantenibilidad** | Modelo versionado (`MODEL_VERSION`), prueba que exige que coincida con el `.pkl`; `GET /model` describe el modelo cargado leyendo el `.pkl` |
 | **Reproducibilidad** | Todo el código, semillas y versiones de bibliotecas en el repositorio |
-| **Pruebas** | 23 pruebas automáticas de la API (pytest) |
+| **Pruebas** | 24 pruebas automáticas de la API (pytest) |
 
 ---
 
@@ -156,7 +155,7 @@ TT_Proyecto/
 │   ├── db_ops.py           inserción/actualización (upsert)
 │   ├── wsgi.py             entrada para gunicorn
 │   ├── ml/                 features.py, model.py, target.py, artifacts/
-│   └── tests/              23 pruebas
+│   └── tests/              24 pruebas
 ├── Frontend/               plataforma: aplicación web (React)
 ├── docs/                   documentación técnica de la plataforma
 ├── scripts_v1/             pipeline inicial (01 construye el dataset)

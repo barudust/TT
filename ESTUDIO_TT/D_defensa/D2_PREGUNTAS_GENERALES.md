@@ -47,7 +47,7 @@ inversión y lo dice.
 **Respuesta corta.** Integra un ciclo completo de ingeniería: adquisición y
 procesamiento de datos, diseño experimental y entrenamiento de modelos
 (incluido cómputo en GPU), validación estadística, y un sistema en
-producción con API REST, base de datos, aplicación web instalable,
+producción con API REST, base de datos, aplicación web,
 contenedores, despliegue continuo en la nube, pruebas automáticas y
 manejo de fallas reales (arranque en frío, caídas del proveedor de datos).
 
@@ -122,7 +122,7 @@ aplicación web. Por objetivo específico:
    ML**: hecho; en este régimen no lo supera, y explicamos en qué
    condiciones podría (más datos, entradas crudas, horizontes largos).
 4. **Aplicación web** (que el TT1 dejó "en desarrollo"): terminada,
-   conectada al modelo real, instalable en el celular y desplegada.
+   conectada al modelo real y desplegada.
 
 **Cuidado:** el TT1 lista 3 objetivos específicos en §1.2.2 y 4 en §5.8 (el
 cuarto es la aplicación). En el documento final conviene unificarlos.

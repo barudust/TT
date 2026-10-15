@@ -41,8 +41,7 @@
   calculaban sobre el precio de la acción, las ventanas 60/90 no existían, el
   estado del mercado estaba fijo y la vela intradía se trataba como cierre. Todo
   corregido (detalle en §5 del informe y `docs/API_FRONTEND_METRICS.md`);
-  endpoints de override desactivados por defecto; service worker cambiado a
-  network-first (antes dejaba a los usuarios con la interfaz vieja). Tests de la
+  endpoints de override desactivados por defecto. Tests de la
   API: 20/20. Nuevos endpoints `GET /model` y `GET /market-status`.
 - **Render con catálogo vacío tras el deploy (2026-09-30)**: el código nuevo sí
   se desplegó (desde `main`, aunque `render.yaml` decía `branch: dev` —ya corregido—: manda la
@@ -160,8 +159,7 @@ Refresco automático diario (16:30 hora NY), suite de tests (verde),
 overrides POST ahora persisten en BD, `Dockerfile`s + `docker-compose.yml`
 (API+frontend). **Docker sin verificar en un build real** — el daemon no
 estaba corriendo en el entorno donde se armó esto; correr
-`docker compose up -d --build` una vez antes de confiar en ello. Android
-descartado a propósito (queda como app web/PWA).
+`docker compose up -d --build` una vez antes de confiar en ello.
 
 ## Organización y unificación del repositorio (2026-07-15)
 

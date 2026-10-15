@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation, useSearchParams } from "react-router";
-import { BookOpen, ListChecks, Search, Smartphone, AlertTriangle } from "lucide-react";
+import { BookOpen, ListChecks, Search, AlertTriangle } from "lucide-react";
 import { Card } from "../components/ui/card";
 import { CATEGORIAS_GLOSARIO, GLOSARIO } from "../glosario";
 import { NIVELES_SEGURIDAD, SIGNAL_CONFIG } from "../format";
@@ -145,16 +145,6 @@ function Guia() {
           Si la aplicación tarda en cargar la primera vez, espera hasta un minuto: el servidor gratuito se "duerme" cuando
           nadie lo usa.
         </p>
-      </Seccion>
-
-      <Seccion titulo="6. Instalarla en el celular">
-        <div className="flex gap-3">
-          <Smartphone className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" />
-          <div className="space-y-1">
-            <p><strong>Android (Chrome):</strong> menú ⋮ → «Agregar a la pantalla principal» o «Instalar aplicación».</p>
-            <p><strong>iPhone (Safari):</strong> botón Compartir → «Agregar a inicio».</p>
-          </div>
-        </div>
       </Seccion>
 
       <Card className="p-5 mb-4 border-2 border-[#ef4444]">

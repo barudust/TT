@@ -92,9 +92,8 @@ defensa.
   eran precisiones, Sharpe y drawdown se calculaban sobre el precio de la
   acción, las ventanas de 60/90 días no existían y el estado del mercado
   estaba fijo. Se agregaron los endpoints `GET /model` y `GET /market-status`,
-  se desactivaron por defecto los endpoints de modificación manual y el
-  service worker pasó a "network-first" para que los usuarios no se queden con
-  la interfaz vieja. Pruebas de la API: 20/20.
+  y se desactivaron por defecto los endpoints de modificación manual.
+  Pruebas de la API: 20/20.
 - **Despliegue:** se verificó en Render que se sirve el modelo
   `LR-v8-interactions-holdw090`. Se agregó un reintento automático cada 2
   minutos para cuando la descarga de datos falla en el arranque, de modo que

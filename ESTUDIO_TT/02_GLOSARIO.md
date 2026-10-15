@@ -212,10 +212,8 @@ Aquí solo los nombres que más se repiten:
 | **JSON** | Formato de texto para intercambiar datos | Respuestas de la API |
 | **ORM / SQLAlchemy** | Biblioteca que traduce clases de Python a tablas de la base de datos | `api/models.py` |
 | **`.pkl` (pickle)** | Archivo con el modelo entrenado guardado | `api/ml/artifacts/` |
-| **PWA** | Aplicación web que se puede instalar en el celular y funciona sin conexión parcial | Frontend |
 | **React / TypeScript / Vite / Tailwind** | Biblioteca de interfaces / JavaScript con tipos / herramienta de compilación / estilos por clases | Frontend |
 | **Render** | Plataforma en la nube donde está desplegado el sistema | B5 |
-| **Service worker** | Script del navegador que maneja la caché de la PWA | Frontend |
 | **SPA** | Aplicación de una sola página: el navegador cambia de vista sin recargar | Frontend |
 | **SQLite** | Base de datos en un solo archivo, sin servidor | B3 |
 | **Upsert** | "Insertar o actualizar": si la fila existe se actualiza, si no se crea | `api/db_ops.py` |
