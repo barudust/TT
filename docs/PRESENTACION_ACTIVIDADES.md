@@ -70,9 +70,9 @@ componentes reutilizables y rutas."
 
 | # | Archivo | Qué señalar |
 |---|---|---|
-| 1 | [Frontend/src/app/routes.ts](../Frontend/src/app/routes.ts) | Las 4 rutas: inicio, `stock/:symbol`, `performance`, `about` |
-| 2 | [Frontend/src/app/Root.tsx:16](../Frontend/src/app/Root.tsx) | `navItems`: barra de navegación inferior y cambio de tema claro/oscuro |
-| 3 | [Frontend/src/app/components/StockCard.tsx:16](../Frontend/src/app/components/StockCard.tsx) | Componente reutilizable: tarjeta que lleva al detalle con `Link` |
+| 1 | [Frontend/src/app/routes.ts](../Frontend/src/app/routes.ts) | Las 5 rutas: inicio, `stock/:symbol`, `performance`, `ayuda`, `about` |
+| 2 | [Frontend/src/app/Root.tsx:24](../Frontend/src/app/Root.tsx) | `navItems`: barra de navegación inferior y cambio de tema claro/oscuro |
+| 3 | [Frontend/src/app/components/StockCard.tsx:13](../Frontend/src/app/components/StockCard.tsx) | Componente reutilizable: tarjeta que lleva al detalle con `Link` |
 | 4 | [Frontend/src/app/pages/Home.tsx](../Frontend/src/app/pages/Home.tsx) | Consumo de la API (`fetch`), estados de carga y error, botón de actualizar |
 | 5 | [Frontend/src/app/types.ts](../Frontend/src/app/types.ts) | Tipos de las respuestas de la API (TypeScript) |
 
@@ -91,9 +91,9 @@ mantener, línea del azar)."
 
 | # | Archivo | Qué señalar |
 |---|---|---|
-| 1 | [Frontend/src/app/pages/StockDetail.tsx:176](../Frontend/src/app/pages/StockDetail.tsx) | `LineChart` del precio de cierre con un punto de color por señal (`CustomDot`), `Tooltip` y `ResponsiveContainer` |
-| 2 | [Frontend/src/app/pages/Performance.tsx:165](../Frontend/src/app/pages/Performance.tsx) | `BarChart`: retorno de la estrategia contra comprar y mantener, línea en cero |
-| 3 | [Frontend/src/app/pages/Performance.tsx:186](../Frontend/src/app/pages/Performance.tsx) | `BarChart` del F1 por acción con `ReferenceLine` en 33.3 % ("azar") |
+| 1 | [Frontend/src/app/pages/StockDetail.tsx:224](../Frontend/src/app/pages/StockDetail.tsx) | `LineChart` del precio de cierre con un punto de color por señal (`CustomDot`), `Tooltip` y `ResponsiveContainer` |
+| 2 | [Frontend/src/app/pages/Performance.tsx:205](../Frontend/src/app/pages/Performance.tsx) | `BarChart`: retorno de la estrategia contra comprar y mantener, línea en cero |
+| 3 | [Frontend/src/app/pages/Performance.tsx:245](../Frontend/src/app/pages/Performance.tsx) | `BarChart` del F1 por acción con `ReferenceLine` en 33.3 % ("azar") |
 | 4 | [Frontend/src/app/format.ts](../Frontend/src/app/format.ts) | Colores y formatos centralizados (porcentajes, fechas, color de cada señal) |
 | 5 | [Frontend/package.json](../Frontend/package.json) | Dependencia `recharts` |
 

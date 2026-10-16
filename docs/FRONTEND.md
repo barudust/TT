@@ -24,7 +24,7 @@ Entradas clave:
   que aparece en pantalla (las usa la página de Ayuda y los íconos «?»).
 
 ## Páginas y endpoints que consumen
-- `Home.tsx` (ruta `/`, pestaña «Hoy») — «¿Qué hacer hoy con cada acción?».
+- `Home.tsx` (ruta `/`, pestaña «Hoy») — «¿Qué hacer hoy?».
   Para qué sesión es la recomendación (`nextTradingDay`) y con qué cierre se
   calculó. `GET /stocks`, `GET /market-status`. Si el catálogo llega vacío
   (arranque en frío de Render) dispara `POST /admin/refresh` una vez y
@@ -32,15 +32,15 @@ Entradas clave:
 - `StockDetail.tsx` (`/stock/:symbol`) — recomendación, seguridad en
   palabras, probabilidades; gráfica de precio con un punto de color por
   recomendación (ejes rotulados); gráfica «¿Qué habría pasado con $1,000?»
-  (siguiendo las recomendaciones vs comprar y esperar, calculada con la misma
-  fórmula que la API); resultados del periodo con rendimiento de la inversión
-  (ROI) y su equivalente en dinero; últimas 10 recomendaciones con porcentajes.
+  (haciéndole caso al modelo vs comprar y esperar, calculada con la misma
+  fórmula que la API); resultados del periodo (aciertos, F1, ganancia con
+  $1,000, Sharpe, peor caída y días con ganancia); últimas 10 recomendaciones.
   `GET /stocks/:symbol`, `.../history?days=`, `.../metrics?days=`.
 - `Performance.tsx` (`/performance`, pestaña «Resultados») — resumen de las 7
   empresas, ganancia por empresa vs comprar y esperar, calificación F1 por
   empresa con la línea de azar y tabla ordenable con unidades.
   `GET /metrics?days=`.
-- `Help.tsx` (`/ayuda`, pestaña «Ayuda») — dos pestañas: **Guía de uso**
+- `Help.tsx` (`/ayuda`, pestaña «Ayuda») — dos pestañas: **Guía rápida**
   (manual corto por pantalla, escala de seguridad, cuándo se actualiza,
   y **Glosario** (buscable, por categorías). Los
   íconos «?» enlazan a `/ayuda?tab=glosario#<término>`.
@@ -60,9 +60,10 @@ Entradas clave:
 - `components/ui/*` — `button`, `card`, `sonner`, `utils`.
 
 ## Cómo se muestran los datos
-- **Vocabulario para cualquier usuario:** «recomendación» en lugar de
-  «señal»; «rendimiento de la inversión (ROI)» con su equivalente sobre
-  $1,000; «comprar y esperar» en lugar de buy & hold; «peor caída» en lugar
+- **Vocabulario para cualquier usuario:** frases cortas y cotidianas;
+  «recomendación» en lugar de «señal», dicha como posibilidad («Podría
+  subir», «Mejor esperar») y no como orden; «haciéndole caso al modelo» en
+  lugar de «estrategia»; «ganancia» (ROI) con su equivalente sobre $1,000; «comprar y esperar» en lugar de buy & hold; «peor caída» en lugar
   de drawdown; el nombre técnico queda entre paréntesis o en el glosario.
 - **Seguridad de la recomendación** (antes «confianza», un porcentaje entre
   33 % y 45 % difícil de interpretar): tres niveles con palabras según la
@@ -78,8 +79,8 @@ Entradas clave:
   modelo actual y el acierto se midió con modelos que no habían visto el año
   evaluado (`scripts_opt/calibrar_niveles_confianza.py`). No hay un nivel
   «Segura» porque ningún tramo acierta ni la mitad de las veces.
-- **Fechas**: largas con día de la semana («jueves 15 de octubre de 2026») en
-  los encabezados; cortas («15 oct») en los ejes.
+- **Fechas**: con día de la semana («jueves 15 de octubre») en los
+  encabezados; cortas («15 oct») en los ejes.
 - **Gráficas**: ejes con título y unidades; puntos de 6 px; leyendas en texto
   bajo cada gráfica; líneas rectas entre días (sin suavizado que invente
   valores).

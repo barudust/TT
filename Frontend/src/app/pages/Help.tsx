@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useLocation, useSearchParams } from "react-router";
+import { useLocation, useSearchParams } from "react-router";
 import { BookOpen, ListChecks, Search, AlertTriangle } from "lucide-react";
 import { Card } from "../components/ui/card";
 import { CATEGORIAS_GLOSARIO, GLOSARIO } from "../glosario";
@@ -18,37 +18,20 @@ function Seccion({ titulo, children }: { titulo: string; children: React.ReactNo
   );
 }
 
-function Termino({ id, children }: { id: string; children: React.ReactNode }) {
-  return (
-    <Link to={`/ayuda?tab=glosario#${id}`} className="text-blue-600 dark:text-blue-400 hover:underline">
-      {children}
-    </Link>
-  );
-}
-
 function Guia() {
   return (
     <div>
-      <Seccion titulo="¿Qué hace esta aplicación?">
+      <Seccion titulo="¿Qué es esto?">
         <p>
-          Cada día hábil, después de que cierra la Bolsa de Nueva York, un modelo revisa los precios de 7 empresas
-          tecnológicas (Apple, Microsoft, Google, Amazon, Tesla, Meta y NVIDIA) y recomienda qué hacer con cada una en
-          la siguiente sesión: <strong>COMPRAR</strong>, <strong>VENDER</strong> o <strong>MANTENER</strong>.
+          Todos los días, cuando cierra la Bolsa de Nueva York, un modelo revisa cómo se movieron 7 empresas tecnológicas
+          y sugiere qué hacer con cada una al día siguiente: comprar, vender o mantener.
         </p>
-        <p>
-          También muestra, con datos reales, qué tan seguido ha acertado y cuánto habría ganado o perdido alguien que
-          siguiera sus recomendaciones.
-        </p>
+        <p>También te enseña qué tanto ha atinado y cuánto habrías ganado o perdido haciéndole caso.</p>
       </Seccion>
 
-      <Seccion titulo="1. Pantalla «Hoy»: la recomendación de cada empresa">
-        <p>Cada tarjeta muestra:</p>
-        <ul className="list-disc list-inside space-y-1">
-          <li><strong>Nombre de la empresa</strong> y su <Termino id="accion">clave en bolsa</Termino> (por ejemplo, AAPL).</li>
-          <li><strong>Precio al cierre</strong> del último día hábil, en dólares.</li>
-          <li><strong>La recomendación</strong> a la derecha, con una frase que la explica:</li>
-        </ul>
-        <div className="grid gap-2 sm:grid-cols-3 my-2 list-none">
+      <Seccion titulo="Las tarjetas de «Hoy»">
+        <p>Cada tarjeta trae el precio de la empresa al cierre, qué tan segura es la recomendación y, a la derecha, la recomendación:</p>
+        <div className="grid gap-2 sm:grid-cols-3 my-2">
           {(["buy", "hold", "sell"] as Signal[]).map((s) => {
             const c = SIGNAL_CONFIG[s];
             const Icon = c.icon;
@@ -56,58 +39,42 @@ function Guia() {
               <div key={s} className={`flex items-center gap-2 p-2 rounded-lg bg-muted border ${c.borderColor}`}>
                 <Icon className={`w-5 h-5 ${c.color}`} />
                 <div>
-                  <div className={`font-bold ${c.color}`}>{c.label}</div>
+                  <div className={`font-bold uppercase tracking-wide ${c.color}`}>{c.label}</div>
                   <div className="text-xs">{c.frase}</div>
                 </div>
               </div>
             );
           })}
         </div>
+        <p>Toca una tarjeta para ver la historia de esa empresa.</p>
+      </Seccion>
+
+      <Seccion titulo="Dentro de cada empresa">
         <ul className="list-disc list-inside space-y-1">
-          <li><strong>La seguridad</strong> de la recomendación, en palabras (ver la sección 4).</li>
+          <li>La recomendación de hoy y cómo se repartió la decisión del modelo.</li>
+          <li>El precio de los últimos 30, 60 o 90 días, con un punto de color por cada recomendación.</li>
+          <li>Qué habría pasado con $1,000 haciéndole caso, contra solo comprar y esperar.</li>
+          <li>Las últimas 10 recomendaciones y si le atinó o no.</li>
         </ul>
-        <p>Arriba se indica para qué día es la recomendación y con qué precios se calculó.</p>
+        <p>Si un dato no te queda claro, toca el «?» que tiene al lado.</p>
       </Seccion>
 
-      <Seccion titulo="2. Detalle de una empresa">
-        <p>Toca una tarjeta o el nombre de la empresa en la barra superior. Verás, de arriba hacia abajo:</p>
-        <ol className="list-decimal list-inside space-y-1">
-          <li><strong>La recomendación de hoy</strong> y cómo repartió el modelo su opinión entre las tres opciones (<Termino id="probabilidades">probabilidades</Termino>).</li>
-          <li><strong>El periodo</strong>: elige 30, 60 o 90 días hábiles hacia atrás; todo lo de abajo se recalcula.</li>
-          <li>
-            <strong>Gráfica de precio:</strong> eje horizontal = fecha; eje vertical = precio de cierre en dólares. Cada
-            punto de color es la recomendación que dio el modelo ese día (verde COMPRAR, amarillo MANTENER, rojo VENDER).
-          </li>
-          <li>
-            <strong>Gráfica «¿Qué habría pasado con $1,000?»:</strong> eje horizontal = fecha; eje vertical = dinero. La
-            línea de color sigue las recomendaciones; la gris compra la acción y la deja quieta.
-          </li>
-          <li><strong>Qué tan bien acertó</strong> y <strong>cuánto habría ganado o perdido</strong> en el periodo. Cada dato tiene un ícono «?» con su explicación.</li>
-          <li><strong>Las últimas 10 recomendaciones</strong>, qué pasó al día siguiente y si acertó.</li>
-        </ol>
+      <Seccion titulo="«Resultados»">
+        <p>Junta las 7 empresas para ver cómo le va al modelo en general y en cuáles le ha ido mejor.</p>
       </Seccion>
 
-      <Seccion titulo="3. Pantalla «Resultados»: las 7 empresas juntas">
+      <Seccion titulo="¿Qué tan segura es una recomendación?">
         <p>
-          Promedia los resultados de las 7 empresas y las compara entre sí: cuánto habrías ganado en cada una siguiendo
-          las recomendaciones contra solo comprar y esperar, y la calificación del modelo en cada una contra lo que se
-          obtendría al azar. La tabla del final se puede ordenar tocando el nombre de cada columna.
-        </p>
-      </Seccion>
-
-      <Seccion titulo="4. ¿Qué tan segura es una recomendación?">
-        <p>
-          El modelo nunca está muy seguro: predecir si una acción subirá o bajará mañana es muy difícil. Por eso, en lugar
-          de un porcentaje, la aplicación usa tres niveles basados en <strong>qué tan seguido acertó el modelo en el
-          pasado</strong> cuando estaba igual de seguro (pruebas con datos de 2019 a 2025 que el modelo no había visto):
+          Adivinar si una acción sube o baja mañana es muy difícil, así que el modelo nunca está muy seguro. En vez de un
+          porcentaje, usamos tres niveles según qué tanto ha atinado antes:
         </p>
         <div className="overflow-x-auto">
           <table className="w-full text-sm my-2">
             <thead>
               <tr className="border-b border-border">
                 <th className="text-left py-2 pr-2 text-foreground">Nivel</th>
-                <th className="text-right py-2 px-2 text-foreground">Aciertos en el pasado</th>
-                <th className="text-right py-2 pl-2 text-foreground">Qué tan seguido aparece</th>
+                <th className="text-right py-2 px-2 text-foreground">Ha acertado</th>
+                <th className="text-right py-2 pl-2 text-foreground">Aparece</th>
               </tr>
             </thead>
             <tbody>
@@ -118,41 +85,33 @@ function Guia() {
                     <div className="text-xs text-muted-foreground">{n.descripcion}</div>
                   </td>
                   <td className="text-right py-2 px-2 text-foreground">{n.acierto} de cada 100</td>
-                  <td className="text-right py-2 pl-2">{n.dias} de cada 100 días</td>
+                  <td className="text-right py-2 pl-2">{n.dias} % de los días</td>
                 </tr>
               ))}
               <tr>
-                <td className="py-2 pr-2 italic">Escoger al azar</td>
+                <td className="py-2 pr-2 italic">Adivinando</td>
                 <td className="text-right py-2 px-2">33 de cada 100</td>
                 <td />
               </tr>
             </tbody>
           </table>
         </div>
-        <p>
-          Aun en el nivel más alto, el modelo se equivoca más de la mitad de las veces. Úsalo como una opinión adicional,
-          nunca como una garantía.
-        </p>
+        <p>Incluso en el mejor nivel se equivoca más de la mitad de las veces. Tómalo como una opinión más, no como una garantía.</p>
       </Seccion>
 
-      <Seccion titulo="5. ¿Cuándo se actualiza?">
+      <Seccion titulo="¿Cuándo se actualiza?">
         <p>
-          Una vez por día hábil, a las 16:30 hora de Nueva York (alrededor de las 14:30 o 15:30 hora del centro de México,
-          según el horario de verano de EE. UU.). Fines de semana y feriados de la bolsa no hay recomendaciones nuevas.
-          La recomendación más reciente aparece como <Termino id="pendiente">«Pendiente»</Termino> hasta que cierra el día siguiente.
+          Una vez al día, a las 16:30 de Nueva York (entre 14:30 y 15:30 en el centro de México). Fines de semana y días
+          festivos no hay recomendaciones nuevas.
         </p>
-        <p>
-          Si la aplicación tarda en cargar la primera vez, espera hasta un minuto: el servidor gratuito se "duerme" cuando
-          nadie lo usa.
-        </p>
+        <p>Si tarda en abrir, dale hasta un minuto: el servidor es gratuito y se duerme cuando nadie lo usa.</p>
       </Seccion>
 
       <Card className="p-5 mb-4 border-2 border-[#ef4444]">
         <div className="flex gap-3">
           <AlertTriangle className="w-6 h-6 text-[#ef4444] flex-shrink-0" />
           <p className="text-sm text-muted-foreground">
-            <strong className="text-foreground">Importante:</strong> esta aplicación es parte de un trabajo académico
-            (ESCOM-IPN). Las recomendaciones no son asesoría financiera; invertir implica riesgo de perder dinero.
+            Es un proyecto escolar (ESCOM-IPN), no una asesoría financiera. Invertir siempre implica el riesgo de perder dinero.
           </p>
         </div>
       </Card>
@@ -174,7 +133,7 @@ function Glosario() {
         <input
           value={buscar}
           onChange={(e) => setBuscar(e.target.value)}
-          placeholder="Buscar un término (por ejemplo: Sharpe, rendimiento, MANTENER)"
+          placeholder="Busca un término (por ejemplo: Sharpe, ganancia, mantener)"
           className="w-full pl-9 pr-3 py-2 rounded-lg border border-border bg-background text-sm text-foreground"
         />
       </div>
@@ -188,7 +147,7 @@ function Glosario() {
               {terminos.map((t) => (
                 <Card key={t.id} id={t.id} className="p-4 scroll-mt-40 target:ring-2 target:ring-blue-500">
                   <div className="font-bold text-foreground">{t.termino}</div>
-                  {t.tambien && <div className="text-xs text-muted-foreground mb-1">También llamado: {t.tambien}</div>}
+                  {t.tambien && <div className="text-xs text-muted-foreground mb-1">También: {t.tambien}</div>}
                   <p className="text-sm text-muted-foreground leading-relaxed">{t.definicion}</p>
                   {t.ejemplo && <p className="text-sm text-muted-foreground mt-1"><span className="font-semibold text-foreground">Ejemplo:</span> {t.ejemplo}</p>}
                 </Card>
@@ -197,7 +156,7 @@ function Glosario() {
           </div>
         );
       })}
-      {visibles.length === 0 && <p className="text-sm text-muted-foreground">No se encontró ningún término.</p>}
+      {visibles.length === 0 && <p className="text-sm text-muted-foreground">No encontramos ese término.</p>}
     </div>
   );
 }
@@ -234,10 +193,10 @@ export default function Help() {
     <div className="pb-8">
       <div className="mb-4">
         <h2 className="text-2xl font-bold text-foreground">Ayuda</h2>
-        <p className="text-sm text-muted-foreground mt-1">Cómo usar la aplicación y qué significa cada término</p>
+        <p className="text-sm text-muted-foreground mt-1">Cómo leer la página y qué significa cada cosa.</p>
       </div>
       <div className="flex gap-1 p-1 bg-muted rounded-lg mb-6">
-        {tab("guia", "Guía de uso", ListChecks)}
+        {tab("guia", "Guía rápida", ListChecks)}
         {tab("glosario", "Glosario", BookOpen)}
       </div>
       {pestana === "guia" ? <Guia /> : <Glosario />}

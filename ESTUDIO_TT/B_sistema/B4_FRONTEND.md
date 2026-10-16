@@ -32,10 +32,10 @@
 
 | Ruta | Pantalla | Qué muestra | Endpoints que usa |
 |---|---|---|---|
-| `/` | **Hoy** (`Home.tsx`): «¿Qué hacer hoy con cada acción?» | Una tarjeta por empresa con su recomendación (y una frase que la explica), precio y seguridad en palabras; para qué sesión es la recomendación y con qué cierre se calculó | `GET /stocks`, `GET /market-status` |
-| `/stock/:symbol` | **Detalle** (`StockDetail.tsx`) | Recomendación y seguridad; probabilidades; gráfica de precio con un punto de color por recomendación; gráfica «¿Qué habría pasado con $1,000?»; qué tan seguido acertó y cuánto habría ganado (ROI y en dinero); últimas 10 recomendaciones | `GET /stocks/:s`, `.../history?days=`, `.../metrics?days=` |
-| `/performance` | **Resultados** (`Performance.tsx`): «¿Qué tan bien le ha ido al modelo?» | Resumen de las 7 empresas, ganancia por empresa contra comprar y esperar, calificación F1 por empresa contra el azar, tabla ordenable con unidades | `GET /metrics?days=` |
-| `/ayuda` | **Ayuda** (`Help.tsx`) | Pestaña **Guía de uso** (manual corto por pantalla, escala de seguridad, cuándo se actualiza) y pestaña **Glosario** (buscable, por categorías) | — |
+| `/` | **Hoy** (`Home.tsx`): «¿Qué hacer hoy?» | Una tarjeta por empresa con su recomendación (y una frase que la explica), precio y seguridad en palabras; para qué sesión es la recomendación y con qué cierre se calculó | `GET /stocks`, `GET /market-status` |
+| `/stock/:symbol` | **Detalle** (`StockDetail.tsx`) | Recomendación y seguridad; probabilidades; gráfica de precio con un punto de color por recomendación; gráfica «¿Qué habría pasado con $1,000?»; aciertos y cuánto habría ganado con $1,000; últimas 10 recomendaciones | `GET /stocks/:s`, `.../history?days=`, `.../metrics?days=` |
+| `/performance` | **Resultados** (`Performance.tsx`): «¿Cómo le ha ido al modelo?» | Resumen de las 7 empresas, ganancia por empresa contra comprar y esperar, calificación F1 por empresa contra el azar, tabla ordenable con unidades | `GET /metrics?days=` |
+| `/ayuda` | **Ayuda** (`Help.tsx`) | Pestaña **Guía rápida** (manual corto por pantalla, escala de seguridad, cuándo se actualiza) y pestaña **Glosario** (buscable, por categorías) | — |
 | `/about` | **Acerca de** (`About.tsx`) | Descripción, metodología, ficha del modelo (leída de la API), aviso legal y créditos | `GET /model` |
 
 ### Componentes
@@ -57,8 +57,7 @@ La revisión observó que un usuario sin contexto no entendería términos como
 «confianza», «Sharpe» o «drawdown». Un manual aparte (PDF) casi nadie lo
 abre; dentro de la app, cada «?» lleva justo a la definición del término que
 se está viendo, y la guía explica cada pantalla con los mismos nombres que
-aparecen en ella. Se mantuvo corta (5 secciones) para leerse en un par de
-minutos.
+aparecen en ella. Se mantuvo corta para leerse en un par de minutos.
 
 ---
 
@@ -66,14 +65,15 @@ minutos.
 
 | Qué | Cómo | Por qué |
 |---|---|---|
-| Recomendación | «COMPRAR / VENDER / MANTENER» con una frase («Se espera que el precio suba», «Sin dirección clara: no operar») y para qué sesión es | «Señal» es jerga; el usuario necesita saber qué hacer y cuándo |
+| Recomendación | «Comprar / Vender / Mantener» con una frase corta y prudente («Podría subir», «Podría bajar», «Mejor esperar») y para qué sesión es | «Señal» es jerga; el usuario necesita saber qué hacer y cuándo. El modelo casi nunca está seguro, así que la frase no debe sonar a orden |
+| Tono | Frases cortas y cotidianas («Si hubieras invertido $1,000», «Haciéndole caso al modelo»); el detalle técnico vive en el glosario | La revisión observó que la página se sentía robotizada y con demasiado texto |
 | **Seguridad** (antes «confianza») | Tres niveles con palabras: **Nada segura** (acertó 37 de cada 100), **Poco segura** (38), **Medianamente segura** (42); azar 33 | Un porcentaje como «36 %» no se entiende. Los cortes salen de 7 años de datos (`calibrar_niveles_confianza.py`). No hay nivel «Segura» porque ningún tramo acierta ni la mitad de las veces: llamarlo así engañaría |
 | Colores de la seguridad | Barras azules | Para no confundirla con el verde/rojo/amarillo de COMPRAR/VENDER/MANTENER |
 | Las 3 probabilidades | Barra repartida | Muestra cuándo la decisión fue reñida |
 | Rendimiento | ROI en % y su equivalente con $1,000 («$1,000 → $1,043.97») | El porcentaje solo no dice cuánto dinero es |
 | Gráficas | Ejes con título y unidades; fechas «15 oct»; puntos grandes; leyenda en texto; líneas rectas entre días | Que se entiendan sin explicación y no dibujen valores que no existieron |
-| Tablas | Encabezados con unidades; aciertos como «12 de 29 (41 %)» | El porcentaje con su conteo se entiende mejor |
-| Fechas | «jueves 15 de octubre de 2026» en encabezados | Sin ambigüedad sobre a qué día se refiere |
+| Tablas | Encabezados con unidades; aciertos como «41 %» con «12 de 29 días» | El porcentaje con su conteo se entiende mejor |
+| Fechas | «jueves 15 de octubre» en encabezados | Sin ambigüedad sobre a qué día se refiere |
 | Resultado de una recomendación | Contra el movimiento al día siguiente, con la etiqueta de la tesis; el último día dice «Pendiente» | Mismo criterio que la evaluación de la tesis |
 | Sharpe | «—» con menos de 5 días invertidos | Con tan pocas operaciones no es interpretable |
 | Aviso legal | En «Hoy», «Ayuda» y «Acerca de» | La plataforma es demostrativa, no asesoría |

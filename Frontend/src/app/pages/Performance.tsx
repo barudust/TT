@@ -17,7 +17,7 @@ import {
 } from "recharts";
 import { Target, Wallet, Table2 } from "lucide-react";
 import { API_BASE_URL } from "../../config/api";
-import { SIGNAL_CONFIG, dd, fechaLarga, frac, num, pct, usd } from "../format";
+import { SIGNAL_CONFIG, dd, fecha, frac, num, pct, usd } from "../format";
 import type { StockMetrics } from "../types";
 
 type SortKey = "name" | "f1_macro" | "accuracy" | "cumulativeReturn" | "bh_return" | "sharpeRatio" | "maxDrawdown" | "winRate" | "signal_hold_pct";
@@ -57,7 +57,7 @@ export default function Performance() {
       else throw new Error("Respuesta de métricas inválida");
     } catch (err) {
       console.error(err);
-      toast.error("No se pudieron cargar los resultados");
+      toast.error("No pudimos cargar los resultados. Intenta de nuevo.");
     } finally {
       setLoading(false);
     }
@@ -89,7 +89,7 @@ export default function Performance() {
     return (
       <div className="flex flex-col items-center justify-center py-20">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-        <p className="mt-4 text-muted-foreground">Cargando resultados...</p>
+        <p className="mt-4 text-muted-foreground">Cargando…</p>
       </div>
     );
 
@@ -97,7 +97,7 @@ export default function Performance() {
   const corto = (m: StockMetrics) => NOMBRE_CORTO[m.symbol] ?? m.symbol;
   const returnData = metrics.map((m) => ({
     empresa: corto(m),
-    "Siguiendo las recomendaciones": m.cumulativeReturn ?? 0,
+    "Haciéndole caso al modelo": m.cumulativeReturn ?? 0,
     "Comprar y esperar": m.bh_return ?? 0,
   }));
   const f1Data = metrics.map((m) => ({ empresa: corto(m), "Calificación (F1)": +((m.f1_macro ?? 0) * 100).toFixed(1) }));
@@ -124,97 +124,82 @@ export default function Performance() {
   return (
     <div>
       <div className="mb-4">
-        <h2 className="text-2xl font-bold text-foreground">¿Qué tan bien le ha ido al modelo?</h2>
-        <p className="text-sm text-muted-foreground mt-1">
-          Las recomendaciones de cada día comparadas con lo que realmente pasó al día siguiente, en las 7 empresas.
-        </p>
+        <h2 className="text-2xl font-bold text-foreground">¿Cómo le ha ido al modelo?</h2>
+        <p className="text-sm text-muted-foreground mt-1">Lo que recomendó contra lo que de verdad pasó, en las 7 empresas.</p>
       </div>
 
       <div className="mb-6">
-        <div className="text-sm font-semibold text-foreground mb-2 flex items-center gap-1">
-          Periodo a analizar <InfoLink term="periodo" />
-        </div>
-        <div className="flex flex-wrap gap-2">
-          {[
-            [30, "Últimos 30 días hábiles (≈ 1½ meses)"],
-            [60, "60 días (≈ 3 meses)"],
-            [90, "90 días (≈ 4 meses)"],
-          ].map(([d, label]) => (
-            <Button key={d} onClick={() => setDays(d as number)} variant={days === d ? "default" : "outline"} size="sm">
-              {label}
+        <div className="flex flex-wrap items-center gap-2">
+          {[30, 60, 90].map((d) => (
+            <Button key={d} onClick={() => setDays(d)} variant={days === d ? "default" : "outline"} size="sm">
+              {d} días
             </Button>
           ))}
+          <InfoLink term="periodo" />
         </div>
         {ref && (
           <p className="text-xs text-muted-foreground mt-2">
-            Del {fechaLarga(ref.periodStart)} al {fechaLarga(ref.periodEnd)}
+            Del {fecha(ref.periodStart)} al {fecha(ref.periodEnd)}
           </p>
         )}
       </div>
 
       <Card className="p-6 mb-6">
-        <h3 className="text-lg font-bold text-foreground mb-1">Resumen de las 7 empresas</h3>
-        <p className="text-xs text-muted-foreground mb-4">Promedio de las 7 empresas, con $1,000 invertidos en cada una y sin comisiones.</p>
+        <h3 className="text-lg font-bold text-foreground mb-1">En resumen</h3>
+        <p className="text-xs text-muted-foreground mb-4">Promedio de las 7 empresas, con $1,000 en cada una.</p>
         <div className="grid grid-cols-2 gap-4 md:grid-cols-3">
           <MetricCard
-            label="Recomendaciones acertadas"
+            label="Acertó"
             help="aciertos"
             value={evaluadosTot ? pct((aciertosTot / evaluadosTot) * 100, 0) : "—"}
-            hint={`${aciertosTot} de ${evaluadosTot} días calificados · al azar ≈ 33 %`}
+            hint={`${aciertosTot} de ${evaluadosTot} días`}
           />
-          <MetricCard label="Calificación del modelo (F1)" help="f1" value={frac(avg((m) => m.f1_macro), 0)} hint="De 0 a 100 %. Al azar ≈ 33 %" color="text-[#8b5cf6]" />
+          <MetricCard label="Calificación (F1)" help="f1" value={frac(avg((m) => m.f1_macro), 0)} hint="Adivinando: 33 %" color="text-[#8b5cf6]" />
           <MetricCard
-            label="Empresas en que convino seguir las recomendaciones"
+            label="Le ganó a comprar y esperar"
             help="diferencia"
             value={`${ganaron} de ${metrics.length}`}
-            hint="Dieron más que comprar y esperar"
+            hint="empresas"
           />
           <MetricCard
-            label="Rendimiento de la inversión (ROI) promedio"
+            label="Haciéndole caso"
             help="roi"
             value={pct(roiProm, 1, true)}
             color={roiProm === undefined ? undefined : roiProm >= 0 ? "text-emerald-600 dark:text-emerald-400" : "text-red-600 dark:text-red-400"}
             hint={roiProm !== undefined ? `$1,000 → ${usd(1000 * (1 + roiProm / 100))}` : undefined}
           />
           <MetricCard
-            label="Si solo hubieras comprado y esperado"
+            label="Comprar y esperar"
             help="comprar-y-esperar"
             value={pct(bhProm, 1, true)}
             hint={bhProm !== undefined ? `$1,000 → ${usd(1000 * (1 + bhProm / 100))}` : undefined}
           />
           <MetricCard
-            label="Ganancia ajustada al riesgo (Sharpe)"
+            label="Ganancia vs. riesgo (Sharpe)"
             help="sharpe"
             value={num(avg((m) => m.sharpeRatio), 2, true)}
-            hint={`> 0 gana · > 1 bueno · comprar y esperar: ${num(avg((m) => m.bh_sharpe), 2, true)}`}
+            hint={`Comprar y esperar: ${num(avg((m) => m.bh_sharpe), 2, true)}`}
             color="text-[#06b6d4]"
           />
-          <MetricCard label="Peor caída promedio" help="drawdown" value={dd(avg((m) => m.maxDrawdown))} color="text-red-600 dark:text-red-400" />
-          <MetricCard label="Operaciones con ganancia" help="win-rate" value={pct(avg((m) => m.winRate), 0)} hint="50 % sería como lanzar una moneda" />
-          <div className="bg-muted p-4 rounded-lg">
-            <div className="text-sm text-muted-foreground mb-2 flex items-center gap-1">
-              Cuántas veces recomendó cada opción <InfoLink term="frecuencia-recomendaciones" />
-            </div>
-            <div className="flex flex-wrap gap-1">
-              {(["buy", "hold", "sell"] as const).map((s) => (
-                <span key={s} className="text-white px-2 py-0.5 rounded text-xs font-semibold" style={{ backgroundColor: SIGNAL_CONFIG[s].hex }}>
-                  {SIGNAL_CONFIG[s].short} {pct(avg((m) => m[`signal_${s}_pct` as const]), 0)}
-                </span>
-              ))}
-            </div>
-          </div>
+        </div>
+        <div className="flex flex-wrap items-center gap-2 mt-4 text-xs">
+          <span className="text-muted-foreground inline-flex items-center gap-1">
+            Qué recomendó <InfoLink term="frecuencia-recomendaciones" />
+          </span>
+          {(["buy", "hold", "sell"] as const).map((s) => (
+            <span key={s} className="text-white px-2 py-0.5 rounded font-semibold" style={{ backgroundColor: SIGNAL_CONFIG[s].hex }}>
+              {SIGNAL_CONFIG[s].short} {pct(avg((m) => m[`signal_${s}_pct` as const]), 0)}
+            </span>
+          ))}
         </div>
       </Card>
 
       <Card className="p-6 mb-6">
         <div className="flex items-center gap-2 mb-1">
           <Wallet className="w-5 h-5 text-[#06b6d4]" />
-          <h3 className="text-lg font-bold text-foreground">¿Cuánto habrías ganado o perdido en cada empresa?</h3>
+          <h3 className="text-lg font-bold text-foreground">Ganancia en cada empresa</h3>
         </div>
-        <p className="text-xs text-muted-foreground mb-4">
-          Barra de color: siguiendo las recomendaciones. Barra gris: comprando el primer día y esperando. Arriba de la
-          línea del 0 % es ganancia; abajo, pérdida.
-        </p>
+        <p className="text-xs text-muted-foreground mb-4">Haciéndole caso al modelo contra solo comprar y esperar. Sin comisiones.</p>
         <div className="h-80">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={returnData} margin={{ top: 10, right: 10, bottom: 30, left: 10 }}>
@@ -224,14 +209,14 @@ export default function Performance() {
                 tick={ejeEstilo}
                 unit=" %"
                 width={70}
-                label={{ value: "Rendimiento de la inversión (%)", angle: -90, position: "insideLeft", style: { ...ejeEstilo, textAnchor: "middle" } }}
+                label={{ value: "Ganancia (%)", angle: -90, position: "insideLeft", style: { ...ejeEstilo, textAnchor: "middle" } }}
               />
               <Tooltip
                 contentStyle={tooltipStyle}
                 formatter={(v: any, name: any) => [`${Number(v) > 0 ? "+" : ""}${Number(v).toFixed(1)} % ($1,000 → ${usd(1000 * (1 + Number(v) / 100))})`, name]}
               />
               <ReferenceLine y={0} stroke="currentColor" opacity={0.5} />
-              <Bar dataKey="Siguiendo las recomendaciones" fill="#06b6d4" radius={[4, 4, 0, 0]} />
+              <Bar dataKey="Haciéndole caso al modelo" fill="#06b6d4" radius={[4, 4, 0, 0]} />
               <Bar dataKey="Comprar y esperar" fill="#94a3b8" radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
@@ -239,7 +224,7 @@ export default function Performance() {
         <div className="mt-4 flex flex-wrap gap-4 text-xs">
           <div className="flex items-center gap-2">
             <div className="w-3.5 h-3.5 rounded-sm bg-[#06b6d4]"></div>
-            <span className="text-muted-foreground">Siguiendo las recomendaciones</span>
+            <span className="text-muted-foreground">Haciéndole caso al modelo</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-3.5 h-3.5 rounded-sm bg-[#94a3b8]"></div>
@@ -251,13 +236,10 @@ export default function Performance() {
       <Card className="p-6 mb-6">
         <div className="flex items-center gap-2 mb-1">
           <Target className="w-5 h-5 text-[#8b5cf6]" />
-          <h3 className="text-lg font-bold text-foreground">¿Qué tan bien acierta el modelo en cada empresa?</h3>
+          <h3 className="text-lg font-bold text-foreground">Calificación en cada empresa</h3>
           <InfoLink term="f1" />
         </div>
-        <p className="text-xs text-muted-foreground mb-4">
-          Calificación del modelo (F1) de 0 a 100 %. La línea roja punteada es lo que se obtendría escogiendo al azar
-          (33 %): las barras por encima de ella son mejores que adivinar.
-        </p>
+        <p className="text-xs text-muted-foreground mb-4">Lo que pase de la línea roja es mejor que adivinar.</p>
         <div className="h-72">
           <ResponsiveContainer width="100%" height="100%">
             <BarChart data={f1Data} margin={{ top: 10, right: 30, bottom: 30, left: 10 }}>
@@ -270,8 +252,8 @@ export default function Performance() {
                 domain={[0, 60]}
                 label={{ value: "Calificación F1 (%)", angle: -90, position: "insideLeft", style: { ...ejeEstilo, textAnchor: "middle" } }}
               />
-              <Tooltip contentStyle={tooltipStyle} formatter={(v: any) => [`${v} % (al azar ≈ 33 %)`, "Calificación"]} />
-              <ReferenceLine y={33.3} stroke="#ef4444" strokeDasharray="4 4" label={{ value: "azar", position: "right", fontSize: 11, fill: "#ef4444" }} />
+              <Tooltip contentStyle={tooltipStyle} formatter={(v: any) => [`${v} %`, "Calificación"]} />
+              <ReferenceLine y={33.3} stroke="#ef4444" strokeDasharray="4 4" label={{ value: "adivinar", position: "right", fontSize: 11, fill: "#ef4444" }} />
               <Bar dataKey="Calificación (F1)" fill="#8b5cf6" radius={[4, 4, 0, 0]} />
             </BarChart>
           </ResponsiveContainer>
@@ -281,24 +263,22 @@ export default function Performance() {
       <Card className="p-6">
         <div className="flex items-center gap-2 mb-1">
           <Table2 className="w-5 h-5 text-[#3b82f6]" />
-          <h3 className="text-lg font-bold text-foreground">Comparación de las 7 empresas</h3>
+          <h3 className="text-lg font-bold text-foreground">Empresa por empresa</h3>
         </div>
-        <p className="text-xs text-muted-foreground mb-4">
-          Toca el nombre de una columna para ordenar. Toca una empresa para ver su detalle.
-        </p>
+        <p className="text-xs text-muted-foreground mb-4">Toca una columna para ordenar.</p>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
               <tr className="border-b border-border">
                 {header("name", "Empresa", "", undefined, "text-left")}
-                {header("accuracy", "Acertó", "% de días (días)", "aciertos")}
-                {header("f1_macro", "Calificación", "F1, % (azar 33)", "f1")}
-                {header("cumulativeReturn", "Siguiendo recomendaciones", "rendimiento %", "roi")}
-                {header("bh_return", "Comprar y esperar", "rendimiento %", "comprar-y-esperar")}
-                {header("sharpeRatio", "Ajustada al riesgo", "Sharpe", "sharpe")}
+                {header("accuracy", "Acertó", "%", "aciertos")}
+                {header("f1_macro", "Calificación", "F1, %", "f1")}
+                {header("cumulativeReturn", "Haciéndole caso", "ganancia %", "roi")}
+                {header("bh_return", "Comprar y esperar", "ganancia %", "comprar-y-esperar")}
+                {header("sharpeRatio", "Ganancia vs. riesgo", "Sharpe", "sharpe")}
                 {header("maxDrawdown", "Peor caída", "%", "drawdown")}
-                {header("winRate", "Operaciones con ganancia", "% (días)", "win-rate")}
-                {header("signal_hold_pct", "Recomendó", "% COMPRAR / MANTENER / VENDER", "frecuencia-recomendaciones")}
+                {header("winRate", "Días con ganancia", "%", "win-rate")}
+                {header("signal_hold_pct", "Recomendó", "% comprar / mantener / vender", "frecuencia-recomendaciones")}
               </tr>
             </thead>
             <tbody>
@@ -337,11 +317,7 @@ export default function Performance() {
             </tbody>
           </table>
         </div>
-        <p className="text-xs text-muted-foreground mt-4">
-          Simulación: con COMPRAR se compra al cierre y se vende al cierre del día siguiente; con VENDER se vende en corto
-          igual; con MANTENER no se hace nada. Sin comisiones. Solo cuentan los días que ya se pueden calificar. La
-          ganancia ajustada al riesgo (Sharpe) aparece como «—» cuando hubo menos de 5 días invertidos.
-        </p>
+        <p className="text-xs text-muted-foreground mt-4">Un «—» quiere decir que hubo muy pocos días invertidos para calcularlo.</p>
       </Card>
     </div>
   );

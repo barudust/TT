@@ -80,7 +80,7 @@ conclusión (los clásicos igualan o superan a las redes).
 - **¿Por qué SQLite si el TT1 decía PostgreSQL?** Un solo escritor, sin JSONB,
   base reconstruible; compatible con PostgreSQL.
 - **¿Por qué 1 worker?** El programador corre en el proceso.
-- **¿Pruebas?** 23 automáticas.
+- **¿Pruebas?** 24 automáticas.
 
 → [D6 completo](D6_PREGUNTAS_SISTEMA.md)
 

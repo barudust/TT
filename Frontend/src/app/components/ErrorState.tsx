@@ -13,15 +13,15 @@ export function ErrorState({ message, onRetry }: ErrorStateProps) {
         <AlertCircle className="w-12 h-12 text-[#ef4444]" />
       </div>
       <h3 className="text-lg font-semibold text-foreground mb-2">
-        Error al cargar datos
+        Algo salió mal
       </h3>
       <p className="text-sm text-muted-foreground text-center max-w-md mb-6">
-        {message || "No se pudieron cargar los datos. Por favor, intenta nuevamente."}
+        {message || "No pudimos cargar los datos. Intenta de nuevo en un momento."}
       </p>
       {onRetry && (
         <Button onClick={onRetry} className="gap-2">
           <RefreshCw className="w-4 h-4" />
-          Reintentar
+          Volver a intentar
         </Button>
       )}
     </div>

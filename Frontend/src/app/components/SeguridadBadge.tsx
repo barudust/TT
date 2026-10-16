@@ -9,8 +9,8 @@ interface SeguridadBadgeProps {
 }
 
 /** Nivel de seguridad con palabras y barras (en lugar de un porcentaje).
- *  Las barras son azules para no confundirse con los colores de COMPRAR,
- *  VENDER y MANTENER. */
+ *  Las barras son azules para no confundirse con los colores de comprar,
+ *  vender y mantener. */
 export function SeguridadBadge({ confianza, variante = "corto", conAyuda = false }: SeguridadBadgeProps) {
   const nivel = nivelSeguridad(confianza);
   if (!nivel) return <span className="text-muted-foreground">—</span>;
@@ -31,8 +31,7 @@ export function SeguridadBadge({ confianza, variante = "corto", conAyuda = false
       </span>
       {variante === "completo" && (
         <span className="text-xs text-muted-foreground">
-          {nivel.descripcion} En 2019–2025, con este nivel acertó {nivel.acierto} de cada 100 veces (al azar
-          serían {ACIERTO_AZAR}).
+          {nivel.descripcion} Con este nivel ha acertado {nivel.acierto} de cada 100 veces (adivinando, {ACIERTO_AZAR}).
         </span>
       )}
     </span>

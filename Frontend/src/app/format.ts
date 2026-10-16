@@ -4,28 +4,28 @@ import type { Signal } from "./types";
 export const SIGNAL_CONFIG = {
   buy: {
     icon: ArrowUp,
-    label: "COMPRAR",
-    short: "COMPRAR",
-    /** Explicación en una línea para quien no conoce el término. */
-    frase: "Se espera que el precio suba",
+    label: "Comprar",
+    short: "Comprar",
+    /** Explicación en pocas palabras para quien no conoce el término. */
+    frase: "Podría subir",
     color: "text-emerald-600 dark:text-emerald-400",
     borderColor: "border-emerald-500 dark:border-emerald-400",
     hex: "#10b981",
   },
   sell: {
     icon: ArrowDown,
-    label: "VENDER",
-    short: "VENDER",
-    frase: "Se espera que el precio baje",
+    label: "Vender",
+    short: "Vender",
+    frase: "Podría bajar",
     color: "text-red-600 dark:text-red-400",
     borderColor: "border-red-500 dark:border-red-400",
     hex: "#ef4444",
   },
   hold: {
     icon: Circle,
-    label: "MANTENER",
-    short: "MANTENER",
-    frase: "Sin dirección clara: no operar",
+    label: "Mantener",
+    short: "Mantener",
+    frase: "Mejor esperar",
     color: "text-amber-600 dark:text-amber-400",
     borderColor: "border-amber-500 dark:border-amber-400",
     hex: "#f59e0b",
@@ -43,9 +43,9 @@ export const SIGNAL_CONFIG = {
 // No hay un nivel "Segura": ningún tramo acierta ni la mitad de las veces.
 export const ACIERTO_AZAR = 33;
 export const NIVELES_SEGURIDAD = [
-  { desde: 0, nombre: "Nada segura", acierto: 37, dias: 30, descripcion: "El modelo está casi indeciso entre las tres opciones." },
-  { desde: 0.35, nombre: "Poco segura", acierto: 38, dias: 30, descripcion: "El modelo prefiere una opción, pero por poco." },
-  { desde: 0.3664, nombre: "Medianamente segura", acierto: 42, dias: 40, descripcion: "La preferencia es más clara; es el nivel en que más acierta." },
+  { desde: 0, nombre: "Nada segura", acierto: 37, dias: 30, descripcion: "El modelo está casi indeciso." },
+  { desde: 0.35, nombre: "Poco segura", acierto: 38, dias: 30, descripcion: "Se inclina por una opción, pero por poco." },
+  { desde: 0.3664, nombre: "Medianamente segura", acierto: 42, dias: 40, descripcion: "Tiene una preferencia más clara." },
 ] as const;
 
 export type NivelSeguridad = (typeof NIVELES_SEGURIDAD)[number] & { indice: number };
@@ -65,7 +65,7 @@ const isNum = (v: unknown): v is number => typeof v === "number" && Number.isFin
 /** Porcentaje ya expresado en % (p. ej. 12.3 -> "12.3 %"). */
 export function pct(v: number | null | undefined, decimals = 1, signed = false): string {
   if (!isNum(v)) return "—";
-  const s = v.toFixed(decimals);
+  const s = v.toFixed(decimals).replace("-", "−"); // signo menos tipográfico
   // espacio no separable: "37.4 %" nunca se parte en dos líneas
   return `${signed && v > 0 ? "+" : ""}${s} %`;
 }
@@ -77,7 +77,7 @@ export function frac(v: number | null | undefined, decimals = 1): string {
 
 export function num(v: number | null | undefined, decimals = 2, signed = false): string {
   if (!isNum(v)) return "—";
-  return `${signed && v > 0 ? "+" : ""}${v.toFixed(decimals)}`;
+  return `${signed && v > 0 ? "+" : ""}${v.toFixed(decimals).replace("-", "−")}`;
 }
 
 /** Dinero en dólares: 1052.3 -> "$1,052.30". */
@@ -122,6 +122,15 @@ export function fechaLarga(iso: string | null | undefined): string {
     ? f
         .toLocaleDateString("es-MX", { weekday: "long", day: "numeric", month: "long", year: "numeric", timeZone: "UTC" })
         .replace(",", "") // "miércoles, 14 de…" -> "miércoles 14 de…"
+    : iso;
+}
+
+/** "2026-09-29" -> "martes 29 de septiembre" (sin año, para frases cortas). */
+export function fechaDia(iso: string | null | undefined): string {
+  if (!iso) return "—";
+  const f = aFecha(iso);
+  return f
+    ? f.toLocaleDateString("es-MX", { weekday: "long", day: "numeric", month: "long", timeZone: "UTC" }).replace(",", "")
     : iso;
 }
 

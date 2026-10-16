@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { StockCard } from "../components/StockCard";
 import { StockCardSkeleton } from "../components/LoadingStates";
 import { MarketStatus } from "../components/MarketStatus";
-import { RefreshCw, HelpCircle } from "lucide-react";
+import { RefreshCw } from "lucide-react";
 import { Link } from "react-router";
 import { Button } from "../components/ui/button";
 import { toast } from "sonner";
@@ -53,7 +53,7 @@ export default function Home() {
       // /admin/refresh (recalcula todo desde cero, ~30-40s) y reintentamos
       // una sola vez antes de rendirnos.
       if (data.data.length === 0) {
-        toast.info("El servidor no tenía datos cargados. Repoblando… puede tardar ~30s.");
+        toast.info("El servidor estaba dormido. Dale unos 30 segundos…");
         await fetch(`${API_BASE_URL}/admin/refresh`, { method: "POST" }).catch((e) => {
           console.error("Error triggering /admin/refresh:", e);
         });
@@ -67,14 +67,14 @@ export default function Home() {
       if (data.success) {
         setStocks(data.data);
         if (isRefresh) {
-          toast.success("Datos actualizados correctamente");
+          toast.success("Listo, datos al día");
         }
       } else {
         throw new Error(data.error || "Error desconocido");
       }
     } catch (error) {
       console.error("Error fetching stocks:", error);
-      toast.error("No se pudieron cargar los datos. Intenta nuevamente.");
+      toast.error("No pudimos cargar los datos. Intenta de nuevo en un momento.");
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -95,8 +95,8 @@ export default function Home() {
     return (
       <div>
         <div className="mb-6">
-          <h2 className="text-2xl font-bold text-foreground">¿Qué hacer hoy con cada acción?</h2>
-          <p className="text-sm text-muted-foreground mt-1">Cargando recomendaciones… (la primera carga puede tardar hasta 1 minuto)</p>
+          <h2 className="text-2xl font-bold text-foreground">¿Qué hacer hoy?</h2>
+          <p className="text-sm text-muted-foreground mt-1">Cargando… la primera vez puede tardar hasta un minuto.</p>
         </div>
         <div className="space-y-3">
           {Array.from({ length: 7 }).map((_, i) => (
@@ -114,10 +114,8 @@ export default function Home() {
       <div className="mb-6">
         <div className="flex items-center justify-between mb-2">
           <div>
-            <h2 className="text-2xl font-bold text-foreground">¿Qué hacer hoy con cada acción?</h2>
-            <p className="text-sm text-muted-foreground mt-1">
-              Recomendación diaria del modelo para cada una de las 7 empresas. Toca una tarjeta para ver su detalle.
-            </p>
+            <h2 className="text-2xl font-bold text-foreground">¿Qué hacer hoy?</h2>
+            <p className="text-sm text-muted-foreground mt-1">Lo que sugiere el modelo para cada empresa. Toca una para ver más.</p>
           </div>
           <Button
             onClick={refresh}
@@ -127,7 +125,7 @@ export default function Home() {
             className="gap-2"
           >
             <RefreshCw className={`w-4 h-4 ${refreshing ? "animate-spin" : ""}`} />
-            {refreshing ? "Actualizando..." : "Actualizar"}
+            {refreshing ? "Actualizando…" : "Actualizar"}
           </Button>
         </div>
         <div className="mt-3">
@@ -139,21 +137,12 @@ export default function Home() {
           <StockCard key={stock.symbol} stock={stock} />
         ))}
       </div>
-      <div className="mt-8 bg-muted border border-border rounded-lg p-4 space-y-2 text-sm text-muted-foreground">
-        <p>
-          <span className="font-semibold text-foreground">Cómo leer cada tarjeta:</span> a la derecha está la
-          recomendación (COMPRAR, VENDER o MANTENER) para la próxima sesión de la bolsa; abajo del precio, qué tan
-          segura es, según qué tan seguido acertó el modelo en el pasado en situaciones parecidas.
-        </p>
-        <p>
-          Las recomendaciones las genera un modelo de Regresión Logística entrenado con datos de 2018 a 2025
-          {ref?.modelVersion ? ` (versión ${ref.modelVersion})` : ""}. Se actualizan una vez al día, después del
-          cierre de la bolsa. <strong>Son un ejercicio académico, no asesoría financiera.</strong>
-        </p>
-        <Link to="/ayuda" className="inline-flex items-center gap-1.5 text-blue-600 dark:text-blue-400 font-medium hover:underline">
-          <HelpCircle className="w-4 h-4" /> Guía de uso y glosario de términos
+      <p className="mt-8 text-center text-xs text-muted-foreground">
+        Es un proyecto escolar, no una asesoría financiera.{" "}
+        <Link to="/ayuda" className="text-blue-600 dark:text-blue-400 hover:underline">
+          ¿Cómo leer las tarjetas?
         </Link>
-      </div>
+      </p>
     </div>
   );
 }
