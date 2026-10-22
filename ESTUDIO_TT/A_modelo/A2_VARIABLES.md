@@ -27,7 +27,7 @@
 | 8 | Calendario | 5 | Día de la semana, mes, semana del mes |
 | 9 | Contexto de mercado | 6 | Qué hacen el S&P 500 y el VIX |
 | | **Total base** | **61** | |
-| | Interacciones (Vía 8) | 15 | Productos de pares de variables importantes |
+| | Interacciones (Etapa 5) | 15 | Productos de pares de variables importantes |
 | | **Total en producción** | **76** | |
 
 ### ¿Por qué tantas formas de normalizar?
@@ -119,7 +119,7 @@ el modelo.
 **Por qué varios parecidos:** cada uno captura algo un poco distinto
 (ventana, suavizado). Están correlacionados, pero la regularización reparte
 el peso entre ellos. Se probó quitar los redundantes con filtros
-estadísticos y fue peor (ver [A6](A6_EVOLUCION_V1_V8.md)).
+estadísticos y fue peor (ver [A6](A6_ETAPAS_DEL_PROYECTO.md)).
 
 **Nota:** el MACD se divide entre el precio para que sea comparable entre
 acciones (el MACD clásico está en dólares).
@@ -193,7 +193,7 @@ está bajo (MANTENER en bloque).
 
 ---
 
-## 11. Las 15 interacciones (Vía 8, en producción)
+## 11. Las 15 interacciones (Etapa 5, en producción)
 
 ### Qué son
 
@@ -277,7 +277,7 @@ en la tabla `features_daily` de la base de datos.
 número de variables impedía comparar arquitecturas (§5.6: "un modelo con 25
 características supere a uno con 3 no permite concluir que su arquitectura
 sea mejor"). (2) Al medirlo, usar las 61 fue mejor que el filtro en 11 de 15
-casos (§12 y [A6](A6_EVOLUCION_V1_V8.md)). (3) Para la LR el cambio fue
+casos (§12 y [A6](A6_ETAPAS_DEL_PROYECTO.md)). (3) Para la LR el cambio fue
 grande: en el Exp B por acción pasó de 0.355 (4 variables) a 0.392 (61). Con
 las mismas variables para todos, los clásicos siguen arriba: la asimetría no
 explicaba la diferencia.
@@ -285,8 +285,8 @@ explicaba la diferencia.
 **Canales OHLCV.** En TT1 la CNN-LSTM y la CNN 1D recibían además
 apertura/máximo/mínimo/cierre divididos entre el cierre del primer día de la
 ventana y el volumen dividido entre el máximo de la ventana, para aprender
-formas de velas. Desde v4 ninguna red los recibe (misma entrada para los
-cinco). El paper todavía los menciona en su §4; el código de v4 no los usa.
+formas de velas. Desde la Etapa 3 ninguna red los recibe (misma entrada para los
+cinco). El paper todavía los menciona en su §4; el código de la Etapa 3 no los usa.
 
 ---
 
@@ -294,11 +294,11 @@ cinco). El paper todavía los menciona en su §4; el código de v4 no los usa.
 
 | Variante | Qué se agregó | Resultado |
 |---|---|---|
-| v3 (94 variables) | Curva de tasas, dólar, oro, petróleo, sectores (XLK, XLF, XLY, XLE) | Sin mejora; más sobreajuste |
-| v5 (93 variables) | Bonos (SHY, IEI, IEF, TLT), VVIX, crédito (HYG, LQD), dólar, oro, petróleo, sectores e índices | Optuna prefirió las 61 originales |
-| Rezagos (Vía 8) | Top-10 variables de hace 1, 3 y 5 días (+30) | Peor (−0.004) |
-| Multi-escala (Vía 8) | Top-10 en ventanas de 5 y 20 días (+20) | Neutro (−0.002) |
-| Entre activos (Vía 8) | Beta contra SPY, correlación con XLK, ranking del retorno (+3) | Marginal (+0.003) |
+| Etapa 2 (94 variables) | Curva de tasas, dólar, oro, petróleo, sectores (XLK, XLF, XLY, XLE) | Sin mejora; más sobreajuste |
+| Etapa 4 (93 variables) | Bonos (SHY, IEI, IEF, TLT), VVIX, crédito (HYG, LQD), dólar, oro, petróleo, sectores e índices | Optuna prefirió las 61 originales |
+| Rezagos (Etapa 5) | Top-10 variables de hace 1, 3 y 5 días (+30) | Peor (−0.004) |
+| Multi-escala (Etapa 5) | Top-10 en ventanas de 5 y 20 días (+20) | Neutro (−0.002) |
+| Entre activos (Etapa 5) | Beta contra SPY, correlación con XLK, ranking del retorno (+3) | Marginal (+0.003) |
 
 Y quitar variables con filtros estadísticos (Pearson, VIF, Spearman, SHAP)
 fue peor en 11 de 15 casos. Conclusión: **el límite no está en las
@@ -313,9 +313,9 @@ Antes de entrenar, las variables se escalan con un escalador ajustado
 
 | Escalador | Cómo | Dónde se usó |
 |---|---|---|
-| StandardScaler | `(x − media) / desv. est.` | LR en v4; XGBoost (no le hace falta, se mantuvo por convención) |
-| MinMaxScaler | `(x − mín) / (máx − mín)` | Redes en v4 |
-| **RobustScaler** | `(x − mediana) / (P75 − P25)` | Elegido por Optuna en v5 para LR y las tres redes; **producción** |
+| StandardScaler | `(x − media) / desv. est.` | LR en la Etapa 3; XGBoost (no le hace falta, se mantuvo por convención) |
+| MinMaxScaler | `(x − mín) / (máx − mín)` | Redes en la Etapa 3 |
+| **RobustScaler** | `(x − mediana) / (P75 − P25)` | Elegido por Optuna en la Etapa 4 para LR y las tres redes; **producción** |
 
 **Por qué RobustScaler:** los retornos tienen colas pesadas (días como
 marzo de 2020). Con la media y la desviación estándar, esos días inflan la

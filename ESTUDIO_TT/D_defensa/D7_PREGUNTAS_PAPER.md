@@ -16,11 +16,11 @@ la versión final el 8 de septiembre de 2026.
 ### P2. ¿Qué relación tiene el paper con el TT?
 
 **Respuesta corta.** El paper publica una parte del TT: la comparación de
-los cinco modelos (corrida v4) y su verificación con un protocolo más
-estricto (v5), más el experimento de selección de variables. El TT es más
-amplio: además evalúa seis años con walk-forward y 2026 fuera de muestra,
+los cinco modelos (corrida de la Etapa 3) y su verificación con un protocolo más
+estricto (Etapa 4), más el experimento de selección de variables. El TT es más
+amplio: además evalúa seis años con prueba año por año y 2026 fuera de muestra,
 analiza y ajusta el exceso de MANTENER, compara global contra por acción
-sobre las mismas filas, prueba dos rondas más de mejoras (Vías 7 y 8) e
+sobre las mismas filas, prueba dos rondas más de mejoras (Etapa 5 (búsqueda de mejoras)) e
 incluye la plataforma desplegada.
 
 ### P3. ¿Qué concluye el paper?
@@ -39,16 +39,16 @@ modelo (3.4 %).
 **Respuesta corta.** Lo principal: que las redes no habían tenido una
 búsqueda de hiperparámetros comparable a la de XGBoost, y que el texto de
 las figuras era ilegible. Respondimos con un diagnóstico de las redes y un
-protocolo nuevo (v5): búsqueda con Optuna para los cinco modelos sobre el
+protocolo nuevo (Etapa 4): búsqueda con Optuna para los cinco modelos sobre el
 mismo año de decisión, ninguna decisión con la prueba, mismas filas para
 todos e intervalos bootstrap. Eso agregó la sección 8 del paper. También
 regeneramos las figuras al tamaño impreso y transparentamos que en la
 corrida original el lookback de las redes se había elegido con la prueba.
 
-### P5. En el paper la LR gana; en su walk-forward empata con XGBoost. ¿Se contradicen?
+### P5. En el paper la LR gana; en su prueba año por año empata con XGBoost. ¿Se contradicen?
 
 **Respuesta corta.** No. El paper evalúa un año de prueba (2025) y lo
-declara como su limitación principal. El walk-forward extiende la
+declara como su limitación principal. La prueba año por año extiende la
 evaluación a seis años: ahí la LR y XGBoost empatan arriba y las redes
 quedan abajo. La conclusión que se mantiene en ambos es la comparativa: los
 clásicos regularizados igualan o superan a las redes en este régimen. Y con
@@ -56,7 +56,7 @@ costos de transacción la LR vuelve a quedar arriba porque opera menos.
 
 ### P6. El paper dice que la LSTM es bidireccional. ¿Es la que ganó?
 
-**Respuesta corta.** La del paper en la sección 7 (corrida v4) sí era
+**Respuesta corta.** La del paper en la sección 7 (corrida de la Etapa 3) sí era
 bidireccional de 2 capas de 128 unidades. En la búsqueda de la sección 8,
 Optuna eligió una LSTM unidireccional de 2 capas de 118 unidades con
 atención. En ambos casos queda por debajo de la LR.
@@ -89,12 +89,12 @@ documentado (PyTorch 2.12, scikit-learn 1.7.2, XGBoost 3.2, Optuna 4.8).
 
 **Respuesta corta.** Validación externa: la metodología y la conclusión
 principal pasaron revisión por pares en un congreso internacional. Y la
-revisión nos obligó a hacer el protocolo v5, que hizo el trabajo más
+revisión nos obligó a hacer el protocolo de la Etapa 4, que hizo el trabajo más
 riguroso.
 
 ### P11. ¿Qué cambiarían del paper hoy?
 
-**Respuesta corta.** Reportaría el walk-forward de seis años como
+**Respuesta corta.** Reportaría la prueba año por año de seis años como
 evaluación principal en vez de un solo año, incluiría los costos de
 transacción en la tabla principal, haría la comparación global contra por
 acción sobre las mismas filas y corregiría la ventana de las redes para que

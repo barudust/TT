@@ -1,5 +1,7 @@
 # Vía 7 — Refinamiento post-Optuna
 
+> **Nota (2026-10-22).** Documento de trabajo de la **Etapa 5 (búsqueda de mejoras), ajustes al modelo**, con los nombres que se usaban entonces. Equivalencias: v1 = Etapa 1 (TT1) · optimización de mayo, "v0", v2 y v3 = Etapa 2 · v4 = Etapa 3 · v5 = Etapa 4 (sus V0–V6 = pasos 4.1–4.7) · v7/"Vía 7" y v8/"Vía 8" = Etapa 5 · análisis de septiembre = Etapa 6 · "walk-forward" = prueba año por año. Referencia: [mapa de experimentos](../../ESTUDIO_TT/03_MAPA_DE_EXPERIMENTOS.md).
+
 > **Fecha inicio: 2026-08-25.** Este documento resume las técnicas que las vías
 > 0-6 NO probaron. Nada de teoría — código real, resultados reales,
 > conclusiones honestas. Cierra la búsqueda: si algo de aquí no ayuda, ya no

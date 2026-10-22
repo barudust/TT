@@ -1,5 +1,5 @@
 import { Outlet, Link, useLocation } from "react-router";
-import { TrendingUp, BarChart3, Info, Moon, Sun, HelpCircle } from "lucide-react";
+import { TrendingUp, BarChart3, Info, Moon, Sun, HelpCircle, GraduationCap } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 
@@ -24,6 +24,7 @@ export default function Root() {
   const navItems = [
     { path: "/", icon: TrendingUp, label: "Hoy" },
     { path: "/performance", icon: BarChart3, label: "Resultados" },
+    { path: "/aprende", icon: GraduationCap, label: "Aprende" },
     { path: "/ayuda", icon: HelpCircle, label: "Ayuda" },
     { path: "/about", icon: Info, label: "Acerca de" },
   ];

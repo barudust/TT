@@ -2,12 +2,32 @@
 
 > Punto de entrada para retomar el proyecto desde cero: **[`CONTEXTO.md`](CONTEXTO.md)**.
 
-Última actualización: 2026-10-02.
+Última actualización: 2026-10-22.
+
+## Experimentos reorganizados en 6 etapas (2026-10-22)
+
+- Para el documento final la investigación se cuenta en **6 etapas**: 1 línea
+  base (TT1) · 2 primeras mejoras · 3 comparación en igualdad (paper §7) ·
+  4 protocolo final (paper §8, resultado principal) · 5 búsqueda de mejoras ·
+  6 plataforma y validación. Lo que cambia el planteamiento (otros horizontes
+  y percentiles de la etiqueta) queda como trabajo futuro.
+- Referencia única: `ESTUDIO_TT/03_MAPA_DE_EXPERIMENTOS.md` (equivalencias con
+  v1 … v8, qué usa el paper sección por sección, cifras citables y puntos a
+  cuidar). `ESTUDIO_TT/` ya usa los nombres nuevos; los documentos de trabajo
+  de `RESULTADOS_OPTIMIZADOS/` conservan los viejos con una nota al inicio.
+- Hallazgo: el §6 del paper (preselección de variables) viene de la Etapa 2
+  (particiones de TT1, mejor configuración elegida con la prueba). La
+  conclusión se confirma en la Etapa 3; anotado en el mapa, §8.
+- Plataforma: nueva página **Aprende** (`/aprende`, `Frontend/src/app/pages/Aprende.tsx`)
+  para explicar comprar, vender en corto y mantener: barra que mueve el cambio
+  del precio, venta en corto en 4 pasos y un juego día por día con los precios
+  reales de 30 días contra el modelo y contra comprar y esperar. Verificada en
+  local con la API; falta subirla (despliega Render).
 
 ## Paper MICAI: material suplementario y corrección de autor (2026-10-02)
 
 - Springer pidió el suplementario que el paper cita (§3.3, §5.1, §7.1, §7.3,
-  §11). Generado en `paper_review/supplementary/` (7 páginas, datos v4,
+  §11). Generado en `paper_review/supplementary/` (7 páginas, datos de la Etapa 3,
   verificado contra las Tablas 4–6).
 - Apellido corregido en el paper: "Cuatiaquiz" → "Cuatianquiz". Directores en
   la web: Abdiel Reyes Vera, Emmanuel Juárez Carbajal.
@@ -29,10 +49,10 @@
   - 40/60 no lo corrige (sigue 53 % HOLD con 20 % real) y baja κ y Sharpe.
   - Global vs por-ticker: gana el global (significativo en LR, LSTM, CNN; empate
     en XGBoost; ningún modelo mejor por ticker).
-  - 2026 fuera de muestra: F1 0.313, κ ≈ 0.01. Las interactions de Vía 8 no
+  - 2026 fuera de muestra: F1 0.313, κ ≈ 0.01. Las interacciones de la Etapa 5 no
     mejoran en val 2024 (0.325 vs 0.326): se eligieron mirando test 2025, y el
     `.metrics.json` etiqueta como "val 2024" cifras que son de test 2025.
-  - Existe un walk-forward 2020-2025 de v5 (`v5/log_wf_v5.txt`) no citado en el
+  - Existe una prueba año por año 2020-2025 de la Etapa 4 (`v5/log_wf_v5.txt`) no citada en el
     paper: LR 0.350 y XGBoost 0.356 de F1 medio, ninguno > 0.394 en ningún año.
 - **Escrito de justificación** para la defensa:
   `RESULTADOS_OPTIMIZADOS/JUSTIFICACION_LIMITE_DEL_MODELO.md`.
@@ -61,15 +81,15 @@
   y estadística). Corregido: CatBoost, GRU, TabNet, Extra-Trees y Transformer
   aparecían como "probados" en la guía, `INVESTIGACION_COMPLETA.md` y
   `METODOLOGIA_COMPLETA.md` sin código ni resultados en el repo; el
-  walk-forward y los costos de transacción aparecían como "trabajo futuro"
-  aunque ya estaban hechos en v5.
+  prueba año por año y los costos de transacción aparecían como "trabajo futuro"
+  aunque ya estaban hechos en la Etapa 4.
 
 ## Qué falta para dar el TT por terminado (2026-09-30)
 
 1. ~~Subir lo de hoy y verificar Render~~ — hecho (2026-09-30): `/model` sirve
    `LR-v8-interactions-holdw090`; tras el arranque en frío Yahoo volvió a fallar
    y el reintento automático completó las 7 acciones en ~2 minutos.
-2. **Llevar al documento de tesis** (no está en este repo): walk-forward
+2. **Llevar al documento de tesis** (no está en este repo): prueba año por año
    2020–2025, el análisis del exceso de HOLD y su ajuste, global vs por-ticker
    comparado sobre las mismas filas, y la evaluación 2026 fuera de muestra.
 3. **Presentación de la defensa** (diapositivas) y ensayo con el Cap. 17.
@@ -87,7 +107,7 @@
 > Entradas anteriores, en orden cronológico inverso por bloque. Pueden citar
 > rutas o estados ya superados: `paper/` hoy es `paper_review/`, `Proyecto/`
 > hoy es `api/` + `Frontend/`, y el modelo de producción cambió dos veces
-> (elasticnet v1 → LR + interactions de Vía 8 → la misma con peso de HOLD).
+> (elasticnet de la Etapa 2 → LR + interacciones de la Etapa 5 → la misma con peso de HOLD).
 > Para el estado actual, leer las secciones de arriba y `CONTEXTO.md`.
 
 ## Modelado (`scripts_opt/` → `RESULTADOS_OPTIMIZADOS/`)
@@ -99,19 +119,19 @@ particiones temporales (A/B/C), por-ticker y global. Bitácora completa en
 
 **Ojo con qué números citar** — hay dos evaluaciones con metodología
 distinta y no son intercambiables:
-- **v1** (`scripts_opt/opt_lr.py`, la que entrenó el `.pkl` que corre en
+- **Etapa 2** (`scripts_opt/opt_lr.py`, la que entrenó el `.pkl` que corre en
   producción): F1-macro=0.417, Sharpe=1.25 en Exp B. Es lo que reportan
   `GUIA_PROGRESO.md` y `docs/PAPER_FINAL.md` (ambos de mayo).
-- **v4** ("splits unificados", mismo test=2025 en A/B/C — la corrida más
+- **Etapa 3** ("splits unificados", mismo test=2025 en A/B/C — la corrida más
   reciente, 1 junio, "versión final para el paper" según su propio
   script): F1-macro=0.385 en Exp B, Sharpe=0.755. **No mencionada en
   GUIA_PROGRESO.md ni en PAPER_FINAL.md** — solo queda documentada en
   `paper/paper.tex` (el paper académico en inglés, también del 1 de
-  junio, y el documento más riguroso/actualizado que hay). v4 nunca
+  junio, y el documento más riguroso/actualizado que hay). La Etapa 3 nunca
   guardó modelos entrenables (solo CSVs de métricas), por eso el `.pkl`
-  deployado sigue siendo el de v1 — no había otra opción real.
+  deployado sigue siendo el de la Etapa 2 — no había otra opción real.
 - **Conclusión que se sostiene en ambas**: LR gana en Sharpe y F1
-  por-ticker de forma clara; en v4 XGBoost solo empata/gana F1-macro
+  por-ticker de forma clara; en la Etapa 3 XGBoost solo empata/gana F1-macro
   GLOBAL por un margen insignificante (0.0015) y con la mitad de Sharpe.
   El modelo elegido para producción sigue siendo el correcto.
 - **Resuelto (14 ago)**: `paper/paper.tex` ahora está referenciado desde
@@ -119,7 +139,7 @@ distinta y no son intercambiables:
   reciente/canónica" — ver sección de organización abajo.
 
 Pendiente si se retoma el modelado: threshold calibration por clase,
-stacking de los 4 modelos, walk-forward validation, costos de
+stacking de los 4 modelos, prueba año por año, costos de
 transacción en el backtest (ver "Próximos pasos" en la bitácora). También
 pendiente (a pedido del Revisor #2 de MICAI): darle a LSTM/CNN/CNN-LSTM una
 búsqueda de hiperparámetros real con Optuna — hoy solo XGBoost la tiene, los

@@ -1,4 +1,6 @@
 # GUÍA INTERNA DE PROGRESO — OPTIMIZACIÓN DE MODELOS
+
+> **Nota (2026-10-22).** Documento de trabajo de la **Etapa 2 (primeras mejoras)**, con los nombres que se usaban entonces. Equivalencias: v1 = Etapa 1 (TT1) · optimización de mayo, "v0", v2 y v3 = Etapa 2 · v4 = Etapa 3 · v5 = Etapa 4 (sus V0–V6 = pasos 4.1–4.7) · v7/"Vía 7" y v8/"Vía 8" = Etapa 5 · análisis de septiembre = Etapa 6 · "walk-forward" = prueba año por año. Referencia: [mapa de experimentos](../../ESTUDIO_TT/03_MAPA_DE_EXPERIMENTOS.md). Sus cifras (p. ej. F1 0.417) se eligieron con la prueba: **no citar**.
 ## Tesis: Predicción de Señales de Trading con ML/DL en Acciones US
 
 > **Propósito de este documento:** Es la libreta de bitácora del proceso de optimización. Sirve para que, al retomar el trabajo, sepa exactamente qué se hizo, qué funcionó, qué no, y qué falta. NO es el documento del paper — ese es `PAPER_TESIS.md`.

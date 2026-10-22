@@ -1,5 +1,7 @@
 # Por qué el modelo llegó a su límite
 
+> **Nota (2026-10-22).** Documento de trabajo de la **etapas 4 a 6**, con los nombres que se usaban entonces. Equivalencias: v1 = Etapa 1 (TT1) · optimización de mayo, "v0", v2 y v3 = Etapa 2 · v4 = Etapa 3 · v5 = Etapa 4 (sus V0–V6 = pasos 4.1–4.7) · v7/"Vía 7" y v8/"Vía 8" = Etapa 5 · análisis de septiembre = Etapa 6 · "walk-forward" = prueba año por año. Referencia: [mapa de experimentos](../ESTUDIO_TT/03_MAPA_DE_EXPERIMENTOS.md). Vigente: es el argumento central de por qué no se puede mejorar más.
+
 **Justificación con evidencia de que, con datos de Yahoo Finance, los cinco
 modelos del proyecto y una señal diaria, se alcanzó el mejor resultado
 posible.**

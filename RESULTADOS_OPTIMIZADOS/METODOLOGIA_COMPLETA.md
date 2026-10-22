@@ -1,5 +1,7 @@
 # Metodología completa — Todo lo que se hizo para encontrar el mejor modelo
 
+> **Nota (2026-10-22).** Documento de trabajo de la **varias etapas**, con los nombres que se usaban entonces. Equivalencias: v1 = Etapa 1 (TT1) · optimización de mayo, "v0", v2 y v3 = Etapa 2 · v4 = Etapa 3 · v5 = Etapa 4 (sus V0–V6 = pasos 4.1–4.7) · v7/"Vía 7" y v8/"Vía 8" = Etapa 5 · análisis de septiembre = Etapa 6 · "walk-forward" = prueba año por año. Referencia: [mapa de experimentos](../ESTUDIO_TT/03_MAPA_DE_EXPERIMENTOS.md). Para estudiar se sustituye por `ESTUDIO_TT/A_modelo/A1`–`A3`; se conserva como historial.
+
 Este documento inventaría **cada intervención** hecha sobre datos, features, arquitecturas y evaluación para obtener el mejor clasificador diario BUY/HOLD/SELL en 7 acciones tecnológicas de EE.UU. Sirve como bitácora técnica y complemento al paper.
 
 ---

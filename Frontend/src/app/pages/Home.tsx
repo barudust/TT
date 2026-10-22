@@ -141,6 +141,10 @@ export default function Home() {
         Es un proyecto escolar, no una asesoría financiera.{" "}
         <Link to="/ayuda" className="text-blue-600 dark:text-blue-400 hover:underline">
           ¿Cómo leer las tarjetas?
+        </Link>{" "}
+        ·{" "}
+        <Link to="/aprende" className="text-blue-600 dark:text-blue-400 hover:underline">
+          ¿Qué es comprar o vender en corto?
         </Link>
       </p>
     </div>

@@ -21,13 +21,13 @@ con la misma prueba (2025) y 10, 6 o 4 años de entrenamiento (2014, 2018 o
 **Respuesta corta.** El k-fold aleatorio mezcla días futuros en el
 entrenamiento, y como días cercanos se parecen (autocorrelación), inflaría
 los resultados. Lo que sí hicimos es la versión temporal: un
-**walk-forward** de 6 años (entrenar 5, validar 1, probar el siguiente, con
+**prueba año por año** de 6 años (entrenar 5, validar 1, probar el siguiente, con
 prueba en 2020, 2021, …, 2025) y un **origen rodante** 2019–2024 para elegir
 el ajuste de MANTENER.
 
 ### E3. ¿Cómo evitaron sobreajustar al año de prueba?
 
-**Respuesta corta.** Con un protocolo anidado en v5: todas las decisiones
+**Respuesta corta.** Con un protocolo anidado en la Etapa 4: todas las decisiones
 (hiperparámetros, ablaciones) se toman en modo *dev* —entrenar 2018–2022,
 elegir la época con 2023 y la configuración con 2024— y 2025 se evalúa una
 sola vez por configuración congelada. Además, evaluamos en 2026, un año que
@@ -38,7 +38,7 @@ no se usó para nada.
 **Respuesta corta.** (1) Variables calculadas solo con datos hasta el cierre
 del día; (2) umbrales de la etiqueta con `shift(1)`; (3) escalador y pesos de
 clase ajustados solo con entrenamiento; (4) separación cronológica; (5)
-ninguna decisión con 2025 en v5; (6) en la plataforma se descarta la vela del
+ninguna decisión con 2025 en la Etapa 4; (6) en la plataforma se descarta la vela del
 día mientras el mercado está abierto.
 
 **Si preguntan por purga/embargo (López de Prado):** la etiqueta del último
@@ -95,7 +95,7 @@ Según Landis y Koch (1977), menos de 0.20 es "acuerdo leve".
 ### E9. ¿Calcularon AUC-ROC o balanced accuracy?
 
 **Respuesta corta.** No eran métricas principales, pero las calculamos con
-las probabilidades guardadas de v5 (Exp B, 2025) y la LR también es la mejor:
+las probabilidades guardadas de la Etapa 4 (Exp B, 2025) y la LR también es la mejor:
 AUC-ROC macro 0.593 (las demás 0.539–0.573) y balanced accuracy 0.407 (las
 demás 0.364–0.373).
 
@@ -112,13 +112,13 @@ la estrategia (COMPRAR +r, VENDER −r, MANTENER 0).
 del Sharpe anualizado es ≈ 1 (Lo, 2002), así que el intervalo de 95 % es
 aproximadamente [−1.1, 2.9]. Por eso la métrica principal es la de
 clasificación y las conclusiones económicas son comparativas. En el
-walk-forward el Sharpe medio de la LR es +0.22 con desviación 0.50 entre
+prueba año por año el Sharpe medio de la LR es +0.22 con desviación 0.50 entre
 años: `t = 0.22/(0.50/√6) ≈ 1.1`, no significativo.
 
 ### E12. ¿Incluyeron costos de transacción?
 
 **Respuesta corta.** Las cifras principales van sin costos para comparar en
-igualdad, pero en v5 calculamos 5 y 10 puntos base por cambio de posición.
+igualdad, pero en la Etapa 4 calculamos 5 y 10 puntos base por cambio de posición.
 La LR pasa de Sharpe +0.89 a +0.76 y +0.62; XGBoost de +0.46 a +0.23 y +0.01.
 Los costos castigan la rotación (0.38 en la LR contra 0.65 en XGBoost), así
 que amplían la ventaja de la LR.
@@ -133,7 +133,7 @@ que amplían la ventaja de la LR.
 F1 de la LR en 2025 está en [0.379, 0.428] y las diferencias pareadas con
 los otros cuatro excluyen el cero; (2) **permutación**: en 2025 solo el 0.4 %
 de 500 reordenamientos de las señales supera al modelo; (3)
-**walk-forward** de 6 años; (4) **2026** fuera de muestra. Conclusión
+**prueba año por año** de 6 años; (4) **2026** fuera de muestra. Conclusión
 honesta: hay señal, débil y dependiente del año (en 2024 el 79 % de las
 permutaciones supera al modelo).
 
@@ -160,7 +160,7 @@ sobre los mismos días de cada acción; 21 pares por modelo (3 experimentos ×
 7 acciones). Prueba de signo y de rangos con signo de Wilcoxon. En la LR el
 global gana 18 de 21 (p = 0.002, binomial). Advertencia: los pares no son
 independientes (mismo año y mercado), así que los p-valores son optimistas;
-lo que da confianza es que la dirección se repite en v4 y v5.
+lo que da confianza es que la dirección se repite en las etapas 3 y 4.
 
 ### E17. ¿El ajuste de MANTENER × 0.90 es una mejora significativa?
 
@@ -214,7 +214,7 @@ k = 0.90: era sobreajuste a un año.
 
 **Respuesta corta.** Calibrar cambia cuánto confía el modelo, no
 necesariamente qué clase elige. La escala de temperatura no cambia el
-argmax; la calibración isotónica sí puede, y la probamos en la Vía 7:
+argmax; la calibración isotónica sí puede, y la probamos en la Etapa 5:
 empeoró la LR (−0.05 de F1). La regresión logística ya optimiza log-loss,
 que suele dar probabilidades razonablemente calibradas.
 
@@ -232,7 +232,7 @@ anterior; con 7 años y el modelo actual no se sostiene.
 
 ### E23. Si 2025 fue el mejor año del modelo, ¿no eligieron la prueba a conveniencia?
 
-**Respuesta corta.** No: 2025 se fijó en v4 como el último año completo,
+**Respuesta corta.** No: 2025 se fijó en la Etapa 3 como el último año completo,
 antes de conocer los resultados, para que los tres experimentos lo
-compartieran. Precisamente por eso reportamos el walk-forward y 2026, donde
+compartieran. Precisamente por eso reportamos la prueba año por año y 2026, donde
 el modelo rinde menos, y lo decimos.

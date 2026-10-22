@@ -54,7 +54,7 @@ conclusión (los clásicos igualan o superan a las redes).
   regularizado (C = 0.000165); las variables ya son no lineales.
 - **¿Cuántas capas?** LSTM 2 × 118; CNN 2 bloques; CNN-LSTM 2 bloques + 1
   LSTM. Las eligió Optuna (podía 1–3 / 1–4).
-- **¿No las ajustaron bien?** v5 buscó 17–20 hiperparámetros; su pérdida de
+- **¿No las ajustaron bien?** Etapa 4 buscó 17–20 hiperparámetros; su pérdida de
   validación no baja del azar con ninguna configuración.
 - **¿GRU, Transformer?** No se corrieron (solo LightGBM además de los 5).
 
@@ -62,9 +62,9 @@ conclusión (los clásicos igualan o superan a las redes).
 
 ## D5. Estadística
 
-- **¿No es suerte?** IC bootstrap, permutación (0.4 % en 2025), walk-forward,
+- **¿No es suerte?** IC bootstrap, permutación (0.4 % en 2025), prueba año por año,
   2026.
-- **¿Por qué no k-fold?** Mezcla futuro con pasado; usamos walk-forward.
+- **¿Por qué no k-fold?** Mezcla futuro con pasado; usamos prueba año por año.
 - **¿Sharpe +0.9 significativo?** No solo: error estándar ≈ 1 en un año.
 - **¿Por qué tanto MANTENER?** Voto dividido: sabe cuándo, no hacia dónde.
 - **¿Data snooping?** Decisiones en validación; las interacciones se
@@ -86,7 +86,7 @@ conclusión (los clásicos igualan o superan a las redes).
 
 ## D7. Paper
 
-- MICAI 2026; publica v4 + v5. En el paper la LR gana en 2025; en el TT,
+- MICAI 2026; publica Etapa 3 + Etapa 4. En el paper la LR gana en 2025; en el TT,
   con 6 años, empata con XGBoost: no se contradicen (el paper declara el año
   único como su limitación).
 

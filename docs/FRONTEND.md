@@ -40,6 +40,11 @@ Entradas clave:
   empresas, ganancia por empresa vs comprar y esperar, calificación F1 por
   empresa con la línea de azar y tabla ordenable con unidades.
   `GET /metrics?days=`.
+- `Aprende.tsx` (`/aprende`, pestaña «Aprende») — qué significa comprar,
+  vender en corto y mantener: barra para mover el cambio del precio y ver el
+  resultado con $1,000, la venta en corto en 4 pasos y un juego día por día
+  con los precios reales de 30 días (`GET /stocks/:symbol/history?days=30`),
+  comparando contra el modelo y contra comprar y esperar.
 - `Help.tsx` (`/ayuda`, pestaña «Ayuda») — dos pestañas: **Guía rápida**
   (manual corto por pantalla, escala de seguridad, cuándo se actualiza,
   y **Glosario** (buscable, por categorías). Los

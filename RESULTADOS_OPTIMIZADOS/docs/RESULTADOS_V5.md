@@ -1,5 +1,7 @@
 # Resultados v5 — protocolo corregido y búsqueda de hiperparámetros real
 
+> **Nota (2026-10-22).** Documento de trabajo de la **Etapa 4 (protocolo final)**, con los nombres que se usaban entonces. Equivalencias: v1 = Etapa 1 (TT1) · optimización de mayo, "v0", v2 y v3 = Etapa 2 · v4 = Etapa 3 · v5 = Etapa 4 (sus V0–V6 = pasos 4.1–4.7) · v7/"Vía 7" y v8/"Vía 8" = Etapa 5 · análisis de septiembre = Etapa 6 · "walk-forward" = prueba año por año. Referencia: [mapa de experimentos](../../ESTUDIO_TT/03_MAPA_DE_EXPERIMENTOS.md). Es la fuente del §8 del paper.
+
 > **En ejecución (2026-08-14).** Este documento se va llenando conforme terminan
 > las fases del plan (`PLAN_MAESTRO_BUSQUEDA.md`). Todo lo que aparece aquí sale
 > de `RESULTADOS_OPTIMIZADOS/v5/` y es reproducible con `scripts_opt/run_v5.py`.

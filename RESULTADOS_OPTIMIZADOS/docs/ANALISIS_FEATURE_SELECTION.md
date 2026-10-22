@@ -1,4 +1,6 @@
 # ANÁLISIS — FEATURE SELECTION ESTADÍSTICA vs TODAS LAS FEATURES
+
+> **Nota (2026-10-22).** Documento de trabajo de la **Etapa 2 (primeras mejoras)**, con los nombres que se usaban entonces. Equivalencias: v1 = Etapa 1 (TT1) · optimización de mayo, "v0", v2 y v3 = Etapa 2 · v4 = Etapa 3 · v5 = Etapa 4 (sus V0–V6 = pasos 4.1–4.7) · v7/"Vía 7" y v8/"Vía 8" = Etapa 5 · análisis de septiembre = Etapa 6 · "walk-forward" = prueba año por año. Referencia: [mapa de experimentos](../../ESTUDIO_TT/03_MAPA_DE_EXPERIMENTOS.md). Es la fuente del §6 del paper; se corrió con las particiones de TT1 (ver el mapa, §8, punto 1).
 ## ¿Mejora el rendimiento usar Pearson, VIF, Spearman y SHAP para filtrar features?
 
 > **Objetivo:** Determinar si filtrar features mediante tests estadísticos (lo que hace el `script 02`) mejora o empeora el rendimiento de cada modelo respecto a usar las 61 features completas.

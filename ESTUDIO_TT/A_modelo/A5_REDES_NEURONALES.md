@@ -4,9 +4,9 @@
 > 60) con las 61 variables de cada día. La LSTM la lee día por día con
 > memoria; la CNN busca patrones locales con filtros; la CNN-LSTM hace
 > primero lo de la CNN y luego lo de la LSTM. Se diseñaron en dos etapas:
-> en v4 (paper) con arquitecturas fijas y una búsqueda pequeña, y en v5 con
+> en la Etapa 3 (paper) con arquitecturas fijas y una búsqueda pequeña, y en la Etapa 4 con
 > Optuna buscando 17–20 hiperparámetros, incluido el número de capas. Las
-> ganadoras de v5 tienen 2 capas LSTM (LSTM), 2 bloques convolucionales
+> ganadoras de la Etapa 4 tienen 2 capas LSTM (LSTM), 2 bloques convolucionales
 > (CNN) y 2 bloques convolucionales + 1 capa LSTM (CNN-LSTM). **Ninguna
 > configuración logró bajar la pérdida de validación del nivel del azar**:
 > el límite no es el diseño de la red sino la poca señal y que las variables
@@ -42,13 +42,13 @@ Krauss 2018 usan LSTM; Sezer et al. 2020 revisan CNN e híbridos).
   últimos `lookback` días con sus 61 variables escaladas.
 - **Salida:** 3 puntajes (*logits*) → softmax → probabilidades de VENDER,
   MANTENER y COMPRAR.
-- **Escalado:** MinMaxScaler en v4; RobustScaler (elegido por Optuna) en v5,
+- **Escalado:** MinMaxScaler en la Etapa 3; RobustScaler (elegido por Optuna) en la Etapa 4,
   ajustado solo con entrenamiento y por acción.
 - **Ejemplos de entrenamiento (Exp B global):** ~10 400 ventanas.
 
 ---
 
-## 3. Primera etapa: las redes del paper (v4)
+## 3. Primera etapa: las redes del paper (Etapa 3)
 
 ### 3.1 Arquitecturas
 
@@ -116,18 +116,18 @@ Al revisar por qué las redes rendían menos, se midió todo
 | Con paro temprano por pérdida de validación, **se restauraba la época 1 o 2**: la pérdida de validación sube desde el inicio | Las redes del paper estaban entrenadas ~1 época útil |
 | **La pérdida de validación nunca baja de ln 3 ≈ 1.0986** (el azar) | No extraen nada generalizable |
 | **Achicar la LSTM de 592 131 a 10 275 parámetros da lo mismo** | No es problema de tamaño ni de regularización |
-| En validación (2024), LR, LSTM y XGBoost quedan dentro de 0.02 | Las diferencias de v4 podían ser ruido de un año |
-| El lookback de las redes en v4 se eligió con el F1 de **prueba** | Error de protocolo que favorecía a las redes |
+| En validación (2024), LR, LSTM y XGBoost quedan dentro de 0.02 | Las diferencias de la Etapa 3 podían ser ruido de un año |
+| El lookback de las redes en la Etapa 3 se eligió con el F1 de **prueba** | Error de protocolo que favorecía a las redes |
 | Los clásicos se reentrenaban con entrenamiento + validación; las redes no | Asimetría |
 | Las redes se evaluaban sobre menos filas (perdían los primeros días) | Comparación no estricta |
 
-Todo esto motivó el protocolo v5.
+Todo esto motivó el protocolo de la Etapa 4.
 
 ---
 
-## 4. Segunda etapa: las redes de v5 (Optuna)
+## 4. Segunda etapa: las redes de la Etapa 4 (Optuna)
 
-### 4.1 Antes de buscar: el torneo de decisiones de protocolo (V1)
+### 4.1 Antes de buscar: el torneo de decisiones de protocolo (paso 4.2)
 
 Se probaron 6 decisiones, una por una, por arquitectura (en modo dev):
 
@@ -166,7 +166,7 @@ entrada (10 días × 61 variables)
 | Lookback | 10 días | Ventana corta: más historia no ayudó |
 | Capas | 2 | Optuna podía elegir 1–3 |
 | Unidades | 118 | Tamaño de la memoria |
-| Bidireccional | **No** | (En v4 sí lo era) |
+| Bidireccional | **No** | (En la Etapa 3 sí lo era) |
 | Pooling | Atención | Decide qué días de la ventana pesan más |
 | Dropout | 0.43 | Regularización fuerte |
 | Pérdida | Focal, γ = 1.43 | Menos peso a ejemplos fáciles |
@@ -224,7 +224,7 @@ entrada (20 días × 61 variables)
 Las convoluciones usan *padding* para que la secuencia no se acorte: la
 LSTM recibe los 20 pasos.
 
-### 4.6 Detalles comunes de entrenamiento (v5)
+### 4.6 Detalles comunes de entrenamiento (Etapa 4)
 
 - Hasta 100 épocas, paro temprano con paciencia 20 sobre el criterio
   elegido; se restaura la mejor época.
@@ -235,7 +235,7 @@ LSTM recibe los 20 pasos.
 
 ### 4.7 ¿Por qué estos números de capas?
 
-**Respuesta para la defensa:** no se fijaron a mano en v5; Optuna podía
+**Respuesta para la defensa:** no se fijaron a mano en la Etapa 4; Optuna podía
 elegir entre 1 y 3 capas LSTM y entre 1 y 4 bloques convolucionales, y
 eligió 2 en la LSTM, 2 en la CNN y 2+1 en la CNN-LSTM. La razón de fondo:
 con ~10 000 ejemplos y poca señal, más capas solo agregan parámetros que
@@ -247,7 +247,7 @@ es lo que limita.
 
 ## 5. Resultados
 
-| Red | v4, Exp B, 2025 (mejor lookback) | v5, Exp B, 2025 | Intervalo 95 % v5 | Sharpe v5 | Walk-forward 2020–2025 |
+| Red | Etapa 3, Exp B, 2025 (mejor lookback) | Etapa 4, Exp B, 2025 | Intervalo 95 % Etapa 4 | Sharpe Etapa 4 | Prueba año por año 2020–2025 |
 |---|---:|---:|---|---:|---:|
 | LSTM | 0.370 | 0.369 | [0.341, 0.395] | −0.35 | 0.314 |
 | CNN 1D | 0.343 | 0.359 | [0.332, 0.386] | −0.46 | 0.292 |
@@ -256,9 +256,9 @@ es lo que limita.
 
 - Las tres redes quedan por debajo de la LR en 2025 con significancia, y
   entre ellas no hay diferencia significativa.
-- Las tres tienen **Sharpe negativo** en v5 (pierden dinero en la
-  simulación) y en el walk-forward.
-- En el paper (v4) la CNN-LSTM parecía casi empatar con la LR, pero ese
+- Las tres tienen **Sharpe negativo** en la Etapa 4 (pierden dinero en la
+  simulación) y en la prueba año por año.
+- En el paper (Etapa 3) la CNN-LSTM parecía casi empatar con la LR, pero ese
   resultado tenía el lookback elegido mirando la prueba.
 
 ---
@@ -292,7 +292,7 @@ dice la literatura: Gu, Kelly y Xiu (2020) obtienen ventaja de las redes con
 
 **Hallazgo del 2026-10-12** (no estaba en ningún documento anterior).
 
-En v4 (`train_all_v4.seq`) y en v5 (`common_v5._ventanas`), para la fila
+En la Etapa 3 (`train_all_v4.seq`) y en la Etapa 4 (`common_v5._ventanas`), para la fila
 *i* la ventana es `Z[i − lookback : i]`, es decir, los días
 `i − lookback, …, i − 1`, y la etiqueta es la de la fila *i*, que describe el
 movimiento de `C_i` a `C_{i+1}`. Por lo tanto:
@@ -308,7 +308,7 @@ documento menciona.
 **Cuánto pesa.** Se midió con la LR: entrenada con las variables del día
 *t − 1* en lugar de las del día *t*, su F1 en 2025 baja de 0.393 a 0.386
 (**−0.007**) (`scripts_opt/verificar_ventana_redes.py`). La brecha entre la
-LR y las redes en v5 es de 0.032 a 0.045; en el walk-forward, de 0.02 a
+LR y las redes en la Etapa 4 es de 0.032 a 0.045; en la prueba año por año, de 0.02 a
 0.06. Y las redes no superan el azar en su pérdida de validación con
 ninguna configuración. Por eso la asimetría **no cambia la conclusión**,
 pero debe reconocerse.
@@ -326,21 +326,21 @@ efecto pequeño."
 
 | Qué | Dónde | Resultado |
 |---|---|---|
-| Lookback 10, 20, 40, 60 | v4, v5 | Corto (10–20) es igual o mejor |
-| 1–3 capas LSTM, 16–256 unidades | v4 (cuadrícula), v5 (Optuna), diagnóstico | Sin efecto real; ganan 1–2 capas |
-| Bidireccional | v4, v5 | v4 sí; Optuna eligió no |
-| Pooling: último, media+máx, atención | V1, v5 | Atención para la LSTM; sin efecto claro |
-| 1–4 bloques convolucionales, kernel 3/5/7, dilatación | v5 | Ganan 2 bloques con kernel 7 |
-| BatchNorm | v4, v5 | La CNN prefirió sin; la CNN-LSTM con |
-| Entropía cruzada, *label smoothing*, *focal loss* | v5 | Optuna eligió focal en las tres |
-| Pesos de clase balanceados / ninguno / raíz | V1, v5 | Sin efecto |
-| Criterio de época (pérdida, F1, F1 promedio) | V1, v5 | F1 ayuda a la LSTM (+0.059) |
-| Reentrenar con entrenamiento + validación | V1 | Empeora |
+| Lookback 10, 20, 40, 60 | Etapa 3, Etapa 4 | Corto (10–20) es igual o mejor |
+| 1–3 capas LSTM, 16–256 unidades | Etapa 3 (cuadrícula), Etapa 4 (Optuna), diagnóstico | Sin efecto real; ganan 1–2 capas |
+| Bidireccional | Etapa 3, Etapa 4 | Etapa 3 sí; Optuna eligió no |
+| Pooling: último, media+máx, atención | paso 4.2, Etapa 4 | Atención para la LSTM; sin efecto claro |
+| 1–4 bloques convolucionales, kernel 3/5/7, dilatación | Etapa 4 | Ganan 2 bloques con kernel 7 |
+| BatchNorm | Etapa 3, Etapa 4 | La CNN prefirió sin; la CNN-LSTM con |
+| Entropía cruzada, *label smoothing*, *focal loss* | Etapa 4 | Optuna eligió focal en las tres |
+| Pesos de clase balanceados / ninguno / raíz | paso 4.2, Etapa 4 | Sin efecto |
+| Criterio de época (pérdida, F1, F1 promedio) | paso 4.2, Etapa 4 | F1 ayuda a la LSTM (+0.059) |
+| Reentrenar con entrenamiento + validación | paso 4.2 | Empeora |
 | Tamaño mínimo (10 275 parámetros) | Diagnóstico | Igual que el grande |
-| Variables extra de mercado (dataset v5, 93 variables) | v5 | No ayuda |
-| SWA (promedio de pesos de las últimas épocas) | Vía 7 | Mejora el Sharpe de la LSTM, no su F1; nada en CNN |
-| Calibración isotónica | Vía 7 | Baja el F1 de las redes (−0.06) |
-| Mezclas con LR y XGBoost | v0, Vía 7 | Peores que la LR sola |
+| Variables extra de mercado (dataset Etapa 4, 93 variables) | Etapa 4 | No ayuda |
+| SWA (promedio de pesos de las últimas épocas) | Etapa 5 | Mejora el Sharpe de la LSTM, no su F1; nada en CNN |
+| Calibración isotónica | Etapa 5 | Baja el F1 de las redes (−0.06) |
+| Mezclas con LR y XGBoost | Etapa 2, Etapa 5 | Peores que la LR sola |
 
 **No se probaron:** GRU, Transformer, TCN, TabNet. Razón: el diagnóstico
 mostró que el límite viene de la señal en los datos, no de la arquitectura
@@ -368,16 +368,16 @@ de hiperparámetros**, "por costo computacional":
    concluyó que la diferencia en número de variables impedía comparar
    arquitecturas (§5.6). Con la Exp C, la LSTM tenía 3 variables contra 25 de
    XGBoost.
-2. **v4:** LSTM bidireccional (2 × 128), CNN de 3 bloques (64 → 128 → 192),
+2. **Etapa 3:** LSTM bidireccional (2 × 128), CNN de 3 bloques (64 → 128 → 192),
    AdamW, lote 128; seguía sin búsqueda.
-3. **v5:** Optuna eligió capas, tamaños, ventana, pérdida y pooling
+3. **Etapa 4:** Optuna eligió capas, tamaños, ventana, pérdida y pooling
    (§4). El diagnóstico mostró que un entrenamiento tarda 7–12 s, así que el
    "costo computacional" que justificaba fijar las arquitecturas no era real.
 4. **Resultado:** las redes siguen debajo de los clásicos, ahora sin la
    excusa de tener menos variables ni hiperparámetros fijos.
 
 La idea de la CNN 1D como ablación sigue siendo útil para explicar: en
-TT1, la CNN-LSTM superaba a la CNN 1D por 0.012–0.025 de F1; en v5 sus
+TT1, la CNN-LSTM superaba a la CNN 1D por 0.012–0.025 de F1; en la Etapa 4 sus
 intervalos se traslapan (0.372 contra 0.359), así que el bloque recurrente
 no aporta una diferencia significativa.
 

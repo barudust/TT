@@ -1,4 +1,6 @@
 # ALTERNATIVAS NO IMPLEMENTABLES CON DATOS ACTUALES
+
+> **Nota (2026-10-22).** Documento de trabajo de la **Etapa 2 (primeras mejoras)**, con los nombres que se usaban entonces. Equivalencias: v1 = Etapa 1 (TT1) · optimización de mayo, "v0", v2 y v3 = Etapa 2 · v4 = Etapa 3 · v5 = Etapa 4 (sus V0–V6 = pasos 4.1–4.7) · v7/"Vía 7" y v8/"Vía 8" = Etapa 5 · análisis de septiembre = Etapa 6 · "walk-forward" = prueba año por año. Referencia: [mapa de experimentos](../../ESTUDIO_TT/03_MAPA_DE_EXPERIMENTOS.md). Lo que propone queda **fuera del planteamiento** (trabajo futuro); los costos y la prueba año por año ya se hicieron en la Etapa 4.
 ## Mejoras potenciales que requieren datos externos o recursos adicionales
 
 > **Propósito:** Este documento lista las técnicas y fuentes de datos que probablemente mejorarían los resultados pero NO se implementaron en este trabajo porque requieren datos no disponibles en Yahoo Finance, costos adicionales o trabajo de ingeniería fuera del alcance de la tesis. Se documentan aquí para referencia futura y para argumentar limitaciones honestas en la sección de "trabajo futuro" del paper.

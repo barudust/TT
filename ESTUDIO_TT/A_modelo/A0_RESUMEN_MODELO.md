@@ -47,13 +47,13 @@
 - **Separación por tiempo**, nunca al azar.
 - **3 experimentos**, prueba 2025: A = 10 años, **B = 6 (2018–2023, principal)**,
   C = 4. Validación 2024.
-- **v5 anidado:** decidir con 2024 (modo dev), evaluar 2025 una sola vez.
+- **Etapa 4 anidado:** decidir con 2024 (modo dev), evaluar 2025 una sola vez.
   Los cinco modelos sobre las mismas 1 736 filas.
 - **Optuna:** LR y XGBoost 150 intentos; redes 80 con 17–20 hiperparámetros.
 - **Métricas:** F1-macro (principal; azar 0.33), kappa, Sharpe, drawdown, win
   rate, profit factor; costos de 5 y 10 pb.
 - **Contra la suerte:** bootstrap por bloques (2 000 × 20 días), permutación,
-  walk-forward 2020–2025, 2026 en vivo.
+  prueba año por año 2020–2025, 2026 en vivo.
 
 → [A3 completo](A3_PROTOCOLO_Y_METRICAS.md)
 
@@ -74,7 +74,7 @@
 
 ## A5. Redes neuronales
 
-| Red | Diseño ganador (v5, Optuna) | Parámetros |
+| Red | Diseño ganador (Etapa 4, Optuna) | Parámetros |
 |---|---|---:|
 | LSTM | 2 capas × 118, atención, ventana 10 días | 198 480 |
 | CNN 1D | 2 bloques (50 → 100 filtros, kernel 7), promedio global, densa 101 | 67 007 |
@@ -95,22 +95,22 @@
 
 | Versión | Qué fue |
 |---|---|
-| v1 = TT1 | Variables por modelo, por acción, redes fijas → XGBoost primero |
-| v2–v3 | Umbrales por clase y 94 variables: no sirven |
-| **v4** | Misma prueba y mismas 61 variables para todos → **paper** |
-| **v5** | Protocolo estricto, Optuna, intervalos, walk-forward → LR significativa |
-| v7 | Refinamientos: solo calibración isotónica ayuda a XGBoost |
-| v8 | Dataset: solo las interacciones (luego empatan) |
+| Etapa 1 = TT1 | Variables por modelo, por acción, redes fijas → XGBoost primero |
+| Etapa 2 | Umbrales por clase y 94 variables: no sirven |
+| **Etapa 3** | Misma prueba y mismas 61 variables para todos → **paper** |
+| **Etapa 4** | Protocolo estricto, Optuna, intervalos, prueba año por año → LR significativa |
+| Etapa 5 | Búsqueda de mejoras: solo las 15 interacciones, que luego empatan; cambiar la etiqueta queda fuera del planteamiento |
+| Etapa 6 | Modelo de la plataforma: ajuste de mantener; 2026: F1 0.354 |
 | Septiembre | Exceso de MANTENER y ajuste × 0.90 |
 
-No existe v6 (V0–V6 eran sub-etapas de v5).
+Equivalencias con los nombres viejos (v1 … v8): [mapa de experimentos](../03_MAPA_DE_EXPERIMENTOS.md).
 
-→ [A6 completo](A6_EVOLUCION_V1_V8.md)
+→ [A6 completo](A6_ETAPAS_DEL_PROYECTO.md)
 
 ## A7. Resultados y límites
 
 - **2025:** LR 0.404 [0.379, 0.428], Sharpe +0.89; los demás 0.359–0.372.
-- **Walk-forward:** XGBoost 0.356, LR 0.350, redes 0.29–0.33; ningún modelo
+- **Prueba año por año:** XGBoost 0.356, LR 0.350, redes 0.29–0.33; ningún modelo
   pasa de 0.394 en ningún año.
 - **2026 (producción):** F1 0.354, kappa 0.035.
 - **Exceso de MANTENER:** "voto dividido" (sabe que habrá movimiento, no

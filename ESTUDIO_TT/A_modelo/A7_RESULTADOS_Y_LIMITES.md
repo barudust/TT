@@ -1,7 +1,7 @@
 # A7 — Resultados y límites
 
-> **Resumen.** En la prueba principal (2025, protocolo v5) la LR gana con
-> significancia: F1 0.404, Sharpe +0.89. En seis años de walk-forward la LR
+> **Resumen.** En la prueba principal (2025, protocolo de la Etapa 4) la LR gana con
+> significancia: F1 0.404, Sharpe +0.89. En seis años de prueba año por año la LR
 > y XGBoost empatan apenas arriba del azar (~0.35) y las redes quedan abajo.
 > En 2026, fuera de muestra, el modelo en producción da F1 0.354. La señal
 > existe pero es débil e inestable entre años; la conclusión que se sostiene
@@ -14,18 +14,18 @@
 
 | Qué | Cifra | Fuente |
 |---|---|---|
-| LR, 2025, v5, Exp B global | **F1 0.404**, IC 95 % [0.379, 0.428], **Sharpe +0.89** | `RESULTADOS_OPTIMIZADOS/v5/resultados_finales.csv` |
-| Los otros cuatro, 2025, v5 | CNN-LSTM 0.372, LSTM 0.369, XGBoost 0.359, CNN 0.359 | ídem |
-| LR, promedio de A/B/C, v4 (paper §7) | F1 0.399, Sharpe B +0.76 | `v4/resultados_v4.csv` |
-| Walk-forward 2020–2025, F1 medio | XGBoost 0.356, LR 0.350, CNN-LSTM 0.328, LSTM 0.314, CNN 0.292 | `analisis_hold/5_walk_forward_v5_resumen.csv` |
-| Máximo de cualquier modelo en cualquier año del walk-forward | 0.394 (LR, 2025) | ídem |
+| LR, 2025, Etapa 4, Exp B global | **F1 0.404**, IC 95 % [0.379, 0.428], **Sharpe +0.89** | `RESULTADOS_OPTIMIZADOS/v5/resultados_finales.csv` |
+| Los otros cuatro, 2025, Etapa 4 | CNN-LSTM 0.372, LSTM 0.369, XGBoost 0.359, CNN 0.359 | ídem |
+| LR, promedio de A/B/C, Etapa 3 (paper §7) | F1 0.399, Sharpe B +0.76 | `v4/resultados_v4.csv` |
+| Prueba año por año 2020–2025, F1 medio | XGBoost 0.356, LR 0.350, CNN-LSTM 0.328, LSTM 0.314, CNN 0.292 | `analisis_hold/5_walk_forward_v5_resumen.csv` |
+| Máximo de cualquier modelo en cualquier año de la prueba año por año | 0.394 (LR, 2025) | ídem |
 | Con costos de 10 pb (2025) | LR Sharpe +0.62; XGBoost +0.01 | `v5/resultados_finales.csv` |
 | Global contra por acción (LR, 21 pares) | Global gana 18/21, p = 0.002 | `analisis_hold/4a_global_vs_porticker_por_modelo.csv` |
 | Producción en 2026 (ene–sep) | **F1 0.354, κ 0.035, Sharpe +0.29**, MANTENER 40 % (real 35 %) | `analisis_hold/8_confirmacion_2026.csv` |
 | Modelo anterior en 2026 | F1 0.313, κ 0.010, MANTENER 60 % | ídem |
 | Azar / siempre MANTENER | F1 ≈ 0.33 / ≈ 0.20 | |
 
-### Otras métricas del mismo ranking (v5, Exp B global, 2025)
+### Otras métricas del mismo ranking (Etapa 4, Exp B global, 2025)
 
 Calculadas el 2026-10-12 con las probabilidades guardadas en
 `RESULTADOS_OPTIMIZADOS/v5/preds/`. La LR es la mejor en todas:
@@ -63,7 +63,7 @@ Matriz de confusión del LR + interacciones en 2025 (filas = realidad):
 
 ### 2.2 Dinero (sin costos)
 
-- La LR de v5 (sin interacciones) en 2025: Sharpe +0.89, win rate 52 %, profit factor 1.27, máximo
+- La LR de la Etapa 4 (sin interacciones) en 2025: Sharpe +0.89, win rate 52 %, profit factor 1.27, máximo
   drawdown −45 %.
 - Gran parte de la ganancia viene de **no operar** en días de poco
   movimiento: los días MANTENER tienen movimientos ~40 % menores (|r| medio
@@ -74,19 +74,19 @@ Matriz de confusión del LR + interacciones en 2025 (filas = realidad):
 
 ### 2.3 Por qué 2025 se ve mejor que el resto
 
-2025 fue el **mejor año** del modelo en el walk-forward. En 2025 se cumplía
+2025 fue el **mejor año** del modelo en la prueba año por año. En 2025 se cumplía
 la regla "VIX bajo → movimientos pequeños" que el modelo aprendió (MANTENER
 real 55 % con VIX bajo contra 28 % con VIX alto). En 2026 esa regla dejó de
 cumplirse (MANTENER real ≈ 35 % en todos los niveles del VIX).
 
-**El año de prueba no se eligió a conveniencia:** se fijó en v4 como el
+**El año de prueba no se eligió a conveniencia:** se fijó en la Etapa 3 como el
 último año completo, antes de conocer los resultados, para que los tres
-experimentos lo compartieran. Por eso se reportan también el walk-forward y
+experimentos lo compartieran. Por eso se reportan también la prueba año por año y
 2026.
 
 ---
 
-## 3. Walk-forward 2020–2025 (la evidencia más amplia)
+## 3. Prueba año por año 2020–2025 (la evidencia más amplia)
 
 | Año de prueba | LR | XGBoost | LSTM | CNN | CNN-LSTM | Mejor |
 |---|---:|---:|---:|---:|---:|---|
@@ -99,7 +99,7 @@ experimentos lo compartieran. Por eso se reportan también el walk-forward y
 | **Media** | 0.350 | **0.356** | 0.314 | 0.292 | 0.328 | |
 | Sharpe medio | **+0.22** | **+0.22** | −0.48 | −0.29 | −0.25 | |
 
-(CNN-LSTM de 2025 no quedó en el registro del walk-forward.)
+(CNN-LSTM de 2025 no quedó en el registro de la prueba año por año.)
 
 **Qué dice:**
 
@@ -192,7 +192,7 @@ objetivo. En 2025 se pasa al otro lado (29 % predicho contra 42 % real).
 
 Comparación pareada: el modelo global y el de cada acción evaluados en
 **exactamente los mismos días** de esa acción. 21 pares por modelo (3
-experimentos × 7 acciones), v5, 2025:
+experimentos × 7 acciones), Etapa 4, 2025:
 
 | Modelo | F1 global | F1 por acción | Pares que gana el global | p (signo) |
 |---|---:|---:|---:|---:|
@@ -211,7 +211,7 @@ mantener.
 
 *Advertencia:* los 21 pares no son independientes (mismo año, mismo
 mercado), así que los p-valores son optimistas. Lo que da confianza es que
-la dirección se repite en v4 y en v5.
+la dirección se repite en la Etapa 3 y en la Etapa 4.
 
 ---
 
@@ -223,7 +223,7 @@ la dirección se repite en v4 y en v5.
 | Permutación 2024 | 79 % de las barajadas supera al modelo → ese año no hubo |
 | IC bootstrap 2025 | LR [0.379, 0.428]: no incluye el azar (0.33) |
 | Kappa | 0.14 en 2025, ≈ 0.01–0.035 en 2026: leve |
-| Walk-forward | ≈ 0.35 de media, apenas arriba del azar |
+| Prueba año por año | ≈ 0.35 de media, apenas arriba del azar |
 
 **Conclusión:** hay una señal pequeña que aparece en algunos años y en
 otros no.
@@ -252,9 +252,9 @@ otros no.
 
 | Limitación | Qué se hizo al respecto |
 |---|---|
-| El paper evalúa un solo año de prueba | Walk-forward de 6 años y evaluación 2026 |
+| El paper evalúa un solo año de prueba | Prueba año por año de 6 años y evaluación 2026 |
 | 7 acciones de un sector, sobrevivientes | Se reconoce; ampliar es trabajo futuro |
-| Backtest simplificado (1 día, tamaño fijo, sin deslizamiento) | Costos calculados en v5 (5 y 10 pb) |
+| Backtest simplificado (1 día, tamaño fijo, sin deslizamiento) | Costos calculados en la Etapa 4 (5 y 10 pb) |
 | Probar muchas variantes sobre 2025 (*data snooping*) | Decisiones en validación / origen rodante; se aclara que las interacciones no están validadas |
 | Sharpe de un año con error estándar ≈ 1 | Las conclusiones son comparativas; métrica principal de clasificación |
 | Búsqueda simétrica en procedimiento, no en dimensión | Se afirma solo "una búsqueda realista no cambia el orden" |
@@ -266,7 +266,7 @@ otros no.
 
 ## 9. Trabajo futuro (en orden de valor esperado)
 
-1. Llevar el walk-forward y los costos al cuerpo de la evaluación (ya
+1. Llevar la prueba año por año y los costos al cuerpo de la evaluación (ya
    están calculados).
 2. Horizonte de 5 días (ya medido: F1 ≈ 0.43), cambiando el problema de
    forma explícita.
@@ -275,7 +275,7 @@ otros no.
 4. Datos gratuitos adicionales: macroeconomía de FRED; sentimiento de
    noticias con FinBERT.
 5. Tamaño de posición dinámico (por volatilidad) y optimizar con costos.
-6. Corregir la ventana de las redes a `[t − lookback + 1, t]` y repetir v5.
+6. Corregir la ventana de las redes a `[t − lookback + 1, t]` y repetir la Etapa 4.
 
 ---
 

@@ -93,7 +93,7 @@ es la fuente sino la poca señal del problema.
 **Respuesta corta.** En la prueba principal (2025, protocolo corregido) la
 Regresión Logística obtuvo F1-macro de 0.404 con intervalo de 95 % [0.379,
 0.428] y Sharpe de +0.89, significativamente mejor que los otros cuatro
-modelos. En seis años de walk-forward la LR y XGBoost empatan alrededor de
+modelos. En seis años de prueba año por año la LR y XGBoost empatan alrededor de
 0.35 y las redes quedan abajo. En 2026, fuera de muestra, el modelo en
 producción da F1 0.354.
 
@@ -114,7 +114,7 @@ contra modelos de referencia con simulación económica e integrarlos a una
 aplicación web. Por objetivo específico:
 
 1. **Analizar las arquitecturas y diseñar el pipeline** (variables,
-   etiquetado multiclase, partición temporal): hecho, y corregido en v4
+   etiquetado multiclase, partición temporal): hecho, y corregido en la Etapa 3
    (mismas variables para todos, misma prueba en los tres experimentos).
 2. **Implementar y optimizar los cinco modelos**: hecho; la optimización
    pasó de cuadrícula y redes fijas a Optuna para los cinco.
@@ -134,7 +134,7 @@ ahora las mismas 61 variables en lugar de un filtro distinto por modelo;
 (2) el modelo global pasó a ser el principal en lugar del modelo por
 acción; (3) el experimento A prueba en 2025 como los demás; (4) la búsqueda
 de hiperparámetros pasó a Optuna para los cinco, incluidas las redes, y se
-agregaron intervalos de confianza, walk-forward y evaluación en 2026; (5)
+agregaron intervalos de confianza, prueba año por año y evaluación en 2026; (5)
 el sistema se terminó y se desplegó, con SQLite y el ETL dentro de la API
 en lugar de PostgreSQL y un proceso aparte. Detalle en
 [D1](D1_TT1_VS_TT2.md).
@@ -146,7 +146,7 @@ modelo recibía distintas variables (la LR solo 3 a 8, XGBoost 23 a 25) y se
 entrenaba por acción. Al corregirlo —mismas 61 variables, modelo global y
 búsqueda de hiperparámetros simétrica— la LR mejora mucho (de 0.355 a 0.404)
 y XGBoost no. En 2025 la LR es significativamente mejor; en seis años de
-walk-forward ambos empatan (0.350 contra 0.356). Lo que no cambió entre TT1
+prueba año por año ambos empatan (0.350 contra 0.356). Lo que no cambió entre TT1
 y TT2 es la conclusión de fondo: los modelos clásicos igualan o superan a
 las redes.
 
@@ -156,7 +156,7 @@ las redes.
 negocio, de los datos, preparación, modelado, evaluación y despliegue) y
 SCRUM para organizar el trabajo en iteraciones. CRISP-DM permite regresar a
 fases anteriores cuando una evaluación lo exige, y eso es justo lo que pasó:
-cada versión (v1 a v8) volvió a la preparación de datos o al modelado
+cada versión etapas 1 a 6 volvió a la preparación de datos o al modelado
 después de evaluar.
 
 ### G12d. ¿Cuál es la brecha que cubre su trabajo frente a la literatura?
@@ -189,16 +189,17 @@ en la API, el despliegue y la respuesta a los revisores.
 > **Atención:** verifiquen y ajusten esta respuesta antes de la defensa; es
 > una pregunta casi segura.
 
-### G14. ¿Por qué tantas versiones (v1 a v8)? ¿No tenían un plan?
+### G14. ¿Por qué tantas versiones etapas 1 a 6? ¿No tenían un plan?
 
 **Respuesta corta.** Sí había plan, pero en investigación cada resultado
-cambia la siguiente pregunta. v1–v3 construyeron el pipeline y probaron más
-variables; v4 hizo la comparación justa; v5 corrigió el protocolo después de
-un diagnóstico; v7 y v8 agotaron las mejoras razonables. Que la conclusión
+cambia la siguiente pregunta. etapas 1–2 construyeron el pipeline y probaron más
+variables; la Etapa 3 hizo la comparación justa; la Etapa 4 corrigió el protocolo después de
+un diagnóstico; la Etapa 5 agotó las mejoras razonables y la Etapa 6 validó el modelo de la plataforma. Que la conclusión
 se mantenga a través de todas es lo que la hace creíble.
 
-**Si preguntan por v6:** no existe como versión. Dentro de v5 había siete
-sub-etapas llamadas V0 a V6; la V6 fue el bootstrap y el walk-forward.
+**Si preguntan por los nombres viejos (v1 … v8):** así se llamaban las corridas mientras se
+trabajaba; no había v6 porque se llamó V0–V6 a los pasos internos de v5. Para el documento se
+ordenaron en seis etapas ([mapa](../03_MAPA_DE_EXPERIMENTOS.md)).
 
 ### G15. ¿Qué harían con seis meses más?
 

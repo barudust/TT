@@ -23,7 +23,7 @@
 | **Buy & hold (comprar y mantener)** | Estrategia de referencia: comprar el primer día y no hacer nada. Sirve para comparar si el modelo agrega valor | Plataforma, análisis 2026 |
 | **Cierre (Close)** | Último precio del día de mercado. Es el precio que se usa para todo | Etiqueta y variables |
 | **Corto (posición corta, *short*)** | Vender una acción prestada para recomprarla más barata. Ganas si el precio baja. En el TT, VENDER = corto | Simulación económica |
-| **Costos de transacción / puntos base (pb)** | Lo que cuesta cada operación (comisión, diferencia compra-venta). 1 pb = 0.01 %. Se evaluó con 5 y 10 pb | v5, A7 |
+| **Costos de transacción / puntos base (pb)** | Lo que cuesta cada operación (comisión, diferencia compra-venta). 1 pb = 0.01 %. Se evaluó con 5 y 10 pb | Etapa 4, A7 |
 | **Deslizamiento (*slippage*)** | Diferencia entre el precio que querías y el que obtuviste al ejecutar. No se modela | Limitaciones |
 | **Drawdown** | Caída desde el punto más alto de tu capital. *Máximo drawdown* = la peor caída del periodo | Métricas económicas |
 | **ETF** | Fondo que cotiza en bolsa y replica un índice. SPY replica al S&P 500 | Contexto de mercado |
@@ -73,11 +73,11 @@ Aquí solo los nombres que más se repiten:
 | **Horizonte** | Cuántos días hacia adelante se predice. Aquí, 1 | Etiqueta |
 | **Interacción (variable de)** | Producto de dos variables (`a × b`). Permite a un modelo lineal representar que el efecto de una depende de la otra | 15 interacciones de producción |
 | **Lookback (ventana)** | Cuántos días hacia atrás lee una red neuronal | LSTM, CNN |
-| **MinMaxScaler** | Escala cada variable al rango [0, 1] usando mínimo y máximo | Redes en v4 |
+| **MinMaxScaler** | Escala cada variable al rango [0, 1] usando mínimo y máximo | Redes en la Etapa 3 |
 | **Percentil móvil** | El valor que deja abajo cierto porcentaje de los datos de una ventana que se va moviendo (aquí, el último año) | Etiqueta |
 | **RobustScaler** | Resta la mediana y divide entre el rango intercuartílico (percentil 75 − percentil 25). No lo distorsionan los días extremos | Modelo de producción |
 | **`shift(1)`** | Desplazar una serie un día. Se usa para que el umbral de la etiqueta del día *t* use solo días anteriores | Etiqueta |
-| **StandardScaler** | Resta la media y divide entre la desviación estándar | LR en v4, XGBoost |
+| **StandardScaler** | Resta la media y divide entre la desviación estándar | LR en la Etapa 3, XGBoost |
 | **Variable (*feature*, característica)** | Cada dato que el modelo usa para decidir (RSI, retorno de 5 días…) | 61 + 15 |
 
 ## 3b. Metodología y proceso (TT1)
@@ -184,7 +184,7 @@ Aquí solo los nombres que más se repiten:
 | **Experimento A / B / C** | Tres divisiones de los datos con el mismo año de prueba (2025) y 10, 6 o 4 años de entrenamiento. B es el principal |
 | **Fuera de muestra (*out-of-sample*)** | Datos que el modelo no usó para entrenar ni para tomar decisiones |
 | **Intervalo de confianza 95 %** | Rango donde, con 95 % de confianza, está el valor real de la métrica |
-| **Modo dev / modo final (v5)** | dev: entrena 2018–2022, elige época en 2023 y configuración en 2024. final: entrena 2018–2023, elige época en 2024 y evalúa 2025 **una vez** |
+| **Modo dev / modo final (Etapa 4)** | dev: entrena 2018–2022, elige época en 2023 y configuración en 2024. final: entrena 2018–2023, elige época en 2024 y evalúa 2025 **una vez** |
 | **Optuna / TPE** | Biblioteca que busca hiperparámetros aprendiendo de los intentos anteriores (TPE = *Tree-structured Parzen Estimator*) |
 | **Origen rodante (*rolling origin*)** | Para cada año Y: entrenar con los años anteriores y probar en Y; repetir para varios años |
 | **Poda (*pruning*, MedianPruner)** | Abandonar un intento de Optuna que va peor que la mediana de los anteriores |
@@ -193,7 +193,7 @@ Aquí solo los nombres que más se repiten:
 | **Purga / embargo** | Técnicas de López de Prado para quitar del entrenamiento observaciones cuya etiqueta se traslapa con la prueba |
 | **Test / prueba** | Datos que solo se usan al final para medir |
 | **Validación** | Datos para elegir hiperparámetros y época; no para reportar |
-| **Walk-forward** | Repetir entrenamiento–validación–prueba moviendo la ventana un año cada vez (aquí, prueba 2020…2025) |
+| **Prueba año por año** (*walk-forward*) | Repetir entrenamiento–validación–prueba moviendo la ventana un año cada vez (aquí, prueba 2020…2025, entrenando con los 5 años previos al de validación) |
 
 ## 9. Software y sistema
 
@@ -222,11 +222,13 @@ Aquí solo los nombres que más se repiten:
 
 | Término | Qué es |
 |---|---|
-| **v1 … v8** | Versiones sucesivas del pipeline de investigación (no existe v6). Ver [A6](A_modelo/A6_EVOLUCION_V1_V8.md) |
-| **V0 … V6 (con mayúscula)** | Sub-etapas **dentro de v5** (replicación, ablación, Optuna, etc.). De aquí viene la confusión con "v6" |
-| **Vía 7 / Vía 8** | v7 (refinamiento) y v8 (exploración del dataset) |
+| **Etapa (1 a 6)** | Cada vuelta de trabajo del proyecto: 1 línea base (TT1), 2 primeras mejoras, 3 comparación en igualdad, 4 protocolo final, 5 búsqueda de mejoras, 6 plataforma y validación. Ver el [mapa](03_MAPA_DE_EXPERIMENTOS.md) |
+| **v1 … v8** | Nombres viejos de las corridas; equivalencias en el [mapa](03_MAPA_DE_EXPERIMENTOS.md#7-equivalencias-con-el-repositorio). No hubo v6 |
+| **Experimento A / B / C** | Las tres formas de dividir los años (10, 6 y 4 años de entrenamiento; prueba 2025). No son etapas |
+| **Pasos 4.1 a 4.7** | Pasos internos de la Etapa 4 (replicación, decisiones de protocolo, Optuna, costos, intervalos). Antes se llamaban V0–V6 |
+| **Vía 7 / Vía 8** | Nombres viejos de las dos partes de la Etapa 5: ajustes al modelo y variables nuevas |
 | **Exp B global** | Configuración principal: entrenamiento 2018–2023, validación 2024, prueba 2025, un modelo para las 7 acciones |
-| **`LR-v8-interactions-holdw090`** | Nombre del modelo en producción: LR + interacciones de la Vía 8, peso de MANTENER × 0.90 |
+| **`LR-v8-interactions-holdw090`** | Nombre del modelo en producción: LR + interacciones de la Etapa 5, peso de MANTENER × 0.90 |
 | **Voto dividido** | Explicación del exceso de MANTENER: la probabilidad de movimiento se reparte entre COMPRAR y VENDER |
 | **`MODEL_VERSION`** | Constante en `api/ml/model.py` que debe coincidir con el `.pkl` (hay una prueba que lo verifica) |
 | **MICAI** | *Mexican International Conference on Artificial Intelligence*; publica en LNAI de Springer |

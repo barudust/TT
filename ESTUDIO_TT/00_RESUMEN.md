@@ -22,9 +22,9 @@ cada día. Parte del trabajo se publicó en **MICAI 2026**.
 
 | Qué | Cifra |
 |---|---|
-| LR en 2025 (prueba principal, protocolo v5) | **F1-macro 0.404**, intervalo 95 % [0.379, 0.428], **Sharpe +0.89** |
+| LR en 2025 (prueba principal, protocolo de la Etapa 4) | **F1-macro 0.404**, intervalo 95 % [0.379, 0.428], **Sharpe +0.89** |
 | Los otros cuatro en 2025 | 0.359–0.372 (la LR es significativamente mejor) |
-| Seis años de walk-forward (2020–2025) | LR 0.350 y XGBoost 0.356 empatan; redes 0.29–0.33 |
+| Seis años de prueba año por año (2020–2025) | LR 0.350 y XGBoost 0.356 empatan; redes 0.29–0.33 |
 | Techo | Ningún modelo pasa de **0.394** en ningún año |
 | Modelo en producción, 2026 (nunca visto) | **F1 0.354**, kappa 0.035 |
 | Referencias | Azar ≈ 0.33; decir siempre MANTENER ≈ 0.20 |
@@ -33,11 +33,15 @@ cada día. Parte del trabajo se publicó en **MICAI 2026**.
 
 | Cuándo | Qué |
 |---|---|
-| 18 mayo | **Reporte de TT1**: XGBoost mejor en F1, LR mejor en Sharpe, redes abajo; app "en desarrollo" |
-| Mayo–junio | v2–v4: misma prueba (2025) para todos y las mismas 61 variables → corrida del paper |
-| Julio | Modelo real conectado a la API, base de datos, despliegue en Render |
-| Agosto | Diagnóstico de las redes; **v5** (protocolo estricto, Optuna para los cinco, intervalos, walk-forward); Vías 7 y 8; paper corregido |
-| Septiembre | Paper final enviado; análisis del exceso de MANTENER y ajuste; evaluación 2026; auditoría de la plataforma |
+| Hasta 18 mayo | **Etapa 1 — Línea base (TT1)**: XGBoost mejor en F1, LR mejor en Sharpe, redes abajo; app "en desarrollo" |
+| Mayo–junio | **Etapa 2 — Primeras mejoras**: optimización por modelo, más variables, ensambles; filtrar variables empeora (paper §6). Cifras no reportables (se eligió con la prueba) |
+| Junio | **Etapa 3 — Comparación en igualdad**: las 61 variables para todos y prueba 2025 en A, B y C (paper §7) |
+| Julio | Modelo conectado a la API, base de datos, despliegue en Render |
+| Agosto | **Etapa 4 — Protocolo final**: diagnóstico de las redes, Optuna para los cinco, intervalos, costos, prueba año por año (paper §8). **Resultado principal** |
+| Fin de agosto | **Etapa 5 — Búsqueda de mejoras**: casi nada ayuda; se adoptan 15 interacciones; cambiar la etiqueta queda fuera del planteamiento |
+| Sep–oct | **Etapa 6 — Plataforma y validación**: exceso de MANTENER y su ajuste, 2026 fuera de muestra, niveles de seguridad, auditoría de la plataforma |
+
+Detalle y equivalencias con los nombres viejos (v1 … v8): [mapa de experimentos](03_MAPA_DE_EXPERIMENTOS.md).
 
 ---
 
@@ -62,10 +66,10 @@ cada día. Parte del trabajo se publicó en **MICAI 2026**.
 ### A3. Protocolo y métricas → [detalle](A_modelo/A3_PROTOCOLO_Y_METRICAS.md)
 - Separación **por tiempo**: 3 experimentos con prueba 2025 y 10, 6 u 4 años
   de entrenamiento (B = 2018–2023 es el principal).
-- **v5:** toda decisión se toma con 2024; 2025 se evalúa una sola vez.
+- **Etapa 4:** toda decisión se toma con 2024; 2025 se evalúa una sola vez.
 - Métricas: **F1-macro** (principal), kappa, y simulación económica
   (Sharpe, drawdown, win rate, profit factor; también con costos).
-- Contra la suerte: bootstrap por bloques, permutación, walk-forward, 2026.
+- Contra la suerte: bootstrap por bloques, permutación, prueba año por año, 2026.
 
 ### A4. Regresión Logística y XGBoost → [detalle](A_modelo/A4_MODELOS_CLASICOS.md)
 - **LR en producción:** multinomial, L2, **C = 0.000165** (regularización muy
@@ -84,10 +88,10 @@ cada día. Parte del trabajo se publicó en **MICAI 2026**.
 - Asimetría a conocer: su ventana termina un día antes que la de la LR
   (cuesta ≈ 0.007 de F1; no cambia la conclusión).
 
-### A6. Evolución v1 → v8 → [detalle](A_modelo/A6_EVOLUCION_V1_V8.md)
-- v1 = TT1 · v2–v3 umbrales y más variables (no sirven) · **v4** comparación
-  justa (paper) · **v5** protocolo estricto · v7 refinamientos · v8 dataset
-  (interacciones). No existe v6.
+### A6. Las seis etapas → [detalle](A_modelo/A6_ETAPAS_DEL_PROYECTO.md)
+- 1 línea base (TT1) · 2 primeras mejoras · **3 comparación en igualdad** (paper §7) ·
+  **4 protocolo final** (paper §8, resultado principal) · 5 búsqueda de mejoras ·
+  6 plataforma y validación.
 
 ### A7. Resultados y límites → [detalle](A_modelo/A7_RESULTADOS_Y_LIMITES.md)
 - La señal existe pero es **débil e inestable entre años**; 2025 fue el mejor.
@@ -124,7 +128,7 @@ Nada es simulado: todo sale de Yahoo o del modelo.
 
 ### B4. Frontend → [detalle](B_sistema/B4_FRONTEND.md)
 - **React + TypeScript + Vite + Tailwind**, aplicación web.
-- 5 pantallas: Hoy, detalle por empresa, Resultados, Ayuda (guía + glosario) y Acerca de.
+- 6 pantallas: Hoy, detalle por empresa, Resultados, **Aprende** (comprar, vender en corto y mantener, con ejemplos que se mueven y un juego con precios reales), Ayuda (guía + glosario) y Acerca de.
 - Seguridad de cada recomendación en palabras (Nada / Poco / Medianamente segura).
 - Muestra las 3 probabilidades, el resultado real de cada señal y el F1
   contra el azar.
@@ -141,9 +145,9 @@ Nada es simulado: todo sale de Yahoo o del modelo.
 - *"A Benchmark of Five Machine-Learning Architectures for Daily
   Trading-Signal Classification on US Tech Equities"*, **MICAI 2026**
   (Springer LNAI). Enviado el 8 de septiembre.
-- Publica la comparación v4 y su verificación v5 (la LR significativamente
+- Publica la comparación Etapa 3 y su verificación Etapa 4 (la LR significativamente
   mejor) y que filtrar variables no ayuda.
-- Es un **producto extra**: el TT es más amplio (walk-forward, 2026,
+- Es un **producto extra**: el TT es más amplio (prueba año por año, 2026,
   análisis de MANTENER, plataforma).
 
 ---

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useLocation, useSearchParams } from "react-router";
+import { Link, useLocation, useSearchParams } from "react-router";
 import { BookOpen, ListChecks, Search, AlertTriangle } from "lucide-react";
 import { Card } from "../components/ui/card";
 import { CATEGORIAS_GLOSARIO, GLOSARIO } from "../glosario";
@@ -47,6 +47,13 @@ function Guia() {
           })}
         </div>
         <p>Toca una tarjeta para ver la historia de esa empresa.</p>
+        <p>
+          ¿No queda claro qué es vender en corto?{" "}
+          <Link to="/aprende" className="text-blue-600 dark:text-blue-400 hover:underline">
+            Pruébalo en «Aprende»
+          </Link>
+          , con ejemplos que puedes mover y precios reales.
+        </p>
       </Seccion>
 
       <Seccion titulo="Dentro de cada empresa">

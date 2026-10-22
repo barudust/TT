@@ -14,9 +14,9 @@ Periodo reportado: 26 de agosto al 3 de octubre de 2026.
 **Descripción:**
 Se concluyó la etapa de optimización del modelo con dos vías finales:
 
-- **Vía 7:** refinamiento posterior a la búsqueda de hiperparámetros con Optuna,
+- **Etapa 5:** refinamiento posterior a la búsqueda de hiperparámetros con Optuna,
   que cerró la búsqueda sin encontrar una configuración mejor.
-- **Vía 8:** exploración del dataset con cinco técnicas y sus combinaciones. La
+- **Etapa 5:** exploración del dataset con cinco técnicas y sus combinaciones. La
   mejor fue agregar 15 términos de interacción entre variables.
 
 Con ello, el modelo en producción pasó de una Regresión Logística elastic-net
@@ -27,7 +27,7 @@ verificó la predicción de punta a punta con datos reales descargados.
 Además se integró la calibración de HOLD y los cambios de autores del paper
 trabajados en otra rama del equipo.
 
-**Evidencia:** commits `0185b44` (Vía 7), `229bb71` (Vía 8) y `817cc5a`;
+**Evidencia:** commits `0185b44` (Etapa 5), `229bb71` (Etapa 5) y `817cc5a`;
 `RESULTADOS_OPTIMIZADOS/INVESTIGACION_COMPLETA.md`; `api/ml/`.
 
 ---
@@ -113,7 +113,7 @@ defensa.
 
 ## Pendientes para el cierre
 
-1. Llevar al documento de tesis el walk-forward 2020–2025, el análisis y ajuste
+1. Llevar al documento de tesis la prueba año por año 2020–2025, el análisis y ajuste
    de HOLD, la comparación global vs por acción y la evaluación 2026.
 2. Preparar la presentación de la defensa y ensayar con la guía.
 3. Responder a Springer con el material suplementario y, al publicarse el DOI,

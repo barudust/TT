@@ -48,9 +48,9 @@ python paper_review/supplementary/build_supplementary.py
 ```
 
 El script escribe el `.tex` y lo compila con `pdflatex` (MiKTeX:
-`winget install MiKTeX.MiKTeX`). Usa la corrida **v4**
+`winget install MiKTeX.MiKTeX`). Usa la corrida de la **Etapa 3**
 (`RESULTADOS_OPTIMIZADOS/v4/resultados_v4.csv`), que es la de las tablas del §7
-del paper (la v5 solo aparece en §8), con la misma selección del mejor
+del paper (la Etapa 4 solo aparece en §8), con la misma selección del mejor
 look-back, y **se detiene si no reproduce las Tablas 4, 5 y 6 del paper** o si
 LaTeX deja referencias sin resolver. El suplementario cita la etiqueta de git
 `micai2026` como instantánea del código.
@@ -134,7 +134,7 @@ y subir el `paper.pdf` resultante.
 > envío (commit `da2906d`); siguen en el historial de git si hicieran falta.
 >
 > **Lo que el paper no incluye** (se hizo después y está en el TT): el
-> walk-forward 2020–2025, el análisis del exceso de HOLD y el ajuste del peso
+> prueba año por año 2020–2025, el análisis del exceso de HOLD y el ajuste del peso
 > de clase, la comparación global vs por-ticker sobre las mismas filas y la
 > evaluación 2026 fuera de muestra. Ver
 > `../RESULTADOS_OPTIMIZADOS/docs/ANALISIS_HOLD_Y_GLOBAL.md`.
@@ -143,7 +143,7 @@ y subir el `paper.pdf` resultante.
 
 | Sección | Fuente |
 |---|---|
-| Tablas 4–7 y figuras (benchmark v4) | `../RESULTADOS_OPTIMIZADOS/v4/resultados_v4.csv` |
+| Tablas 4–7 y figuras (benchmark Etapa 3) | `../RESULTADOS_OPTIMIZADOS/v4/resultados_v4.csv` |
 | Sección 8 (protocolo corregido, Optuna simétrico, IC bootstrap) | `../RESULTADOS_OPTIMIZADOS/v5/reportes/tabla{1,2,4,5}*.md` |
 | Justificación del año de test 2025 | `../tesis_ml_stocks/01_raw_datasets/*.parquet` |
 | Expediente completo de la investigación | `../RESULTADOS_OPTIMIZADOS/INVESTIGACION_COMPLETA.md` |

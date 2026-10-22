@@ -24,8 +24,8 @@
 ║                      (61 variables + etiqueta)          tesis_ml_stocks/    ║
 ║                                  │                                          ║
 ║                                  ▼                                          ║
-║          scripts_opt/ (v4, v5, v7, v8, análisis de septiembre)              ║
-║          5 modelos · Optuna · walk-forward · bootstrap                      ║
+║          scripts_opt/ (Etapa 3, Etapa 4, Etapa 5, Etapa 5, análisis de septiembre)              ║
+║          5 modelos · Optuna · prueba año por año · bootstrap                      ║
 ║                                  │  ganador: LR                             ║
 ║                                  ▼                                          ║
 ║          scripts_opt/entrenar_produccion.py                                 ║
@@ -159,7 +159,7 @@ TT_Proyecto/
 ├── Frontend/               plataforma: aplicación web (React)
 ├── docs/                   documentación técnica de la plataforma
 ├── scripts_v1/             pipeline inicial (01 construye el dataset)
-├── scripts_opt/            investigación v4–v8 y análisis
+├── scripts_opt/            investigación de las etapas 3–5 y análisis
 ├── tesis_ml_stocks/        datasets (parquet)
 ├── RESULTADOS_OPTIMIZADOS/ resultados, informes, guía de defensa
 ├── paper/, paper_review/   paper MICAI

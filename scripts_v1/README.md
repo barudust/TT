@@ -1,6 +1,7 @@
-# scripts_v1 — pipeline inicial (numerado)
+# scripts_v1 — pipeline inicial (numerado) · Etapa 1
 
-Primer pipeline de la tesis, ejecutado en orden (01 → 08). Se corren desde
+Primer pipeline de la tesis, ejecutado en orden (01 → 08). Es la **Etapa 1
+(línea base, reporte de TT1)** del [mapa de experimentos](../ESTUDIO_TT/03_MAPA_DE_EXPERIMENTOS.md). Se corren desde
 la raíz del repo (usan rutas relativas tipo `tesis_ml_stocks/...`,
 no relativas al script):
 

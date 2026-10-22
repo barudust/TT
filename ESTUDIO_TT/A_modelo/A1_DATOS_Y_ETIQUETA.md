@@ -25,7 +25,7 @@ precios **ajustados** por *splits* y dividendos (`auto_adjust=True`).
 | Reproducibilidad | Cualquiera puede descargar exactamente los mismos datos y correr el pipeline sin pagar licencias |
 | Alcance | El TT es de metodología comparativa con datos públicos, no de acceso a datos privilegiados |
 | Calidad suficiente | Para datos **diarios** de acciones grandes, Yahoo es confiable; sus problemas conocidos están en datos intradía y en acciones pequeñas |
-| Evidencia de que no es la limitante | Se probó agregar 32–33 variables más de Yahoo (bonos, dólar, oro, petróleo, sectores, VVIX, crédito) en v3 y v5, y no mejoró |
+| Evidencia de que no es la limitante | Se probó agregar 32–33 variables más de Yahoo (bonos, dólar, oro, petróleo, sectores, VVIX, crédito) en las etapas 2 y 4, y no mejoró |
 
 ### ¿Qué no se usó y por qué?
 
@@ -94,7 +94,7 @@ llamadas *Magnificent 7*), ~30 % del valor del S&P 500.
 En el reporte de TT1 el **experimento A** usaba entrenamiento 2014–2021,
 validación 2022–2023 y **prueba 2024–2025** (Tablas 3 y 8 del TT1), así que
 no compartía la prueba con B y C (el texto del TT1, §3.5.1, dice que sí; la
-tabla dice que no). Desde v4 el experimento A es 2014–2023 / 2024 / 2025.
+tabla dice que no). Desde la Etapa 3 el experimento A es 2014–2023 / 2024 / 2025.
 Ver [A3 §2](A3_PROTOCOLO_Y_METRICAS.md#2-los-tres-experimentos-a-b-c).
 
 ---
@@ -169,7 +169,7 @@ retorno de *t*.
 - Da ~30 % COMPRAR, ~40 % MANTENER, ~30 % VENDER: clases suficientemente
   grandes para aprender y una clase de "no operar" clara.
 - Es la elección usual en la literatura de clasificación de señales.
-- **Se probaron otros cortes (Vía 8 y análisis de septiembre):**
+- **Se probaron otros cortes (Etapa 5 y análisis de septiembre):**
 
 | Percentiles | F1 test 2025 | Kappa 2025 | MANTENER real | MANTENER predicho |
 |---|---:|---:|---:|---:|
@@ -205,7 +205,7 @@ adaptarse a un cambio de régimen.
 - Da el máximo número de ejemplos.
 - Es el caso más difícil (más ruido), y por eso el más exigente para
   comparar modelos.
-- **Se probaron horizontes de 2, 3, 5, 7 y 10 días** (Vía 8). Con 5–7 días
+- **Se probaron horizontes de 2, 3, 5, 7 y 10 días** (Etapa 5). Con 5–7 días
   el F1 sube a ~0.43, pero eso **cambia el problema** (ya no es una señal
   diaria) y contradice lo publicado. Queda como trabajo futuro.
 

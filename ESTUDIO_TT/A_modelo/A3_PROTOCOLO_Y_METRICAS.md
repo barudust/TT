@@ -2,13 +2,13 @@
 
 > **Resumen.** Los datos se separan siempre por tiempo (pasado para
 > entrenar, el año siguiente para validar, el último para probar). Hay tres
-> experimentos que comparten el año de prueba 2025. En v5, toda decisión se
+> experimentos que comparten el año de prueba 2025. En la Etapa 4, toda decisión se
 > toma con 2024 y 2025 se evalúa **una sola vez**. Los cinco modelos se
 > ajustan con la misma herramienta (Optuna) y se evalúan sobre las mismas
 > filas. Se mide con F1-macro (clasificación), kappa (acuerdo sobre el
 > azar) y una simulación económica (Sharpe, drawdown, win rate, profit
 > factor). La incertidumbre se mide con bootstrap por bloques, pruebas de
-> permutación, walk-forward de 6 años y una evaluación real en 2026.
+> permutación, prueba año por año de 6 años y una evaluación real en 2026.
 >
 > Código: `scripts_opt/common_v5.py` (datos, redes, entrenamiento),
 > `scripts_opt/run_v5.py` (búsqueda, evaluación final, estadística),
@@ -43,11 +43,11 @@ inflados. Por eso:
 | C | 2020–2023 | 2024 | 2025 | 4 |
 
 - **Por qué el mismo año de prueba en los tres:** para que la única
-  diferencia sea cuántos años de historia se usan. Antes de v4, el
+  diferencia sea cuántos años de historia se usan. Antes de la Etapa 3, el
   experimento A tenía otro periodo de prueba y la comparación era injusta.
 - **Por qué tres:** responden "¿más historia ayuda o el mercado viejo ya
   no sirve?". Resultado: no hay una tendencia clara; la LR sale bien en los
-  tres (v5: 0.406 / 0.404 / 0.401).
+  tres (Etapa 4: 0.406 / 0.404 / 0.401).
 - **Por qué B es el principal:** 6 años es un punto medio razonable entre
   cantidad de datos y vigencia del régimen, y es el que usa producción.
 
@@ -64,16 +64,16 @@ modalidades = **120 corridas** por versión.
 |---|---|
 | Exp A: 2014–2021 / 2022–2023 / **2024–2025** | 2014–2023 / 2024 / 2025 |
 | Estrategia principal: un modelo por acción; global como adicional | Global como principal |
-| LR y XGBoost: búsqueda en cuadrícula en validación y reentrenar con entrenamiento + validación | Optuna (v5) en un año de decisión separado |
+| LR y XGBoost: búsqueda en cuadrícula en validación y reentrenar con entrenamiento + validación | Optuna (Etapa 4) en un año de decisión separado |
 | Redes: arquitectura e hiperparámetros fijos "por costo computacional" | Optuna con 17–20 hiperparámetros (un entrenamiento tarda 7–12 s) |
-| Lookback 20 o 60: el texto dice "mejor en validación", los resultados usan el mejor **en la prueba** | v5: el lookback lo elige Optuna en 2024 |
-| Sin pruebas de significancia; "análisis por subperiodos" = comparar A, B y C | Bootstrap, permutación, walk-forward, 2026 |
+| Lookback 20 o 60: el texto dice "mejor en validación", los resultados usan el mejor **en la prueba** | Etapa 4: el lookback lo elige Optuna en 2024 |
+| Sin pruebas de significancia; "análisis por subperiodos" = comparar A, B y C | Bootstrap, permutación, prueba año por año, 2026 |
 | Líneas base: clase mayoritaria y aleatoria estratificada | Se siguen usando como referencia |
 | Métricas: F1-macro, F1 por clase, F1 ponderado, accuracy, matriz de confusión; win rate, retorno, Sharpe, drawdown, profit factor, Calmar | + kappa, AUC-ROC y balanced accuracy; costos |
 
 ---
 
-## 3. El protocolo anidado de v5 (cómo se evita tocar la prueba)
+## 3. El protocolo anidado de la Etapa 4 (cómo se evita tocar la prueba)
 
 | Modo | Entrena | Elige la época (redes) | Elige la configuración | Evalúa |
 |---|---|---|---|---|
@@ -84,7 +84,7 @@ modalidades = **120 corridas** por versión.
 configuración, ese año deja de ser independiente. Y si se mira 2025 para
 decidir algo, 2025 deja de ser una prueba.
 
-Otras reglas de v5 (corrigen problemas de v4):
+Otras reglas de la Etapa 4 (corrigen problemas de la Etapa 3):
 
 1. **Ventanas alineadas:** las secuencias de las redes se construyen sobre la
    serie continua y se asignan al conjunto por la fecha de la etiqueta. Así
@@ -94,7 +94,7 @@ Otras reglas de v5 (corrigen problemas de v4):
 3. **Los clásicos (LR, XGBoost) se reentrenan con entrenamiento +
    validación** antes de predecir la prueba. Para las redes se probó y las
    empeoraba (−0.024 a −0.047), así que no se hace.
-4. **Se replicó v4 dentro del código nuevo** antes de cambiar nada: 18 de 18
+4. **Se replicó Etapa 3 dentro del código nuevo** antes de cambiar nada: 18 de 18
    celdas idénticas. Así se sabe que las diferencias vienen del protocolo y
    no de un error de reimplementación.
 
@@ -172,7 +172,7 @@ semillas). La LR es prácticamente determinista (desviación entre semillas:
 
 ## 5. Validaciones adicionales (más allá de un año de prueba)
 
-### 5.1 Walk-forward (v5)
+### 5.1 Prueba año por año (Etapa 4)
 
 Para cada año de prueba *T* de 2020 a 2025: entrenar con los 5 años
 `[T−6, T−2]`, validar con `T−1` y probar con `T`. La ventana es del mismo
@@ -215,14 +215,14 @@ clases igual.
 |---|---:|
 | Decir siempre MANTENER | ≈ 0.20 |
 | Al azar con las proporciones reales | ≈ 0.33 |
-| LR (v5) | 0.404 |
+| LR (Etapa 4) | 0.404 |
 
 ### 6.2 Por qué no accuracy
 
 Decir siempre MANTENER da ~42 % de exactitud sin aprender nada. El F1-macro
 lo detecta (F1 de COMPRAR y VENDER = 0). Los colapsos sí ocurrieron en
-algunas redes: en v5, la CNN y la CNN-LSTM del experimento A no predijeron
-ni un MANTENER (F1 0.26 y 0.24), y en v4 la CNN-LSTM del experimento C
+algunas redes: en la Etapa 4, la CNN y la CNN-LSTM del experimento A no predijeron
+ni un MANTENER (F1 0.26 y 0.24), y en la Etapa 3 la CNN-LSTM del experimento C
 predecía COMPRAR solo el 4.9 % de los días.
 
 ### 6.3 Kappa de Cohen
@@ -268,7 +268,7 @@ Un modelo puede tener buen F1 acertando días con movimientos pequeños y
 perder dinero en los grandes, o al revés. El TT reporta ambos tipos de
 métrica.
 
-### 7.4 Costos de transacción (v5)
+### 7.4 Costos de transacción (Etapa 4)
 
 Se descuentan 5 o 10 pb por cada **cambio de posición** (pasar de corto a
 largo cuenta doble). La **rotación** (cambio medio de posición por día) de
@@ -295,7 +295,7 @@ principal es la de clasificación.
 |---|---|---|
 | **Bootstrap por bloques** | Remuestrea 2 000 veces bloques de 20 días consecutivos del año de prueba; los percentiles 2.5 y 97.5 dan el intervalo. Bloques (no días sueltos) para respetar que los días están correlacionados | LR 2025: [0.379, 0.428]; supera a las otras cuatro (las diferencias pareadas excluyen el cero) |
 | **Permutación** | Baraja 500 veces las señales del modelo entre días (misma cantidad de cada señal, sin relación con lo que pasó) | 2025: solo 0.4 % de las permutaciones supera al modelo. 2024: el 79 % lo supera |
-| **Walk-forward** | 6 años de prueba | Ningún modelo pasa de 0.394; LR y XGBoost ≈ 0.35 |
+| **Prueba año por año** | 6 años de prueba | Ningún modelo pasa de 0.394; LR y XGBoost ≈ 0.35 |
 | **Prueba de signo / Wilcoxon** | Compara pares (global contra por acción en la misma acción y experimento) | Global gana en LR 18 de 21, p = 0.002 |
 | **2026 en vivo** | Año no usado para nada | F1 0.354, κ 0.035 |
 
@@ -310,7 +310,7 @@ principal es la de clasificación.
 3. Escalador ajustado solo con entrenamiento.
 4. Pesos de clase calculados con entrenamiento.
 5. Separación cronológica estricta.
-6. En v5, ninguna decisión mira 2025.
+6. En la Etapa 4, ninguna decisión mira 2025.
 7. En la plataforma, se descarta la vela del día mientras el mercado está
    abierto (su "cierre" sería un precio intermedio).
 

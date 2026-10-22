@@ -7,16 +7,16 @@ heurística ni datos simulados.
 ## Modelo elegido
 
 **Regresión Logística multinomial, global (los 7 tickers juntos):** L2 con
-C = 0.000165 (ganador de Optuna en v5), RobustScaler, 61 indicadores + 15
-interacciones (Vía 8) y pesos de clase "balanced" con el de HOLD × 0.90.
+C = 0.000165 (ganador de Optuna en la Etapa 4), RobustScaler, 61 indicadores + 15
+interacciones (Etapa 5) y pesos de clase "balanced" con el de HOLD × 0.90.
 Entrenada con 2018-2025. `config_id`: `LR-v8-interactions-holdw090`.
 Se regenera con `python scripts_opt/entrenar_produccion.py`.
 
 | Evaluación | F1-macro | κ | Sharpe | Fuente |
 |---|---:|---:|---:|---|
-| Test 2025, Exp B (LR v5, 61 features) | 0.404 | — | +0.89 | `RESULTADOS_OPTIMIZADOS/v5/resultados_finales.csv` |
-| Test 2025, Exp B (+ interacciones, Vía 8) | 0.413 | 0.14 | +0.92 | `RESULTADOS_OPTIMIZADOS/v8/interactions.csv` |
-| Walk-forward 2020-2025 (LR v5, media) | 0.350 | — | +0.22 | `RESULTADOS_OPTIMIZADOS/analisis_hold/5_walk_forward_v5_resumen.csv` |
+| Test 2025, Exp B (LR de la Etapa 4, 61 features) | 0.404 | — | +0.89 | `RESULTADOS_OPTIMIZADOS/v5/resultados_finales.csv` |
+| Test 2025, Exp B (+ interacciones, Etapa 5) | 0.413 | 0.14 | +0.92 | `RESULTADOS_OPTIMIZADOS/v8/interactions.csv` |
+| Prueba año por año 2020-2025 (LR de la Etapa 4, media) | 0.350 | — | +0.22 | `RESULTADOS_OPTIMIZADOS/analisis_hold/5_walk_forward_v5_resumen.csv` |
 | Origen rodante 2019-2024, pipeline de producción (media) | 0.365 | 0.068 | +0.54 | `analisis_hold/7_reglas_alternativas_resumen.csv` |
 | **2026 fuera de muestra, modelo desplegado** | **0.354** | **0.035** | +0.29 | `scripts_opt/evaluar_produccion_2026.py` |
 
@@ -26,8 +26,8 @@ Por qué el peso de HOLD: `RESULTADOS_OPTIMIZADOS/docs/ANALISIS_HOLD_Y_GLOBAL.md
 (sin él, el modelo predecía HOLD el 60 % de los días de 2026 con 35 % real).
 
 > **Historia.** Hasta agosto de 2026 corría el `LR-02-elasticnet-all` de la
-> evaluación v1 (F1 0.417 / Sharpe 1.25, cifras de un protocolo anterior que
-> no son comparables con v4/v5). Se reemplazó por el ganador de la Vía 8 y,
+> Etapa 2 (F1 0.417 / Sharpe 1.25, cifras de un protocolo anterior que
+> no son comparables con las etapas 3 y 4). Se reemplazó por el ganador de la Etapa 5 y,
 > el 2026-09-30, por esta versión con el peso de HOLD ajustado.
 
 El `.pkl` (modelo + `RobustScaler` + lista de 76 features + pares de

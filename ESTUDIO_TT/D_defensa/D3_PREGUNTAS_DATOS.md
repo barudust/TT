@@ -45,7 +45,7 @@ salieron del índice, es trabajo futuro.
 (la media de 200 días necesita casi un año de historia, por eso se
 descargó desde 2013) y cubrimos varios regímenes: alcista largo, COVID,
 recuperación, año bajista 2022 y auge de la IA. 2025 era el último año
-completo cuando se fijó la prueba en v4, antes de ver resultados. No fue un
+completo cuando se fijó la prueba en la Etapa 3, antes de ver resultados. No fue un
 año fácil: retorno por debajo de la mediana histórica y volatilidad alta.
 
 ### DA6. ¿Limpiaron los datos? ¿Hubo valores faltantes?
@@ -233,13 +233,13 @@ esa asimetría impedía comparar arquitecturas: en el experimento C la LSTM
 tenía 3 variables y XGBoost 25. Segunda, lo medimos: cada modelo con las 61
 variables fue mejor que con su filtro en 11 de 15 casos. La regularización
 del modelo selecciona mejor que un filtro que mira cada variable por
-separado. Desde v4 los cinco modelos reciben las mismas 61.
+separado. Desde la Etapa 3 los cinco modelos reciben las mismas 61.
 
 ### DT2. En TT1 el experimento A probaba en 2024–2025. ¿Por qué cambió?
 
 **Respuesta corta.** Porque así A no se podía comparar con B y C, que
 probaban solo en 2025: cualquier diferencia podía deberse al año y no a la
-cantidad de historia. Desde v4 los tres prueban en 2025 y solo cambia el
+cantidad de historia. Desde la Etapa 3 los tres prueban en 2025 y solo cambia el
 entrenamiento (10, 6 o 4 años).
 
 ### DT3. ¿Qué eran los canales OHLCV de la CNN-LSTM en TT1 y por qué ya no están?

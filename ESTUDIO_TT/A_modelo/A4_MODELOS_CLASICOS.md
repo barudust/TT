@@ -4,7 +4,7 @@
 > variables y las convierte en tres probabilidades; con regularización L2 muy
 > fuerte (C = 0.000165) es el modelo ganador y el que está en producción.
 > **XGBoost** es un conjunto de árboles de decisión entrenados uno tras otro;
-> es muy competitivo (empata con la LR en el walk-forward), pero opera más y
+> es muy competitivo (empata con la LR en la prueba año por año), pero opera más y
 > por eso pierde cuando hay costos. Ninguno de los dos "lee" la secuencia de
 > días: miran solo la fila del día, que ya resume la historia.
 
@@ -58,8 +58,8 @@ pérdida = Σ_i w_{y_i} · (−log p_{y_i}(x_i))  +  (1/C) · ½ ‖β‖²
 | Versión | Penalización | C | Escalador | Cómo se eligió |
 |---|---|---|---|---|
 | TT1 | L2, **one-vs-rest** (un clasificador binario por clase), lbfgs | {0.001, 0.01, 0.1, 1, 10, 100} | StandardScaler | Cuadrícula en validación; solo con 3–8 variables filtradas |
-| v4 (paper §7) | Elasticnet, l1_ratio = 0.5 | 0.01, 0.1 o 1 | StandardScaler | Cuadrícula de 3 valores en validación |
-| **v5 y producción** | **L2** | **0.000165** | **RobustScaler** | Optuna, 150 intentos, objetivo F1 en 2024 |
+| Etapa 3 (paper §7) | Elasticnet, l1_ratio = 0.5 | 0.01, 0.1 o 1 | StandardScaler | Cuadrícula de 3 valores en validación |
+| **Etapa 4 y producción** | **L2** | **0.000165** | **RobustScaler** | Optuna, 150 intentos, objetivo F1 en 2024 |
 
 Optuna podía elegir L1, L2 o elasticnet y eligió **L2**. Con una
 regularización tan fuerte, la parte L1 no agrega nada: todos los
@@ -92,7 +92,7 @@ coeficientes ya son diminutos.
 
 ### 1.6 Algoritmo de optimización (solver)
 
-- **lbfgs** en la investigación v5 cuando la penalización es L2.
+- **lbfgs** en la investigación de la Etapa 4 cuando la penalización es L2.
 - **SAGA** en producción y cuando hay L1 o elasticnet (es el único de
   scikit-learn que soporta elasticnet multinomial).
 - Como el problema es convexo (un solo mínimo), ambos llegan a la misma
@@ -120,9 +120,9 @@ en rigor hay 154 grados de libertad.)
 En TT1 la LR recibía solo 3–8 variables (filtradas con Pearson + VIF) y
 XGBoost 23–25, y la estrategia principal era por acción (~1 500 filas). Al
 darles las mismas 61 variables, la LR por acción en el Exp B pasó de 0.355 a
-0.392 y XGBoost se quedó en 0.37; con el modelo global y la búsqueda de v5
+0.392 y XGBoost se quedó en 0.37; con el modelo global y la búsqueda de la Etapa 4
 la LR llegó a 0.404. El filtro le quitaba a la LR información que su
-propia regularización sabe aprovechar. Aun así, en el walk-forward de seis
+propia regularización sabe aprovechar. Aun así, en la prueba año por año de seis
 años ambos empatan (0.350 contra 0.356).
 
 ### 1.9 Por qué ganó
@@ -156,7 +156,7 @@ años ambos empatan (0.350 contra 0.356).
    de entrenamiento, evidencia del ajuste de MANTENER).
 
 El nombre del archivo dice "elasticnet" por historia (así se llamaba en
-v4); el modelo actual es L2.
+Etapa 3); el modelo actual es L2.
 
 ---
 
@@ -193,10 +193,10 @@ pasa por softmax.
 | Versión | Búsqueda | Detalles |
 |---|---|---|
 | TT1 | Cuadrícula: árboles {100…500}, profundidad {3, 4, 6}, tasa {0.01, 0.05, 0.1}, submuestreo {0.6, 0.8, 1} | Sin escalado, `scale_pos_weight`, 23–25 variables filtradas con SHAP |
-| v4 (paper §7) | Optuna, 20–40 intentos por configuración | Pesos balanceados por muestra, varias semillas promediadas |
-| **v5** | Optuna, **150 intentos**, objetivo F1 2024 | Ganador abajo |
+| Etapa 3 (paper §7) | Optuna, 20–40 intentos por configuración | Pesos balanceados por muestra, varias semillas promediadas |
+| **Etapa 4** | Optuna, **150 intentos**, objetivo F1 2024 | Ganador abajo |
 
-Ganador v5: 485 árboles, profundidad 9, tasa 0.074, submuestreo de filas
+Ganador Etapa 4: 485 árboles, profundidad 9, tasa 0.074, submuestreo de filas
 0.97 y de columnas 0.93, min_child_weight 2, gamma 0.035, reg_alpha 1.70,
 reg_lambda 5.23, `tree_method="hist"` en GPU, pesos balanceados por
 muestra, 5 semillas promediadas. **Sin paro temprano**: el número de árboles
@@ -209,9 +209,9 @@ StandardScaler por uniformidad.
 
 | Evaluación | XGBoost | LR |
 |---|---:|---:|
-| v4, Exp B, 2025 | 0.386 | 0.385 |
-| v5, Exp B, 2025 | 0.359 | **0.404** |
-| Walk-forward 2020–2025 (media) | **0.356** | 0.350 |
+| Etapa 3, Exp B, 2025 | 0.386 | 0.385 |
+| Etapa 4, Exp B, 2025 | 0.359 | **0.404** |
+| Prueba año por año 2020–2025 (media) | **0.356** | 0.350 |
 | Sharpe 2025 sin costos / con 10 pb | +0.46 / +0.01 | +0.89 / +0.62 |
 | Rotación | 0.65 | 0.38 |
 
@@ -221,7 +221,7 @@ gana con costos porque cambia de posición mucho menos.
 
 ### 2.5 Mejoras que se le probaron
 
-- **Calibración isotónica (Vía 7):** F1 0.359 → 0.371, Sharpe +0.46 → +0.60.
+- **Calibración isotónica (Etapa 5):** F1 0.359 → 0.371, Sharpe +0.46 → +0.60.
   Es la única técnica posterior que ayudó a algún modelo. No cambia el
   ganador.
 - **LightGBM** (otra implementación de boosting): F1 parecido. No aporta.

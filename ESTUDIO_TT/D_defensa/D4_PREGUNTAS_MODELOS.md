@@ -22,8 +22,8 @@ correcta) más una penalización a los coeficientes.
 **Respuesta corta.** Penalizar coeficientes grandes para que el modelo no
 memorice ruido. L2 (Ridge) penaliza la suma de cuadrados y encoge todos los
 coeficientes; L1 (Lasso) penaliza la suma de valores absolutos y vuelve
-algunos exactamente cero; elasticnet mezcla ambas. En el paper (v4) usamos
-elasticnet; con Optuna (v5), que podía elegir cualquiera, ganó **L2 con
+algunos exactamente cero; elasticnet mezcla ambas. En el paper (Etapa 3) usamos
+elasticnet; con Optuna (Etapa 4), que podía elegir cualquiera, ganó **L2 con
 C = 0.000165**, que es la que está en producción.
 
 ### M3. ¿Por qué C es tan pequeño? ¿Qué implica?
@@ -40,8 +40,8 @@ un prior gaussiano muy concentrado en cero sobre los coeficientes.
 
 ### M4. ¿Por qué ganó elasticnet en el paper y L2 después?
 
-**Respuesta corta.** En v4 no se comparó: se fijó elasticnet con
-l1_ratio = 0.5 y solo se buscó C en {0.01, 0.1, 1}. En v5 Optuna podía
+**Respuesta corta.** En la Etapa 3 no se comparó: se fijó elasticnet con
+l1_ratio = 0.5 y solo se buscó C en {0.01, 0.1, 1}. En la Etapa 4, Optuna podía
 elegir L1, L2 o elasticnet y C en un rango mucho más amplio; con una
 regularización tan fuerte la parte L1 no agrega nada y ganó L2.
 
@@ -99,7 +99,7 @@ muestra; entrenamiento en GPU.
 
 ### M11. ¿Por qué XGBoost no ganó si suele ganar en datos tabulares?
 
-**Respuesta corta.** En seis años de walk-forward **empata** con la LR
+**Respuesta corta.** En seis años de prueba año por año **empata** con la LR
 (0.356 contra 0.350). En 2025 la LR fue significativamente mejor, y con
 costos de transacción la LR gana claramente porque cambia de posición
 mucho menos (rotación 0.38 contra 0.65): con 10 pb el Sharpe de XGBoost cae a
@@ -110,7 +110,7 @@ modelo más simple, determinista, interpretable y barato de operar.
 
 **Respuesta corta.** No; el número de árboles lo eligió Optuna como
 hiperparámetro. Lo único que se le agregó después fue calibración isotónica
-(Vía 7), que mejoró un poco su F1 (0.359 → 0.371) sin cambiar el ranking.
+(Etapa 5), que mejoró un poco su F1 (0.359 → 0.371) sin cambiar el ranking.
 
 ---
 
@@ -125,7 +125,7 @@ CNN-LSTM de 2 bloques convolucionales más una LSTM de 2 capas. En la
 segunda, después de un diagnóstico, dejamos que Optuna eligiera 17 a 20
 hiperparámetros, incluidos el número de capas, de unidades y de filtros,
 el tamaño del kernel, la ventana, el dropout, la función de pérdida y el
-tipo de pooling. Las ganadoras son las de v5.
+tipo de pooling. Las ganadoras son las de la Etapa 4.
 
 ### M14. ¿Cuántas capas tiene cada red y por qué?
 
@@ -167,7 +167,7 @@ recordar patrones de varios pasos.
 ### M17. ¿Por qué bidireccional en el paper y no en la versión final?
 
 **Respuesta corta.** Leer la ventana en ambos sentidos es válido porque toda
-la ventana es pasado, y era la configuración estándar de v4. En v5 Optuna
+la ventana es pasado, y era la configuración estándar de la Etapa 3. En la Etapa 4, Optuna
 podía elegir y prefirió unidireccional; la diferencia no fue relevante, lo
 que confirma que la arquitectura no es la limitante.
 
@@ -242,7 +242,7 @@ de capacidad ni de regularización.
 ### M26. ¿No será que no las ajustaron bien?
 
 **Respuesta corta.** Eso fue justo lo que señalaron los revisores del paper,
-y por eso hicimos v5: una búsqueda de Optuna con 17–20 hiperparámetros por
+y por eso hicimos la Etapa 4: una búsqueda de Optuna con 17–20 hiperparámetros por
 red, sobre el mismo año de decisión que los modelos clásicos y sin mirar la
 prueba. El resultado no cambió: la LR siguió arriba y con más margen. La
 mejora más grande para las redes no fue un hiperparámetro sino elegir la
@@ -327,7 +327,7 @@ variables son razones, los patrones son comparables entre acciones.
 
 **Respuesta corta.** El TT1 lo justificó por costo computacional y por
 comparar las tres redes en igualdad. Después medimos que un entrenamiento
-tarda 7 a 12 segundos en GPU, así que el costo no era el límite, y en v5
+tarda 7 a 12 segundos en GPU, así que el costo no era el límite, y en la Etapa 4
 hicimos la búsqueda con Optuna (80 intentos, 17–20 hiperparámetros por red),
 que era el trabajo futuro que el propio TT1 proponía. Las redes no
 superaron a los clásicos.
@@ -337,7 +337,7 @@ superaron a los clásicos.
 **Respuesta corta.** En TT1 la CNN 1D se diseñó como la CNN-LSTM sin el
 bloque LSTM: mismo bloque convolucional y misma entrada, con promedio global
 en vez de LSTM. Así la diferencia entre ambas medía el aporte del bloque
-recurrente. En TT1 la CNN-LSTM ganaba por 0.012 a 0.025; en v5 sus
+recurrente. En TT1 la CNN-LSTM ganaba por 0.012 a 0.025; en la Etapa 4 sus
 intervalos de confianza se traslapan (0.372 contra 0.359), así que el
 bloque recurrente no aporta una diferencia significativa.
 
@@ -351,7 +351,7 @@ optimiza directamente la entropía cruzada de tres clases.
 
 ### MT4. En TT1 la LSTM era unidireccional, en el paper bidireccional y ahora unidireccional. ¿Por qué tantos cambios?
 
-**Respuesta corta.** TT1 la fijó unidireccional a priori; en v4 se usó
+**Respuesta corta.** TT1 la fijó unidireccional a priori; en la Etapa 3 se usó
 bidireccional (2 × 128), que es válido porque toda la ventana es pasado; en
-v5 dejamos que Optuna decidiera y eligió unidireccional. Que la decisión no
+Etapa 4 dejamos que Optuna decidiera y eligió unidireccional. Que la decisión no
 cambie el resultado confirma que la arquitectura no es la limitante.

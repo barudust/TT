@@ -3,7 +3,14 @@
 > **Para qué sirve este archivo:** retomar el proyecto sin el historial del
 > chat. Resume qué es, en qué estado está, qué se decidió y por qué, las
 > cifras que hay que citar, los errores conocidos que no hay que repetir y
-> dónde está cada cosa. Última actualización: **2026-10-02**.
+> dónde está cada cosa. Última actualización: **2026-10-22**.
+>
+> **Nombres de las etapas:** desde el 2026-10-22 la investigación se cuenta en
+> **6 etapas** (1 línea base TT1 · 2 primeras mejoras · 3 comparación en
+> igualdad · 4 protocolo final · 5 búsqueda de mejoras · 6 plataforma y
+> validación). Los nombres viejos (v1 … v8, Vía 7/8, V0–V6) siguen en las
+> carpetas y en los documentos de trabajo de `RESULTADOS_OPTIMIZADOS/`.
+> Equivalencias y qué usa el paper: `ESTUDIO_TT/03_MAPA_DE_EXPERIMENTOS.md`.
 >
 > Si algo aquí contradice a otro documento, este y `STATUS.md` son los más
 > recientes; los demás se corrigieron el mismo día (ver §9).
@@ -37,7 +44,7 @@ decían "Reyes Vega" y "Juarez Carvajal", y el paper enviado el 8 sep decía
 |---|---|
 | Modelado | **Cerrado.** Ganador: Regresión Logística global. Justificación de que no se puede mejorar más: `RESULTADOS_OPTIMIZADOS/JUSTIFICACION_LIMITE_DEL_MODELO.md` |
 | Modelo en producción | LR L2 (C = 0.000165), RobustScaler, 61 indicadores + 15 interacciones, pesos de clase "balanced" con HOLD × 0.90. `MODEL_VERSION = LR-v8-interactions-holdw090`. Entrenado con 2018–2025 |
-| Paper MICAI | Capítulo 171490174 (LNAI). Camera-ready enviado el 8 sep 2026 en `paper_review/camera_ready/` (12 páginas). Sus resultados del §7 son la corrida **v4**; el §8 (Robustness) es la **v5**. Springer pidió el 2 oct el material suplementario que el paper cita y faltaba: `paper_review/supplementary/MICAI2026_ch171490174_supplementary.pdf` |
+| Paper MICAI | Capítulo 171490174 (LNAI). Camera-ready enviado el 8 sep 2026 en `paper_review/camera_ready/` (12 páginas). Sus resultados del §7 son la corrida de la **Etapa 3**; el §8 (Robustness) es la **Etapa 4**. Springer pidió el 2 oct el material suplementario que el paper cita y faltaba: `paper_review/supplementary/MICAI2026_ch171490174_supplementary.pdf` |
 | Plataforma | Terminada: todo lo que muestra sale de Yahoo Finance o del modelo; métricas con la metodología de la tesis. Desplegada en Render desde `main` |
 | Documentación | Revisada y corregida el 2026-09-30 |
 | Pendiente | Documento escrito de la tesis (no está en el repo), diapositivas y ensayo de la defensa (§10) |
@@ -46,12 +53,12 @@ decían "Reyes Vega" y "Juarez Carvajal", y el paper enviado el 8 sep decía
 
 | Qué | Valor | Fuente |
 |---|---|---|
-| Test 2025, protocolo v5 (Exp B, global) | LR **0.404** F1-macro (IC 95 % [0.379, 0.428]), Sharpe +0.89; XGBoost 0.359; LSTM 0.369; CNN 0.359; CNN-LSTM 0.372. LR significativamente arriba de los otros cuatro | `RESULTADOS_OPTIMIZADOS/v5/resultados_finales.csv`, paper §6 |
-| Validación 2024 (v5) | Los cinco entre 0.324 y 0.366 (empate; LR el más bajo) | ídem |
-| Walk-forward 2020–2025 (v5) | F1 medio: XGBoost 0.356, LR 0.350, CNN-LSTM 0.328, LSTM 0.314, CNN 0.292. Ningún modelo pasa de 0.394 en ningún año. Sharpe medio LR y XGBoost +0.22 | `RESULTADOS_OPTIMIZADOS/analisis_hold/5_walk_forward_v5_resumen.csv` |
-| Costos de transacción (v5, 10 pb) | LR Sharpe +0.62; XGBoost +0.01 (LR rota menos: 0.38 vs 0.65) | `v5/resultados_finales.csv` |
-| Global vs por ticker (v5, 21 casos por modelo) | Global gana en LR (18/21, p = 0.002), LSTM y CNN; empata en XGBoost; ningún modelo es mejor por ticker | `analisis_hold/4a_global_vs_porticker_por_modelo.csv` |
-| Interacciones (Vía 8) | +0.023 F1 en test 2025, **pero elegidas viendo 2025**: en validación 2024 y en origen rodante 2019–2024 empatan con el LR sin ellas (0.357 vs 0.354) | `analisis_hold/7_interactions_vs_base_rolling.csv` |
+| Test 2025, protocolo de la Etapa 4 (Exp B, global) | LR **0.404** F1-macro (IC 95 % [0.379, 0.428]), Sharpe +0.89; XGBoost 0.359; LSTM 0.369; CNN 0.359; CNN-LSTM 0.372. LR significativamente arriba de los otros cuatro | `RESULTADOS_OPTIMIZADOS/v5/resultados_finales.csv`, paper §8 |
+| Validación 2024 (Etapa 4) | Los cinco entre 0.324 y 0.366 (empate; LR el más bajo) | ídem |
+| Prueba año por año 2020–2025 (Etapa 4) | F1 medio: XGBoost 0.356, LR 0.350, CNN-LSTM 0.328, LSTM 0.314, CNN 0.292. Ningún modelo pasa de 0.394 en ningún año. Sharpe medio LR y XGBoost +0.22 | `RESULTADOS_OPTIMIZADOS/analisis_hold/5_walk_forward_v5_resumen.csv` |
+| Costos de transacción (Etapa 4, 10 pb) | LR Sharpe +0.62; XGBoost +0.01 (LR rota menos: 0.38 vs 0.65) | `v5/resultados_finales.csv` |
+| Global vs por ticker (Etapa 4, 21 casos por modelo) | Global gana en LR (18/21, p = 0.002), LSTM y CNN; empata en XGBoost; ningún modelo es mejor por ticker | `analisis_hold/4a_global_vs_porticker_por_modelo.csv` |
+| Interacciones (Etapa 5) | +0.023 F1 en test 2025, **pero elegidas viendo 2025**: en validación 2024 y en origen rodante 2019–2024 empatan con el LR sin ellas (0.357 vs 0.354) | `analisis_hold/7_interactions_vs_base_rolling.csv` |
 | Etiqueta 40/60 ("60/40") | Peor: κ 0.077 vs 0.140 en 2025; sigue prediciendo HOLD 53 % con 20 % real | `analisis_hold/3a_percentiles_target.csv` |
 | Ajuste de HOLD (origen rodante 2019–2024) | Peso HOLD × 0.90: F1 0.365 vs 0.357, κ 0.068 vs 0.063, Sharpe +0.54 vs +0.52, HOLD predicho 36 % (real 40 %) | `analisis_hold/7_reglas_alternativas_resumen.csv` |
 | **Producción, 2026 fuera de muestra** | Antes (balanced): F1 0.313, κ 0.010, HOLD 60 % (real 35 %), Sharpe +0.38. **Ahora (HOLD × 0.90): F1 0.354, κ 0.035, HOLD 40 %, Sharpe +0.29** (portafolio +0.60 vs buy & hold +0.49) | `analisis_hold/8_confirmacion_2026.csv` |
@@ -60,7 +67,7 @@ decían "Reyes Vega" y "Juarez Carvajal", y el paper enviado el 8 sep decía
 ## 4. Decisiones tomadas y por qué
 
 1. **Regresión Logística global en producción.** Gana en el protocolo del paper
-   (con IC bootstrap), empata con XGBoost en walk-forward pero opera menos (con
+   (con IC bootstrap), empata con XGBoost en prueba año por año pero opera menos (con
    costos gana claramente), es determinista e interpretable.
 2. **Modelo global, no uno por acción.** 7× más datos; gana o empata en los 5
    modelos (§3).
@@ -96,13 +103,13 @@ decían "Reyes Vega" y "Juarez Carvajal", y el paper enviado el 8 sep decía
 - **CatBoost, GRU, TabNet, Extra-Trees y Transformer NO se corrieron.** Antes
   aparecían como "probados" en tres documentos sin código ni resultados; ya
   se corrigió. Solo LightGBM se probó además de los 5 modelos.
-- El walk-forward y los costos de transacción **no** son trabajo futuro: se
-  hicieron en v5.
-- Las cifras de la Vía 8 son de **test 2025**, no de validación 2024 (el
+- La prueba año por año y los costos de transacción **no** son trabajo futuro: se
+  hicieron en la Etapa 4.
+- Las cifras de la Etapa 5 son de **test 2025**, no de validación 2024 (el
   `.metrics.json` decía "val 2024"; corregido).
-- El F1 0.417 / Sharpe 1.25 (evaluación v1 de mayo) no es comparable con
-  v4/v5; no citarlo como resultado final.
-- 2025 fue el mejor año del modelo; decirlo y mostrar el walk-forward y 2026.
+- El F1 0.417 / Sharpe 1.25 (Etapa 2, mayo) no es comparable con
+  las etapas 3 y 4; no citarlo como resultado final.
+- 2025 fue el mejor año del modelo; decirlo y mostrar la prueba año por año y 2026.
 - Un Sharpe de un año tiene error estándar ≈ 1: no es significativo solo.
 
 ## 7. La plataforma
@@ -143,7 +150,7 @@ python api/main.py
 npm --prefix Frontend install
 npm --prefix Frontend run dev
 
-# Tests de la API (23)
+# Tests de la API (24)
 pip install -r api/requirements-dev.txt
 cd api && pytest
 
@@ -171,12 +178,13 @@ agosto, superado) quedó en la etiqueta **local** `respaldo/baru-local-2026-08-0
 
 | Para | Leer |
 |---|---|
+| **Las etapas, los experimentos y qué usa el paper (referencia única)** | **`ESTUDIO_TT/03_MAPA_DE_EXPERIMENTOS.md`** |
 | **Estudiar el TT en orden (general → particular) y preparar la defensa** | **`ESTUDIO_TT/00_INDICE.md`** (2026-10-12: panorama, glosario, modelo, sistema, paper y bancos de preguntas; corrige cifras de documentos anteriores) |
 | Defensa: guía extensa | `RESULTADOS_OPTIMIZADOS/GUIA_DEFENSA_TT.md` (Cap. 15 banco de preguntas; **Cap. 17 sinodal experta**) |
 | Defensa: argumento central | `RESULTADOS_OPTIMIZADOS/JUSTIFICACION_LIMITE_DEL_MODELO.md` |
 | Redactar la tesis | `docs/THESIS_DOCUMENTATION.md` (qué documento usar por capítulo + cifras) |
 | Análisis más reciente (HOLD, 40/60, global, 2026, auditoría web) | `RESULTADOS_OPTIMIZADOS/docs/ANALISIS_HOLD_Y_GLOBAL.md` |
-| Todo lo probado (v0–v8) | `RESULTADOS_OPTIMIZADOS/INVESTIGACION_COMPLETA.md` |
+| Todo lo probado (etapas 2–5) | `RESULTADOS_OPTIMIZADOS/INVESTIGACION_COMPLETA.md` |
 | Índice de documentos de investigación | `RESULTADOS_OPTIMIZADOS/docs/README.md` |
 | Paper | `paper_review/README.md` |
 | Modelo desplegado | `docs/MODEL_INTEGRATION.md` |
@@ -205,7 +213,7 @@ agosto, superado) quedó en la etiqueta **local** `respaldo/baru-local-2026-08-0
    `LR-v8-interactions-holdw090`. El arranque volvió a quedar sin datos (Yahoo
    falla en el arranque en frío) y el reintento automático cargó las 7 acciones
    en ~2 minutos sin intervención.
-2. Documento escrito de la tesis: incorporar walk-forward 2020–2025, exceso de
+2. Documento escrito de la tesis: incorporar prueba año por año 2020–2025, exceso de
    HOLD y su ajuste, global vs por-ticker sobre las mismas filas y la
    evaluación 2026 (guía: `docs/THESIS_DOCUMENTATION.md`).
 3. Diapositivas de la defensa y ensayo con el Cap. 17.
@@ -216,7 +224,7 @@ agosto, superado) quedó en la etiqueta **local** `respaldo/baru-local-2026-08-0
 1. **Análisis del modelo y de la plataforma.** Se midió por qué el modelo
    predice tanto HOLD (voto dividido + régimen de VIX), se evaluó 40/60
    (peor), se comparó global vs por-ticker (gana global), se encontró el
-   walk-forward de v5 sin citar y se evaluó 2026 fuera de muestra. Se auditó
+   prueba año por año de la Etapa 4 sin citar y se evaluó 2026 fuera de muestra. Se auditó
    la página y se corrigieron todas las métricas mal calculadas (§7). Se
    escribió `JUSTIFICACION_LIMITE_DEL_MODELO.md`.
 2. **Render no cargaba.** El código sí se había desplegado; Yahoo falló en el
@@ -235,7 +243,7 @@ agosto, superado) quedó en la etiqueta **local** `respaldo/baru-local-2026-08-0
 ### Sesión del 2026-10-02 (paper MICAI)
 
 1. El `078.zip` (8 sep) es la versión más reciente del paper; el repo se
-   igualó a él. El §7 usa la corrida v4 y el §8 la v5.
+   igualó a él. El §7 usa la corrida de la Etapa 3 y el §8 la Etapa 4.
 2. Springer pidió el suplementario citado en §3.3, §5.1, §7.1, §7.3 y §11. Se
    generó en LaTeX (7 páginas, una sección por cita, verificado contra las
    Tablas 4–6) con `paper_review/supplementary/build_supplementary.py`.

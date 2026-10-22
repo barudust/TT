@@ -12,7 +12,7 @@ Que medimos con rigor cuánto se puede extraer de datos públicos diarios con
 cinco familias de modelos: poco y de forma inestable entre años (F1 ≈ 0.35
 de media en seis años, azar 0.33). Y que en ese régimen un modelo lineal bien
 regularizado iguala o supera a redes profundas, con dos protocolos, un
-walk-forward y una evaluación en vivo. Un resultado negativo bien medido es
+prueba año por año y una evaluación en vivo. Un resultado negativo bien medido es
 un resultado; y la hipótesis de mercado eficiente predice justamente que
 esto debería ser casi impredecible.
 
@@ -28,15 +28,15 @@ sobre las redes.
 Al revés: las versiones posteriores hicieron el protocolo **más
 estricto**, y varias "mejoras" las declaramos como no significativas (las
 interacciones solo mejoran en 2025; el ajuste de MANTENER no es
-significativo). Reportamos el walk-forward, donde la LR empata con XGBoost, y
+significativo). Reportamos la prueba año por año, donde la LR empata con XGBoost, y
 2026, donde el modelo rinde menos que en 2025. Si buscáramos el mejor número,
 no publicaríamos esos.
 
 ### T4. "2025 fue el mejor año del modelo. Eligieron la prueba a conveniencia."
 
-2025 se fijó en v4 como el último año completo, antes de conocer los
+2025 se fijó en la Etapa 3 como el último año completo, antes de conocer los
 resultados, para que los tres experimentos compartieran el año de prueba. Lo
-decimos nosotros mismos y por eso reportamos seis años de walk-forward y
+decimos nosotros mismos y por eso reportamos seis años de prueba año por año y
 2026.
 
 ### T5. "Las redes están mal diseñadas; con una buena arquitectura ganarían."
@@ -53,7 +53,7 @@ de los datos, no en el diseño.
 Es correcto: la ventana va de *t − lookback* a *t − 1* y la LR ve el día
 *t*. No es fuga de información, es una desventaja. La medimos: a la LR,
 quitarle el día *t* le cuesta 0.007 de F1, mientras que la diferencia con las
-redes es de 0.03 a 0.045 en 2025 y de 0.02 a 0.06 en el walk-forward; y las
+redes es de 0.03 a 0.045 en 2025 y de 0.02 a 0.06 en la prueba año por año; y las
 redes no superan el azar en validación con ninguna configuración. No cambia
 la conclusión, pero la corrección (ventana hasta *t*) está en el trabajo
 futuro.
@@ -128,9 +128,9 @@ reconstruible. Detalle en [D1](D1_TT1_VS_TT2.md).
 
 ### T14b. "En TT1 dijeron que la ventaja de los clásicos era por la asimetría de variables. ¿Entonces su comparación no vale?"
 
-Al contrario: tomamos esa limitación y la corregimos. Desde v4 los cinco
+Al contrario: tomamos esa limitación y la corregimos. Desde la Etapa 3 los cinco
 modelos reciben exactamente las mismas 61 variables, y los clásicos siguen
-arriba (en v5 la LR es significativamente mejor que las tres redes). La
+arriba (en la Etapa 4 la LR es significativamente mejor que las tres redes). La
 asimetría no era la causa; la causa es que con estos datos las redes no
 aprenden nada que generalice (su pérdida de validación no baja del azar).
 
@@ -164,8 +164,8 @@ datos alternativos y con un backtest simplificado.
 
 ### T18. "Si empezaran de nuevo, ¿qué harían distinto?"
 
-Usar desde el inicio el protocolo de v5 (decisiones solo en validación,
-mismas filas para todos, intervalos de confianza) y el walk-forward como
+Usar desde el inicio el protocolo de la Etapa 4 (decisiones solo en validación,
+mismas filas para todos, intervalos de confianza) y la prueba año por año como
 evaluación principal; definir la etiqueta después de explorar horizontes;
 incluir costos como métrica principal; y construir las ventanas de las redes
 hasta el día *t*.
@@ -179,7 +179,7 @@ hasta el día *t*.
 2. **Ten a mano 5 cifras:** 0.404 [0.379, 0.428] y Sharpe +0.89 (2025);
    0.35 de media en seis años; 0.394 máximo en cualquier año; 0.354 en 2026;
    ln 3 en las redes.
-3. **Distingue paper y TT:** el paper es la corrida v4 + v5; el TT es todo.
+3. **Distingue paper y TT:** el paper es la corrida de la Etapa 3 + Etapa 4; el TT es todo.
 4. **No digas "probamos"** de algo que no se corrió (CatBoost, GRU,
    Transformer, TabNet, Random Forest).
 5. **Si no sabes:** "no lo medimos; se podría medir así…".

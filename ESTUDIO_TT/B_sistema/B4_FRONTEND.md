@@ -2,8 +2,9 @@
 
 > **Resumen.** Aplicación de una sola página (SPA) en **React 18 +
 > TypeScript**, compilada con **Vite**, con estilos de **Tailwind CSS 4** y
-> gráficas de **Recharts**. Tiene 5 pantallas: «Hoy» (recomendación de cada empresa),
-> detalle por empresa, «Resultados», «Ayuda» (guía de uso y glosario) y
+> gráficas de **Recharts**. Tiene 6 pantallas: «Hoy» (recomendación de cada empresa),
+> detalle por empresa, «Resultados», «Aprende» (qué es comprar, vender en
+> corto y mantener, de forma interactiva), «Ayuda» (guía de uso y glosario) y
 > «Acerca de». Está escrita para un usuario sin conocimientos de finanzas:
 > la confianza se muestra en palabras, cada métrica tiene un «?» que lleva a
 > su definición y las gráficas tienen sus ejes rotulados. No tiene ningún dato
@@ -35,13 +36,14 @@
 | `/` | **Hoy** (`Home.tsx`): «¿Qué hacer hoy?» | Una tarjeta por empresa con su recomendación (y una frase que la explica), precio y seguridad en palabras; para qué sesión es la recomendación y con qué cierre se calculó | `GET /stocks`, `GET /market-status` |
 | `/stock/:symbol` | **Detalle** (`StockDetail.tsx`) | Recomendación y seguridad; probabilidades; gráfica de precio con un punto de color por recomendación; gráfica «¿Qué habría pasado con $1,000?»; aciertos y cuánto habría ganado con $1,000; últimas 10 recomendaciones | `GET /stocks/:s`, `.../history?days=`, `.../metrics?days=` |
 | `/performance` | **Resultados** (`Performance.tsx`): «¿Cómo le ha ido al modelo?» | Resumen de las 7 empresas, ganancia por empresa contra comprar y esperar, calificación F1 por empresa contra el azar, tabla ordenable con unidades | `GET /metrics?days=` |
+| `/aprende` | **Aprende** (`Aprende.tsx`) | Qué significa cada recomendación: (1) que dura un solo día; (2) una barra para mover el cambio del precio y ver qué pasa con $1,000 al comprar, vender en corto o mantener; (3) la venta en corto en 4 pasos, con precio que baja o sube; (4) un juego día por día con los precios reales de los últimos 30 días hábiles: el usuario decide, se revela el cierre siguiente y se compara contra el modelo y contra comprar y esperar | `GET /stocks/:s/history?days=30` |
 | `/ayuda` | **Ayuda** (`Help.tsx`) | Pestaña **Guía rápida** (manual corto por pantalla, escala de seguridad, cuándo se actualiza) y pestaña **Glosario** (buscable, por categorías) | — |
 | `/about` | **Acerca de** (`About.tsx`) | Descripción, metodología, ficha del modelo (leída de la API), aviso legal y créditos | `GET /model` |
 
 ### Componentes
 
 - `Root.tsx`: encabezado, barra con las 7 empresas por nombre, navegación
-  inferior (Hoy, Resultados, Ayuda, Acerca de) y cambio de tema.
+  inferior (Hoy, Resultados, Aprende, Ayuda, Acerca de) y cambio de tema.
 - `StockCard.tsx`: tarjeta de una empresa.
 - `SeguridadBadge.tsx`: nivel de seguridad en palabras con barras azules.
 - `MetricCard.tsx` + `InfoLink.tsx`: tarjeta de métrica con su «?» al glosario.

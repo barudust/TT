@@ -56,8 +56,9 @@ Yahoo Finance ──► API Flask ──► SQLite
 ## B4. Frontend
 
 - **React 18 + TypeScript + Vite + Tailwind + Recharts**, aplicación web.
-- **5 pantallas:** Hoy (recomendación de cada empresa), detalle, Resultados,
-  Ayuda (guía de uso + glosario) y Acerca de.
+- **6 pantallas:** Hoy (recomendación de cada empresa), detalle, Resultados,
+  Aprende (comprar, vender en corto y mantener, interactivo), Ayuda (guía de
+  uso + glosario) y Acerca de.
 - **Para usuarios sin contexto:** seguridad en palabras (Nada / Poco /
   Medianamente segura, con su acierto real), «?» junto a cada métrica,
   ejes rotulados, rendimiento en % y en dinero sobre $1,000.

@@ -1,3 +1,5 @@
+> **Nota (2026-10-22).** Documento de trabajo de la **Etapas 3 (columnas v4) y 4 (columnas v5)**, con los nombres que se usaban entonces. Equivalencias: v1 = Etapa 1 (TT1) · optimización de mayo, "v0", v2 y v3 = Etapa 2 · v4 = Etapa 3 · v5 = Etapa 4 (sus V0–V6 = pasos 4.1–4.7) · v7/"Vía 7" y v8/"Vía 8" = Etapa 5 · análisis de septiembre = Etapa 6 · "walk-forward" = prueba año por año. Referencia: [mapa de experimentos](../../../ESTUDIO_TT/03_MAPA_DE_EXPERIMENTOS.md).
+
 **F1-macro GLOBAL en test 2025 — v4 (publicado) vs v5 (protocolo corregido + búsqueda simétrica)**
 
 | modelo | v4_A | v5_A | v5_A_std | v4_B | v5_B | v5_B_std | v4_C | v5_C | v5_C_std | v5_prom | v4_prom | delta_prom |

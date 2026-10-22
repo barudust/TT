@@ -1,94 +1,72 @@
-# scripts_opt — pipeline de optimización
+# scripts_opt — scripts de la investigación (etapas 2 a 6)
 
-Segunda fase del pipeline (posterior a `../scripts_v1/`). Se corren desde la
-raíz del repo — leen de `tesis_ml_stocks/` y escriben en
-`../RESULTADOS_OPTIMIZADOS/`. Pasó por varias iteraciones (v1 → v2 → v3 →
-v4) antes de declarar ganador; esta tabla documenta qué sigue siendo la
-fuente de verdad y qué quedó como historial.
+Segunda parte del pipeline (la primera, la Etapa 1 = TT1, está en
+`../scripts_v1/`). Se corren desde la raíz del repo: leen de
+`tesis_ml_stocks/` y escriben en `../RESULTADOS_OPTIMIZADOS/`.
 
-## Módulos `common*` (indican a qué iteración pertenece cada script)
+Los scripts conservan los nombres de trabajo (`_v2`, `_v4`, `_v5`, `via7`,
+`via8`). La tabla de abajo los ordena por **etapa**, que es como se cuenta la
+investigación en el documento final. Vista general, equivalencias y qué usa
+el paper: [`../ESTUDIO_TT/03_MAPA_DE_EXPERIMENTOS.md`](../ESTUDIO_TT/03_MAPA_DE_EXPERIMENTOS.md).
 
-| Módulo | Iteración | Dataset que carga |
-|---|---|---|
-| `common.py` | v1 (61 features) | `tesis_ml_stocks/01_raw_datasets/` |
-| `common_v2.py` | v2 (181 features) | `tesis_ml_stocks/01_raw_datasets_v2/` |
-| `common_v3.py` | v3 (94 features = 61 + 33 de mercado) | `tesis_ml_stocks/01_raw_datasets_v3/` |
-| `common_v4.py` | v4 (splits unificados, test=2025 fijo) | reusa carga de v1 con `SPLITS_V4` propios |
-| `common_velas.py` | experimento aislado (solo OHLCV) | reusa carga de v1 |
+## Por etapa
 
-## Vigente / fuente de verdad
+### Etapa 2 — Primeras mejoras (mayo–junio) · historial, no re-ejecutar
 
-- **`opt_lr.py`** (config `LR-02-elasticnet-all`, experimento B) — generó
-  `modelo_global.pkl`, verificado **idéntico byte a byte** al `.pkl` que
-  corre en producción en `api/ml/artifacts/`. Es el script a
-  re-ejecutar si algún día hay que reentrenar el modelo de producción.
-- **`consolidar_120.py`** — produce la tabla maestra de 120 corridas citada
-  literalmente en el borrador `PAPER_FINAL.md` (eliminado en el commit
-  `da2906d`; se recupera con `git show da2906d^:paper_review/PAPER_FINAL.md`). Es el
-  consolidador "oficial" citado en el paper (superset de `consolidar.py`,
-  que solo cubre 4 de los 5 modelos).
-- **`reporte_final.py`** — reporte completo baseline-vs-optimizado (tablas
-  `MAESTRA_`/`MEJOR_` + plots `FINAL_*`); superset funcional de
-  `comparar_baseline.py`.
-- **`analisis_feature_selection.py`** — respaldado por
-  `../RESULTADOS_OPTIMIZADOS/docs/ANALISIS_FEATURE_SELECTION.md`.
-- **`analisis_hold_global.py`** (2026-09-30) — mide sin reentrenar nada: por qué
-  el modelo de producción predice tanto HOLD, qué pasa con percentiles 40/60 (y
-  20/80…35/65), el ajuste del prior de HOLD, y global vs por-ticker para los 5
-  modelos con las predicciones de v5. ~20 s, sin red. Respaldado por
-  `../RESULTADOS_OPTIMIZADOS/docs/ANALISIS_HOLD_Y_GLOBAL.md`.
-- **`ajuste_hold_rolling.py`** (2026-09-30) — elige cómo reducir el exceso de
-  HOLD sin cambiar el target, por validación de origen rodante 2019–2024
-  (factor fijo, reglas adaptativas y pesos de clase). Eligió reentrenar con el
-  peso de HOLD × 0.90 (`PESO_HOLD` en `entrenar_produccion.py`). ~45 min, sin red.
-- **`ajuste_hold_2026.py`** (2026-09-30) — confirma esa elección en 2026 (fuera
-  de muestra) con datos reales; requiere red.
-- **`entrenar_produccion.py`** — regenera el `.pkl` de producción (LR + 15
-  interactions, pesos "balanced" con HOLD × `PESO_HOLD`). Si se cambia algo,
-  actualizar `MODEL_VERSION` en `api/ml/model.py` (hay un test que lo exige).
-- **`evaluar_produccion_2026.py`** (2026-09-30) — evalúa el `.pkl` de producción
-  sobre 2026 (fuera de muestra) con el mismo código que la API
-  (`api/ml/features.py`, `model.py`, `target.py`). Requiere red.
-- **`diag_deep.py`** (2026-08-14) — diagnóstico de los modelos profundos de v4:
-  costo real por entrenamiento, época que restaura el early stopping, curvas
-  train/val sin early stopping, efecto del `MinMaxScaler` y F1 de validación de
-  LR como referencia. No toca test. Corre en 2.2 min y respalda
-  `../RESULTADOS_OPTIMIZADOS/docs/DIAGNOSTICO_MODELOS_PROFUNDOS.md`.
-- **`opt_xgb.py`, `opt_lstm.py`, `opt_cnn_lstm.py`, `opt_cnn_puro.py`,
-  `opt_cnn_puro_filtradas.py`** — comparadores de la iteración v1 que
-  alimentan las tablas anteriores (no ganaron, pero sus CSVs siguen siendo
-  insumo activo de `consolidar_120.py`/`reporte_final.py`).
+Optimización por modelo con los datos y particiones de TT1. Sus cifras no se
+reportan (la mejor configuración se eligió con la prueba).
 
-## Historial de iteración — conservar, no re-ejecutar
+| Script | Qué hace |
+|---|---|
+| `common.py` | Carga de los datasets de TT1 (61 variables) con las particiones de TT1 |
+| `opt_lr.py`, `opt_xgb.py`, `opt_lstm.py`, `opt_cnn_lstm.py`, `opt_cnn_puro.py`, `opt_cnn_puro_filtradas.py` | Optimización de cada modelo. `opt_lr.py` produjo la LR elasticnet que corrió en la plataforma hasta agosto |
+| `analisis_feature_selection.py` | Preselección de variables contra las 61 → **paper §6** |
+| `common_v2.py`, `feature_engineering_v2.py`, `opt_lr_v2.py`, `opt_xgb_v2.py` | 181 variables + calibración de umbrales (no mejoró) |
+| `common_v3.py`, `expand_market_data.py`, `train_all_v3.py`, `comparar_v1_v3.py` | 94 variables con contexto de mercado (no mejoró) |
+| `opt_lgbm.py`, `stacking.py`, `soft_voting.py`, `ensemble_lr_xgb.py`, `lr_confidence_filter.py` | LightGBM, ensambles y filtro por confianza (ninguno supera a la LR sola) |
+| `consolidar.py`, `consolidar_120.py`, `reporte_final.py`, `comparar_baseline.py` | Tablas de esa etapa (`consolidar_120.py` reemplaza a `consolidar.py`; `reporte_final.py` a `comparar_baseline.py`) |
+| `common_velas.py` | Sin uso (no lo importa ningún script) |
 
-- `common_v2.py`, `feature_engineering_v2.py`, `opt_lr_v2.py`,
-  `opt_xgb_v2.py` — rama v2 (181 features), documentada explícitamente como
-  **"no mejoró"** en `GUIA_PROGRESO.md`.
-- `common_v3.py`, `expand_market_data.py`, `train_all_v3.py`,
-  `comparar_v1_v3.py` — rama v3 (94 features), superada por v4.
-- `common_v4.py`, `train_all_v4.py`, `consolidar_v4.py`, `plots_extra.py` —
-  corrida más reciente (1 junio, "splits unificados"). Da otro resultado
-  (F1-macro=0.385, Sharpe=0.755 vs. 0.417/1.25 de v1) y **no está
-  referenciada** en `GUIA_PROGRESO.md` ni `PAPER_FINAL.md` — ver
-  `../STATUS.md` para la discusión completa de esta discrepancia. Útil
-  como evidencia de sensibilidad a los splits, no como fuente primaria de
-  cifras.
-- `consolidar.py` — subsumido por `consolidar_120.py` (4 de 5 modelos, sin
-  CNN puro).
-- `opt_lgbm.py` — corrida real y documentada ("alternativa viable a XGB"),
-  pero su CSV no entra en ningún consolidador automático de esta carpeta;
-  queda solo en la narrativa.
-- `stacking.py`, `soft_voting.py`, `ensemble_lr_xgb.py`,
-  `lr_confidence_filter.py` — ensembles/filtros probados y descartados
-  ("peor"/"similar" en `GUIA_PROGRESO.md`); se conservan porque justifican
-  en la tesis por qué no se usaron.
+### Etapa 3 — Comparación en igualdad (junio) · paper §3–§7
 
-## Posible limpieza pendiente (no aplicada — revisar antes de borrar)
+| Script | Qué hace |
+|---|---|
+| `common_v4.py`, `train_all_v4.py` | Las 61 variables para los cinco modelos y prueba 2025 en A, B y C (120 corridas) → `RESULTADOS_OPTIMIZADOS/v4/` |
+| `consolidar_v4.py`, `plots_extra.py` | Tablas y figuras de la etapa |
+| `replicar_lr_v4.py` | Reproduce exactas las 24 corridas de LR del paper (scikit-learn 1.7.2) |
+| `plots_paper.py` | Figuras del paper al tamaño impreso (respuesta al revisor #3) |
 
-- **`common_velas.py`** — cero importadores en todo el repo (confirmado por
-  grep global). Parece preparado para un experimento que nunca se llegó a
-  correr, o cuyo script consumidor se perdió en alguna reorganización.
-- **`comparar_baseline.py`** — su único output
-  (`comparativa_baseline_vs_optimizado.csv`) es redundante con
-  `MAESTRA_baseline_optimizado.csv` de `reporte_final.py` (mismas fuentes,
-  menos tablas). Parece el borrador que `reporte_final.py` reemplazó.
+### Etapa 4 — Protocolo final (agosto) · paper §8 · resultado principal
+
+| Script | Qué hace |
+|---|---|
+| `diag_deep.py` | Diagnóstico de las redes de la Etapa 3 (época restaurada, curvas sin paro temprano). No toca la prueba |
+| `common_v5.py`, `run_v5.py` | Protocolo final y sus pasos 4.1–4.7 (replicación, decisiones, Optuna, costos, intervalos, prueba año por año) → `RESULTADOS_OPTIMIZADOS/v5/` |
+| `build_dataset_v5.py` | Dataset ampliado a 93 variables (paso 4.5, no ayudó) |
+| `calibrar_v5.py` | Capa de decisión y umbral económico (paso 4.6) |
+| `reporte_v5.py` | Tablas y figuras para el §8 del paper |
+
+### Etapa 5 — Búsqueda de mejoras (fin de agosto)
+
+| Script | Qué hace |
+|---|---|
+| `via7_refinamiento.py` | Ajustes al modelo: calibración, mezclas, SWA, recencia → `RESULTADOS_OPTIMIZADOS/v7/` |
+| `via8_dataset.py` | Variables nuevas: rezagos, entre acciones, multi-escala, **interacciones** → `RESULTADOS_OPTIMIZADOS/v8/` |
+| `via8_target_extendido.py`, `via8_combinado.py` | Otros horizontes y percentiles de la etiqueta. **Fuera del planteamiento** (trabajo futuro) |
+
+### Etapa 6 — Modelo de la plataforma y validación (septiembre–octubre) · vigente
+
+| Script | Qué hace |
+|---|---|
+| `entrenar_produccion.py` | **Regenera el `.pkl` de la plataforma** (LR + 15 interacciones, pesos "balanced" con mantener × `PESO_HOLD`). Si se cambia algo, actualizar `MODEL_VERSION` en `api/ml/model.py` (hay una prueba que lo exige) |
+| `analisis_hold_global.py` | Por qué el modelo predice tanto mantener, etiqueta 40/60, global contra por acción. ~20 s, sin red |
+| `ajuste_hold_rolling.py` | Elige el ajuste de mantener por origen rodante 2019–2024 (peso × 0.90). ~45 min, sin red |
+| `ajuste_hold_2026.py`, `evaluar_produccion_2026.py` | Confirman el modelo en 2026 con el mismo código que la API. Requieren red |
+| `calibrar_niveles_confianza.py` | Niveles de seguridad que muestra la plataforma |
+| `verificar_ventana_redes.py` | Mide el efecto de que la ventana de las redes termine un día antes |
+| `calibrar_hold.py` | Antecedente de julio: factor fijo sobre la probabilidad de mantener (sustituido por el peso × 0.90) |
+
+## Dependencias
+
+`requirements.txt` (además de las de la API). Los análisis de la Etapa 6
+documentados en `../RESULTADOS_OPTIMIZADOS/docs/ANALISIS_HOLD_Y_GLOBAL.md`.

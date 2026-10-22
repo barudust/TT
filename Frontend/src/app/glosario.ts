@@ -34,7 +34,7 @@ export const GLOSARIO: TerminoGlosario[] = [
     tambien: "venta en corto, posición corta, SELL",
     categoria: "Recomendaciones",
     definicion:
-      "El modelo cree que el precio podría bajar bastante. Si ya tienes la acción, sería momento de venderla; los inversionistas con experiencia también pueden «vender en corto» para ganar con la bajada.",
+      "El modelo cree que el precio podría bajar bastante. En la simulación es una venta en corto: pides prestada una acción, la vendes hoy y la recompras mañana; ganas si el precio baja. La página «Aprende» lo muestra paso a paso.",
   },
   {
     id: "mantener",

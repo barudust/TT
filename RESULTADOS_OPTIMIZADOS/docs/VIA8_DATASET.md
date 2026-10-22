@@ -1,5 +1,7 @@
 # Vía 8 — Exploración del dataset
 
+> **Nota (2026-10-22).** Documento de trabajo de la **Etapa 5 (búsqueda de mejoras), variables nuevas**, con los nombres que se usaban entonces. Equivalencias: v1 = Etapa 1 (TT1) · optimización de mayo, "v0", v2 y v3 = Etapa 2 · v4 = Etapa 3 · v5 = Etapa 4 (sus V0–V6 = pasos 4.1–4.7) · v7/"Vía 7" y v8/"Vía 8" = Etapa 5 · análisis de septiembre = Etapa 6 · "walk-forward" = prueba año por año. Referencia: [mapa de experimentos](../../ESTUDIO_TT/03_MAPA_DE_EXPERIMENTOS.md). Cambiar el horizonte o los percentiles de la etiqueta queda **fuera del planteamiento** (trabajo futuro). Sus cifras se midieron en la prueba 2025.
+
 > **Fecha: 2026-08-25.** Vía complementaria a [VIA7_REFINAMIENTO.md](VIA7_REFINAMIENTO.md).
 > Objetivo: probar 5 ampliaciones del dataset que ni v0-v7 tocaron, siempre
 > dentro del scope "Yahoo Finance, sin news, sin fundamentales, sin cambiar el

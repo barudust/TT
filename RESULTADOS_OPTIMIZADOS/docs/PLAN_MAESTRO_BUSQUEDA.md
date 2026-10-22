@@ -1,5 +1,7 @@
 # Plan maestro: exprimir al máximo los resultados con datos de Yahoo Finance
 
+> **Nota (2026-10-22).** Documento de trabajo de la **Etapa 4 (protocolo final), plan**, con los nombres que se usaban entonces. Equivalencias: v1 = Etapa 1 (TT1) · optimización de mayo, "v0", v2 y v3 = Etapa 2 · v4 = Etapa 3 · v5 = Etapa 4 (sus V0–V6 = pasos 4.1–4.7) · v7/"Vía 7" y v8/"Vía 8" = Etapa 5 · análisis de septiembre = Etapa 6 · "walk-forward" = prueba año por año. Referencia: [mapa de experimentos](../../ESTUDIO_TT/03_MAPA_DE_EXPERIMENTOS.md). Sus sub-vías V0–V6 se ejecutaron como los pasos 4.1–4.7.
+
 > **Fecha: 2026-08-14.** Este documento reemplaza a `PLAN_OPTUNA_DEEP_MODELS.md`
 > (que queda como historial). Se apoya en las mediciones de
 > **[`DIAGNOSTICO_MODELOS_PROFUNDOS.md`](DIAGNOSTICO_MODELOS_PROFUNDOS.md)** —

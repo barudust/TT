@@ -1,5 +1,7 @@
 # Diagnóstico: qué está pasando realmente con los modelos profundos
 
+> **Nota (2026-10-22).** Documento de trabajo de la **Etapa 4 (protocolo final), diagnóstico previo**, con los nombres que se usaban entonces. Equivalencias: v1 = Etapa 1 (TT1) · optimización de mayo, "v0", v2 y v3 = Etapa 2 · v4 = Etapa 3 · v5 = Etapa 4 (sus V0–V6 = pasos 4.1–4.7) · v7/"Vía 7" y v8/"Vía 8" = Etapa 5 · análisis de septiembre = Etapa 6 · "walk-forward" = prueba año por año. Referencia: [mapa de experimentos](../../ESTUDIO_TT/03_MAPA_DE_EXPERIMENTOS.md).
+
 > **Fecha: 2026-08-14.** Documento de evidencia. Todo lo que sigue está medido en
 > esta máquina (RTX 5060 Ti, torch 2.12+cu128, optuna 4.8, sklearn 1.7.2,
 > xgboost 3.2.0) o verificado leyendo el código. Reproducible con:

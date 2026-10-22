@@ -16,6 +16,8 @@ en `RESULTADOS_OPTIMIZADOS/JUSTIFICACION_LIMITE_DEL_MODELO.md`.
 Estado y pendientes: [`STATUS.md`](STATUS.md).
 **Para estudiar el TT y preparar la defensa, en orden de lo general a lo particular: [`ESTUDIO_TT/00_INDICE.md`](ESTUDIO_TT/00_INDICE.md).**
 
+**Las 6 etapas de la investigación, los experimentos A/B/C y qué usa el paper: [`ESTUDIO_TT/03_MAPA_DE_EXPERIMENTOS.md`](ESTUDIO_TT/03_MAPA_DE_EXPERIMENTOS.md).**
+
 ## Estructura del repositorio
 
 ```
@@ -145,8 +147,8 @@ Tras comparar Regresión Logística, XGBoost, LSTM, CNN 1D y CNN-LSTM (más
 LightGBM) en tres particiones temporales, globales y por ticker, con búsqueda
 de hiperparámetros simétrica (Optuna), la **Regresión Logística regularizada y
 global** es la ganadora: F1-macro 0.404 y Sharpe +0.89 en el test 2025 del
-protocolo corregido (v5), significativamente arriba de los otros cuatro.
-El walk-forward 2020–2025 muestra el límite del problema: LR 0.350 y XGBoost
+protocolo corregido (Etapa 4), significativamente arriba de los otros cuatro.
+La prueba año por año 2020–2025 muestra el límite del problema: LR 0.350 y XGBoost
 0.356 de F1 medio (azar = 0.33). En 2026, ya en producción y fuera de
 muestra, el modelo desplegado da F1 0.354.
 
