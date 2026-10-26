@@ -251,10 +251,11 @@ El contenido es valioso (conexiones que no se cerraban, errores en HTML en
 lugar de JSON). Ajustes:
 - Pasar a tono impersonal ("se observó que…", no "nos dimos cuenta de que
   'funciona en mi computadora' no es lo mismo que 'es estable'").
-- Si el problema de conexiones fue con la primera versión en PostgreSQL,
-  decirlo así ("en la primera versión, con PostgreSQL y psycopg2, …"); la
-  versión actual usa SQLAlchemy con sesiones que se cierran en cada
-  operación.
+- Verificado en el historial de git: la primera versión de la API (commit
+  `1dcda50`) se conectaba a PostgreSQL. Redactarlo así: "en la primera
+  versión del servidor, que usaba PostgreSQL, …"; y agregar que la versión
+  actual usa SQLite con SQLAlchemy y sesiones que se cierran en cada
+  operación, con reversión (`rollback`) si algo falla.
 - Agregar las **24 pruebas automáticas** (pytest) que existen hoy y qué
   verifican (`ESTUDIO_TT/B_sistema/B2` §7) — mejor en una sección de
   pruebas (5-32).

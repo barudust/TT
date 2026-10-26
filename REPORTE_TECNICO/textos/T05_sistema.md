@@ -262,7 +262,7 @@ Además se hicieron pruebas de estabilidad (solicitudes repetidas durante
 periodos largos, varias pestañas abiertas) y pruebas funcionales
 recorriendo cada pantalla como un usuario nuevo, incluidos los casos de
 error: servidor apagado, respuesta lenta y acción inexistente. En la primera
-versión, con PostgreSQL [confirmar con el equipo que fue en esa versión], las pruebas de estabilidad revelaron que las
+versión del servidor, que usaba PostgreSQL, las pruebas de estabilidad revelaron que las
 conexiones no se cerraban cuando una consulta fallaba y que los errores
 inesperados devolvían páginas HTML en lugar de JSON; ambos se corrigieron y
 hoy todas las respuestas de error usan el formato estándar.

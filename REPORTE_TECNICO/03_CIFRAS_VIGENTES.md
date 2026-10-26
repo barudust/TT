@@ -263,6 +263,7 @@ clásicos les da igual (±0.006). Fuente:
 | F1 ≈ 0.43 y Sharpe ≈ 1.1–1.5 a 5–7 días | Otro problema (ya no es señal diaria); trabajo futuro |
 | Percentiles 25/75: 0.411 | Cambia la definición de las clases; no comparable |
 | "+0.023 de F1 por las interacciones" como mejora | Solo aparece en el año en que se decidió adoptarlas |
+| "+0.033 de F1 a la LR por Optuna" (§6.6.3 del reporte actual) | La línea base no está documentada; usar la del paper: 0.385 → 0.404 (+0.019) |
 | CNN 1D en META, Exp C: Sharpe 3.640 / +223.6 % | Mejor caso entre 105 combinaciones de TT1, con lookback elegido en la prueba |
 | F1 promedio de NVDA 0.269 / TSLA 0.269 / NVDA 0.284 | No coinciden con las Tablas 15–17 (C-27) |
 | Tiempos del ETL "~30 s, ~20 s…" (Tabla 11) | No se midieron así; el sistema actual recalcula todo en segundos |
