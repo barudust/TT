@@ -4,6 +4,27 @@
 
 Última actualización: 2026-10-22.
 
+## Observaciones de la sinodal (2026-10-26)
+
+- Respuestas con evidencia nueva en `ESTUDIO_TT/D_defensa/D9_OBSERVACIONES_SINODAL.md`
+  (script `scripts_opt/observaciones_sinodal.py`, salida en
+  `RESULTADOS_OPTIMIZADOS/observaciones_sinodal/`):
+  - Ocho métricas para los cinco en las mismas 1,736 filas: la LR es la mejor
+    en todas en A, B y C.
+  - Elección del modelo: elegir por la validación de un año da F1 0.342 (peor
+    que cualquier clásico fijo). Año por año con ajustes fijos de antemano:
+    LR 0.360, XGBoost 0.356 (empate), redes 0.326–0.338 (abajo con
+    significancia). Ante el empate, LR por sencillez y costos.
+  - Prueba ciega 2026 de los cinco (dataset nuevo en
+    `tesis_ml_stocks/01_raw_datasets_2026/`, entrenamiento 2020–2024): LR
+    0.346 de F1, primera pero sin diferencia significativa con XGBoost, LSTM
+    y CNN-LSTM; en Sharpe la CNN 1D (+0.88) y la LSTM (+0.72) superan a la LR.
+  - Multicolinealidad: 26 variables con VIF > 10. Con el protocolo final, las
+    61 contra un filtro VIF ≤ 10 (45 variables): las 61 ganan en 11 de 15
+    casos (el filtro perjudica a las redes; a los clásicos les da igual).
+- Plataforma: pestaña nueva **Modelos** (`/modelos`) con la comparación en
+  gráficas, y el modelo elegido explícito en Hoy y Acerca de.
+
 ## Experimentos reorganizados en 6 etapas (2026-10-22)
 
 - Para el documento final la investigación se cuenta en **6 etapas**: 1 línea

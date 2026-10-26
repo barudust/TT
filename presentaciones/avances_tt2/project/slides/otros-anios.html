@@ -1,0 +1,28 @@
+<section id="otros-anios" style="background:#F6F5F1;color:#1F2430;font-family:Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<h2 style="font-size:64px;font-weight:700;line-height:1.1">¿Y si la prueba no fuera 2025?</h2>
+<p style="font-size:28px;line-height:1.4;color:#3A414D">Prueba extra: tomamos como prueba cada año de 2020 a 2025; en cada caso se valida con el año anterior y se entrena con los cinco años previos a ese.</p>
+<div style="display:flex;flex-direction:row;gap:96px;align-items:start">
+<div style="flex:1;display:flex;flex-direction:column;gap:16px">
+<table style="font-size:30px;color:#1F2430">
+<tr style="background:#E4E1D9"><th style="width:44%;text-align:left">Promedio de 6 años</th><th style="width:28%;text-align:right">F1-macro</th><th style="width:28%;text-align:right">Sharpe</th></tr>
+<tr><td style="font-weight:700">XGBoost</td><td style="text-align:right">0.356</td><td style="text-align:right">+0.22</td></tr>
+<tr><td style="font-weight:700">Regresión Logística</td><td style="text-align:right">0.350</td><td style="text-align:right">+0.22</td></tr>
+<tr><td>CNN-LSTM</td><td style="text-align:right">0.328</td><td style="text-align:right">−0.25</td></tr>
+<tr><td>LSTM</td><td style="text-align:right">0.314</td><td style="text-align:right">−0.48</td></tr>
+<tr><td>CNN 1D</td><td style="text-align:right">0.292</td><td style="text-align:right">−0.29</td></tr>
+</table>
+</div>
+<div style="width:500px;display:flex;flex-direction:column;gap:12px;background:#FCFBF8;border:1px solid #DEDBD2;border-radius:12px;padding:40px">
+<p style="font-size:28px;color:#5A6270">2026, datos que el modelo nunca vio</p>
+<p style="font-size:120px;font-weight:700;line-height:1;color:#7A2142">0.354</p>
+<p style="font-size:26px;line-height:1.4">F1-macro del modelo de la plataforma, de enero a septiembre</p>
+</div>
+</div>
+<p style="font-size:30px;line-height:1.4">Los dos modelos clásicos se mantienen arriba y son los únicos con Sharpe positivo; las redes quedan abajo.</p>
+<p style="position:absolute;left:128px;bottom:64px;width:1200px;font-size:24px;color:#5A6270">TT 2026-B164 · Avances TT2</p>
+<p style="position:absolute;right:128px;bottom:64px;width:200px;font-size:24px;color:#5A6270;text-align:right">6</p>
+<aside>Esto no es otro experimento como A, B o C: es una comprobación de que el resultado no depende de haber probado en 2025. Para cada año de prueba se entrena con los cinco años anteriores al año de validación, se valida con el año previo y se prueba en ese año (por ejemplo, prueba 2020: entrenamiento 2014–2018, validación 2019).
+Si preguntan por qué la LR y no XGBoost si aquí empatan: la LR es significativamente mejor en los tres experimentos, aguanta mejor los costos y es más simple.
+2026 es la prueba más limpia: el modelo de la plataforma se entrenó con 2018–2025 (la configuración de B extendida hasta 2025) y nunca vio esos datos; queda en el mismo nivel que el promedio histórico.
+Si preguntan si se reentrena cada día: no; el modelo es fijo y solo se reentrena cuando un cambio se valida antes, así todas las recomendaciones salen del mismo modelo.</aside>
+</section>

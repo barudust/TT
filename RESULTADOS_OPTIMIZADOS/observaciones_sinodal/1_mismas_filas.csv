@@ -1,0 +1,16 @@
+exp,modelo,mismas_filas_que_LR
+A,LR,True
+A,XGBoost,True
+A,LSTM,True
+A,CNN-LSTM,True
+A,CNN,True
+B,LR,True
+B,XGBoost,True
+B,LSTM,True
+B,CNN-LSTM,True
+B,CNN,True
+C,LR,True
+C,XGBoost,True
+C,LSTM,True
+C,CNN-LSTM,True
+C,CNN,True

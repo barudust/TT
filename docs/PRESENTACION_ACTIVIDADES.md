@@ -70,7 +70,7 @@ componentes reutilizables y rutas."
 
 | # | Archivo | Qué señalar |
 |---|---|---|
-| 1 | [Frontend/src/app/routes.ts](../Frontend/src/app/routes.ts) | Las 6 rutas: inicio, `stock/:symbol`, `performance`, `aprende`, `ayuda`, `about` |
+| 1 | [Frontend/src/app/routes.ts](../Frontend/src/app/routes.ts) | Las 7 rutas: inicio, `stock/:symbol`, `performance`, `modelos`, `aprende`, `ayuda`, `about` |
 | 2 | [Frontend/src/app/Root.tsx:24](../Frontend/src/app/Root.tsx) | `navItems`: barra de navegación inferior y cambio de tema claro/oscuro |
 | 3 | [Frontend/src/app/components/StockCard.tsx:13](../Frontend/src/app/components/StockCard.tsx) | Componente reutilizable: tarjeta que lleva al detalle con `Link` |
 | 4 | [Frontend/src/app/pages/Home.tsx](../Frontend/src/app/pages/Home.tsx) | Consumo de la API (`fetch`), estados de carga y error, botón de actualizar |

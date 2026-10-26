@@ -104,6 +104,20 @@ conclusión (los clásicos igualan o superan a las redes).
 
 → [D8 completo](D8_PREGUNTAS_TRAMPA.md)
 
+## D9. Observaciones de la sinodal (26 de octubre)
+
+- **"Métricas distintas":** en TT1 sí (filtro de variables distinto por
+  familia); hoy los cinco usan las mismas 61 variables, las mismas filas y
+  las mismas ocho métricas, y la LR gana en las ocho.
+- **"¿Eligen por la prueba?":** no con un solo año: en seis años LR y
+  XGBoost empatan; se elige la LR por sencillez y costos; la prueba ciega
+  2026 la deja primera en F1 (casi empatada).
+- **Multicolinealidad:** existe (26 variables con VIF > 10). Quitarla (VIF ≤ 10,
+  quedan 45) empeora en 11 de 15 casos: perjudica a las redes y a los
+  clásicos les da igual; por eso se quedan las 61.
+
+→ [D9 completo](D9_OBSERVACIONES_SINODAL.md)
+
 ---
 
 ## Las 5 cifras para tener en la cabeza

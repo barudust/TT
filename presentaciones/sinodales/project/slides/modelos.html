@@ -1,0 +1,38 @@
+<section id="modelos" style="background:#F7F6F2;color:#1F2430;font-family:Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:36px">
+<p style="font-size:24px;font-weight:700;color:#7A2142;letter-spacing:2px;text-transform:uppercase">1 · El problema</p>
+<h2 style="font-size:56px;font-weight:700;line-height:1.1">Los cinco modelos</h2>
+<div style="display:flex;flex-direction:row;gap:32px">
+<div style="flex:2;display:flex;flex-direction:column;gap:14px">
+<p style="font-size:26px;font-weight:700;color:#4F5663;letter-spacing:2px;text-transform:uppercase">Clásicos</p>
+<div style="display:flex;flex-direction:column;gap:8px;background:#FFFDF9;border:1px solid #DEDBD2;border-left:12px solid #2A78D6;border-radius:12px;padding:20px 28px">
+<h3 style="font-size:32px;font-weight:700">Regresión Logística</h3>
+<p style="font-size:26px;line-height:1.4;color:#4F5663">Suma ponderada de las variables que da una probabilidad para cada opción. Simple y muy controlada.</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px;background:#FFFDF9;border:1px solid #DEDBD2;border-left:12px solid #EB6834;border-radius:12px;padding:20px 28px">
+<h3 style="font-size:32px;font-weight:700">XGBoost</h3>
+<p style="font-size:26px;line-height:1.4;color:#4F5663">Cientos de árboles de decisión pequeños; cada uno corrige los errores de los anteriores.</p>
+</div>
+</div>
+<div style="flex:3;display:flex;flex-direction:column;gap:14px">
+<p style="font-size:26px;font-weight:700;color:#4F5663;letter-spacing:2px;text-transform:uppercase">Redes neuronales</p>
+<div style="display:flex;flex-direction:column;gap:8px;background:#FFFDF9;border:1px solid #DEDBD2;border-left:12px solid #9AA0A6;border-radius:12px;padding:20px 28px">
+<h3 style="font-size:32px;font-weight:700">LSTM</h3>
+<p style="font-size:26px;line-height:1.4;color:#4F5663">Lee los días anteriores en orden y recuerda lo importante.</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px;background:#FFFDF9;border:1px solid #DEDBD2;border-left:12px solid #9AA0A6;border-radius:12px;padding:20px 28px">
+<h3 style="font-size:32px;font-weight:700">CNN 1D</h3>
+<p style="font-size:26px;line-height:1.4;color:#4F5663">Busca patrones cortos en esos días, como un filtro que se desliza.</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px;background:#FFFDF9;border:1px solid #DEDBD2;border-left:12px solid #9AA0A6;border-radius:12px;padding:20px 28px">
+<h3 style="font-size:32px;font-weight:700">CNN-LSTM</h3>
+<p style="font-size:26px;line-height:1.4;color:#4F5663">Primero busca patrones y luego los lee en orden.</p>
+</div>
+</div>
+</div>
+<p style="font-size:26px;line-height:1.4;color:#4F5663">En las gráficas: <span style="color:#1F5FAE"><b>azul = Regresión Logística</b></span>, <span style="color:#B34A1C"><b>naranja = XGBoost</b></span>, <b>gris = redes neuronales</b>.</p>
+<p style="position:absolute;left:128px;bottom:64px;width:1200px;font-size:24px;color:#6B7280">TT 2026-B164 · Lo que encontramos</p>
+<p style="position:absolute;right:128px;bottom:64px;width:200px;font-size:24px;color:#6B7280;text-align:right">7</p>
+<aside>Arquitecturas finales (elegidas por Optuna en la Etapa 4): LSTM de 2 capas de 118 unidades con atención (198 mil parámetros); CNN 1D de 2 bloques de 50 y 100 filtros, kernel 7 (67 mil); CNN-LSTM de 2 bloques de 77 y 154 filtros más una LSTM de 136 (276 mil).
+La LR: multinomial, penalización L2 con C = 0.000165 (regularización muy fuerte), RobustScaler, pesos de clase balanceados. 231 parámetros.
+Por qué estos cinco: dos referencias clásicas (lineal y árboles) contra las tres arquitecturas de redes más usadas en la literatura de series financieras.</aside>
+</section>

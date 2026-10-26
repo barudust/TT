@@ -1,0 +1,36 @@
+<section id="plataforma" style="background:#F7F6F2;color:#1F2430;font-family:Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:36px">
+<p style="font-size:24px;font-weight:700;color:#7A2142;letter-spacing:2px;text-transform:uppercase">5 · La plataforma · solo en el TT</p>
+<h2 style="font-size:56px;font-weight:700;line-height:1.1">El modelo funcionando todos los días</h2>
+<div style="display:flex;flex-direction:row;gap:24px;align-items:center">
+<div style="flex:1;display:flex;flex-direction:column;gap:8px;background:#FFFDF9;border:1px solid #DEDBD2;border-radius:12px;padding:28px">
+<h3 style="font-size:30px;font-weight:700">Yahoo Finance</h3>
+<p style="font-size:24px;line-height:1.4;color:#4F5663">Precios diarios de las 7 acciones, el S&amp;P 500 y el VIX</p>
+</div>
+<x-shape kind="arrow-right" style="width:64px;height:32px;background:#4F5663"></x-shape>
+<div style="flex:1;display:flex;flex-direction:column;gap:8px;background:#FFFDF9;border:1px solid #DEDBD2;border-radius:12px;padding:28px">
+<h3 style="font-size:30px;font-weight:700">API en Flask</h3>
+<p style="font-size:24px;line-height:1.4;color:#4F5663">Calcula las variables con el mismo código de la tesis, corre el modelo y guarda en SQLite</p>
+</div>
+<x-shape kind="arrow-right" style="width:64px;height:32px;background:#4F5663"></x-shape>
+<div style="flex:1;display:flex;flex-direction:column;gap:8px;background:#FFFDF9;border:1px solid #DEDBD2;border-radius:12px;padding:28px">
+<h3 style="font-size:30px;font-weight:700">Página en React</h3>
+<p style="font-size:24px;line-height:1.4;color:#4F5663">Para cualquier persona, sin conocimientos de finanzas</p>
+</div>
+</div>
+<div style="display:flex;flex-direction:row;flex-wrap:wrap;gap:14px">
+<p style="font-size:26px;background:#E8E6DF;padding:10px 22px;border-radius:999px">Hoy</p>
+<p style="font-size:26px;background:#E8E6DF;padding:10px 22px;border-radius:999px">Detalle por empresa</p>
+<p style="font-size:26px;background:#E8E6DF;padding:10px 22px;border-radius:999px">Resultados</p>
+<p style="font-size:26px;background:#DCE7F5;padding:10px 22px;border-radius:999px"><b>Aprende</b>: comprar, vender en corto y mantener</p>
+<p style="font-size:26px;background:#E8E6DF;padding:10px 22px;border-radius:999px">Ayuda y glosario</p>
+<p style="font-size:26px;background:#E8E6DF;padding:10px 22px;border-radius:999px">Acerca de</p>
+</div>
+<p style="font-size:28px;line-height:1.4">Se actualiza sola cada día hábil a las 16:30 de Nueva York. Está publicada en Render: <b style="color:#7A2142">tt-frontend-womf.onrender.com</b></p>
+<p style="font-size:26px;line-height:1.4;color:#4F5663">Atendimos las observaciones de usuarios sin contexto: la seguridad de cada recomendación en palabras, un «?» en cada dato que lleva a su definición, ejes rotulados y la ganancia en dinero.</p>
+<p style="position:absolute;left:128px;bottom:64px;width:1200px;font-size:24px;color:#6B7280">TT 2026-B164 · Lo que encontramos</p>
+<p style="position:absolute;right:128px;bottom:64px;width:200px;font-size:24px;color:#6B7280;text-align:right">24</p>
+<aside>Aquí conviene abrir el portal en vivo, sobre todo la página «Aprende» para los profesores que no son del área.
+Si preguntan por la arquitectura: cliente-servidor REST; la actualización diaria corre dentro de la API (APScheduler), por eso un solo proceso de gunicorn. SQLite porque solo un proceso escribe y la base se reconstruye desde Yahoo y el modelo; el esquema funciona igual en PostgreSQL (el TT1 proponía PostgreSQL).
+El modelo no se reentrena cada día: es fijo y se reentrena solo cuando un cambio se valida antes, así todas las recomendaciones salen del mismo modelo.
+24 pruebas automáticas de la API, incluida una que compara la etiqueta en vivo contra la del dataset.</aside>
+</section>

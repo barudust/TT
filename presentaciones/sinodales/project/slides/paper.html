@@ -1,0 +1,21 @@
+<section id="paper" style="background:#F7F6F2;color:#1F2430;font-family:Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:32px">
+<p style="font-size:24px;font-weight:700;color:#7A2142;letter-spacing:2px;text-transform:uppercase">5 · El artículo</p>
+<h2 style="font-size:56px;font-weight:700;line-height:1.1">El artículo de MICAI 2026 publica una parte del TT</h2>
+<p style="font-size:26px;line-height:1.4;font-style:italic;color:#4F5663">A Benchmark of Five Machine-Learning Architectures for Daily Trading-Signal Classification on US Tech Equities · Springer LNAI · versión final enviada el 8 de septiembre</p>
+<table style="font-size:26px;color:#1F2430">
+<tr style="background:#E8E6DF"><th style="width:22%;text-align:left">Sección</th><th style="width:52%;text-align:left">Qué publica</th><th style="width:26%;text-align:left">Viene de</th></tr>
+<tr><td style="font-weight:700">§3–§5</td><td>Datos, etiqueta, experimentos A/B/C, modelos y métricas</td><td>Etapa 3</td></tr>
+<tr><td style="font-weight:700">§6</td><td>Filtrar variables empeora en 11 de 15 casos</td><td>Etapa 2</td></tr>
+<tr><td style="font-weight:700">§7</td><td>Comparación de los cinco modelos (120 corridas)</td><td>Etapa 3</td></tr>
+<tr><td style="font-weight:700">§8</td><td>Protocolo final e intervalos: la Reg. Log. arriba con significancia</td><td>Etapa 4</td></tr>
+</table>
+<div style="display:flex;flex-direction:column;gap:8px;background:#FFFDF9;border:1px solid #DEDBD2;border-radius:12px;padding:24px 28px">
+<h3 style="font-size:30px;font-weight:700">Solo en el TT</h3>
+<p style="font-size:26px;line-height:1.4;color:#4F5663">Costos de transacción, prueba año por año, intervalos de A y C, permutación, la búsqueda de mejoras (Etapa 5), el modelo de la plataforma y 2026 (Etapa 6), y la plataforma.</p>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1200px;font-size:24px;color:#6B7280">TT 2026-B164 · Lo que encontramos</p>
+<p style="position:absolute;right:128px;bottom:64px;width:200px;font-size:24px;color:#6B7280;text-align:right">25</p>
+<aside>El artículo es un producto adicional que pasó revisión por pares. Lo que el artículo declara como limitaciones (un solo año de prueba, sin costos) el TT ya lo resolvió.
+Puntos a conocer: (1) el §6 viene de la Etapa 2, con las particiones de TT1 (el Experimento A probaba 2024–2025) y la mejor configuración elegida con la prueba; la conclusión se confirma con el protocolo limpio. (2) El §4 dice que la CNN-LSTM recibe 5 canales OHLCV, frase heredada del diseño de TT1; en la corrida publicada las cinco reciben las mismas 61 variables. (3) En el §7 la ventana de las redes se eligió con la prueba; el artículo lo declara y eso las favorecía.
+¿Se contradicen el artículo y el TT? No en la conclusión: en el artículo la LR gana en 2025; en el TT además se probó en seis años, donde empata con XGBoost.</aside>
+</section>

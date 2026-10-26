@@ -1,0 +1,20 @@
+<section id="descartado" style="background:#F6F5F1;color:#1F2430;font-family:Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<h2 style="font-size:64px;font-weight:700;line-height:1.1">Lo que probamos y descartamos</h2>
+<table style="font-size:28px;color:#1F2430">
+<tr style="background:#E4E1D9"><th style="width:48%;text-align:left">Qué probamos</th><th style="width:52%;text-align:left">Qué pasó</th></tr>
+<tr><td style="font-weight:700">Seleccionar variables para cada modelo</td><td>Peor en 11 de 15 casos que darles las 61</td></tr>
+<tr><td style="font-weight:700">Un modelo por acción como principal</td><td>El global gana o empata en los cinco modelos</td></tr>
+<tr><td style="font-weight:700">Más variables (tasas, dólar, oro, petróleo, sectores)</td><td>Sin mejora; los modelos se ajustan más al ruido</td></tr>
+<tr><td style="font-weight:700">Combinar modelos (ensambles)</td><td>No superan a la Regresión Logística sola</td></tr>
+<tr><td style="font-weight:700">Ajustar umbrales y calibrar probabilidades</td><td>Marginal e inestable; en la Regresión Logística, peor</td></tr>
+<tr><td style="font-weight:700">Otra etiqueta (40/60)</td><td>Peor; nos quedamos con 30/70</td></tr>
+</table>
+<p style="position:absolute;left:128px;bottom:64px;width:1200px;font-size:24px;color:#5A6270">TT 2026-B164 · Avances TT2</p>
+<p style="position:absolute;right:128px;bottom:64px;width:200px;font-size:24px;color:#5A6270;text-align:right">8</p>
+<aside>Pasarla rápido: sirve para que vean que no nos quedamos con lo primero que salió.
+Ensambles: stacking quedó igual que la LR sola; el promedio de los 5 dio alrededor de 0.38; la mezcla optimizada terminó siendo casi toda LR.
+Más variables: pasamos de 61 a 94 y no mejoró; fue la primera señal de que el límite no estaba en las variables.
+Si preguntan por otros horizontes (predecir a 5 o 7 días): da números más altos, pero cambia el problema; el TT es sobre el día siguiente.
+Si preguntan por qué la página dice 76 variables y no 61: son las mismas 61 más 15 combinaciones de pares de ellas (interacciones). Las probamos de 2019 a 2024 y dan lo mismo o un poco mejor que sin ellas (F1 0.357 contra 0.354), así que se quedaron. Los resultados de A, B y C de la presentación son con las 61 variables.
+Lo que sí se ajustó: bajar un poco el peso de la clase mantener, porque el modelo la recomendaba de más.</aside>
+</section>

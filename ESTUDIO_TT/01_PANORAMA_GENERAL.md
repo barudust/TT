@@ -231,8 +231,9 @@ Yahoo Finance ──► API (Flask, Python) ──► Base de datos (SQLite)
   predicciones, métricas). Es reconstruible desde Yahoo + el modelo, por eso
   basta una base efímera. Detalle y análisis de normalización:
   [B3](B_sistema/B3_BASE_DE_DATOS.md).
-- **Frontend:** React + TypeScript + Vite + Tailwind. Seis pantallas: Hoy
-  (recomendación de cada empresa), detalle por empresa, Resultados, Aprende
+- **Frontend:** React + TypeScript + Vite + Tailwind. Siete pantallas: Hoy
+  (recomendación de cada empresa), detalle por empresa, Resultados, Modelos
+  (comparación de los cinco y por qué se eligió la Regresión Logística), Aprende
   (qué es comprar, vender en corto y mantener, con un juego día por día con
   precios reales), Ayuda (guía de uso y glosario) y Acerca de. Detalle: [B4](B_sistema/B4_FRONTEND.md).
 - **Despliegue:** Docker + gunicorn en Render (API) y sitio estático en

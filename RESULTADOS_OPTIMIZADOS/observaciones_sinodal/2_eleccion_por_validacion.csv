@@ -1,0 +1,13 @@
+config,anio,elegido_por_validacion,f1_prueba_del_elegido,mejor_en_prueba,f1_prueba_del_mejor,corr_val_prueba
+v4,2020,CNN-LSTM,0.327,LR,0.3926,-0.5
+v4,2021,CNN,0.3015,LR,0.3783,-0.5
+v4,2022,LR,0.3581,CNN,0.3751,-0.6
+v4,2023,LR,0.3304,CNN,0.3516,0.5
+v4,2024,XGBoost,0.3688,XGBoost,0.3688,0.3
+v4,2025,XGBoost,0.3633,LR,0.3727,-0.1
+v5,2020,LR,0.3432,XGBoost,0.3866,0.9
+v5,2021,XGBoost,0.3576,LR,0.3878,0.8
+v5,2022,LR,0.3143,LSTM,0.3656,0.1
+v5,2023,XGBoost,0.3297,LR,0.335,0.0
+v5,2024,CNN,0.3591,CNN-LSTM,0.376,-0.1
+v5,2025,XGBoost,0.3594,LR,0.3944,0.8

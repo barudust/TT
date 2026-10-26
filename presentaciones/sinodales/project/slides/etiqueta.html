@@ -1,0 +1,41 @@
+<section id="etiqueta" style="background:#F7F6F2;color:#1F2430;font-family:Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:32px">
+<p style="font-size:24px;font-weight:700;color:#7A2142;letter-spacing:2px;text-transform:uppercase">1 · El problema</p>
+<h2 style="font-size:56px;font-weight:700;line-height:1.1">Cómo se decide qué convenía hacer</h2>
+<p style="font-size:28px;line-height:1.4;color:#4F5663">Se ordenan los movimientos de un día de esa acción en su último año (252 días hábiles). El movimiento de mañana cae en una de tres zonas:</p>
+<div style="display:flex;flex-direction:column;gap:8px;align-self:center">
+<div style="display:flex;flex-direction:row;align-items:end;gap:6px;height:300px">
+<div style="width:56px;height:13px;background:#E06A5E;border-radius:4px 4px 0 0"></div>
+<div style="width:56px;height:24px;background:#E06A5E;border-radius:4px 4px 0 0"></div>
+<div style="width:56px;height:41px;background:#E06A5E;border-radius:4px 4px 0 0"></div>
+<div style="width:56px;height:65px;background:#E06A5E;border-radius:4px 4px 0 0"></div>
+<div style="width:56px;height:97px;background:#E06A5E;border-radius:4px 4px 0 0"></div>
+<div style="width:56px;height:137px;background:#E06A5E;border-radius:4px 4px 0 0"></div>
+<div style="width:56px;height:182px;background:#E06A5E;border-radius:4px 4px 0 0"></div>
+<div style="width:56px;height:226px;background:#E06A5E;border-radius:4px 4px 0 0"></div>
+<div style="width:56px;height:265px;background:#E9A93B;border-radius:4px 4px 0 0"></div>
+<div style="width:56px;height:291px;background:#E9A93B;border-radius:4px 4px 0 0"></div>
+<div style="width:56px;height:300px;background:#E9A93B;border-radius:4px 4px 0 0"></div>
+<div style="width:56px;height:291px;background:#E9A93B;border-radius:4px 4px 0 0"></div>
+<div style="width:56px;height:265px;background:#E9A93B;border-radius:4px 4px 0 0"></div>
+<div style="width:56px;height:226px;background:#3FA67E;border-radius:4px 4px 0 0"></div>
+<div style="width:56px;height:182px;background:#3FA67E;border-radius:4px 4px 0 0"></div>
+<div style="width:56px;height:137px;background:#3FA67E;border-radius:4px 4px 0 0"></div>
+<div style="width:56px;height:97px;background:#3FA67E;border-radius:4px 4px 0 0"></div>
+<div style="width:56px;height:65px;background:#3FA67E;border-radius:4px 4px 0 0"></div>
+<div style="width:56px;height:41px;background:#3FA67E;border-radius:4px 4px 0 0"></div>
+<div style="width:56px;height:24px;background:#3FA67E;border-radius:4px 4px 0 0"></div>
+<div style="width:56px;height:13px;background:#3FA67E;border-radius:4px 4px 0 0"></div>
+</div>
+<div style="display:flex;flex-direction:row;gap:6px;border-top:2px solid #4F5663;padding:8px 0 0 0">
+<p style="width:490px;font-size:26px;text-align:center"><b>Vender</b> · el 30 % de las bajadas más fuertes</p>
+<p style="width:304px;font-size:26px;text-align:center"><b>Mantener</b> · el 40 % del medio</p>
+<p style="width:490px;font-size:26px;text-align:center"><b>Comprar</b> · el 30 % de las subidas más fuertes</p>
+</div>
+</div>
+<p style="font-size:26px;line-height:1.4;color:#4F5663">Ilustración de la forma; los cortes se recalculan cada día con los 252 días anteriores, así que se adaptan a qué tan volátil está cada acción y nunca usan el futuro.</p>
+<p style="position:absolute;left:128px;bottom:64px;width:1200px;font-size:24px;color:#6B7280">TT 2026-B164 · Lo que encontramos</p>
+<p style="position:absolute;right:128px;bottom:64px;width:200px;font-size:24px;color:#6B7280;text-align:right">5</p>
+<aside>La etiqueta: r = ln(cierre de mañana / cierre de hoy). Comprar si r está en o arriba del percentil 70 de los 252 días previos de esa acción; vender si está en o abajo del percentil 30; mantener en otro caso. Los percentiles se calculan con shift(1): solo con días anteriores.
+Por qué percentiles móviles y no un umbral fijo (por ejemplo ±1 %): un umbral fijo cambia de significado cuando la volatilidad sube o baja, y deja las clases desbalanceadas.
+Por qué 30/70: deja las clases cerca de 30/40/30. Probamos 40/60 y empeora (y no corrige el exceso de mantener). Otros percentiles cambian la definición del problema: quedan como trabajo futuro.</aside>
+</section>

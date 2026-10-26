@@ -1,0 +1,8 @@
+config,comparacion,dif_f1,ic_lo,ic_hi,significativa
+v4,LR − XGBoost,0.0025,-0.007,0.0132,False
+v4,LR − LSTM,0.0264,0.0147,0.0393,True
+v4,LR − CNN-LSTM,0.0248,0.0138,0.0364,True
+v4,LR − CNN,0.0172,0.0066,0.0294,True
+v5,LR − XGBoost,0.0055,-0.0054,0.0165,False
+v5,LR − LSTM,0.042,0.0306,0.0549,True
+v5,LR − CNN,0.0554,0.0428,0.0697,True

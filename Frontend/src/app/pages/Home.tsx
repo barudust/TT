@@ -116,6 +116,9 @@ export default function Home() {
           <div>
             <h2 className="text-2xl font-bold text-foreground">¿Qué hacer hoy?</h2>
             <p className="text-sm text-muted-foreground mt-1">Lo que sugiere el modelo para cada empresa. Toca una para ver más.</p>
+            <Link to="/modelos" className="inline-block mt-2 text-xs px-3 py-1 rounded-full bg-muted border border-border text-foreground hover:bg-card">
+              Modelo: <strong>Regresión Logística</strong> · ¿por qué este?
+            </Link>
           </div>
           <Button
             onClick={refresh}

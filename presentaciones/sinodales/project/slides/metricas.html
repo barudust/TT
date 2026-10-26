@@ -1,0 +1,35 @@
+<section id="metricas" style="background:#F7F6F2;color:#1F2430;font-family:Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:32px">
+<p style="font-size:24px;font-weight:700;color:#7A2142;letter-spacing:2px;text-transform:uppercase">2 · Cómo se evaluó</p>
+<h2 style="font-size:56px;font-weight:700;line-height:1.1">Qué medimos</h2>
+<div style="display:flex;flex-direction:column;gap:16px;background:#FFFDF9;border:1px solid #DEDBD2;border-radius:12px;padding:32px">
+<h3 style="font-size:32px;font-weight:700">F1-macro: qué tan bien acierta las tres opciones por igual</h3>
+<p style="font-size:26px;line-height:1.4;color:#4F5663">Va de 0 a 1. No se deja engañar si una opción es más común: decir siempre «mantener» saca 0.20.</p>
+<div style="position:relative;width:1400px;height:130px">
+<div style="position:absolute;left:0;top:64px;width:1400px;height:4px;background:#4F5663"></div>
+<div style="position:absolute;left:548px;top:54px;width:24px;height:24px;border-radius:50%;background:#9AA0A6"></div>
+<div style="position:absolute;left:921px;top:54px;width:24px;height:24px;border-radius:50%;background:#4F5663"></div>
+<div style="position:absolute;left:1119px;top:54px;width:24px;height:24px;border-radius:50%;background:#2A78D6"></div>
+<p style="position:absolute;left:400px;top:0px;width:320px;font-size:24px;text-align:center">Siempre «mantener» 0.20</p>
+<p style="position:absolute;left:765px;top:90px;width:340px;font-size:24px;text-align:center">Azar con 3 opciones 0.33</p>
+<p style="position:absolute;left:971px;top:0px;width:320px;font-size:24px;text-align:center;font-weight:700;color:#1F5FAE">Nuestro modelo ≈ 0.40</p>
+<p style="position:absolute;left:0px;top:90px;width:80px;font-size:24px;color:#6B7280">0</p>
+<p style="position:absolute;left:1320px;top:90px;width:80px;font-size:24px;color:#6B7280;text-align:right">0.5</p>
+</div>
+</div>
+<div style="display:flex;flex-direction:row;gap:24px">
+<div style="flex:1;display:flex;flex-direction:column;gap:8px;background:#FFFDF9;border:1px solid #DEDBD2;border-radius:12px;padding:28px">
+<h3 style="font-size:30px;font-weight:700">Dinero: el Sharpe</h3>
+<p style="font-size:26px;line-height:1.4;color:#4F5663">Ganancia de seguir las recomendaciones dividida entre qué tanto se movió el dinero. Arriba de 0 gana; arriba de 1 es bueno. Con y sin comisiones.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:8px;background:#FFFDF9;border:1px solid #DEDBD2;border-radius:12px;padding:28px">
+<h3 style="font-size:30px;font-weight:700">Que no sea suerte</h3>
+<p style="font-size:26px;line-height:1.4;color:#4F5663">Intervalos de confianza, prueba de permutación, prueba en otros años y evaluación en 2026 con datos nuevos.</p>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1200px;font-size:24px;color:#6B7280">TT 2026-B164 · Lo que encontramos</p>
+<p style="position:absolute;right:128px;bottom:64px;width:200px;font-size:24px;color:#6B7280;text-align:right">9</p>
+<aside>F1-macro = promedio simple del F1 de comprar, mantener y vender. Es la métrica principal desde TT1. Por qué no accuracy: un modelo que siempre dice la clase más común puede tener buena accuracy y no servir.
+También reportamos kappa (acuerdo sobre el azar), AUC y balanced accuracy en los respaldos; la LR es la mejor en todas.
+Simulación: con comprar se gana el cambio del día siguiente, con vender en corto se gana el cambio con signo contrario, con mantener cero. Rendimientos logarítmicos. Comisiones de 5 y 10 puntos base por cambio de posición.
+Intervalos: bootstrap por bloques de 20 días (2,000 repeticiones), porque los días seguidos se parecen. Permutación: se barajan las señales del modelo para ver qué tan seguido el azar iguala su resultado (en 2025 solo el 0.4 % lo iguala).</aside>
+</section>

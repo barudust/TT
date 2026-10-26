@@ -1,0 +1,21 @@
+<section id="cambios" style="background:#F6F5F1;color:#1F2430;font-family:Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<h2 style="font-size:64px;font-weight:700;line-height:1.1">Qué cambió desde TT1</h2>
+<table style="font-size:26px;color:#1F2430">
+<tr style="background:#E4E1D9"><th style="width:26%;text-align:left"></th><th style="width:32%;text-align:left">TT1</th><th style="width:42%;text-align:left">TT2</th></tr>
+<tr><td style="font-weight:700">Variables</td><td>Cada modelo con su propia selección</td><td>Las mismas 61 para los cinco modelos</td></tr>
+<tr><td style="font-weight:700">Enfoque principal</td><td>Un modelo por acción</td><td>Un modelo global para las 7 acciones</td></tr>
+<tr><td style="font-weight:700">Hiperparámetros</td><td>Cuadrícula; redes con configuración fija</td><td>Búsqueda con Optuna para los cinco</td></tr>
+<tr><td style="font-weight:700">Experimentos</td><td>A con otra prueba (2024–2025)</td><td>A, B y C con la misma prueba (2025)</td></tr>
+<tr><td style="font-weight:700">Evaluación</td><td>Sin pruebas de significancia</td><td>Intervalos de confianza, otros años y 2026</td></tr>
+<tr><td style="font-weight:700">Mejor modelo</td><td>XGBoost</td><td style="color:#7A2142;font-weight:700">Regresión Logística</td></tr>
+<tr><td style="font-weight:700">Plataforma</td><td>En desarrollo</td><td>Terminada y publicada en internet</td></tr>
+</table>
+<p style="font-size:26px;line-height:1.4;color:#5A6270">No cambió: el problema, la etiqueta, las 7 acciones, los 5 modelos y la conclusión de que los modelos clásicos igualan o superan a las redes.</p>
+<p style="position:absolute;left:128px;bottom:64px;width:1200px;font-size:24px;color:#5A6270">TT 2026-B164 · Avances TT2</p>
+<p style="position:absolute;right:128px;bottom:64px;width:200px;font-size:24px;color:#5A6270;text-align:right">3</p>
+<aside>Lo más importante: darles las mismas variables a todos. El propio TT1 decía que sin eso no se podía comparar en igualdad. Filtrar variables por modelo salió peor en 11 de 15 casos.
+El modelo global gana o empata en los cinco modelos.
+Pudimos usar Optuna en las redes porque cada entrenamiento tarda de 7 a 12 segundos.
+Por qué ahora gana la LR: con las 61 variables pasó de 0.355 a 0.392.
+Si preguntan por la base de datos: pasamos de PostgreSQL a SQLite porque solo un proceso escribe y la base se puede reconstruir desde Yahoo y el modelo; el esquema funciona igual en PostgreSQL.</aside>
+</section>

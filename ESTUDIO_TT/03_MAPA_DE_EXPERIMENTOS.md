@@ -211,6 +211,19 @@ Sobre el protocolo de la Etapa 4, sin cambiar el problema:
   interacciones (Etapa 5) + peso de mantener × 0.90 (Etapa 6), entrenado con
   2018–2025 (la configuración de B extendida hasta 2025). Versión
   `LR-v8-interactions-holdw090`.
+- **Respuesta a la sinodal (26 de octubre)** — `scripts_opt/observaciones_sinodal.py`,
+  detalle en [D9](D_defensa/D9_OBSERVACIONES_SINODAL.md):
+  - Las ocho métricas para los cinco en las mismas filas: la LR es la mejor
+    en todas, en A, B y C.
+  - Elección del modelo: la validación de un año no sirve para escoger; en
+    seis años LR y XGBoost empatan y las redes quedan abajo con
+    significancia; ante el empate se elige la LR por sencillez y costos.
+  - **Prueba ciega 2026 de los cinco** (ajustes congelados, entrenamiento
+    2020–2024): LR primera en F1 (0.346) sin diferencia significativa con
+    XGBoost, LSTM y CNN-LSTM; en dinero dos redes salen mejor ese año.
+  - Multicolinealidad: 26 variables con VIF > 10. Con el protocolo final, las
+    61 contra un filtro VIF ≤ 10 (45 variables): las 61 son mejores en 11 de
+    15 casos; el filtro perjudica a las redes y a los clásicos les da igual.
 
 ---
 
@@ -279,7 +292,7 @@ conclusión, pero hay que tener la respuesta lista:
 
 | # | Punto | Dónde | Respuesta corta |
 |---|---|---|---|
-| 1 | El §6 del paper (preselección) viene de la Etapa 2: Experimento A con la prueba vieja y configuraciones elegidas con la prueba | Paper §6 | La conclusión (usar las 61) se confirma después con el protocolo limpio: en el Experimento B por acción la LR pasa de 0.355 (Etapa 1, 4 variables) a 0.392 (Etapa 3, las 61) |
+| 1 | El §6 del paper (preselección) viene de la Etapa 2: Experimento A con la prueba vieja y configuraciones elegidas con la prueba | Paper §6 | **Confirmado con el protocolo final** (26 oct): un filtro VIF ≤ 10 calculado solo con el entrenamiento empeora en 11 de 15 casos ([D9 §3](D_defensa/D9_OBSERVACIONES_SINODAL.md)); además la LR por acción pasa de 0.355 (4 variables) a 0.392 (las 61) |
 | 2 | El paper dice que la CNN-LSTM recibe 5 canales OHLCV; el código de la Etapa 3 le da las 61 variables | Paper §4 | Frase heredada del diseño de TT1; en la corrida publicada las cinco reciben lo mismo |
 | 3 | En la Etapa 3 la ventana de las redes se eligió con la prueba | Paper §7 | El paper lo declara; favorecía a las redes y aun así ganó la LR; la Etapa 4 lo corrigió |
 | 4 | Las 15 interacciones se propusieron viendo 2025 | Etapa 5 | Validadas después en 2019–2024: empatan (0.357 contra 0.354); los resultados de A/B/C son sin ellas |
@@ -288,6 +301,8 @@ conclusión, pero hay que tener la respuesta lista:
 | 7 | La prueba de permutación pasa en 2025 pero no en 2024 | Etapa 4 | Coherente con que la señal es débil e inestable entre años; se dice como limitación |
 | 8 | La ventana de las redes termina un día antes que la de la LR | Etapas 3–4 | Medido: cuesta ≈ 0.007 de F1, no cambia el orden |
 | 9 | La cifra de mayo (0.417) y la mejora de 5–7 días (0.43) | Etapas 2 y 5 | **[NO CITAR]** / **[FUERA]**: protocolo inválido y otro problema |
+| 11 | La elección de la LR podría parecer hecha con la prueba (en validación 2024 no era la primera) | Etapas 4 y 6 | Criterio declarado en [D9 §2](D_defensa/D9_OBSERVACIONES_SINODAL.md): seis años (empate con XGBoost) + sencillez y costos + prueba ciega 2026 |
+| 12 | En la prueba ciega 2026 dos redes tienen mejor Sharpe que la LR | Etapa 6 | Un Sharpe de diez meses no es significativo; en clasificación la LR sigue primera; en dinero el orden cambia cada año |
 | 10 | Peor caída de la simulación de la LR en 2025: −45 % | Etapa 4 | Sin costos ni control de riesgo; el TT no propone operar con dinero real |
 
 ---

@@ -1,0 +1,39 @@
+<section id="etapa6" style="background:#F7F6F2;color:#1F2430;font-family:Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:32px">
+<p style="font-size:24px;font-weight:700;color:#7A2142;letter-spacing:2px;text-transform:uppercase">5 · Etapa 6 — Plataforma y validación (sep–oct) · solo en el TT</p>
+<h2 style="font-size:56px;font-weight:700;line-height:1.1">El modelo decía «mantener» de más; lo ajustamos y lo probamos en 2026</h2>
+<div style="display:flex;flex-direction:row;gap:72px;align-items:start">
+<div style="display:flex;flex-direction:column;gap:12px">
+<p style="font-size:24px;color:#4F5663">% de días con «mantener», enero–septiembre de 2026</p>
+<div style="width:600px;height:360px;display:flex;flex-direction:row;align-items:end;gap:60px;border-bottom:2px solid #4F5663">
+<div style="width:160px;display:flex;flex-direction:column;align-items:center;gap:6px"><p style="font-size:28px;font-weight:700">35 %</p><div style="width:160px;height:175px;background:#3D4450;border-radius:4px 4px 0 0"></div></div>
+<div style="width:160px;display:flex;flex-direction:column;align-items:center;gap:6px"><p style="font-size:28px;font-weight:700">60 %</p><div style="width:160px;height:300px;background:#A9AEB5;border-radius:4px 4px 0 0"></div></div>
+<div style="width:160px;display:flex;flex-direction:column;align-items:center;gap:6px"><p style="font-size:28px;font-weight:700">40 %</p><div style="width:160px;height:200px;background:#2A78D6;border-radius:4px 4px 0 0"></div></div>
+</div>
+<div style="display:flex;flex-direction:row;gap:60px">
+<p style="width:160px;font-size:24px;text-align:center">Lo que convenía</p>
+<p style="width:160px;font-size:24px;text-align:center">Modelo antes del ajuste</p>
+<p style="width:160px;font-size:24px;text-align:center">Modelo ajustado</p>
+</div>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:20px">
+<div style="display:flex;flex-direction:column;gap:6px">
+<h3 style="font-size:30px;font-weight:700">Por qué pasaba</h3>
+<p style="font-size:26px;line-height:1.4;color:#4F5663">Cuando el modelo ve que habrá movimiento pero no sabe hacia dónde, reparte la probabilidad entre comprar y vender, y gana «mantener».</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:6px">
+<h3 style="font-size:30px;font-weight:700">El ajuste</h3>
+<p style="font-size:26px;line-height:1.4;color:#4F5663">Bajar el peso de «mantener» al entrenar (× 0.90), elegido con 2019–2024 sin mirar 2026.</p>
+</div>
+<div style="display:flex;flex-direction:row;gap:24px;background:#E8EEF6;border-radius:12px;padding:24px">
+<div style="display:flex;flex-direction:column;gap:4px"><p style="font-size:24px;color:#4F5663">F1 en 2026, antes</p><p style="font-size:44px;font-weight:700">0.313</p></div>
+<div style="display:flex;flex-direction:column;gap:4px"><p style="font-size:24px;color:#4F5663">F1 en 2026, ajustado</p><p style="font-size:44px;font-weight:700;color:#1F5FAE">0.354</p></div>
+</div>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1200px;font-size:24px;color:#6B7280">TT 2026-B164 · Lo que encontramos</p>
+<p style="position:absolute;right:128px;bottom:64px;width:200px;font-size:24px;color:#6B7280;text-align:right">21</p>
+<aside>El modelo de la plataforma: Reg. Logística L2 con C = 0.000165 (de la Etapa 4) + 15 combinaciones de variables (Etapa 5) + peso de mantener × 0.90 (Etapa 6), entrenado con 2018–2025 (la configuración del Experimento B extendida hasta 2025).
+2026 son datos que nadie usó para decidir nada: F1 0.354, kappa 0.035, Sharpe +0.29. Es más bajo que 2025, que fue el mejor año del modelo; queda en el nivel del promedio de la prueba año por año.
+Probamos otras formas: un factor fijo sobre la probabilidad de mantener (se usaba desde julio) empeoraba en seis años de validación porque estaba ajustado a 2024; la etiqueta 40/60 no corrige el exceso y baja el kappa. Se eligió el peso de clase por origen rodante 2019–2024.
+Además en esta etapa: niveles de seguridad de la plataforma calibrados igual, auditoría de las métricas de la página y medición de la ventana de las redes.</aside>
+</section>

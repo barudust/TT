@@ -112,6 +112,33 @@ experimentos lo compartieran. Por eso se reportan también la prueba año por a�
 
 ---
 
+### 3.1 La misma prueba con ajustes fijos de antemano (más limpia)
+
+Los ajustes de la tabla anterior se eligieron con 2024, así que para los
+pliegues 2020–2023 son información posterior. Con los ajustes fijos de la
+Etapa 3 (que no vieron ningún pliegue) la comparación es limpia
+(`v5/walkforward_v4.csv`):
+
+| Modelo | F1 promedio | Lugar promedio | Años ganados | Sharpe 10 pb |
+|---|---:|---:|---:|---:|
+| **LR** | **0.360** | **1.83** | **3** | **+0.09** |
+| XGBoost | 0.356 | 2.67 | 1 | −0.10 |
+| CNN 1D | 0.338 | 3.00 | 2 | −0.02 |
+| LSTM | 0.331 | 3.67 | 0 | −0.50 |
+| CNN-LSTM | 0.326 | 3.83 | 0 | −0.63 |
+
+Juntando los seis años: LR − XGBoost +0.003 (no significativa); LR − cada
+red +0.017 a +0.026 (significativas).
+
+### 3.2 Prueba ciega 2026 de los cinco
+
+Ajustes congelados de la Etapa 4, entrenamiento 2020–2024, validación 2025,
+prueba del 2 de enero al 22 de octubre de 2026: LR 0.346, XGBoost 0.343,
+LSTM 0.331, CNN-LSTM 0.318, CNN 1D 0.304 de F1. Solo la diferencia contra la
+CNN 1D es significativa. En Sharpe, la CNN 1D (+0.88) y la LSTM (+0.72)
+superan a la LR (+0.38). Detalle y lectura en
+[D9](../D_defensa/D9_OBSERVACIONES_SINODAL.md).
+
 ## 4. El exceso de MANTENER y su ajuste
 
 ### 4.1 El síntoma

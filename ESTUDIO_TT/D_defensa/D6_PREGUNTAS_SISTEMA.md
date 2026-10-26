@@ -211,12 +211,13 @@ enormes.
 
 ### S24. ¿Qué pantallas tiene?
 
-**Respuesta corta.** Seis: **Hoy** (una tarjeta por empresa con su
+**Respuesta corta.** Siete: **Hoy** (una tarjeta por empresa con su
 recomendación, precio y seguridad en palabras); **detalle** de cada empresa
 (recomendación, probabilidades, gráfica de precio con la recomendación de
 cada día, gráfica de qué habría pasado con $1,000, resultados de 30/60/90
 días y últimas 10 recomendaciones); **Resultados** (las 7 empresas
-comparadas); **Aprende** (qué es comprar, vender en corto y mantener, con
+comparadas); **Modelos** (la comparación de los cinco con gráficas y por qué
+se eligió la Regresión Logística); **Aprende** (qué es comprar, vender en corto y mantener, con
 ejemplos que se mueven y un juego día por día con precios reales); **Ayuda**
 (guía de uso y glosario) y **Acerca de** (metodología, ficha del modelo leída
 de la API, aviso legal).

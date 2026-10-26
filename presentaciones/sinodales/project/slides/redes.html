@@ -1,0 +1,34 @@
+<section id="redes" style="background:#F7F6F2;color:#1F2430;font-family:Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:32px">
+<p style="font-size:24px;font-weight:700;color:#7A2142;letter-spacing:2px;text-transform:uppercase">4 · El resultado principal</p>
+<h2 style="font-size:56px;font-weight:700;line-height:1.1">¿Por qué no ganaron las redes neuronales?</h2>
+<div style="display:flex;flex-direction:row;gap:24px">
+<div style="flex:1;display:flex;flex-direction:column;gap:10px;background:#FFFDF9;border:1px solid #DEDBD2;border-radius:12px;padding:32px">
+<h3 style="font-size:32px;font-weight:700">Poca señal</h3>
+<p style="font-size:26px;line-height:1.4;color:#4F5663">El movimiento de un día depende sobre todo de noticias y factores que no están en los precios pasados.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:10px;background:#FFFDF9;border:1px solid #DEDBD2;border-radius:12px;padding:32px">
+<h3 style="font-size:32px;font-weight:700">Pocos datos</h3>
+<p style="font-size:26px;line-height:1.4;color:#4F5663">Unas 10,500 filas de entrenamiento en B, para redes de 67 mil a 276 mil parámetros.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:10px;background:#FFFDF9;border:1px solid #DEDBD2;border-radius:12px;padding:32px">
+<h3 style="font-size:32px;font-weight:700">Las variables ya resumen la historia</h3>
+<p style="font-size:26px;line-height:1.4;color:#4F5663">Medias, volatilidad y osciladores ya cuentan lo que una red leería en la secuencia.</p>
+</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:14px;background:#E8EEF6;border-radius:12px;padding:32px">
+<h3 style="font-size:32px;font-weight:700">No fue falta de ajuste</h3>
+<ul style="font-size:26px;line-height:1.45;color:#1F2430">
+<li>Con ninguna de las configuraciones probadas su error de validación baja del nivel del azar</li>
+<li>Una LSTM 57 veces más chica rinde igual: el límite no es el tamaño</li>
+<li>Darles más datos de entrenamiento las empeora</li>
+</ul>
+</div>
+<p style="font-size:26px;line-height:1.4;color:#4F5663">Un modelo lineal muy regularizado aprovecha mejor esa poca señal. Es la misma conclusión que el TT1, ahora con las mismas condiciones para todos.</p>
+<p style="position:absolute;left:128px;bottom:64px;width:1200px;font-size:24px;color:#6B7280">TT 2026-B164 · Lo que encontramos</p>
+<p style="position:absolute;right:128px;bottom:64px;width:200px;font-size:24px;color:#6B7280;text-align:right">19</p>
+<aside>Datos técnicos: la pérdida de validación (entropía cruzada) de las redes nunca baja apreciablemente de ln 3 = 1.0986, que es lo que da un modelo que reparte 1/3 a cada clase. Pasa con cualquiera de las configuraciones de Optuna.
+LSTM de 592 mil parámetros (Etapa 3) contra una de 10 mil: mismo resultado. Reentrenar con entrenamiento + validación empeora a las tres redes (−0.024 a −0.047); a los clásicos los mejora.
+Lo que más movió a las redes no fue un hiperparámetro sino elegir la época por F1 de validación (+0.059 a la LSTM).
+Si preguntan por GRU o Transformers: no se corrieron; quedan como trabajo futuro. Con estos diagnósticos no esperamos que cambie el orden, pero no lo afirmamos.
+La ventana de las redes termina un día antes que la de la LR (t − 1); lo medimos: cuesta ≈ 0.007 de F1, no cambia el orden.</aside>
+</section>

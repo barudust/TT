@@ -40,6 +40,12 @@ Entradas clave:
   empresas, ganancia por empresa vs comprar y esperar, calificación F1 por
   empresa con la línea de azar y tabla ordenable con unidades.
   `GET /metrics?days=`.
+- `Modelos.tsx` (`/modelos`, pestaña «Modelos») — comparación de los cinco
+  modelos con gráficas: el elegido y por qué, igualdad de condiciones, prueba
+  2025 (A/B/C, ocho métricas), intervalos, año por año, prueba ciega 2026,
+  dinero, global contra por acción y multicolinealidad. Lee
+  `src/app/data/comparacion_modelos.json` (lo genera
+  `scripts_opt/observaciones_sinodal.py exportar_web`); no llama a la API.
 - `Aprende.tsx` (`/aprende`, pestaña «Aprende») — qué significa comprar,
   vender en corto y mantener: barra para mover el cambio del precio y ver el
   resultado con $1,000, la venta en corto en 4 pasos y un juego día por día

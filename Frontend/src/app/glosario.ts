@@ -9,7 +9,7 @@ export interface TerminoGlosario {
   tambien?: string;
   definicion: string;
   ejemplo?: string;
-  categoria: "Recomendaciones" | "Precios y mercado" | "Qué tan bien acierta" | "Dinero y riesgo";
+  categoria: "Recomendaciones" | "Precios y mercado" | "Qué tan bien acierta" | "Dinero y riesgo" | "Cómo se comparan los modelos";
 }
 
 export const GLOSARIO: TerminoGlosario[] = [
@@ -208,8 +208,60 @@ export const GLOSARIO: TerminoGlosario[] = [
     categoria: "Dinero y riesgo",
     definicion: "De los días en que sí se invirtió (sin contar mantener), en cuántos se ganó dinero. 50 % es como echar un volado.",
   },
+  // ── Cómo se comparan los modelos ────────────────────────────────────────
+  {
+    id: "validacion",
+    termino: "Entrenamiento, validación y prueba",
+    categoria: "Cómo se comparan los modelos",
+    definicion:
+      "Los años se separan en orden. Con el entrenamiento el modelo aprende; con la validación se eligen sus ajustes; la prueba se usa una sola vez al final para calificarlo, como un examen que no se vio antes.",
+  },
+  {
+    id: "anio-por-anio",
+    termino: "Prueba año por año",
+    tambien: "walk-forward",
+    categoria: "Cómo se comparan los modelos",
+    definicion:
+      "Repetir la evaluación tomando como prueba cada año de 2020 a 2025, para comprobar que el resultado no depende de un solo año.",
+  },
+  {
+    id: "intervalo",
+    termino: "Intervalo de confianza",
+    tambien: "bootstrap",
+    categoria: "Cómo se comparan los modelos",
+    definicion:
+      "El rango donde probablemente está el valor real si se repitiera la prueba con otros días parecidos. Si dos modelos difieren y el intervalo de su diferencia no incluye el cero, la diferencia no es suerte.",
+  },
+  {
+    id: "kappa",
+    termino: "Kappa",
+    categoria: "Cómo se comparan los modelos",
+    definicion: "Cuánto acierta el modelo por encima de lo que acertaría por casualidad. 0 = igual que el azar; 1 = perfecto.",
+  },
+  {
+    id: "auc",
+    termino: "AUC",
+    categoria: "Cómo se comparan los modelos",
+    definicion:
+      "Qué tan bien ordena el modelo sus probabilidades: la probabilidad de que le dé más puntaje a un día de una clase que a uno de otra. 0.5 = azar.",
+  },
+  {
+    id: "log-loss",
+    termino: "Log-loss",
+    tambien: "pérdida logarítmica",
+    categoria: "Cómo se comparan los modelos",
+    definicion: "Castiga estar muy seguro y equivocarse. Menor es mejor; el azar con tres opciones da 1.10.",
+  },
+  {
+    id: "multicolinealidad",
+    termino: "Multicolinealidad",
+    tambien: "VIF",
+    categoria: "Cómo se comparan los modelos",
+    definicion:
+      "Cuando varias variables dicen casi lo mismo (por ejemplo, dos medias móviles cercanas). El VIF mide qué tanto se puede adivinar una variable con las demás; arriba de 10 se considera alto. Complica leer cada coeficiente, pero no necesariamente empeora las predicciones.",
+  },
 ];
 
-export const CATEGORIAS_GLOSARIO = ["Recomendaciones", "Precios y mercado", "Qué tan bien acierta", "Dinero y riesgo"] as const;
+export const CATEGORIAS_GLOSARIO = ["Recomendaciones", "Precios y mercado", "Qué tan bien acierta", "Dinero y riesgo", "Cómo se comparan los modelos"] as const;
 
 export type IdGlosario = (typeof GLOSARIO)[number]["id"];

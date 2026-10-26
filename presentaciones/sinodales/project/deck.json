@@ -1,0 +1,17 @@
+{
+  "v": 4,
+  "createdOnFiles": { "v": 1, "at": "2026-10-22T18:00:00Z" },
+  "lists": "css",
+  "title": "TT 2026-B164 - Lo que encontramos",
+  "order": ["portada", "ruta", "problema", "senales", "etiqueta", "datos", "modelos", "particion", "metricas", "etapas", "etapa1", "etapa2", "etapa3", "etapa4", "resultado", "intervalos", "dinero", "anios", "redes", "etapa5", "etapa6", "global", "fuera", "plataforma", "paper", "conclusiones", "gracias"],
+  "sections": {
+    "s1": { "description": "El problema y cómo se plantea", "start": "portada" },
+    "s2": { "description": "Cómo se evaluó", "start": "particion" },
+    "s3": { "description": "Las seis etapas del trabajo", "start": "etapas" },
+    "s4": { "description": "El resultado principal y sus pruebas", "start": "resultado" },
+    "s5": { "description": "Lo que siguió: mejoras, plataforma y artículo", "start": "etapa5" },
+    "s6": { "description": "Conclusiones", "start": "conclusiones" }
+  },
+  "faces": {},
+  "designSystems": []
+}

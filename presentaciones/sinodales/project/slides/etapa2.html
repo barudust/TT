@@ -1,0 +1,27 @@
+<section id="etapa2" style="background:#F7F6F2;color:#1F2430;font-family:Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:32px">
+<p style="font-size:24px;font-weight:700;color:#7A2142;letter-spacing:2px;text-transform:uppercase">3 · Etapa 2 — Primeras mejoras (mayo–junio)</p>
+<h2 style="font-size:56px;font-weight:700;line-height:1.1">Probamos mejorar cada modelo; aprendimos dos cosas</h2>
+<table style="font-size:26px;color:#1F2430">
+<tr style="background:#E8E6DF"><th style="width:52%;text-align:left">Qué probamos</th><th style="width:48%;text-align:left">Qué pasó</th></tr>
+<tr><td style="font-weight:700">Filtrar variables con pruebas estadísticas</td><td>Peor que darle las 61 en 11 de 15 casos (artículo §6)</td></tr>
+<tr><td style="font-weight:700">181 variables y calibrar umbrales</td><td>Peor: el modelo se ajusta al ruido</td></tr>
+<tr><td style="font-weight:700">94 variables (tasas, dólar, oro, petróleo, sectores)</td><td>Sin mejora</td></tr>
+<tr><td style="font-weight:700">LightGBM, stacking, votos, mezclas</td><td>Ninguno supera a la Regresión Logística sola</td></tr>
+<tr><td style="font-weight:700">Optimizar cada modelo</td><td>Algo mejora, pero se eligió viendo la prueba</td></tr>
+</table>
+<div style="display:flex;flex-direction:row;gap:24px">
+<div style="flex:1;display:flex;flex-direction:column;gap:8px;background:#FFFDF9;border:1px solid #DEDBD2;border-left:12px solid #7A2142;border-radius:12px;padding:24px 28px">
+<h3 style="font-size:30px;font-weight:700">Lección 1</h3>
+<p style="font-size:26px;line-height:1.4;color:#4F5663">Darles a todos los modelos las mismas 61 variables</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:8px;background:#FFFDF9;border:1px solid #DEDBD2;border-left:12px solid #7A2142;border-radius:12px;padding:24px 28px">
+<h3 style="font-size:30px;font-weight:700">Lección 2</h3>
+<p style="font-size:26px;line-height:1.4;color:#4F5663">Un protocolo donde nada se decida con la prueba. Por eso sus cifras no se reportan</p>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1200px;font-size:24px;color:#6B7280">TT 2026-B164 · Lo que encontramos</p>
+<p style="position:absolute;right:128px;bottom:64px;width:200px;font-size:24px;color:#6B7280;text-align:right">12</p>
+<aside>Cifras de esta etapa (no citar como resultado): LR elasticnet 0.417 con Sharpe 1.25; LightGBM 0.402; filtro por confianza 0.412; mezcla LR+XGBoost 0.390; stacking 0.358; voto ponderado 0.331; 181 variables 0.375. La mejor configuración se eligió con la prueba y el Experimento A aún tenía la prueba vieja.
+Punto a cuidar: el §6 del artículo (filtrar variables empeora en 11 de 15) sale de esta etapa, con esas particiones. La conclusión se confirma en la Etapa 3: con las 61 variables la LR por acción pasa de 0.355 a 0.392.
+La LR elasticnet de esta etapa fue el modelo de la plataforma hasta agosto.</aside>
+</section>

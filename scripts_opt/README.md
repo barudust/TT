@@ -65,6 +65,7 @@ reportan (la mejor configuración se eligió con la prueba).
 | `calibrar_niveles_confianza.py` | Niveles de seguridad que muestra la plataforma |
 | `verificar_ventana_redes.py` | Mide el efecto de que la ventana de las redes termine un día antes |
 | `calibrar_hold.py` | Antecedente de julio: factor fijo sobre la probabilidad de mantener (sustituido por el peso × 0.90) |
+| `observaciones_sinodal.py` | Respuesta a la sinodal (26 oct): ocho métricas para los cinco, cómo se elige el modelo, multicolinealidad (61 contra filtro VIF ≤ 10), dataset hasta hoy (`01_raw_datasets_2026/`), prueba ciega 2026 de los cinco y el JSON de la pestaña «Modelos» → `RESULTADOS_OPTIMIZADOS/observaciones_sinodal/` |
 
 ## Dependencias
 

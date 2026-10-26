@@ -1,0 +1,16 @@
+{
+  "v": 4,
+  "createdOnFiles": { "v": 1, "at": "2026-10-16T06:40:00Z" },
+  "lists": "css",
+  "title": "Avances TT2 - TT 2026-B164",
+  "order": ["portada", "problema", "cambios", "evaluacion", "resultados", "otros-anios", "redes", "descartado", "plataforma", "siguiente", "gracias", "respaldo-ic", "respaldo-global", "respaldo-anios"],
+  "sections": {
+    "inicio": { "description": "Portada y recordatorio del problema", "start": "portada" },
+    "cambios": { "description": "Qué cambió desde TT1 y los tres experimentos", "start": "cambios" },
+    "resultados": { "description": "Resultados, otros años, redes y lo que descartamos", "start": "resultados" },
+    "cierre": { "description": "Plataforma y estado del trabajo", "start": "plataforma" },
+    "respaldo": { "description": "Datos de respaldo, solo si los piden", "start": "respaldo-ic" }
+  },
+  "faces": {},
+  "designSystems": []
+}

@@ -1,0 +1,19 @@
+<section id="etapa5" style="background:#F7F6F2;color:#1F2430;font-family:Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:32px">
+<p style="font-size:24px;font-weight:700;color:#7A2142;letter-spacing:2px;text-transform:uppercase">5 · Etapa 5 — Búsqueda de mejoras (fin de agosto) · solo en el TT</p>
+<h2 style="font-size:56px;font-weight:700;line-height:1.1">¿Algo más mejora sin cambiar el problema? Casi nada</h2>
+<table style="font-size:26px;color:#1F2430">
+<tr style="background:#E8E6DF"><th style="width:36%;text-align:left">Qué probamos</th><th style="width:42%;text-align:left">Qué pasó</th><th style="width:22%;text-align:left">Decisión</th></tr>
+<tr><td style="font-weight:700">Calibrar las probabilidades</td><td>Ayuda poco a XGBoost; empeora a la Reg. Log. y a las redes</td><td>Descartada</td></tr>
+<tr><td style="font-weight:700">Umbral para ganar más dinero</td><td>Sube la ganancia, se derrumba el F1</td><td>Descartada</td></tr>
+<tr><td style="font-weight:700">Mezclar varios modelos</td><td>Peor que la Reg. Log. sola</td><td>Descartada</td></tr>
+<tr><td style="font-weight:700">Rezagos, variables entre acciones, varias escalas</td><td>Entre −0.004 y +0.003</td><td>Descartadas</td></tr>
+<tr><td style="font-weight:700">15 combinaciones de pares de variables</td><td>+0.023 en 2025; en 2019–2024 empatan</td><td style="color:#1F5FAE;font-weight:700">En la plataforma</td></tr>
+<tr><td style="font-weight:700">Predecir a 5–7 días u otros percentiles</td><td>F1 ≈ 0.43, pero ya es otro problema</td><td style="color:#7A2142;font-weight:700">Fuera del planteamiento</td></tr>
+</table>
+<p style="font-size:26px;line-height:1.4;color:#4F5663">Que tantas ideas razonables no ayuden es evidencia de que el límite está en la información disponible, no en el modelo.</p>
+<p style="position:absolute;left:128px;bottom:64px;width:1200px;font-size:24px;color:#6B7280">TT 2026-B164 · Lo que encontramos</p>
+<p style="position:absolute;right:128px;bottom:64px;width:200px;font-size:24px;color:#6B7280;text-align:right">20</p>
+<aside>Antes se llamaban "Vía 7" (ajustes al modelo: calibración isotónica, umbral económico, mezclas, SWA, ponderar por recencia) y "Vía 8" (variables nuevas y cambios de etiqueta).
+Las 15 combinaciones (interacciones) se propusieron viendo 2025; por eso las validamos después en 2019–2024 sin ver 2025: con ellas 0.357, sin ellas 0.354. Empatan, así que se quedaron como equivalentes. Los resultados de A, B y C son sin ellas.
+Lo de 5–7 días: la LR llega a F1 ≈ 0.43 y Sharpe ≈ +1.5, pero ya no es una señal diaria. No lo reportamos como resultado; queda como trabajo futuro (otro TT).</aside>
+</section>

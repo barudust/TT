@@ -1,0 +1,11 @@
+modelo,config,descripcion,f1_prueba_media,f1_prueba_desv,f1_validacion_media,rango_medio,anios_ganados,anios,sharpe_medio,sharpe_10bp_medio
+CNN,v4,Etapa 3 (configuraciones fijas: no vieron ningún pliegue),0.3376,0.0269,0.3354,3.0,2,6,0.074,-0.022
+CNN-LSTM,v4,Etapa 3 (configuraciones fijas: no vieron ningún pliegue),0.3262,0.0266,0.3378,3.83,0,6,-0.526,-0.631
+LR,v4,Etapa 3 (configuraciones fijas: no vieron ningún pliegue),0.3597,0.0268,0.3433,1.83,3,6,0.353,0.088
+LSTM,v4,Etapa 3 (configuraciones fijas: no vieron ningún pliegue),0.331,0.0309,0.3359,3.67,0,6,-0.343,-0.499
+XGBoost,v4,Etapa 3 (configuraciones fijas: no vieron ningún pliegue),0.3562,0.0168,0.3574,2.67,1,6,0.256,-0.102
+CNN,v5,Etapa 4 (configuraciones elegidas con 2024),0.292,0.0473,0.2967,4.33,0,6,-0.294,-0.359
+CNN-LSTM,v5,Etapa 4 (configuraciones elegidas con 2024),0.328,0.0385,0.3305,2.4,1,5,-0.249,-0.378
+LR,v5,Etapa 4 (configuraciones elegidas con 2024),0.35,0.0333,0.3523,2.33,3,6,0.223,-0.06
+LSTM,v5,Etapa 4 (configuraciones elegidas con 2024),0.3135,0.0424,0.3155,3.17,1,6,-0.48,-0.544
+XGBoost,v5,Etapa 4 (configuraciones elegidas con 2024),0.356,0.0186,0.3624,2.33,1,6,0.218,-0.195

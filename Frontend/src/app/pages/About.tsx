@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Card } from "../components/ui/card";
+import { Link } from "react-router";
 import { AlertTriangle, BookOpen, Code, Cpu, TrendingUp, Users } from "lucide-react";
 import { API_BASE_URL } from "../../config/api";
 import type { ModelInfo } from "../types";
@@ -131,7 +132,11 @@ export default function About() {
             <Cpu className="w-6 h-6 text-[#06b6d4]" />
           </div>
           <div className="flex-1 min-w-0">
-            <h3 className="font-bold text-foreground text-lg mb-3">El modelo que se usa</h3>
+            <h3 className="font-bold text-foreground text-lg mb-1">Modelo elegido: Regresión Logística</h3>
+            <p className="text-sm text-muted-foreground mb-3">
+              Por qué este y no los otros cuatro:{" "}
+              <Link to="/modelos" className="text-blue-600 dark:text-blue-400 hover:underline">comparación completa en «Modelos»</Link>.
+            </p>
             {model ? (
               <dl className="text-sm grid grid-cols-1 sm:grid-cols-[max-content_1fr] gap-x-4 gap-y-2">
                 {ficha.map(([k, v]) => (

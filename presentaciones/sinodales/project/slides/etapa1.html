@@ -1,0 +1,40 @@
+<section id="etapa1" style="background:#F7F6F2;color:#1F2430;font-family:Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:32px">
+<p style="font-size:24px;font-weight:700;color:#7A2142;letter-spacing:2px;text-transform:uppercase">3 · Etapa 1 — Línea base (reporte de TT1)</p>
+<h2 style="font-size:56px;font-weight:700;line-height:1.1">TT1: ganaba XGBoost, pero la comparación no era pareja</h2>
+<div style="display:flex;flex-direction:row;gap:72px;align-items:start">
+<div style="display:flex;flex-direction:column;gap:12px">
+<p style="font-size:24px;color:#4F5663">F1-macro, un modelo por acción, promedio de A, B y C</p>
+<div style="position:relative;width:792px;height:400px;display:flex;flex-direction:row;align-items:end;gap:48px;border-bottom:2px solid #4F5663">
+<div style="width:120px;display:flex;flex-direction:column;align-items:center;gap:6px"><p style="font-size:24px;white-space:nowrap">0.351</p><div style="width:120px;height:281px;background:#2A78D6;border-radius:4px 4px 0 0"></div></div>
+<div style="width:120px;display:flex;flex-direction:column;align-items:center;gap:6px"><p style="font-size:24px;white-space:nowrap;font-weight:700">0.369</p><div style="width:120px;height:295px;background:#EB6834;border-radius:4px 4px 0 0"></div></div>
+<div style="width:120px;display:flex;flex-direction:column;align-items:center;gap:6px"><p style="font-size:24px;white-space:nowrap">0.291</p><div style="width:120px;height:233px;background:#9AA0A6;border-radius:4px 4px 0 0"></div></div>
+<div style="width:120px;display:flex;flex-direction:column;align-items:center;gap:6px"><p style="font-size:24px;white-space:nowrap">0.340</p><div style="width:120px;height:272px;background:#9AA0A6;border-radius:4px 4px 0 0"></div></div>
+<div style="width:120px;display:flex;flex-direction:column;align-items:center;gap:6px"><p style="font-size:24px;white-space:nowrap">0.331</p><div style="width:120px;height:265px;background:#9AA0A6;border-radius:4px 4px 0 0"></div></div>
+<div style="position:absolute;left:0;top:133px;width:792px;height:0;border-top:3px dashed #4F5663"></div>
+</div>
+<div style="display:flex;flex-direction:row;gap:48px">
+<p style="width:120px;font-size:24px;text-align:center">Reg. Log.</p>
+<p style="width:120px;font-size:24px;text-align:center">XGBoost</p>
+<p style="width:120px;font-size:24px;text-align:center">LSTM</p>
+<p style="width:120px;font-size:24px;text-align:center">CNN-LSTM</p>
+<p style="width:120px;font-size:24px;text-align:center">CNN 1D</p>
+</div>
+<p style="font-size:24px;color:#4F5663">Línea punteada: azar (0.33)</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:16px">
+<h3 style="font-size:32px;font-weight:700">Lo que quedó abierto</h3>
+<ul style="font-size:26px;line-height:1.45;color:#4F5663">
+<li>Cada modelo con variables distintas (la Reg. Log. solo 3 a 8)</li>
+<li>El Experimento A probaba en otro periodo (2024–2025)</li>
+<li>Las redes sin búsqueda de hiperparámetros</li>
+<li>La ventana de las redes elegida con la prueba</li>
+</ul>
+<p style="font-size:26px;line-height:1.4">El propio TT1 dijo que con variables distintas no se podía concluir sobre los modelos.</p>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1200px;font-size:24px;color:#6B7280">TT 2026-B164 · Lo que encontramos</p>
+<p style="position:absolute;right:128px;bottom:64px;width:200px;font-size:24px;color:#6B7280;text-align:right">11</p>
+<aside>Cifras del reporte de TT1 (18 de mayo), estrategia por acción, mejor ventana según la prueba: XGBoost 0.369, LR 0.351, CNN-LSTM 0.340, CNN 1D 0.331, LSTM 0.291. La LR tenía el mejor Sharpe (0.285 en B).
+Conclusión de entonces: no se rechaza H0 (el aprendizaje profundo no supera al clásico). Eso se mantiene hasta hoy.
+Lo que cambió después fue el ganador entre los clásicos: con las mismas variables para todos, la LR sube (en B por acción de 0.355 a 0.392) y XGBoost no.</aside>
+</section>

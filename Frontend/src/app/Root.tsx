@@ -1,5 +1,5 @@
 import { Outlet, Link, useLocation } from "react-router";
-import { TrendingUp, BarChart3, Info, Moon, Sun, HelpCircle, GraduationCap } from "lucide-react";
+import { TrendingUp, BarChart3, Info, Moon, Sun, HelpCircle, GraduationCap, Scale } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 
@@ -24,6 +24,7 @@ export default function Root() {
   const navItems = [
     { path: "/", icon: TrendingUp, label: "Hoy" },
     { path: "/performance", icon: BarChart3, label: "Resultados" },
+    { path: "/modelos", icon: Scale, label: "Modelos" },
     { path: "/aprende", icon: GraduationCap, label: "Aprende" },
     { path: "/ayuda", icon: HelpCircle, label: "Ayuda" },
     { path: "/about", icon: Info, label: "Acerca de" },
@@ -103,7 +104,7 @@ export default function Root() {
                 <Link
                   key={item.path}
                   to={item.path}
-                  className={`flex flex-col items-center justify-center gap-1 px-3 py-2 rounded-lg transition-colors ${
+                  className={`flex flex-col items-center justify-center gap-1 px-1.5 py-2 rounded-lg transition-colors ${
                     isActive
                       ? "text-blue-500"
                       : "text-muted-foreground hover:text-foreground"
