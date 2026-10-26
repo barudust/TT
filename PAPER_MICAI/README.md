@@ -20,7 +20,8 @@ sobre él, citarlo en el reporte o reutilizarlo en otros documentos.
 | [`03_TABLAS_Y_CIFRAS.md`](03_TABLAS_Y_CIFRAS.md) | Las 6 tablas y la figura del texto publicado, copiadas exactas, y lo que va en el suplementario |
 | [`04_PAPER_VS_TT.md`](04_PAPER_VS_TT.md) | De qué etapa del TT sale cada sección, qué cambió después y los detalles finos que hay que conocer |
 | [`05_INCLUSION_EN_EL_REPORTE.md`](05_INCLUSION_EN_EL_REPORTE.md) | **Si conviene y cómo meter el artículo en el reporte técnico** (recomendación y textos listos) |
-| [`06_PRESENTACION_MICAI.md`](06_PRESENTACION_MICAI.md) | Guion de la presentación en el congreso: diapositivas, tiempos, figuras y qué decir |
+| [`presentacion_micai/`](presentacion_micai/README.md) | **Presentación lista para el congreso** (10 min, plantilla oficial), guion para dos expositores en inglés sencillo con traducción y pronunciación, PDF de respaldo y pendientes |
+| [`06_PRESENTACION_MICAI.md`](06_PRESENTACION_MICAI.md) | Versión larga del guion (15 min), de referencia |
 | [`07_PREGUNTAS_MICAI.md`](07_PREGUNTAS_MICAI.md) | Preguntas probables del público y revisores, con respuesta en inglés y en español |
 | [`figuras_presentacion/`](figuras_presentacion/) | Seis gráficas en inglés listas para las diapositivas (PNG y SVG) y su generador |
 

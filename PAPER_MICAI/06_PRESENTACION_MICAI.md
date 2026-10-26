@@ -1,5 +1,12 @@
 # 06 — Guion para la presentación en MICAI
 
+> **Actualización (26 oct):** la regla oficial es de **10 minutos + 5 de
+> preguntas**, no 15. La versión final —diapositivas sobre la plantilla
+> oficial, guion para dos expositores en inglés sencillo con traducción,
+> pronunciación y lista de pendientes— está en
+> [`presentacion_micai/`](presentacion_micai/README.md). Este documento queda
+> como versión larga de referencia (útil si piden una charla de 15–20 min).
+
 > Base para preparar las diapositivas del congreso. Pensado para **15 minutos
 > de exposición + 5 de preguntas** (ajustar al tiempo que indique el programa
 > de MICAI). Diapositivas y discurso en **inglés** (el artículo está en
