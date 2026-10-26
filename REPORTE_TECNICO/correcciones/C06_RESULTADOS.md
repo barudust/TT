@@ -286,7 +286,7 @@ ocupan un párrafo.
 **Dice:** "La búsqueda le sumó +0.033 de F1-macro a la Regresión Logística,
 que quedó en 0.404 sobre 2025".
 **Decisión (26 oct):** usar la cifra publicada: **"pasó de 0.385 en la Etapa
-3 a 0.404 en la Etapa 4 (+0.019)"** (paper, Tabla 7, columna Δ). El +0.033
+3 a 0.404 en la Etapa 4 (+0.019)"** (paper, Tabla 6, columna Δ). El +0.033
 sale de una tabla interna (`INVESTIGACION_COMPLETA.md` §5) cuya línea base no
 está documentada; si un sinodal compara el reporte con el paper, +0.019 es la
 única que se puede respaldar. Escribir siempre los dos extremos (0.385 → 0.404)

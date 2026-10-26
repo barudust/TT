@@ -190,7 +190,7 @@ paper). En negritas, el mejor por columna.*
 Economía, Experimento B global: LR profit factor 1.210, Sharpe +0.755;
 XGBoost 1.083 / +0.345; CNN-LSTM 1.041 / +0.147; LSTM 1.120 / +0.433;
 CNN 1D 1.031 / +0.121.
-Fuente: `paper_review/paper.tex` (Tablas 4–6); `RO/v4/resultados_v4.csv`.
+Fuente: `paper_review/paper.tex` (Tablas 3–5); `RO/v4/resultados_v4.csv`.
 
 ---
 

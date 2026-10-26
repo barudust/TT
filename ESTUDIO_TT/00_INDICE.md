@@ -17,6 +17,10 @@
 > [D1](D_defensa/D1_TT1_VS_TT2.md). (El archivo `TT-Fin/TT1.pdf`, de abril,
 > es un borrador anterior y no se usa.)
 
+> **Carpetas hermanas:** la revisión del reporte técnico está en
+> [`../REPORTE_TECNICO/`](../REPORTE_TECNICO/README.md) y todo lo del artículo de MICAI
+> (incluida la presentación en el congreso) en [`../PAPER_MICAI/`](../PAPER_MICAI/README.md).
+
 ---
 
 ## Orden de lectura

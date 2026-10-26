@@ -54,7 +54,7 @@ Fuente: Tablas 18 y 23 del reporte actual; `ESTUDIO_TT/D_defensa/D1` §8.
 
 | Cifra | Qué es | Fuente |
 |---|---|---|
-| **11 de 15** | Combinaciones (5 modelos × 3 experimentos) en que usar las 61 variables supera a la preselección estadística (Pearson+VIF, SHAP, Spearman) | paper §6, Tabla 3 del paper |
+| **11 de 15** | Combinaciones (5 modelos × 3 experimentos) en que usar las 61 variables supera a la preselección estadística (Pearson+VIF, SHAP, Spearman) | paper §6, Tabla 2 del paper |
 | hasta +0.039 | Mayor ventaja de usar las 61 (LSTM, Exp A) | ídem |
 | 94 variables, −0.010 | Agregar contexto macro y sectorial: cambio medio de F1, mejora solo en 6 de 15 | §6.6.1 del reporte; `RO/v3/` |
 
@@ -82,7 +82,7 @@ Exp B global, economía: LR profit factor 1.210 y Sharpe **+0.755**; XGBoost
 La acción explica el 15.5 % de la variación del Sharpe y el modelo el 3.4 %
 (≈ 4.5 veces); experimento 7.0 %; interacción y ruido 74.1 %.
 
-Fuente: `paper_review/paper.tex` (Tablas 4–6, §7.3); `RO/v4/resultados_v4.csv`.
+Fuente: `paper_review/paper.tex` (Tablas 3–5, §7.3); `RO/v4/resultados_v4.csv`.
 
 ## 6. Etapa 4 — protocolo final (**resultado principal**)
 

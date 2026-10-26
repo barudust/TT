@@ -2,7 +2,18 @@
 
 > Punto de entrada para retomar el proyecto desde cero: **[`CONTEXTO.md`](CONTEXTO.md)**.
 
-Última actualización: 2026-10-22.
+Última actualización: 2026-10-26.
+
+## Revisión del reporte técnico y carpeta del paper (2026-10-26)
+
+- `REPORTE_TECNICO/`: revisión completa del reporte (versión 21/10/2026, 105 pp.)
+  para que el equipo lo corrija: resumen de los 12 problemas, estructura propuesta,
+  60 contradicciones, cifras vigentes con su fuente, 208 correcciones por capítulo,
+  borradores de texto, 21 tablas, 12 diagramas nuevos y 7 gráficas de resultados.
+- `PAPER_MICAI/`: ficha y estado del envío a Springer, contenido por sección, tablas
+  exactas, relación con el TT, cómo incluirlo en el reporte (anexo + citas),
+  guion de la presentación en el congreso, preguntas probables y 6 figuras en inglés.
+- `presentaciones/`: fuentes de los decks de avances y de sinodales.
 
 ## Observaciones de la sinodal (2026-10-26)
 

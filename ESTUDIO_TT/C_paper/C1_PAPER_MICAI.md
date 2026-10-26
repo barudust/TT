@@ -10,6 +10,9 @@
 > respaldo en la defensa (pasó revisión por pares), pero el TT es más amplio
 > y siguió avanzando después.
 >
+> **Material completo del artículo (cifras exactas, presentación en MICAI,
+> preguntas del congreso, cómo incluirlo en el reporte):** [`../../PAPER_MICAI/`](../../PAPER_MICAI/README.md).
+>
 > Archivos: `paper_review/paper.tex` (versión canónica),
 > `paper_review/paper.pdf` (copia pública), `paper_review/supplementary/`
 > (material suplementario), `paper_review/README.md`.
