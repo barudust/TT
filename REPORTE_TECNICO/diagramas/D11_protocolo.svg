@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="640" viewBox="0 0 1600 640" font-family="Arial, Helvetica, sans-serif">
+<title>Protocolo anidado de la Etapa 4</title>
+<defs>
+  <marker id="flecha" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <path d="M0,0 L10,5 L0,10 z" fill="#8a94a6"/>
+  </marker>
+  <marker id="flecha-azul" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <path d="M0,0 L10,5 L0,10 z" fill="#2a78d6"/>
+  </marker>
+  <marker id="flecha-naranja" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <path d="M0,0 L10,5 L0,10 z" fill="#eb6834"/>
+  </marker>
+  <marker id="flecha-ambar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <path d="M0,0 L10,5 L0,10 z" fill="#c27c0e"/>
+  </marker>
+  <pattern id="rayado" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+    <rect width="8" height="8" fill="#f3f4f6"/>
+    <line x1="0" y1="0" x2="0" y2="8" stroke="#9aa3ae" stroke-width="2"/>
+  </pattern>
+</defs>
+<rect x="0" y="0" width="1600" height="640" fill="#ffffff"/>
+<text x="378.8" y="55.0" font-size="15" fill="#6b7280" font-weight="bold" text-anchor="middle">2018</text>
+<text x="536.2" y="55.0" font-size="15" fill="#6b7280" font-weight="bold" text-anchor="middle">2019</text>
+<text x="693.8" y="55.0" font-size="15" fill="#6b7280" font-weight="bold" text-anchor="middle">2020</text>
+<text x="851.2" y="55.0" font-size="15" fill="#6b7280" font-weight="bold" text-anchor="middle">2021</text>
+<text x="1008.8" y="55.0" font-size="15" fill="#6b7280" font-weight="bold" text-anchor="middle">2022</text>
+<text x="1166.2" y="55.0" font-size="15" fill="#6b7280" font-weight="bold" text-anchor="middle">2023</text>
+<text x="1323.8" y="55.0" font-size="15" fill="#6b7280" font-weight="bold" text-anchor="middle">2024</text>
+<text x="1481.2" y="55.0" font-size="15" fill="#6b7280" font-weight="bold" text-anchor="middle">2025</text>
+<text x="30.0" y="140.0" font-size="18" fill="#1f2937" font-weight="bold" text-anchor="start">Modo dev</text>
+<text x="30.0" y="166.0" font-size="14" fill="#6b7280" font-weight="normal" text-anchor="start">aquí se toman</text>
+<text x="30.0" y="186.0" font-size="14" fill="#6b7280" font-weight="normal" text-anchor="start">todas las decisiones</text>
+<rect x="304.0" y="95.0" width="779.5" height="110.0" rx="10" fill="#2a78d6" stroke="#2a78d6" stroke-width="1.8"/>
+<text x="693.8" y="143.0" font-size="16" fill="#ffffff" font-weight="bold" text-anchor="middle">Entrenamiento</text>
+<text x="693.8" y="171.0" font-size="13" fill="#ffffff" font-weight="normal" text-anchor="middle">2018–2022</text>
+<rect x="1091.5" y="95.0" width="149.5" height="110.0" rx="10" fill="#a9c9f2" stroke="#2a78d6" stroke-width="1.8"/>
+<text x="1166.2" y="143.0" font-size="16" fill="#1f2937" font-weight="bold" text-anchor="middle">Época</text>
+<text x="1166.2" y="171.0" font-size="13" fill="#1f2937" font-weight="normal" text-anchor="middle">redes</text>
+<rect x="1249.0" y="95.0" width="149.5" height="110.0" rx="10" fill="#f1c36b" stroke="#c27c0e" stroke-width="1.8"/>
+<text x="1323.8" y="143.0" font-size="16" fill="#1f2937" font-weight="bold" text-anchor="middle">Configuración</text>
+<text x="1323.8" y="171.0" font-size="13" fill="#1f2937" font-weight="normal" text-anchor="middle">Optuna</text>
+<rect x="1406.5" y="95.0" width="149.5" height="110.0" rx="10" fill="url(#rayado)" stroke="#9aa3ae" stroke-width="1.5"/>
+<rect x="1445.9" y="143.7" width="70.8" height="18.9" fill="#ffffff" rx="3"/>
+<text x="1481.2" y="157.0" font-size="14" fill="#6b7280" font-weight="bold" text-anchor="middle">no se usa</text>
+<text x="30.0" y="330.0" font-size="18" fill="#1f2937" font-weight="bold" text-anchor="start">Modo final</text>
+<text x="30.0" y="356.0" font-size="14" fill="#6b7280" font-weight="normal" text-anchor="start">configuración</text>
+<text x="30.0" y="376.0" font-size="14" fill="#6b7280" font-weight="normal" text-anchor="start">congelada</text>
+<rect x="304.0" y="285.0" width="937.0" height="110.0" rx="10" fill="#2a78d6" stroke="#2a78d6" stroke-width="1.8"/>
+<text x="772.5" y="333.0" font-size="16" fill="#ffffff" font-weight="bold" text-anchor="middle">Entrenamiento</text>
+<text x="772.5" y="361.0" font-size="13" fill="#ffffff" font-weight="normal" text-anchor="middle">2018–2023 (clásicos: + 2024)</text>
+<rect x="1249.0" y="285.0" width="149.5" height="110.0" rx="10" fill="#a9c9f2" stroke="#2a78d6" stroke-width="1.8"/>
+<text x="1323.8" y="333.0" font-size="16" fill="#1f2937" font-weight="bold" text-anchor="middle">Época</text>
+<text x="1323.8" y="361.0" font-size="13" fill="#1f2937" font-weight="normal" text-anchor="middle">redes</text>
+<rect x="1406.5" y="285.0" width="149.5" height="110.0" rx="10" fill="#eb6834" stroke="#eb6834" stroke-width="1.8"/>
+<text x="1481.2" y="333.0" font-size="16" fill="#ffffff" font-weight="bold" text-anchor="middle">Prueba</text>
+<text x="1481.2" y="361.0" font-size="13" fill="#ffffff" font-weight="normal" text-anchor="middle">una sola vez</text>
+<path d="M1323.8,205.0 L1323.8,245.0 L772.5,245.0 L772.5,285.0" fill="none" stroke="#c27c0e" stroke-width="2.2" marker-end="url(#flecha-ambar)"/>
+<rect x="970.3" y="224.7" width="155.6" height="17.6" fill="#ffffff" rx="3"/>
+<text x="1048.1" y="237.0" font-size="13" fill="#c27c0e" font-weight="bold" text-anchor="middle">configuración congelada</text>
+<rect x="30.0" y="440.0" width="1530.0" height="170.0" rx="12" fill="#f1f4f8" stroke="#475569" stroke-width="1.5"/>
+<text x="55.0" y="480.0" font-size="15" fill="#1f2937" font-weight="normal" text-anchor="start">• Ninguna decisión (hiperparámetros, arquitectura, ventana, escalador, época) usa 2025.</text>
+<text x="55.0" y="514.0" font-size="15" fill="#1f2937" font-weight="normal" text-anchor="start">• Los clásicos se reentrenan con entrenamiento + validación antes de la prueba; las redes no (las empeoraba −0.024 a −0.047).</text>
+<text x="55.0" y="548.0" font-size="15" fill="#1f2937" font-weight="normal" text-anchor="start">• Antes de cambiar nada se verificó que el código nuevo reproduce la Etapa 3: 18 de 18 celdas idénticas.</text>
+<text x="55.0" y="582.0" font-size="15" fill="#1f2937" font-weight="normal" text-anchor="start">• Evaluación final con cinco semillas (42, 1, 7, 2024, 100) y probabilidades promediadas.</text>
+</svg>

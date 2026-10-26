@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="880" viewBox="0 0 1600 880" font-family="Arial, Helvetica, sans-serif">
+<title>Despliegue en Render</title>
+<defs>
+  <marker id="flecha" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <path d="M0,0 L10,5 L0,10 z" fill="#8a94a6"/>
+  </marker>
+  <marker id="flecha-azul" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <path d="M0,0 L10,5 L0,10 z" fill="#2a78d6"/>
+  </marker>
+  <marker id="flecha-naranja" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <path d="M0,0 L10,5 L0,10 z" fill="#eb6834"/>
+  </marker>
+  <marker id="flecha-ambar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <path d="M0,0 L10,5 L0,10 z" fill="#c27c0e"/>
+  </marker>
+  <pattern id="rayado" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+    <rect width="8" height="8" fill="#f3f4f6"/>
+    <line x1="0" y1="0" x2="0" y2="8" stroke="#9aa3ae" stroke-width="2"/>
+  </pattern>
+</defs>
+<rect x="0" y="0" width="1600" height="880" fill="#ffffff"/>
+<rect x="30.0" y="300.0" width="300.0" height="170.0" rx="10" fill="#f3f4f6" stroke="#8a94a6" stroke-width="1.5"/>
+<text x="180.0" y="362.0" font-size="18" fill="#1f2937" font-weight="bold" text-anchor="middle">GitHub</text>
+<text x="180.0" y="382.7" font-size="14" fill="#1f2937" font-weight="normal" text-anchor="middle">barudust/TT</text>
+<text x="180.0" y="402.1" font-size="14" fill="#1f2937" font-weight="normal" text-anchor="middle">rama main</text>
+<text x="180.0" y="421.4" font-size="14" fill="#1f2937" font-weight="normal" text-anchor="middle">render.yaml (Blueprint)</text>
+<rect x="30.0" y="520.0" width="300.0" height="200.0" rx="10" fill="#ffffff" stroke="#1f8a4c" stroke-width="1.5"/>
+<text x="180.0" y="578.4" font-size="15" fill="#1f8a4c" font-weight="bold" text-anchor="middle">Verificación</text>
+<text x="180.0" y="597.6" font-size="13.5" fill="#1f2937" font-weight="normal" text-anchor="middle">GET /health →</text>
+<text x="180.0" y="616.2" font-size="13.5" fill="#1f2937" font-weight="normal" text-anchor="middle">stocksLoaded: 7</text>
+<text x="180.0" y="634.8" font-size="13.5" fill="#1f2937" font-weight="normal" text-anchor="middle"></text>
+<text x="180.0" y="653.5" font-size="13.5" fill="#1f2937" font-weight="normal" text-anchor="middle">GET /model →</text>
+<text x="180.0" y="672.1" font-size="13.5" fill="#1f2937" font-weight="normal" text-anchor="middle">LR-v8-interactions-holdw090</text>
+<path d="M330.0,385.0 L400.0,385.0" fill="none" stroke="#8a94a6" stroke-width="2.2" marker-end="url(#flecha)"/>
+<rect x="346.5" y="360.1" width="37.0" height="16.9" fill="#ffffff" rx="3"/>
+<text x="365.0" y="372.0" font-size="12.5" fill="#6b7280" font-weight="normal" text-anchor="middle">push</text>
+<rect x="400.0" y="40.0" width="820.0" height="800.0" rx="16" fill="none" stroke="#c3cad6" stroke-width="1.6" stroke-dasharray="7 6"/>
+<rect x="418.0" y="30.0" width="313.0" height="20" fill="#ffffff"/>
+<text x="426.0" y="45.0" font-size="13" fill="#6b7280" font-weight="bold" text-anchor="start">RENDER · plan gratuito · despliegue automático</text>
+<rect x="440.0" y="95.0" width="740.0" height="370.0" rx="10" fill="#eaf2fd" stroke="#2a78d6" stroke-width="2"/>
+<text x="465.0" y="135.0" font-size="19" fill="#1c518f" font-weight="bold" text-anchor="start">tt-api · servicio web (Docker)</text>
+<text x="470.0" y="175.0" font-size="14.5" fill="#1f2937" font-weight="normal" text-anchor="start">• imagen python:3.13-slim · versiones fijas (scikit-learn 1.7.2)</text>
+<text x="470.0" y="211.0" font-size="14.5" fill="#1f2937" font-weight="normal" text-anchor="start">• gunicorn --workers 1 --timeout 300 wsgi:app</text>
+<text x="470.0" y="247.0" font-size="14.5" fill="#1f2937" font-weight="normal" text-anchor="start">• 1 instancia: el programador de tareas vive en el proceso</text>
+<text x="470.0" y="283.0" font-size="14.5" fill="#1f2937" font-weight="normal" text-anchor="start">• SQLite en /data: efímera, se reconstruye al arrancar</text>
+<text x="470.0" y="319.0" font-size="14.5" fill="#1f2937" font-weight="normal" text-anchor="start">• variables: DATABASE_URL, REFRESH_HOUR = 16, REFRESH_MINUTE = 30</text>
+<text x="470.0" y="355.0" font-size="14.5" fill="#1f2937" font-weight="normal" text-anchor="start">• ruta de salud: /health</text>
+<rect x="470.0" y="405.0" width="251.0" height="23" rx="11.5" fill="#ffffff"/>
+<text x="595.5" y="420.5" font-size="13" fill="#1c518f" font-weight="bold" text-anchor="middle" font-family="Consolas, 'Courier New', monospace">https://tt-api-jc7n.onrender.com</text>
+<rect x="440.0" y="500.0" width="740.0" height="300.0" rx="10" fill="#eaf2fd" stroke="#2a78d6" stroke-width="2"/>
+<text x="465.0" y="540.0" font-size="19" fill="#1c518f" font-weight="bold" text-anchor="start">tt-frontend · sitio estático</text>
+<text x="470.0" y="580.0" font-size="14.5" fill="#1f2937" font-weight="normal" text-anchor="start">• compila: cd Frontend &amp;&amp; npm ci &amp;&amp; npm run build</text>
+<text x="470.0" y="616.0" font-size="14.5" fill="#1f2937" font-weight="normal" text-anchor="start">• publica: Frontend/dist (siempre disponible, sin dormir)</text>
+<text x="470.0" y="652.0" font-size="14.5" fill="#1f2937" font-weight="normal" text-anchor="start">• regla: /* → /index.html (navegación de React)</text>
+<text x="470.0" y="688.0" font-size="14.5" fill="#1f2937" font-weight="normal" text-anchor="start">• VITE_API_URL = URL de tt-api (se fija en el panel)</text>
+<rect x="470.0" y="740.0" width="287.4" height="23" rx="11.5" fill="#ffffff"/>
+<text x="613.7" y="755.5" font-size="13" fill="#1c518f" font-weight="bold" text-anchor="middle" font-family="Consolas, 'Courier New', monospace">https://tt-frontend-womf.onrender.com</text>
+<rect x="1290.0" y="150.0" width="280.0" height="110.0" rx="10" fill="#f3f4f6" stroke="#8a94a6" stroke-width="1.5"/>
+<text x="1430.0" y="200.6" font-size="16" fill="#1f2937" font-weight="bold" text-anchor="middle">Yahoo Finance</text>
+<text x="1430.0" y="220.7" font-size="14" fill="#1f2937" font-weight="normal" text-anchor="middle">datos diarios</text>
+<rect x="1290.0" y="560.0" width="280.0" height="110.0" rx="10" fill="#ffffff" stroke="#8a94a6" stroke-width="1.5"/>
+<text x="1430.0" y="610.6" font-size="16" fill="#1f2937" font-weight="bold" text-anchor="middle">Usuario</text>
+<text x="1430.0" y="630.7" font-size="14" fill="#1f2937" font-weight="normal" text-anchor="middle">navegador o celular</text>
+<path d="M1180.0,205.0 L1290.0,205.0" fill="none" stroke="#8a94a6" stroke-width="1.8" marker-end="url(#flecha)"/>
+<rect x="1203.0" y="183.1" width="64.0" height="16.9" fill="#ffffff" rx="3"/>
+<text x="1235.0" y="195.0" font-size="12.5" fill="#6b7280" font-weight="normal" text-anchor="middle">descarga</text>
+<path d="M1290.0,615.0 L1180.0,615.0" fill="none" stroke="#8a94a6" stroke-width="1.8" marker-end="url(#flecha)"/>
+<rect x="1210.0" y="593.1" width="50.0" height="16.9" fill="#ffffff" rx="3"/>
+<text x="1235.0" y="605.0" font-size="12.5" fill="#6b7280" font-weight="normal" text-anchor="middle">HTTPS</text>
+<path d="M1360.0,560.0 L1360.0,420.0 L1180.0,420.0" fill="none" stroke="#8a94a6" stroke-width="1.8" marker-end="url(#flecha)"/>
+<rect x="1296.1" y="458.1" width="87.7" height="16.9" fill="#ffffff" rx="3"/>
+<text x="1340.0" y="470.0" font-size="12.5" fill="#6b7280" font-weight="normal" text-anchor="middle">JSON + CORS</text>
+<rect x="1240.0" y="700.0" width="330.0" height="140.0" rx="10" fill="#fdf3e1" stroke="#c27c0e" stroke-width="1.5"/>
+<text x="1405.0" y="739.1" font-size="15" fill="#1f2937" font-weight="bold" text-anchor="middle">Plan gratuito</text>
+<text x="1405.0" y="757.7" font-size="13" fill="#1f2937" font-weight="normal" text-anchor="middle">se duerme tras ~15 min sin tráfico</text>
+<text x="1405.0" y="775.7" font-size="13" fill="#1f2937" font-weight="normal" text-anchor="middle">primera carga: 20–40 s</text>
+<text x="1405.0" y="793.6" font-size="13" fill="#1f2937" font-weight="normal" text-anchor="middle">la actualización corre solo</text>
+<text x="1405.0" y="811.6" font-size="13" fill="#1f2937" font-weight="normal" text-anchor="middle">si el servicio está despierto</text>
+</svg>

@@ -1,0 +1,109 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1500" height="1240" viewBox="0 0 1500 1240" font-family="Arial, Helvetica, sans-serif">
+<title>Actualización diaria dentro de la API</title>
+<defs>
+  <marker id="flecha" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <path d="M0,0 L10,5 L0,10 z" fill="#8a94a6"/>
+  </marker>
+  <marker id="flecha-azul" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <path d="M0,0 L10,5 L0,10 z" fill="#2a78d6"/>
+  </marker>
+  <marker id="flecha-naranja" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <path d="M0,0 L10,5 L0,10 z" fill="#eb6834"/>
+  </marker>
+  <marker id="flecha-ambar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <path d="M0,0 L10,5 L0,10 z" fill="#c27c0e"/>
+  </marker>
+  <pattern id="rayado" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+    <rect width="8" height="8" fill="#f3f4f6"/>
+    <line x1="0" y1="0" x2="0" y2="8" stroke="#9aa3ae" stroke-width="2"/>
+  </pattern>
+</defs>
+<rect x="0" y="0" width="1500" height="1240" fill="#ffffff"/>
+<text x="750.0" y="40.0" font-size="15" fill="#6b7280" font-weight="bold" text-anchor="middle">Cuándo corre</text>
+<rect x="180.0" y="60.0" width="270.0" height="56.0" rx="28" fill="#eaf2fd" stroke="#2a78d6" stroke-width="1.5"/>
+<text x="315.0" y="92.6" font-size="14" fill="#1f2937" font-weight="bold" text-anchor="middle">Al arrancar el servidor</text>
+<path d="M315.0,116.0 L315.0,140.0 L750.0,140.0 L750.0,165.0" fill="none" stroke="#8a94a6" stroke-width="1.8" marker-end="url(#flecha)"/>
+<rect x="470.0" y="60.0" width="270.0" height="56.0" rx="28" fill="#eaf2fd" stroke="#2a78d6" stroke-width="1.5"/>
+<text x="605.0" y="92.6" font-size="14" fill="#1f2937" font-weight="bold" text-anchor="middle">16:30 Nueva York, lun–vie</text>
+<path d="M605.0,116.0 L605.0,140.0 L750.0,140.0 L750.0,165.0" fill="none" stroke="#8a94a6" stroke-width="1.8"/>
+<rect x="760.0" y="60.0" width="270.0" height="56.0" rx="28" fill="#eaf2fd" stroke="#2a78d6" stroke-width="1.5"/>
+<text x="895.0" y="92.6" font-size="14" fill="#1f2937" font-weight="bold" text-anchor="middle">Cada 2 min si falta una acción</text>
+<path d="M895.0,116.0 L895.0,140.0 L750.0,140.0 L750.0,165.0" fill="none" stroke="#8a94a6" stroke-width="1.8"/>
+<rect x="1050.0" y="60.0" width="270.0" height="56.0" rx="28" fill="#eaf2fd" stroke="#2a78d6" stroke-width="1.5"/>
+<text x="1185.0" y="92.6" font-size="14" fill="#1f2937" font-weight="bold" text-anchor="middle">POST /admin/refresh</text>
+<path d="M1185.0,116.0 L1185.0,140.0 L750.0,140.0 L750.0,165.0" fill="none" stroke="#8a94a6" stroke-width="1.8"/>
+<rect x="520.0" y="165.0" width="460.0" height="60.0" rx="10" fill="#ffffff" stroke="#2a78d6" stroke-width="1.5"/>
+<text x="750.0" y="191.3" font-size="15" fill="#1f2937" font-weight="bold" text-anchor="middle" font-family="Consolas, 'Courier New', monospace">initialize_data()</text>
+<text x="750.0" y="209.5" font-size="12.5" fill="#1f2937" font-weight="normal" text-anchor="middle">un candado evita dos actualizaciones a la vez</text>
+<rect x="330.0" y="260.0" width="840.0" height="96.0" rx="10" fill="#ffffff" stroke="#8a94a6" stroke-width="1.5"/>
+<circle cx="378.0" cy="308.0" r="22" fill="#2a78d6"/>
+<text x="378.0" y="314.0" font-size="17" fill="#ffffff" font-weight="bold" text-anchor="middle">1</text>
+<text x="420.0" y="300.0" font-size="17" fill="#1f2937" font-weight="bold" text-anchor="start">Descargar ~3 años</text>
+<text x="420.0" y="328.0" font-size="14" fill="#6b7280" font-weight="normal" text-anchor="start">7 acciones + SPY + VIX con yfinance · 3 reintentos por descarga</text>
+<path d="M750.0,356.0 L750.0,384.0" fill="none" stroke="#8a94a6" stroke-width="1.8" marker-end="url(#flecha)"/>
+<rect x="330.0" y="384.0" width="840.0" height="96.0" rx="10" fill="#ffffff" stroke="#8a94a6" stroke-width="1.5"/>
+<circle cx="378.0" cy="432.0" r="22" fill="#2a78d6"/>
+<text x="378.0" y="438.0" font-size="17" fill="#ffffff" font-weight="bold" text-anchor="middle">2</text>
+<text x="420.0" y="424.0" font-size="17" fill="#1f2937" font-weight="bold" text-anchor="start">¿El mercado sigue abierto?</text>
+<text x="420.0" y="452.0" font-size="14" fill="#6b7280" font-weight="normal" text-anchor="start">sí → se descarta la vela del día: su precio todavía no es un cierre</text>
+<path d="M750.0,480.0 L750.0,508.0" fill="none" stroke="#8a94a6" stroke-width="1.8" marker-end="url(#flecha)"/>
+<rect x="330.0" y="508.0" width="840.0" height="96.0" rx="10" fill="#ffffff" stroke="#8a94a6" stroke-width="1.5"/>
+<circle cx="378.0" cy="556.0" r="22" fill="#2a78d6"/>
+<text x="378.0" y="562.0" font-size="17" fill="#ffffff" font-weight="bold" text-anchor="middle">3</text>
+<text x="420.0" y="548.0" font-size="17" fill="#1f2937" font-weight="bold" text-anchor="start">Calcular 76 características</text>
+<text x="420.0" y="576.0" font-size="14" fill="#6b7280" font-weight="normal" text-anchor="start">ml/features.py: 61 base + 15 interacciones, mismo código del entrenamiento</text>
+<path d="M750.0,604.0 L750.0,632.0" fill="none" stroke="#8a94a6" stroke-width="1.8" marker-end="url(#flecha)"/>
+<rect x="330.0" y="632.0" width="840.0" height="96.0" rx="10" fill="#ffffff" stroke="#8a94a6" stroke-width="1.5"/>
+<circle cx="378.0" cy="680.0" r="22" fill="#2a78d6"/>
+<text x="378.0" y="686.0" font-size="17" fill="#ffffff" font-weight="bold" text-anchor="middle">4</text>
+<text x="420.0" y="672.0" font-size="17" fill="#1f2937" font-weight="bold" text-anchor="start">Predecir</text>
+<text x="420.0" y="700.0" font-size="14" fill="#6b7280" font-weight="normal" text-anchor="start">ml/model.py: 3 probabilidades por día · la recomendación es la más alta</text>
+<path d="M750.0,728.0 L750.0,756.0" fill="none" stroke="#8a94a6" stroke-width="1.8" marker-end="url(#flecha)"/>
+<rect x="330.0" y="756.0" width="840.0" height="96.0" rx="10" fill="#ffffff" stroke="#8a94a6" stroke-width="1.5"/>
+<circle cx="378.0" cy="804.0" r="22" fill="#2a78d6"/>
+<text x="378.0" y="810.0" font-size="17" fill="#ffffff" font-weight="bold" text-anchor="middle">5</text>
+<text x="420.0" y="796.0" font-size="17" fill="#1f2937" font-weight="bold" text-anchor="start">Evaluar</text>
+<text x="420.0" y="824.0" font-size="14" fill="#6b7280" font-weight="normal" text-anchor="start">ml/target.py: etiqueta real del día siguiente · el último día queda «pendiente»</text>
+<path d="M750.0,852.0 L750.0,880.0" fill="none" stroke="#8a94a6" stroke-width="1.8" marker-end="url(#flecha)"/>
+<rect x="330.0" y="880.0" width="840.0" height="96.0" rx="10" fill="#ffffff" stroke="#8a94a6" stroke-width="1.5"/>
+<circle cx="378.0" cy="928.0" r="22" fill="#2a78d6"/>
+<text x="378.0" y="934.0" font-size="17" fill="#ffffff" font-weight="bold" text-anchor="middle">6</text>
+<text x="420.0" y="920.0" font-size="17" fill="#1f2937" font-weight="bold" text-anchor="start">Calcular métricas</text>
+<text x="420.0" y="948.0" font-size="14" fill="#6b7280" font-weight="normal" text-anchor="start">ventanas de 30, 60 y 90 días por acción (misma definición que la tesis)</text>
+<path d="M750.0,976.0 L750.0,1004.0" fill="none" stroke="#8a94a6" stroke-width="1.8" marker-end="url(#flecha)"/>
+<rect x="330.0" y="1004.0" width="840.0" height="96.0" rx="10" fill="#eaf2fd" stroke="#2a78d6" stroke-width="1.5"/>
+<circle cx="378.0" cy="1052.0" r="22" fill="#2a78d6"/>
+<text x="378.0" y="1058.0" font-size="17" fill="#ffffff" font-weight="bold" text-anchor="middle">7</text>
+<text x="420.0" y="1044.0" font-size="17" fill="#1f2937" font-weight="bold" text-anchor="start">Guardar</text>
+<text x="420.0" y="1072.0" font-size="14" fill="#6b7280" font-weight="normal" text-anchor="start">caché en memoria + upsert en SQLite (una transacción por acción)</text>
+<path d="M750.0,1100.0 L750.0,1128.0" fill="none" stroke="#8a94a6" stroke-width="1.8" marker-end="url(#flecha)"/>
+<rect x="330.0" y="1128.0" width="840.0" height="96.0" rx="10" fill="#eaf2fd" stroke="#2a78d6" stroke-width="1.5"/>
+<circle cx="378.0" cy="1176.0" r="22" fill="#2a78d6"/>
+<text x="378.0" y="1182.0" font-size="17" fill="#ffffff" font-weight="bold" text-anchor="middle">8</text>
+<text x="420.0" y="1168.0" font-size="17" fill="#1f2937" font-weight="bold" text-anchor="start">Servir</text>
+<text x="420.0" y="1196.0" font-size="14" fill="#6b7280" font-weight="normal" text-anchor="start">GET /stocks, /stocks/:s/history, /metrics… responden desde la caché</text>
+<path d="M750.0,225.0 L750.0,260.0" fill="none" stroke="#8a94a6" stroke-width="1.8" marker-end="url(#flecha)"/>
+<rect x="30.0" y="384.0" width="270.0" height="220.0" rx="10" fill="#f1f4f8" stroke="#475569" stroke-width="1.5"/>
+<text x="165.0" y="433.4" font-size="14" fill="#1f2937" font-weight="bold" text-anchor="middle">Por qué todo y no solo el día nuevo</text>
+<text x="165.0" y="452.2" font-size="13.5" fill="#1f2937" font-weight="normal" text-anchor="middle">cuesta segundos de cómputo</text>
+<text x="165.0" y="470.9" font-size="13.5" fill="#1f2937" font-weight="normal" text-anchor="middle">todo lo mostrado sale</text>
+<text x="165.0" y="489.5" font-size="13.5" fill="#1f2937" font-weight="normal" text-anchor="middle">del modelo vigente</text>
+<text x="165.0" y="508.1" font-size="13.5" fill="#1f2937" font-weight="normal" text-anchor="middle">si se reentrena, la historia</text>
+<text x="165.0" y="526.8" font-size="13.5" fill="#1f2937" font-weight="normal" text-anchor="middle">se actualiza sola</text>
+<text x="165.0" y="545.4" font-size="13.5" fill="#1f2937" font-weight="normal" text-anchor="middle">la base se puede</text>
+<text x="165.0" y="564.0" font-size="13.5" fill="#1f2937" font-weight="normal" text-anchor="middle">reconstruir siempre</text>
+<rect x="1200.0" y="384.0" width="270.0" height="330.0" rx="10" fill="#fdf3e1" stroke="#c27c0e" stroke-width="1.5"/>
+<text x="1335.0" y="441.9" font-size="14" fill="#1f2937" font-weight="bold" text-anchor="middle">Si algo falla</text>
+<text x="1335.0" y="460.7" font-size="13.5" fill="#1f2937" font-weight="normal" text-anchor="middle">una acción falla → se omite</text>
+<text x="1335.0" y="479.3" font-size="13.5" fill="#1f2937" font-weight="normal" text-anchor="middle">y se reintenta cada 2 min</text>
+<text x="1335.0" y="497.9" font-size="13.5" fill="#1f2937" font-weight="normal" text-anchor="middle"></text>
+<text x="1335.0" y="516.6" font-size="13.5" fill="#1f2937" font-weight="normal" text-anchor="middle">SPY o VIX fallan → se omiten</text>
+<text x="1335.0" y="535.2" font-size="13.5" fill="#1f2937" font-weight="normal" text-anchor="middle">todas (sin contexto no hay</text>
+<text x="1335.0" y="553.8" font-size="13.5" fill="#1f2937" font-weight="normal" text-anchor="middle">características válidas)</text>
+<text x="1335.0" y="572.4" font-size="13.5" fill="#1f2937" font-weight="normal" text-anchor="middle"></text>
+<text x="1335.0" y="591.1" font-size="13.5" fill="#1f2937" font-weight="normal" text-anchor="middle">la base falla → rollback de</text>
+<text x="1335.0" y="609.7" font-size="13.5" fill="#1f2937" font-weight="normal" text-anchor="middle">esa acción; se sirve desde</text>
+<text x="1335.0" y="628.3" font-size="13.5" fill="#1f2937" font-weight="normal" text-anchor="middle">memoria</text>
+<text x="1335.0" y="647.0" font-size="13.5" fill="#1f2937" font-weight="normal" text-anchor="middle"></text>
+<text x="1335.0" y="665.6" font-size="13.5" fill="#1f2937" font-weight="normal" text-anchor="middle">nunca se inventan datos</text>
+</svg>

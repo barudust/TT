@@ -1,0 +1,110 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" font-family="Arial, Helvetica, sans-serif">
+<title>Del dataset al modelo en producción</title>
+<defs>
+  <marker id="flecha" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <path d="M0,0 L10,5 L0,10 z" fill="#8a94a6"/>
+  </marker>
+  <marker id="flecha-azul" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <path d="M0,0 L10,5 L0,10 z" fill="#2a78d6"/>
+  </marker>
+  <marker id="flecha-naranja" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <path d="M0,0 L10,5 L0,10 z" fill="#eb6834"/>
+  </marker>
+  <marker id="flecha-ambar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <path d="M0,0 L10,5 L0,10 z" fill="#c27c0e"/>
+  </marker>
+  <pattern id="rayado" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+    <rect width="8" height="8" fill="#f3f4f6"/>
+    <line x1="0" y1="0" x2="0" y2="8" stroke="#9aa3ae" stroke-width="2"/>
+  </pattern>
+</defs>
+<rect x="0" y="0" width="1600" height="900" fill="#ffffff"/>
+<text x="40.0" y="50.0" font-size="15" fill="#6b7280" font-weight="bold" text-anchor="start">1 · Datos</text>
+<rect x="40.0" y="70.0" width="260.0" height="120.0" rx="10" fill="#f3f4f6" stroke="#8a94a6" stroke-width="1.5"/>
+<text x="170.0" y="116.0" font-size="16" fill="#1f2937" font-weight="bold" text-anchor="middle">Yahoo Finance</text>
+<text x="170.0" y="136.0" font-size="14" fill="#1f2937" font-weight="normal" text-anchor="middle">desde 2013-01-01</text>
+<text x="170.0" y="155.3" font-size="14" fill="#1f2937" font-weight="normal" text-anchor="middle">auto_adjust = True</text>
+<rect x="360.0" y="70.0" width="420.0" height="120.0" rx="10" fill="#f1f4f8" stroke="#475569" stroke-width="1.5"/>
+<text x="570.0" y="103.6" font-size="12" fill="#6b7280" font-weight="normal" text-anchor="middle">scripts_v1/</text>
+<text x="570.0" y="124.3" font-size="16" fill="#1f2937" font-weight="bold" text-anchor="middle">01_build_raw_dataset.py</text>
+<text x="570.0" y="144.3" font-size="14" fill="#1f2937" font-weight="normal" text-anchor="middle">61 características en 9 familias</text>
+<text x="570.0" y="163.6" font-size="14" fill="#1f2937" font-weight="normal" text-anchor="middle">etiqueta 30/70 (252 días, shift 1) · r_forward</text>
+<rect x="840.0" y="70.0" width="420.0" height="120.0" rx="10" fill="#ffffff" stroke="#475569" stroke-width="1.5"/>
+<text x="1050.0" y="103.6" font-size="12" fill="#6b7280" font-weight="normal" text-anchor="middle">tesis_ml_stocks/01_raw_datasets/</text>
+<text x="1050.0" y="124.3" font-size="16" fill="#1f2937" font-weight="bold" text-anchor="middle">7 archivos parquet</text>
+<text x="1050.0" y="144.3" font-size="14" fill="#1f2937" font-weight="normal" text-anchor="middle">2013-12-31 a 2025-12-29 · 21 119 filas</text>
+<text x="1050.0" y="163.6" font-size="14" fill="#1f2937" font-weight="normal" text-anchor="middle">2026 aparte, solo para la prueba ciega</text>
+<rect x="1320.0" y="70.0" width="240.0" height="120.0" rx="10" fill="#f3f4f6" stroke="#9aa3ae" stroke-width="1.5" stroke-dasharray="6 5"/>
+<text x="1440.0" y="108.1" font-size="15" fill="#1f2937" font-weight="bold" text-anchor="middle">Etapas 1–2</text>
+<text x="1440.0" y="126.7" font-size="13" fill="#1f2937" font-weight="normal" text-anchor="middle">scripts_v1/02–08</text>
+<text x="1440.0" y="144.7" font-size="13" fill="#1f2937" font-weight="normal" text-anchor="middle">scripts_opt/opt_*.py</text>
+<text x="1440.0" y="162.6" font-size="13" fill="#1f2937" font-weight="normal" text-anchor="middle">(antecedente)</text>
+<path d="M300.0,130.0 L360.0,130.0" fill="none" stroke="#8a94a6" stroke-width="1.8" marker-end="url(#flecha)"/>
+<path d="M780.0,130.0 L840.0,130.0" fill="none" stroke="#8a94a6" stroke-width="1.8" marker-end="url(#flecha)"/>
+<text x="40.0" y="265.0" font-size="15" fill="#6b7280" font-weight="bold" text-anchor="start">2 · Comparación y decisiones (scripts_opt/)</text>
+<rect x="40.0" y="285.0" width="340.0" height="250.0" rx="10" fill="#f1f4f8" stroke="#475569" stroke-width="1.5"/>
+<text x="210.0" y="363.6" font-size="12" fill="#475569" font-weight="normal" text-anchor="middle">Etapa 3</text>
+<text x="210.0" y="385.3" font-size="17" fill="#1f2937" font-weight="bold" text-anchor="middle">Igualdad de condiciones</text>
+<text x="210.0" y="405.7" font-size="14" fill="#1f2937" font-weight="normal" text-anchor="middle">common_v4.py · train_all_v4.py</text>
+<text x="210.0" y="425.0" font-size="14" fill="#1f2937" font-weight="normal" text-anchor="middle">61 variables para los cinco</text>
+<text x="210.0" y="444.3" font-size="14" fill="#1f2937" font-weight="normal" text-anchor="middle">A/B/C con prueba 2025</text>
+<text x="210.0" y="463.6" font-size="14" fill="#1f2937" font-weight="normal" text-anchor="middle">120 corridas</text>
+<rect x="163.6" y="533.0" width="92.8" height="22" rx="11.0" fill="#475569"/>
+<text x="210.0" y="547.5" font-size="12" fill="#ffffff" font-weight="bold" text-anchor="middle">paper §3–§7</text>
+<rect x="425.0" y="285.0" width="340.0" height="250.0" rx="10" fill="#fdeee6" stroke="#eb6834" stroke-width="2.4"/>
+<text x="595.0" y="363.6" font-size="12" fill="#eb6834" font-weight="normal" text-anchor="middle">Etapa 4</text>
+<text x="595.0" y="385.3" font-size="17" fill="#1f2937" font-weight="bold" text-anchor="middle">Protocolo final</text>
+<text x="595.0" y="405.7" font-size="14" fill="#1f2937" font-weight="normal" text-anchor="middle">common_v5.py · run_v5.py</text>
+<text x="595.0" y="425.0" font-size="14" fill="#1f2937" font-weight="normal" text-anchor="middle">dev/final: nada con la prueba</text>
+<text x="595.0" y="444.3" font-size="14" fill="#1f2937" font-weight="normal" text-anchor="middle">Optuna para los cinco</text>
+<text x="595.0" y="463.6" font-size="14" fill="#1f2937" font-weight="normal" text-anchor="middle">IC bootstrap · costos · año por año</text>
+<rect x="498.1" y="533.0" width="193.8" height="22" rx="11.0" fill="#eb6834"/>
+<text x="595.0" y="547.5" font-size="12" fill="#ffffff" font-weight="bold" text-anchor="middle">paper §8 · resultado principal</text>
+<rect x="810.0" y="285.0" width="340.0" height="250.0" rx="10" fill="#f1f4f8" stroke="#475569" stroke-width="1.5"/>
+<text x="980.0" y="363.6" font-size="12" fill="#475569" font-weight="normal" text-anchor="middle">Etapa 5</text>
+<text x="980.0" y="385.3" font-size="17" fill="#1f2937" font-weight="bold" text-anchor="middle">Búsqueda de mejoras</text>
+<text x="980.0" y="405.7" font-size="14" fill="#1f2937" font-weight="normal" text-anchor="middle">via7_refinamiento.py</text>
+<text x="980.0" y="425.0" font-size="14" fill="#1f2937" font-weight="normal" text-anchor="middle">via8_dataset.py</text>
+<text x="980.0" y="444.3" font-size="14" fill="#1f2937" font-weight="normal" text-anchor="middle">calibración, mezclas, SWA…</text>
+<text x="980.0" y="463.6" font-size="14" fill="#1f2937" font-weight="normal" text-anchor="middle">se adoptan 15 interacciones</text>
+<rect x="1195.0" y="285.0" width="340.0" height="250.0" rx="10" fill="#f1f4f8" stroke="#475569" stroke-width="1.5"/>
+<text x="1365.0" y="363.6" font-size="12" fill="#475569" font-weight="normal" text-anchor="middle">Etapa 6</text>
+<text x="1365.0" y="385.3" font-size="17" fill="#1f2937" font-weight="bold" text-anchor="middle">Modelo de la plataforma</text>
+<text x="1365.0" y="405.7" font-size="14" fill="#1f2937" font-weight="normal" text-anchor="middle">ajuste_hold_rolling.py</text>
+<text x="1365.0" y="425.0" font-size="14" fill="#1f2937" font-weight="normal" text-anchor="middle">peso de mantener × 0.90</text>
+<text x="1365.0" y="444.3" font-size="14" fill="#1f2937" font-weight="normal" text-anchor="middle">global contra por acción</text>
+<text x="1365.0" y="463.6" font-size="14" fill="#1f2937" font-weight="normal" text-anchor="middle">prueba ciega 2026</text>
+<path d="M380.0,410.0 L425.0,410.0" fill="none" stroke="#8a94a6" stroke-width="1.8" marker-end="url(#flecha)"/>
+<path d="M765.0,410.0 L810.0,410.0" fill="none" stroke="#8a94a6" stroke-width="1.8" marker-end="url(#flecha)"/>
+<path d="M1150.0,410.0 L1195.0,410.0" fill="none" stroke="#8a94a6" stroke-width="1.8" marker-end="url(#flecha)"/>
+<path d="M1050.0,190.0 L1050.0,240.0 L210.0,240.0 L210.0,285.0" fill="none" stroke="#8a94a6" stroke-width="1.8" marker-end="url(#flecha)"/>
+<rect x="522.0" y="233.1" width="216.0" height="16.9" fill="#ffffff" rx="3"/>
+<text x="630.0" y="245.0" font-size="12.5" fill="#6b7280" font-weight="normal" text-anchor="middle">mismos datos para todas las etapas</text>
+<text x="40.0" y="640.0" font-size="15" fill="#6b7280" font-weight="bold" text-anchor="start">3 · Producción</text>
+<rect x="40.0" y="660.0" width="430.0" height="170.0" rx="10" fill="#f1f4f8" stroke="#475569" stroke-width="1.5"/>
+<text x="255.0" y="698.6" font-size="12" fill="#6b7280" font-weight="normal" text-anchor="middle">scripts_opt/</text>
+<text x="255.0" y="720.3" font-size="17" fill="#1f2937" font-weight="bold" text-anchor="middle">entrenar_produccion.py</text>
+<text x="255.0" y="740.7" font-size="14" fill="#1f2937" font-weight="normal" text-anchor="middle">7 acciones, 2018–2025 (14 063 filas)</text>
+<text x="255.0" y="760.0" font-size="14" fill="#1f2937" font-weight="normal" text-anchor="middle">+ 15 interacciones · RobustScaler global</text>
+<text x="255.0" y="779.3" font-size="14" fill="#1f2937" font-weight="normal" text-anchor="middle">pesos balanceados, mantener × 0.90</text>
+<text x="255.0" y="798.6" font-size="14" fill="#1f2937" font-weight="normal" text-anchor="middle">LogisticRegression(L2, C = 0.000165)</text>
+<rect x="560.0" y="660.0" width="460.0" height="170.0" rx="10" fill="#fdeee6" stroke="#eb6834" stroke-width="1.5"/>
+<text x="790.0" y="699.3" font-size="12" fill="#6b7280" font-weight="normal" text-anchor="middle">api/ml/artifacts/</text>
+<text x="790.0" y="719.9" font-size="16" fill="#1f2937" font-weight="bold" text-anchor="middle">lr_elasticnet_global_expB.pkl</text>
+<text x="790.0" y="740.0" font-size="14" fill="#1f2937" font-weight="normal" text-anchor="middle">modelo + escalador + 76 variables</text>
+<text x="790.0" y="759.3" font-size="14" fill="#1f2937" font-weight="normal" text-anchor="middle">metadatos: versión, rango, evidencia</text>
+<text x="790.0" y="778.6" font-size="14" fill="#1f2937" font-weight="normal" text-anchor="middle">+ .metrics.json · interaction_pairs.json</text>
+<text x="790.0" y="797.9" font-size="14" fill="#1f2937" font-weight="normal" text-anchor="middle">(el nombre «elasticnet» es histórico)</text>
+<rect x="1110.0" y="660.0" width="450.0" height="170.0" rx="10" fill="#eaf2fd" stroke="#2a78d6" stroke-width="1.5"/>
+<text x="1335.0" y="712.0" font-size="17" fill="#1f2937" font-weight="bold" text-anchor="middle">API (api/ml/model.py)</text>
+<text x="1335.0" y="732.4" font-size="14" fill="#1f2937" font-weight="normal" text-anchor="middle">carga el archivo una sola vez</text>
+<text x="1335.0" y="751.7" font-size="14" fill="#1f2937" font-weight="normal" text-anchor="middle">verifica que estén las 76 variables</text>
+<text x="1335.0" y="771.0" font-size="14" fill="#1f2937" font-weight="normal" text-anchor="middle">MODEL_VERSION = LR-v8-interactions-holdw090</text>
+<text x="1335.0" y="790.3" font-size="14" fill="#1f2937" font-weight="normal" text-anchor="middle">una prueba exige que coincidan</text>
+<path d="M1365.0,535.0 L1365.0,600.0 L255.0,600.0 L255.0,660.0" fill="none" stroke="#8a94a6" stroke-width="1.8" marker-end="url(#flecha)"/>
+<rect x="743.2" y="593.1" width="133.5" height="16.9" fill="#ffffff" rx="3"/>
+<text x="810.0" y="605.0" font-size="12.5" fill="#6b7280" font-weight="normal" text-anchor="middle">configuración elegida</text>
+<path d="M470.0,745.0 L560.0,745.0" fill="none" stroke="#eb6834" stroke-width="2" marker-end="url(#flecha-naranja)"/>
+<path d="M1020.0,745.0 L1110.0,745.0" fill="none" stroke="#eb6834" stroke-width="2" marker-end="url(#flecha-naranja)"/>
+<text x="800.0" y="870.0" font-size="13.5" fill="#6b7280" font-weight="normal" text-anchor="middle">Para cambiar de modelo basta sustituir el .pkl y actualizar MODEL_VERSION; la API no cambia.</text>
+</svg>

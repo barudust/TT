@@ -1,0 +1,136 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" font-family="Arial, Helvetica, sans-serif">
+<title>Modelo entidad-relación</title>
+<defs>
+  <marker id="flecha" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <path d="M0,0 L10,5 L0,10 z" fill="#8a94a6"/>
+  </marker>
+  <marker id="flecha-azul" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <path d="M0,0 L10,5 L0,10 z" fill="#2a78d6"/>
+  </marker>
+  <marker id="flecha-naranja" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <path d="M0,0 L10,5 L0,10 z" fill="#eb6834"/>
+  </marker>
+  <marker id="flecha-ambar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <path d="M0,0 L10,5 L0,10 z" fill="#c27c0e"/>
+  </marker>
+  <pattern id="rayado" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+    <rect width="8" height="8" fill="#f3f4f6"/>
+    <line x1="0" y1="0" x2="0" y2="8" stroke="#9aa3ae" stroke-width="2"/>
+  </pattern>
+</defs>
+<rect x="0" y="0" width="1600" height="900" fill="#ffffff"/>
+<rect x="60.0" y="330.0" width="300.0" height="202.0" rx="10" fill="#ffffff" stroke="#2a78d6" stroke-width="2"/>
+<path d="M60,374 L60,340 Q60,330 70,330 L350,330 Q360,330 360,340 L360,374 Z" fill="#2a78d6"/>
+<text x="210.0" y="359.0" font-size="17" fill="#ffffff" font-weight="bold" text-anchor="middle" font-family="Consolas, 'Courier New', monospace">assets</text>
+<text x="74.0" y="394.0" font-size="13.5" fill="#1f2937" font-weight="normal" text-anchor="start" font-family="Consolas, 'Courier New', monospace">id</text>
+<text x="346.0" y="394.0" font-size="12.5" fill="#6b7280" font-weight="normal" text-anchor="end">PK</text>
+<rect x="61.5" y="404" width="297" height="30" fill="#f3f4f6"/>
+<text x="74.0" y="424.0" font-size="13.5" fill="#1f2937" font-weight="normal" text-anchor="start" font-family="Consolas, 'Courier New', monospace">ticker</text>
+<text x="346.0" y="424.0" font-size="12.5" fill="#6b7280" font-weight="normal" text-anchor="end">único</text>
+<text x="74.0" y="454.0" font-size="13.5" fill="#1f2937" font-weight="normal" text-anchor="start" font-family="Consolas, 'Courier New', monospace">name</text>
+<text x="346.0" y="454.0" font-size="12.5" fill="#6b7280" font-weight="normal" text-anchor="end">texto</text>
+<rect x="61.5" y="464" width="297" height="30" fill="#f3f4f6"/>
+<text x="74.0" y="484.0" font-size="13.5" fill="#1f2937" font-weight="normal" text-anchor="start" font-family="Consolas, 'Courier New', monospace">sector</text>
+<text x="346.0" y="484.0" font-size="12.5" fill="#6b7280" font-weight="normal" text-anchor="end">texto</text>
+<text x="74.0" y="514.0" font-size="13.5" fill="#1f2937" font-weight="normal" text-anchor="start" font-family="Consolas, 'Courier New', monospace">industry</text>
+<text x="346.0" y="514.0" font-size="12.5" fill="#6b7280" font-weight="normal" text-anchor="end">texto</text>
+<rect x="560.0" y="40.0" width="430.0" height="232.0" rx="10" fill="#ffffff" stroke="#2a78d6" stroke-width="2"/>
+<path d="M560,84 L560,50 Q560,40 570,40 L980,40 Q990,40 990,50 L990,84 Z" fill="#2a78d6"/>
+<text x="775.0" y="69.0" font-size="17" fill="#ffffff" font-weight="bold" text-anchor="middle" font-family="Consolas, 'Courier New', monospace">ohlcv_daily</text>
+<text x="574.0" y="104.0" font-size="13.5" fill="#1f2937" font-weight="normal" text-anchor="start" font-family="Consolas, 'Courier New', monospace">id</text>
+<text x="976.0" y="104.0" font-size="12.5" fill="#6b7280" font-weight="normal" text-anchor="end">PK</text>
+<rect x="561.5" y="114" width="427" height="30" fill="#f3f4f6"/>
+<text x="574.0" y="134.0" font-size="13.5" fill="#1f2937" font-weight="normal" text-anchor="start" font-family="Consolas, 'Courier New', monospace">asset_id</text>
+<text x="976.0" y="134.0" font-size="12.5" fill="#6b7280" font-weight="normal" text-anchor="end">FK → assets.id</text>
+<text x="574.0" y="164.0" font-size="13.5" fill="#1f2937" font-weight="normal" text-anchor="start" font-family="Consolas, 'Courier New', monospace">date</text>
+<text x="976.0" y="164.0" font-size="12.5" fill="#6b7280" font-weight="normal" text-anchor="end">fecha</text>
+<rect x="561.5" y="174" width="427" height="30" fill="#f3f4f6"/>
+<text x="574.0" y="194.0" font-size="13.5" fill="#1f2937" font-weight="normal" text-anchor="start" font-family="Consolas, 'Courier New', monospace">open, high, low, close</text>
+<text x="976.0" y="194.0" font-size="12.5" fill="#6b7280" font-weight="normal" text-anchor="end">numérico</text>
+<text x="574.0" y="224.0" font-size="13.5" fill="#1f2937" font-weight="normal" text-anchor="start" font-family="Consolas, 'Courier New', monospace">volume</text>
+<text x="976.0" y="224.0" font-size="12.5" fill="#6b7280" font-weight="normal" text-anchor="end">entero</text>
+<rect x="561.5" y="234" width="427" height="30" fill="#f3f4f6"/>
+<text x="574.0" y="254.0" font-size="13.5" fill="#1f2937" font-weight="normal" text-anchor="start" font-family="Consolas, 'Courier New', monospace">(asset_id, date)</text>
+<text x="976.0" y="254.0" font-size="12.5" fill="#6b7280" font-weight="normal" text-anchor="end">único</text>
+<rect x="560.0" y="330.0" width="430.0" height="382.0" rx="10" fill="#ffffff" stroke="#2a78d6" stroke-width="2"/>
+<path d="M560,374 L560,340 Q560,330 570,330 L980,330 Q990,330 990,340 L990,374 Z" fill="#2a78d6"/>
+<text x="775.0" y="359.0" font-size="17" fill="#ffffff" font-weight="bold" text-anchor="middle" font-family="Consolas, 'Courier New', monospace">predictions</text>
+<text x="574.0" y="394.0" font-size="13.5" fill="#1f2937" font-weight="normal" text-anchor="start" font-family="Consolas, 'Courier New', monospace">id</text>
+<text x="976.0" y="394.0" font-size="12.5" fill="#6b7280" font-weight="normal" text-anchor="end">PK</text>
+<rect x="561.5" y="404" width="427" height="30" fill="#f3f4f6"/>
+<text x="574.0" y="424.0" font-size="13.5" fill="#1f2937" font-weight="normal" text-anchor="start" font-family="Consolas, 'Courier New', monospace">asset_id</text>
+<text x="976.0" y="424.0" font-size="12.5" fill="#6b7280" font-weight="normal" text-anchor="end">FK → assets.id</text>
+<text x="574.0" y="454.0" font-size="13.5" fill="#1f2937" font-weight="normal" text-anchor="start" font-family="Consolas, 'Courier New', monospace">date</text>
+<text x="976.0" y="454.0" font-size="12.5" fill="#6b7280" font-weight="normal" text-anchor="end">fecha del cierre</text>
+<rect x="561.5" y="464" width="427" height="30" fill="#f3f4f6"/>
+<text x="574.0" y="484.0" font-size="13.5" fill="#1f2937" font-weight="normal" text-anchor="start" font-family="Consolas, 'Courier New', monospace">signal</text>
+<text x="976.0" y="484.0" font-size="12.5" fill="#6b7280" font-weight="normal" text-anchor="end">buy / hold / sell</text>
+<text x="574.0" y="514.0" font-size="13.5" fill="#1f2937" font-weight="normal" text-anchor="start" font-family="Consolas, 'Courier New', monospace">prob_buy, prob_hold, prob_sell</text>
+<text x="976.0" y="514.0" font-size="12.5" fill="#6b7280" font-weight="normal" text-anchor="end">numérico</text>
+<rect x="561.5" y="524" width="427" height="30" fill="#f3f4f6"/>
+<text x="574.0" y="544.0" font-size="13.5" fill="#1f2937" font-weight="normal" text-anchor="start" font-family="Consolas, 'Courier New', monospace">confidence</text>
+<text x="976.0" y="544.0" font-size="12.5" fill="#6b7280" font-weight="normal" text-anchor="end">derivada</text>
+<text x="574.0" y="574.0" font-size="13.5" fill="#1f2937" font-weight="normal" text-anchor="start" font-family="Consolas, 'Courier New', monospace">actual_price</text>
+<text x="976.0" y="574.0" font-size="12.5" fill="#6b7280" font-weight="normal" text-anchor="end">derivada</text>
+<rect x="561.5" y="584" width="427" height="30" fill="#f3f4f6"/>
+<text x="574.0" y="604.0" font-size="13.5" fill="#1f2937" font-weight="normal" text-anchor="start" font-family="Consolas, 'Courier New', monospace">correct</text>
+<text x="976.0" y="604.0" font-size="12.5" fill="#6b7280" font-weight="normal" text-anchor="end">0 / 1 · nulo = pendiente</text>
+<text x="574.0" y="634.0" font-size="13.5" fill="#1f2937" font-weight="normal" text-anchor="start" font-family="Consolas, 'Courier New', monospace">model_version</text>
+<text x="976.0" y="634.0" font-size="12.5" fill="#6b7280" font-weight="normal" text-anchor="end">texto</text>
+<rect x="561.5" y="644" width="427" height="30" fill="#f3f4f6"/>
+<text x="574.0" y="664.0" font-size="13.5" fill="#1f2937" font-weight="normal" text-anchor="start" font-family="Consolas, 'Courier New', monospace">created_at</text>
+<text x="976.0" y="664.0" font-size="12.5" fill="#6b7280" font-weight="normal" text-anchor="end">UTC</text>
+<text x="574.0" y="694.0" font-size="13.5" fill="#1f2937" font-weight="normal" text-anchor="start" font-family="Consolas, 'Courier New', monospace">(asset_id, date)</text>
+<text x="976.0" y="694.0" font-size="12.5" fill="#6b7280" font-weight="normal" text-anchor="end">único</text>
+<rect x="1100.0" y="330.0" width="450.0" height="412.0" rx="10" fill="#ffffff" stroke="#2a78d6" stroke-width="2"/>
+<path d="M1100,374 L1100,340 Q1100,330 1110,330 L1540,330 Q1550,330 1550,340 L1550,374 Z" fill="#2a78d6"/>
+<text x="1325.0" y="359.0" font-size="17" fill="#ffffff" font-weight="bold" text-anchor="middle" font-family="Consolas, 'Courier New', monospace">metrics</text>
+<text x="1114.0" y="394.0" font-size="13.5" fill="#1f2937" font-weight="normal" text-anchor="start" font-family="Consolas, 'Courier New', monospace">id</text>
+<text x="1536.0" y="394.0" font-size="12.5" fill="#6b7280" font-weight="normal" text-anchor="end">PK</text>
+<rect x="1101.5" y="404" width="447" height="30" fill="#f3f4f6"/>
+<text x="1114.0" y="424.0" font-size="13.5" fill="#1f2937" font-weight="normal" text-anchor="start" font-family="Consolas, 'Courier New', monospace">asset_id</text>
+<text x="1536.0" y="424.0" font-size="12.5" fill="#6b7280" font-weight="normal" text-anchor="end">FK → assets.id</text>
+<text x="1114.0" y="454.0" font-size="13.5" fill="#1f2937" font-weight="normal" text-anchor="start" font-family="Consolas, 'Courier New', monospace">window_days</text>
+<text x="1536.0" y="454.0" font-size="12.5" fill="#6b7280" font-weight="normal" text-anchor="end">30 / 60 / 90</text>
+<rect x="1101.5" y="464" width="447" height="30" fill="#f3f4f6"/>
+<text x="1114.0" y="484.0" font-size="13.5" fill="#1f2937" font-weight="normal" text-anchor="start" font-family="Consolas, 'Courier New', monospace">model_version</text>
+<text x="1536.0" y="484.0" font-size="12.5" fill="#6b7280" font-weight="normal" text-anchor="end">texto</text>
+<text x="1114.0" y="514.0" font-size="13.5" fill="#1f2937" font-weight="normal" text-anchor="start" font-family="Consolas, 'Courier New', monospace">accuracy, f1_macro, f1_buy, f1_sell</text>
+<text x="1536.0" y="514.0" font-size="12.5" fill="#6b7280" font-weight="normal" text-anchor="end">clasificación</text>
+<rect x="1101.5" y="524" width="447" height="30" fill="#f3f4f6"/>
+<text x="1114.0" y="544.0" font-size="13.5" fill="#1f2937" font-weight="normal" text-anchor="start" font-family="Consolas, 'Courier New', monospace">cumulative_return, return_vs_bh</text>
+<text x="1536.0" y="544.0" font-size="12.5" fill="#6b7280" font-weight="normal" text-anchor="end">estrategia</text>
+<text x="1114.0" y="574.0" font-size="13.5" fill="#1f2937" font-weight="normal" text-anchor="start" font-family="Consolas, 'Courier New', monospace">sharpe_ratio, max_drawdown</text>
+<text x="1536.0" y="574.0" font-size="12.5" fill="#6b7280" font-weight="normal" text-anchor="end">estrategia</text>
+<rect x="1101.5" y="584" width="447" height="30" fill="#f3f4f6"/>
+<text x="1114.0" y="604.0" font-size="13.5" fill="#1f2937" font-weight="normal" text-anchor="start" font-family="Consolas, 'Courier New', monospace">win_rate, profit_factor, number_of_trades</text>
+<text x="1536.0" y="604.0" font-size="12.5" fill="#6b7280" font-weight="normal" text-anchor="end"></text>
+<text x="1114.0" y="634.0" font-size="13.5" fill="#1f2937" font-weight="normal" text-anchor="start" font-family="Consolas, 'Courier New', monospace">exposure, final_capital</text>
+<text x="1536.0" y="634.0" font-size="12.5" fill="#6b7280" font-weight="normal" text-anchor="end">estrategia</text>
+<rect x="1101.5" y="644" width="447" height="30" fill="#f3f4f6"/>
+<text x="1114.0" y="664.0" font-size="13.5" fill="#1f2937" font-weight="normal" text-anchor="start" font-family="Consolas, 'Courier New', monospace">signal_buy/hold/sell_pct</text>
+<text x="1536.0" y="664.0" font-size="12.5" fill="#6b7280" font-weight="normal" text-anchor="end">distribución</text>
+<text x="1114.0" y="694.0" font-size="13.5" fill="#1f2937" font-weight="normal" text-anchor="start" font-family="Consolas, 'Courier New', monospace">updated_at</text>
+<text x="1536.0" y="694.0" font-size="12.5" fill="#6b7280" font-weight="normal" text-anchor="end">UTC</text>
+<rect x="1101.5" y="704" width="447" height="30" fill="#f3f4f6"/>
+<text x="1114.0" y="724.0" font-size="13.5" fill="#1f2937" font-weight="normal" text-anchor="start" font-family="Consolas, 'Courier New', monospace">(asset_id, window_days)</text>
+<text x="1536.0" y="724.0" font-size="12.5" fill="#6b7280" font-weight="normal" text-anchor="end">único</text>
+<path d="M360.0,430.0 L460.0,430.0 L460.0,160.0 L560.0,160.0" fill="none" stroke="#2a78d6" stroke-width="2"/>
+<text x="372.0" y="418.0" font-size="14" fill="#1c518f" font-weight="bold" text-anchor="start">1</text>
+<text x="535.0" y="146.0" font-size="14" fill="#1c518f" font-weight="bold" text-anchor="start">N</text>
+<path d="M360.0,485.0 L560.0,485.0" fill="none" stroke="#2a78d6" stroke-width="2"/>
+<text x="372.0" y="472.0" font-size="14" fill="#1c518f" font-weight="bold" text-anchor="start">1</text>
+<text x="535.0" y="520.0" font-size="14" fill="#1c518f" font-weight="bold" text-anchor="start">N</text>
+<path d="M360.0,540.0 L450.0,540.0 L450.0,860.0 L1060.0,860.0 L1060.0,500.0 L1100.0,500.0" fill="none" stroke="#2a78d6" stroke-width="2"/>
+<text x="372.0" y="525.0" font-size="14" fill="#1c518f" font-weight="bold" text-anchor="start">1</text>
+<text x="1075.0" y="520.0" font-size="14" fill="#1c518f" font-weight="bold" text-anchor="start">N</text>
+<rect x="1100.0" y="40.0" width="450.0" height="250.0" rx="10" fill="#f1f4f8" stroke="#475569" stroke-width="1.5"/>
+<text x="1114.0" y="104.8" font-size="15" fill="#1f2937" font-weight="bold" text-anchor="start">Integridad</text>
+<text x="1114.0" y="123.9" font-size="13.5" fill="#1f2937" font-weight="normal" text-anchor="start">llaves foráneas hacia assets (1 : N)</text>
+<text x="1114.0" y="142.6" font-size="13.5" fill="#1f2937" font-weight="normal" text-anchor="start">restricciones únicas: sin duplicados + índices</text>
+<text x="1114.0" y="161.2" font-size="13.5" fill="#1f2937" font-weight="normal" text-anchor="start">upsert: recalcular no duplica filas</text>
+<text x="1114.0" y="179.8" font-size="13.5" fill="#1f2937" font-weight="normal" text-anchor="start">borrado en cascada desde assets</text>
+<text x="1114.0" y="198.5" font-size="13.5" fill="#1f2937" font-weight="normal" text-anchor="start">columnas derivadas a propósito: registro</text>
+<text x="1114.0" y="217.1" font-size="13.5" fill="#1f2937" font-weight="normal" text-anchor="start">de lo que la plataforma calculó y mostró</text>
+<text x="1114.0" y="235.7" font-size="13.5" fill="#1f2937" font-weight="normal" text-anchor="start">funciona igual en PostgreSQL (DATABASE_URL)</text>
+</svg>

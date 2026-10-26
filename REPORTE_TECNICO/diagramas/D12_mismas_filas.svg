@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="770" viewBox="0 0 1600 770" font-family="Arial, Helvetica, sans-serif">
+<title>Mismas filas de prueba para los cinco modelos</title>
+<defs>
+  <marker id="flecha" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <path d="M0,0 L10,5 L0,10 z" fill="#8a94a6"/>
+  </marker>
+  <marker id="flecha-azul" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <path d="M0,0 L10,5 L0,10 z" fill="#2a78d6"/>
+  </marker>
+  <marker id="flecha-naranja" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <path d="M0,0 L10,5 L0,10 z" fill="#eb6834"/>
+  </marker>
+  <marker id="flecha-ambar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+    <path d="M0,0 L10,5 L0,10 z" fill="#c27c0e"/>
+  </marker>
+  <pattern id="rayado" width="8" height="8" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+    <rect width="8" height="8" fill="#f3f4f6"/>
+    <line x1="0" y1="0" x2="0" y2="8" stroke="#9aa3ae" stroke-width="2"/>
+  </pattern>
+</defs>
+<rect x="0" y="0" width="1600" height="770" fill="#ffffff"/>
+<text x="30.0" y="50.0" font-size="18" fill="#1f2937" font-weight="bold" text-anchor="start">Etapas 1 a 3: cada conjunto se cortaba por separado</text>
+<rect x="330.0" y="70.0" width="530.0" height="30.0" rx="6" fill="#fdf3e1" stroke="#c27c0e" stroke-width="1.5"/>
+<text x="595.0" y="91.0" font-size="13.5" fill="#c27c0e" font-weight="bold" text-anchor="middle">validación 2024</text>
+<rect x="860.0" y="70.0" width="680.0" height="30.0" rx="6" fill="#fdeee6" stroke="#eb6834" stroke-width="1.5"/>
+<text x="1200.0" y="91.0" font-size="13.5" fill="#eb6834" font-weight="bold" text-anchor="middle">prueba 2025 (248 días hábiles por acción)</text>
+<text x="30.0" y="145.0" font-size="14.5" fill="#1f2937" font-weight="normal" text-anchor="start">LR y XGBoost</text>
+<rect x="860.0" y="125.0" width="680.0" height="28.0" rx="5" fill="#2a78d6" stroke="none" stroke-width="1.5"/>
+<text x="1530.0" y="144.0" font-size="13.5" fill="#ffffff" font-weight="bold" text-anchor="end">248 días</text>
+<text x="30.0" y="187.0" font-size="14.5" fill="#1f2937" font-weight="normal" text-anchor="start">Redes, ventana de 20</text>
+<rect x="860.0" y="167.0" width="54.8" height="28.0" rx="5" fill="url(#rayado)" stroke="#9aa3ae" stroke-width="1.5"/>
+<rect x="914.8" y="167.0" width="625.2" height="28.0" rx="5" fill="#a9c9f2" stroke="none" stroke-width="1.5"/>
+<text x="1530.0" y="186.0" font-size="13.5" fill="#1f2937" font-weight="bold" text-anchor="end">228 días</text>
+<text x="30.0" y="229.0" font-size="14.5" fill="#1f2937" font-weight="normal" text-anchor="start">Redes, ventana de 60</text>
+<rect x="860.0" y="209.0" width="164.5" height="28.0" rx="5" fill="url(#rayado)" stroke="#9aa3ae" stroke-width="1.5"/>
+<rect x="1024.5" y="209.0" width="515.5" height="28.0" rx="5" fill="#a9c9f2" stroke="none" stroke-width="1.5"/>
+<text x="1530.0" y="228.0" font-size="13.5" fill="#1f2937" font-weight="bold" text-anchor="end">188 días</text>
+<text x="30.0" y="269.0" font-size="14" fill="#c0392b" font-weight="normal" text-anchor="start">Los primeros días de prueba no tenían ventana completa y se descartaban: cada modelo se evaluaba sobre días distintos.</text>
+<text x="30.0" y="330.0" font-size="18" fill="#1f2937" font-weight="bold" text-anchor="start">Etapa 4: ventanas sobre la serie continua, asignadas por la fecha de la etiqueta</text>
+<rect x="330.0" y="350.0" width="530.0" height="30.0" rx="6" fill="#fdf3e1" stroke="#c27c0e" stroke-width="1.5"/>
+<text x="595.0" y="371.0" font-size="13.5" fill="#c27c0e" font-weight="bold" text-anchor="middle">validación 2024</text>
+<rect x="860.0" y="350.0" width="680.0" height="30.0" rx="6" fill="#fdeee6" stroke="#eb6834" stroke-width="1.5"/>
+<text x="1200.0" y="371.0" font-size="13.5" fill="#eb6834" font-weight="bold" text-anchor="middle">prueba 2025 (248 días hábiles por acción)</text>
+<text x="30.0" y="425.0" font-size="14.5" fill="#1f2937" font-weight="normal" text-anchor="start">LR y XGBoost</text>
+<rect x="860.0" y="405.0" width="680.0" height="28.0" rx="5" fill="#2a78d6" stroke="none" stroke-width="1.5"/>
+<text x="1530.0" y="424.0" font-size="13.5" fill="#ffffff" font-weight="bold" text-anchor="end">248 días</text>
+<text x="30.0" y="467.0" font-size="14.5" fill="#1f2937" font-weight="normal" text-anchor="start">LSTM y CNN 1D (ventana de 10)</text>
+<rect x="860.0" y="447.0" width="680.0" height="28.0" rx="5" fill="#2a78d6" stroke="none" stroke-width="1.5"/>
+<text x="1530.0" y="466.0" font-size="13.5" fill="#ffffff" font-weight="bold" text-anchor="end">248 días</text>
+<text x="30.0" y="509.0" font-size="14.5" fill="#1f2937" font-weight="normal" text-anchor="start">CNN-LSTM (ventana de 20)</text>
+<rect x="860.0" y="489.0" width="680.0" height="28.0" rx="5" fill="#2a78d6" stroke="none" stroke-width="1.5"/>
+<text x="1530.0" y="508.0" font-size="13.5" fill="#ffffff" font-weight="bold" text-anchor="end">248 días</text>
+<rect x="805.2" y="545.0" width="54.8" height="26.0" rx="4" fill="#eaf2fd" stroke="#2a78d6" stroke-width="1.5" stroke-dasharray="4 3"/>
+<path d="M862.0,558.0 L900.0,558.0" fill="none" stroke="#2a78d6" stroke-width="1.8" marker-end="url(#flecha-azul)"/>
+<text x="908.0" y="563.0" font-size="13.5" fill="#1c518f" font-weight="normal" text-anchor="start">ventana del primer día de prueba: usa días de validación (solo pasado; no es fuga)</text>
+<rect x="30.0" y="605.0" width="1510.0" height="120.0" rx="10" fill="#f1f4f8" stroke="#475569" stroke-width="1.5"/>
+<text x="44.0" y="649.8" font-size="14.5" fill="#1f2937" font-weight="normal" text-anchor="start">Resultado: los cinco modelos se evalúan sobre las mismas 1 736 filas (7 acciones × 248 días) y con las mismas ocho métricas.</text>
+<text x="44.0" y="669.8" font-size="14.5" fill="#1f2937" font-weight="normal" text-anchor="start">Detalle: para la fila del día t la ventana abarca t − W … t − 1, así que las redes no ven el día t (la LR sí).</text>
+<text x="44.0" y="689.8" font-size="14.5" fill="#1f2937" font-weight="normal" text-anchor="start">Medido con la LR: quitarle el día t le cuesta ≈ 0.007 de F1, mucho menos que la diferencia con las redes.</text>
+</svg>
