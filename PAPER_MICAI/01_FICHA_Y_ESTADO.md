@@ -30,7 +30,7 @@
 
 1. **Responder a Springer** en el mismo hilo del correo de Atchaya con el
    suplementario y el zip corregido. Texto listo en
-   `../paper_review/correo_springer.txt`. *Si ya se envió, marcarlo aquí con
+   `paper_review/correo_springer.txt`. *Si ya se envió, marcarlo aquí con
    la fecha.*
 2. **Preguntar si hace falta un nuevo formulario de licencia** por el
    apellido corregido (el correo ya lo pregunta).
@@ -55,7 +55,7 @@ versión publicada (*Version of Record*):
 > Accepted Version is subject to the publisher's Accepted Manuscript terms of
 > use https://www.springernature.com/gp/open-research/policies/accepted-manuscript-terms
 
-`../paper_review/paper.pdf` ya lleva el aviso (con el DOI pendiente). Para
+`paper_review/paper.pdf` ya lleva el aviso (con el DOI pendiente). Para
 incluirlo en el reporte técnico ver `05_INCLUSION_EN_EL_REPORTE.md` §3.
 
 ## Cómo citarlo

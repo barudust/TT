@@ -1,9 +1,9 @@
 """Genera el guion de la presentación de MICAI en Markdown y en una versión
 imprimible (HTML → PDF con Chrome o Edge), a partir de guion.py.
 
-Uso (desde la raíz del repositorio):
+Uso (desde la raíz del repositorio del artículo; dentro del TT, PAPER_MICAI/):
 
-    python PAPER_MICAI/presentacion_micai/fuente/generar_guion.py
+    python presentacion_micai/fuente/generar_guion.py
 """
 
 from __future__ import annotations
@@ -16,7 +16,8 @@ from pathlib import Path
 
 AQUI = Path(__file__).resolve().parent
 sys.path.insert(0, str(AQUI))
-from guion import DIAPOSITIVAS, FRASES_DE_APOYO, PREGUNTAS, PRONUNCIACION, RESPALDO  # noqa: E402
+from guion import (DIAPOSITIVAS, FRASES_DE_APOYO, PREGUNTAS, PRONUNCIACION, RESPALDO,  # noqa: E402
+                   VERSION_CORTA)
 
 SALIDA = AQUI.parent
 
@@ -81,6 +82,23 @@ def markdown() -> str:
             out.append(f"- {es}")
         if d.get("pase_es"):
             out.append(f"- → {d['pase_es']}")
+        out += ["", "</details>", ""]
+    out += [
+        "---",
+        "",
+        "## Versión de 2 minutos (solo si el moderador pide recortar)",
+        "",
+        "Si la sesión va retrasada y piden acortar, la dice **una sola persona** y solo se muestran",
+        "las diapositivas " + ", ".join(str(b["n"]) for b in VERSION_CORTA) + " (escribir el número y **Enter**).",
+        "",
+    ]
+    for b in VERSION_CORTA:
+        out.append(f"**Diapositiva {b['n']}**")
+        out.append("")
+        for en in b["en"]:
+            out.append(f"> **{en}**  ")
+        out += ["", "<details><summary>Traducción</summary>", ""]
+        out += [f"- {es}" for es in b["es"]]
         out += ["", "</details>", ""]
     out += ["---", "", "## Diapositivas de respaldo (solo si una pregunta las necesita)", ""]
     for n, desc in RESPALDO.items():
@@ -182,6 +200,13 @@ def html() -> str:
             h.append(f"<div class='pase'>→ {escape(d['pase'])}</div>")
         es = " ".join(d["es"]) + (f" → {d['pase_es']}" if d.get("pase_es") else "")
         h.append(f"<div class='es'>{escape(es)}</div></div>")
+    h.append("<h2 class='salto'>Versión de 2 minutos (solo si piden recortar)</h2>"
+             "<div class='meta'>Una sola persona; solo las diapositivas "
+             + ", ".join(str(b["n"]) for b in VERSION_CORTA) + " (número + Enter).</div>")
+    for b in VERSION_CORTA:
+        h.append(f"<div class='slide'><div class='cab'><b>Diapositiva {b['n']}</b></div>")
+        h += [f"<div class='en'>{escape(en)}</div>" for en in b["en"]]
+        h.append(f"<div class='es'>{escape(' '.join(b['es']))}</div></div>")
     h.append("<h2 class='salto'>Preguntas probables</h2>")
     for i, q in enumerate(PREGUNTAS, 1):
         h.append(f"<div class='q'><b>{i}. {escape(q['q'])}</b> <span class='t'>({escape(q['q_es'])} · "
@@ -220,4 +245,6 @@ if __name__ == "__main__":
     hp = AQUI / "guion_imprimible.html"
     hp.write_text(html(), encoding="utf-8")
     ok = a_pdf(hp, SALIDA / "GUION_imprimible.pdf")
+    if ok:
+        hp.unlink()
     print("guion listo" + ("" if ok else " (sin PDF: no se encontró Chrome ni Edge)"))

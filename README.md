@@ -25,7 +25,7 @@ Estado y pendientes: [`STATUS.md`](STATUS.md).
 ├── CONTEXTO.md                 # Punto de entrada: todo el contexto del proyecto
 ├── ESTUDIO_TT/                 # Serie de estudio y defensa (general → particular, con glosario y preguntas)
 ├── REPORTE_TECNICO/            # Revisión del reporte técnico: correcciones, textos, tablas, diagramas y gráficas
-├── PAPER_MICAI/                # Todo lo del artículo de MICAI 2026: ficha, contenido, cifras, presentación, preguntas
+├── PAPER_MICAI/                # Todo lo del artículo de MICAI 2026, autosuficiente (futuro repo aparte): docs, presentación, copia del código y datos
 ├── paper_review/               # Fuente LaTeX del paper MICAI 2026 (camera_ready/ = paquete final)
 ├── presentaciones/             # Fuentes de los decks (avances TT2, sinodales)
 ├── api/                        # API Flask (endpoints, modelo ML, SQLite)
@@ -121,7 +121,9 @@ VITE_API_URL=http://localhost:8000
 - **Corregir el reporte técnico** → [`REPORTE_TECNICO/README.md`](REPORTE_TECNICO/README.md)
   (qué cambiar capítulo por capítulo, con textos, tablas, diagramas y gráficas).
 - **Paper** → [`PAPER_MICAI/README.md`](PAPER_MICAI/README.md) (contenido, cifras, presentación
-  y preguntas del congreso); fuente y compilación en [`paper_review/README.md`](paper_review/README.md).
+  y preguntas del congreso, y copia de todo lo que el artículo cita para separarlo como
+  repositorio); fuente y compilación en [`paper_review/README.md`](paper_review/README.md).
+  Si se cambia algo del artículo aquí: `python PAPER_MICAI/sincronizar_desde_tt.py --copiar`.
 - **Presentaciones** → [`presentaciones/README.md`](presentaciones/README.md).
 - **Todo lo que se probó en el modelado** →
   [`RESULTADOS_OPTIMIZADOS/INVESTIGACION_COMPLETA.md`](RESULTADOS_OPTIMIZADOS/INVESTIGACION_COMPLETA.md);

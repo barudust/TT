@@ -310,3 +310,57 @@ FRASES_DE_APOYO = [
     ("Let me show you a backup slide.", "Le muestro una diapositiva de respaldo.", "let mi SHOU yu a BÁK-ap slaid."),
     ("We can talk more after the session.", "Podemos platicar más al final de la sesión.", "ui can tok mor ÁF-ter de SÉ-shon."),
 ]
+
+# Versión de 2 minutos, por si la sesión va retrasada y el moderador pide
+# recortar. La dice una sola persona y solo se muestran cuatro diapositivas
+# (en PowerPoint: escribir el número y Enter). ~170 palabras a ritmo lento.
+VERSION_CORTA = [
+    {
+        "n": 1,
+        "en": [
+            "Good morning. My name is [NAME], from the Instituto Politécnico Nacional, in Mexico City.",
+            "Our question is simple: for daily trading signals, do deep networks beat simple models?",
+            "Each day we predict one signal, buy, hold or sell, for seven big tech stocks, with free data from Yahoo Finance.",
+        ],
+        "es": [
+            "Buenos días. Me llamo [NOMBRE], del Instituto Politécnico Nacional, en la Ciudad de México.",
+            "Nuestra pregunta es simple: para señales diarias de trading, ¿las redes profundas le ganan a los modelos simples?",
+            "Cada día predecimos una señal, comprar, mantener o vender, para siete acciones grandes de tecnología, con datos gratis de Yahoo Finance.",
+        ],
+    },
+    {
+        "n": 5,
+        "en": [
+            "We compared five models: logistic regression, XGBoost, LSTM, CNN and CNN-LSTM. Same data, same test year: 2025.",
+            "Logistic regression was the best on average, with a macro F1 of zero point three nine nine.",
+        ],
+        "es": [
+            "Comparamos cinco modelos: regresión logística, XGBoost, LSTM, CNN y CNN-LSTM. Mismos datos, mismo año de prueba: 2025.",
+            "La regresión logística fue la mejor en promedio, con un F1-macro de 0.399.",
+        ],
+    },
+    {
+        "n": 9,
+        "en": [
+            "Then we gave all five models the same hyper-parameter search. The gap did not close.",
+            "Logistic regression got zero point four zero four, significantly better than the other four models.",
+        ],
+        "es": [
+            "Después les dimos a los cinco modelos la misma búsqueda de hiperparámetros. La diferencia no se cerró.",
+            "La regresión logística obtuvo 0.404, significativamente mejor que los otros cuatro modelos.",
+        ],
+    },
+    {
+        "n": 11,
+        "en": [
+            "Three messages. One: a simple linear model is hard to beat here.",
+            "Two: do not filter the features before training. Three: the stock matters more than the model.",
+            "Thank you. Questions?",
+        ],
+        "es": [
+            "Tres mensajes. Uno: aquí es difícil ganarle a un modelo lineal simple.",
+            "Dos: no filtren las variables antes de entrenar. Tres: la acción importa más que el modelo.",
+            "Gracias. ¿Preguntas?",
+        ],
+    },
+]

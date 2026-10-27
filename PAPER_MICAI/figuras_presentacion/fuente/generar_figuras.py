@@ -1,10 +1,10 @@
 """Figures for the MICAI 2026 talk (English), built only from what the paper reports.
 
-Usage (from the repository root):
+Usage (from the root of the paper repository; inside the TT repository, PAPER_MICAI/):
 
-    python PAPER_MICAI/figuras_presentacion/fuente/generar_figuras.py
+    python figuras_presentacion/fuente/generar_figuras.py
 
-Writes PNG (300 dpi) and SVG to PAPER_MICAI/figuras_presentacion/. Numbers
+Writes PNG (300 dpi) and SVG to figuras_presentacion/. Numbers
 come from the stored results that the paper cites (Stage 3 benchmark:
 RESULTADOS_OPTIMIZADOS/v4/resultados_v4.csv; Stage 4 robustness:
 RESULTADOS_OPTIMIZADOS/v5/) and, where the paper reports a derived value
@@ -27,7 +27,7 @@ import matplotlib.pyplot as plt  # noqa: E402
 import pandas as pd  # noqa: E402
 from matplotlib.lines import Line2D  # noqa: E402
 
-RAIZ = Path(__file__).resolve().parents[3]
+RAIZ = Path(__file__).resolve().parents[2]
 RO = RAIZ / "RESULTADOS_OPTIMIZADOS"
 SALIDA = Path(__file__).resolve().parents[1]
 

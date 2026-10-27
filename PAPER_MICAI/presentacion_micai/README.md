@@ -89,7 +89,9 @@ completas pasaron a diapositivas de respaldo.
       `GUION_imprimible.pdf`. Probar que la USB abre en otra computadora.
 - [ ] Imprimir el `GUION_imprimible.pdf` (una copia por expositor).
 - [ ] Llevar laptop y adaptador HDMI por si la computadora de la sede falla.
-- [ ] Ensayar al menos **tres veces completas con cronómetro** (ver §5).
+- [ ] Ensayar al menos **tres veces completas con cronómetro** (ver §5), y
+      una vez la **versión de 2 minutos** del guion, por si la sesión va
+      retrasada y el moderador pide recortar.
 - [ ] Revisar `../07_PREGUNTAS_MICAI.md` y las respuestas cortas del guion.
 - [ ] El día de la presentación: llegar a la sala **15 minutos antes** de la
       sesión, presentarse con el moderador (*session chair*) y cargar la
@@ -132,8 +134,8 @@ quiere poder regenerarlos.
 
 ```bash
 # Cambiar el texto del guion o de las notas: editar fuente/guion.py, luego:
-python PAPER_MICAI/presentacion_micai/fuente/generar_guion.py
-python PAPER_MICAI/presentacion_micai/fuente/construir_presentacion.py
+python presentacion_micai/fuente/generar_guion.py
+python presentacion_micai/fuente/construir_presentacion.py
 
 # Cambiar el diseño o los datos de una diapositiva: editar fuente/construir_presentacion.py
 ```

@@ -1,0 +1,86 @@
+{
+  "D1_criterio": {
+    "lstm": {
+      "elegida": "val_f1",
+      "motivo": "adoptada, delta=+0.0585 (std=0.0146)"
+    },
+    "cnn": {
+      "elegida": "val_loss",
+      "motivo": "sin efecto (se queda la de v4)"
+    },
+    "cnn_lstm": {
+      "elegida": "val_loss",
+      "motivo": "sin efecto (se queda la de v4)"
+    }
+  },
+  "D2_alineado": {
+    "lstm": {
+      "elegida": "si",
+      "motivo": "adoptada por dise\u00f1o (corrige asimetr\u00eda), delta=-0.0027"
+    },
+    "cnn": {
+      "elegida": "si",
+      "motivo": "adoptada por dise\u00f1o (corrige asimetr\u00eda), delta=+0.0133"
+    },
+    "cnn_lstm": {
+      "elegida": "no",
+      "motivo": "NO adoptada: empeora -0.0265"
+    }
+  },
+  "D3_escalador": {
+    "lstm": {
+      "elegida": "minmax",
+      "motivo": "sin efecto (se queda la de v4)"
+    },
+    "cnn": {
+      "elegida": "minmax",
+      "motivo": "sin efecto (se queda la de v4)"
+    },
+    "cnn_lstm": {
+      "elegida": "minmax",
+      "motivo": "sin efecto (se queda la de v4)"
+    }
+  },
+  "D4_pesos": {
+    "lstm": {
+      "elegida": "balanced",
+      "motivo": "sin efecto (se queda la de v4)"
+    },
+    "cnn": {
+      "elegida": "balanced",
+      "motivo": "sin efecto (se queda la de v4)"
+    },
+    "cnn_lstm": {
+      "elegida": "balanced",
+      "motivo": "sin efecto (se queda la de v4)"
+    }
+  },
+  "D5_pooling": {
+    "lstm": {
+      "elegida": "last",
+      "motivo": "sin efecto (se queda la de v4)"
+    },
+    "cnn": {
+      "elegida": "gap_gmp",
+      "motivo": "sin efecto (se queda la de v4)"
+    },
+    "cnn_lstm": {
+      "elegida": "last",
+      "motivo": "sin efecto (se queda la de v4)"
+    }
+  },
+  "D6_refit": {
+    "lstm": {
+      "elegida": "no",
+      "motivo": "NO adoptada: empeora -0.0474"
+    },
+    "cnn": {
+      "elegida": "no",
+      "motivo": "NO adoptada: empeora -0.0242"
+    },
+    "cnn_lstm": {
+      "elegida": "no",
+      "motivo": "NO adoptada: empeora -0.0419"
+    }
+  }
+}

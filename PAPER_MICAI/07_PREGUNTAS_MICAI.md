@@ -1,7 +1,7 @@
 # 07 — Preguntas probables en MICAI (inglés y español)
 
 > Respuestas cortas para el público del congreso. Las de los sinodales sobre
-> el artículo están en `../ESTUDIO_TT/D_defensa/D7_PREGUNTAS_PAPER.md`.
+> el artículo están en [`ESTUDIO_TT/D_defensa/D7_PREGUNTAS_PAPER.md`](https://github.com/barudust/TT/blob/main/ESTUDIO_TT/D_defensa/D7_PREGUNTAS_PAPER.md) (repositorio del TT).
 > Regla: responder con lo que dice el artículo; si la pregunta va más allá,
 > se puede mencionar lo que el TT hizo después, aclarando "since submission".
 

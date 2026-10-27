@@ -12,11 +12,11 @@ paper reports; the script checks them against Tables 3 and 4.
 | `P05_sharpe_variance_decomposition` | Ticker 15.5 % vs model 3.4 % of Sharpe variation | §7.3 | 10 |
 | `P06_benchmark_to_corrected_protocol` | Each model from Section 7 to Section 8 (Exp B) | §8 | 12 (alt.) |
 
-Also usable from the paper: `../../paper_review/figures/fig_signal_dist.png`
+Also usable from the paper: `../paper_review/figures/fig_signal_dist.png`
 (Figure 1) and `fig_sharpe_heatmap.png` (supplementary S4).
 
 Regenerate:
 
 ```bash
-python PAPER_MICAI/figuras_presentacion/fuente/generar_figuras.py
+python figuras_presentacion/fuente/generar_figuras.py
 ```

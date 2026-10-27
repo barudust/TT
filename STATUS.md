@@ -4,6 +4,21 @@
 
 Última actualización: 2026-10-26.
 
+## Carpeta del paper lista para separarse como repositorio (2026-10-26)
+
+- `PAPER_MICAI/` ya no depende de nada fuera de ella. Tiene copia exacta, con las
+  mismas rutas, de lo que el artículo cita: `paper_review/`, el código de la Tabla
+  S4, los 7 parquet, los resultados de las Etapas 2–4 y los documentos de §6 y §8.
+  Las copias se mantienen al día con `python PAPER_MICAI/sincronizar_desde_tt.py`.
+- Probada fuera del TT: las tablas regeneradas salen idénticas, el suplementario y
+  el artículo compilan (12 páginas), y `replicar_lr_v4.py` reproduce las 24
+  corridas de LR.
+- Nuevos: `requirements.txt` completo, `verificar_datos.py` (SHA-256 de la Tabla
+  S5), `CITATION.cff`, `.gitignore` que deja fuera lo privado de Springer, y una
+  versión de 2 minutos del guion del congreso.
+- Pendiente de los autores: elegir licencia del código y crear el repositorio
+  (pasos en `PAPER_MICAI/README.md`).
+
 ## Revisión del reporte técnico y carpeta del paper (2026-10-26)
 
 - `REPORTE_TECNICO/`: revisión completa del reporte (versión 21/10/2026, 105 pp.)

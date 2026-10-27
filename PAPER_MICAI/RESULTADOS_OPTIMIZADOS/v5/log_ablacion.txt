@@ -1,0 +1,91 @@
+Dispositivo: cuda — NVIDIA GeForce RTX 5060 Ti
+==============================================================================
+  V1 — torneo de decisiones de protocolo
+  modo dev: entrena 2018-2022, elige época con 2023, DECIDE con 2024
+  Exp B GLOBAL, 5 semillas por variante
+==============================================================================
+
+  ── D1_criterio ───────────────────────────────────────────────
+  LSTM      val_loss                 val_f1=0.2514 (sem 0.2561±0.0226)  eval_f1=0.2882 (sem 0.2859±0.0305)  Sharpe=-0.394  [51s ep=[21, 1, 16, 13, 16]]
+  LSTM      val_f1                   val_f1=0.3671 (sem 0.3521±0.0065)  eval_f1=0.3489 (sem 0.3444±0.0146)  Sharpe=-0.140  [52s ep=[5, 12, 13, 20, 24]]
+  LSTM      val_f1_ma3               val_f1=0.3440 (sem 0.3335±0.0181)  eval_f1=0.3486 (sem 0.3336±0.0090)  Sharpe=-0.535  [60s ep=[27, 28, 15, 20, 9]]
+    → LSTM      val_f1  [adoptada, delta=+0.0585 (std=0.0146)]
+  CNN       val_loss                 val_f1=0.2339 (sem 0.2462±0.0240)  eval_f1=0.2949 (sem 0.3006±0.0289)  Sharpe=-0.181  [38s ep=[4, 9, 4, 4, 9]]
+  CNN       val_f1                   val_f1=0.3695 (sem 0.3589±0.0040)  eval_f1=0.3309 (sem 0.3279±0.0085)  Sharpe=-0.308  [60s ep=[20, 15, 24, 12, 14]]
+  CNN       val_f1_ma3               val_f1=0.3425 (sem 0.3340±0.0068)  eval_f1=0.3254 (sem 0.3226±0.0179)  Sharpe=-0.503  [63s ep=[25, 5, 25, 1, 41]]
+    → CNN       val_loss  [sin efecto (se queda la de v4)]
+  CNN-LSTM  val_loss                 val_f1=0.2916 (sem 0.2936±0.0164)  eval_f1=0.3374 (sem 0.3350±0.0098)  Sharpe=-0.417  [39s ep=[9, 3, 4, 6, 3]]
+  CNN-LSTM  val_f1                   val_f1=0.3559 (sem 0.3543±0.0030)  eval_f1=0.3301 (sem 0.3348±0.0062)  Sharpe=-0.805  [58s ep=[13, 9, 27, 10, 19]]
+  CNN-LSTM  val_f1_ma3               val_f1=0.3563 (sem 0.3381±0.0115)  eval_f1=0.3199 (sem 0.3100±0.0240)  Sharpe=-0.922  [63s ep=[5, 21, 29, 12, 23]]
+    → CNN-LSTM  val_loss  [sin efecto (se queda la de v4)]
+
+  ── D2_alineado ───────────────────────────────────────────────
+  LSTM      no                       val_f1=0.3671 (sem 0.3521±0.0065)  eval_f1=0.3489 (sem 0.3444±0.0146)  Sharpe=-0.140  [52s ep=[5, 12, 13, 20, 24]]
+  LSTM      si                       val_f1=0.3531 (sem 0.3538±0.0067)  eval_f1=0.3475 (sem 0.3417±0.0127)  Sharpe=-0.534  [48s ep=[11, 6, 3, 21, 12]]
+    → LSTM      si  [adoptada por diseño (corrige asimetría), delta=-0.0027]
+  CNN       no                       val_f1=0.2339 (sem 0.2462±0.0240)  eval_f1=0.2949 (sem 0.3006±0.0289)  Sharpe=-0.181  [40s ep=[4, 9, 4, 4, 9]]
+  CNN       si                       val_f1=0.2474 (sem 0.2540±0.0138)  eval_f1=0.3331 (sem 0.3139±0.0221)  Sharpe=-0.189  [48s ep=[2, 4, 13, 17, 19]]
+    → CNN       si  [adoptada por diseño (corrige asimetría), delta=+0.0133]
+  CNN-LSTM  no                       val_f1=0.2916 (sem 0.2936±0.0164)  eval_f1=0.3374 (sem 0.3350±0.0098)  Sharpe=-0.417  [38s ep=[9, 3, 4, 6, 3]]
+  CNN-LSTM  si                       val_f1=0.2488 (sem 0.2688±0.0333)  eval_f1=0.3062 (sem 0.3085±0.0194)  Sharpe=-0.792  [38s ep=[6, 3, 8, 3, 3]]
+    → CNN-LSTM  no  [NO adoptada: empeora -0.0265]
+
+  ── D3_escalador ──────────────────────────────────────────────
+  LSTM      minmax                   val_f1=0.3531 (sem 0.3538±0.0067)  eval_f1=0.3475 (sem 0.3417±0.0127)  Sharpe=-0.534  [46s ep=[11, 6, 3, 21, 12]]
+  LSTM      standard                 val_f1=0.3569 (sem 0.3539±0.0085)  eval_f1=0.3398 (sem 0.3372±0.0237)  Sharpe=-0.141  [37s ep=[4, 11, 2, 8, 2]]
+  LSTM      robust_clip5             val_f1=0.3560 (sem 0.3461±0.0079)  eval_f1=0.3046 (sem 0.3093±0.0229)  Sharpe=-0.583  [43s ep=[4, 11, 9, 10, 8]]
+    → LSTM      minmax  [sin efecto (se queda la de v4)]
+  CNN       minmax                   val_f1=0.2474 (sem 0.2540±0.0138)  eval_f1=0.3331 (sem 0.3139±0.0221)  Sharpe=-0.189  [49s ep=[2, 4, 13, 17, 19]]
+  CNN       standard                 val_f1=0.2377 (sem 0.2608±0.0170)  eval_f1=0.3512 (sem 0.3263±0.0287)  Sharpe=-0.247  [39s ep=[2, 4, 2, 8, 10]]
+  CNN       robust_clip5             val_f1=0.2391 (sem 0.2547±0.0091)  eval_f1=0.3245 (sem 0.3198±0.0246)  Sharpe=-0.624  [39s ep=[6, 10, 2, 4, 6]]
+    → CNN       minmax  [sin efecto (se queda la de v4)]
+  CNN-LSTM  minmax                   val_f1=0.2916 (sem 0.2936±0.0164)  eval_f1=0.3374 (sem 0.3350±0.0098)  Sharpe=-0.417  [39s ep=[9, 3, 4, 6, 3]]
+  CNN-LSTM  standard                 val_f1=0.2697 (sem 0.2834±0.0343)  eval_f1=0.3275 (sem 0.3153±0.0393)  Sharpe=-0.238  [35s ep=[2, 1, 4, 5, 4]]
+  CNN-LSTM  robust_clip5             val_f1=0.2543 (sem 0.2681±0.0186)  eval_f1=0.3321 (sem 0.3059±0.0367)  Sharpe=-0.455  [34s ep=[3, 1, 4, 2, 4]]
+    → CNN-LSTM  minmax  [sin efecto (se queda la de v4)]
+
+  ── D4_pesos ──────────────────────────────────────────────────
+  LSTM      balanced                 val_f1=0.3531 (sem 0.3538±0.0067)  eval_f1=0.3475 (sem 0.3417±0.0127)  Sharpe=-0.534  [46s ep=[11, 6, 3, 21, 12]]
+  LSTM      none                     val_f1=0.3392 (sem 0.3261±0.0106)  eval_f1=0.3530 (sem 0.3450±0.0098)  Sharpe=-0.251  [49s ep=[11, 6, 19, 9, 18]]
+  LSTM      sqrt                     val_f1=0.3546 (sem 0.3443±0.0121)  eval_f1=0.3580 (sem 0.3471±0.0098)  Sharpe=-0.347  [42s ep=[11, 6, 3, 9, 12]]
+    → LSTM      balanced  [sin efecto (se queda la de v4)]
+  CNN       balanced                 val_f1=0.2474 (sem 0.2540±0.0138)  eval_f1=0.3331 (sem 0.3139±0.0221)  Sharpe=-0.189  [49s ep=[2, 4, 13, 17, 19]]
+  CNN       none                     val_f1=0.2293 (sem 0.2423±0.0170)  eval_f1=0.3118 (sem 0.3039±0.0308)  Sharpe=-0.349  [46s ep=[19, 4, 3, 17, 5]]
+  CNN       sqrt                     val_f1=0.2190 (sem 0.2401±0.0159)  eval_f1=0.3042 (sem 0.2932±0.0362)  Sharpe=-0.418  [43s ep=[2, 4, 15, 12, 8]]
+    → CNN       balanced  [sin efecto (se queda la de v4)]
+  CNN-LSTM  balanced                 val_f1=0.2916 (sem 0.2936±0.0164)  eval_f1=0.3374 (sem 0.3350±0.0098)  Sharpe=-0.417  [38s ep=[9, 3, 4, 6, 3]]
+  CNN-LSTM  none                     val_f1=0.2438 (sem 0.2546±0.0140)  eval_f1=0.3080 (sem 0.3118±0.0080)  Sharpe=-0.336  [38s ep=[9, 3, 4, 6, 3]]
+  CNN-LSTM  sqrt                     val_f1=0.2531 (sem 0.2632±0.0129)  eval_f1=0.3063 (sem 0.3154±0.0069)  Sharpe=-0.483  [38s ep=[9, 3, 4, 6, 3]]
+    → CNN-LSTM  balanced  [sin efecto (se queda la de v4)]
+
+  ── D5_pooling ────────────────────────────────────────────────
+  LSTM      last                     val_f1=0.3531 (sem 0.3538±0.0067)  eval_f1=0.3475 (sem 0.3417±0.0127)  Sharpe=-0.534  [46s ep=[11, 6, 3, 21, 12]]
+  LSTM      meanmax                  val_f1=0.3524 (sem 0.3463±0.0213)  eval_f1=0.3393 (sem 0.3356±0.0138)  Sharpe=-0.462  [51s ep=[17, 13, 2, 15, 16]]
+  LSTM      attn                     val_f1=0.3533 (sem 0.3490±0.0045)  eval_f1=0.3442 (sem 0.3463±0.0086)  Sharpe=-0.592  [69s ep=[24, 27, 12, 16, 23]]
+    → LSTM      last  [sin efecto (se queda la de v4)]
+  CNN       gap_gmp                  val_f1=0.2474 (sem 0.2540±0.0138)  eval_f1=0.3331 (sem 0.3139±0.0221)  Sharpe=-0.189  [49s ep=[2, 4, 13, 17, 19]]
+  CNN       gap                      val_f1=0.2397 (sem 0.2712±0.0300)  eval_f1=0.3355 (sem 0.3075±0.0289)  Sharpe=-0.326  [34s ep=[2, 1, 6, 1, 11]]
+  CNN       flatten                  val_f1=0.2677 (sem 0.2895±0.0323)  eval_f1=0.3296 (sem 0.3306±0.0196)  Sharpe=-0.135  [33s ep=[2, 3, 6, 5, 2]]
+    → CNN       gap_gmp  [sin efecto (se queda la de v4)]
+  CNN-LSTM  last                     val_f1=0.2916 (sem 0.2936±0.0164)  eval_f1=0.3374 (sem 0.3350±0.0098)  Sharpe=-0.417  [39s ep=[9, 3, 4, 6, 3]]
+  CNN-LSTM  meanmax                  val_f1=0.2307 (sem 0.2464±0.0183)  eval_f1=0.3104 (sem 0.3055±0.0293)  Sharpe=-0.369  [40s ep=[2, 3, 9, 4, 4]]
+  CNN-LSTM  attn                     val_f1=0.2299 (sem 0.2581±0.0365)  eval_f1=0.3201 (sem 0.3051±0.0382)  Sharpe=-0.030  [41s ep=[1, 10, 2, 5, 3]]
+    → CNN-LSTM  last  [sin efecto (se queda la de v4)]
+
+  ── D6_refit ──────────────────────────────────────────────────
+  LSTM      no                       val_f1=0.3531 (sem 0.3538±0.0067)  eval_f1=0.3475 (sem 0.3417±0.0127)  Sharpe=-0.534  [46s ep=[11, 6, 3, 21, 12]]
+  LSTM      si                       val_f1=0.3531 (sem 0.3538±0.0067)  eval_f1=0.2870 (sem 0.2943±0.0328)  Sharpe=-0.240  [68s ep=[11, 6, 3, 21, 12]]
+    → LSTM      no  [NO adoptada: empeora -0.0474]
+  CNN       no                       val_f1=0.2474 (sem 0.2540±0.0138)  eval_f1=0.3331 (sem 0.3139±0.0221)  Sharpe=-0.189  [50s ep=[2, 4, 13, 17, 19]]
+  CNN       si                       val_f1=0.2474 (sem 0.2540±0.0138)  eval_f1=0.3330 (sem 0.2897±0.0263)  Sharpe=-0.043  [73s ep=[2, 4, 13, 17, 19]]
+    → CNN       no  [NO adoptada: empeora -0.0242]
+  CNN-LSTM  no                       val_f1=0.2916 (sem 0.2936±0.0164)  eval_f1=0.3374 (sem 0.3350±0.0098)  Sharpe=-0.417  [40s ep=[9, 3, 4, 6, 3]]
+  CNN-LSTM  si                       val_f1=0.2916 (sem 0.2936±0.0164)  eval_f1=0.3464 (sem 0.2931±0.0374)  Sharpe=-0.260  [50s ep=[9, 3, 4, 6, 3]]
+    → CNN-LSTM  no  [NO adoptada: empeora -0.0419]
+
+  Base v5 congelada → RESULTADOS_OPTIMIZADOS\v5\base_v5.json
+    lstm: lstm_lb20_h128_l2_val_f1_ali
+    cnn: cnn_lb20_h128_l2_val_loss_ali
+    cnn_lstm: cnn_lstm_lb20_h128_l2_val_loss
+
+[ablacion] tiempo total: 37.2 min

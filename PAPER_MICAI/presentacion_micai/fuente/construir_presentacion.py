@@ -1,10 +1,10 @@
 """Construye la presentación de MICAI 2026 sobre la plantilla oficial.
 
-Uso (desde la raíz del repositorio):
+Uso (desde la raíz del repositorio del artículo; dentro del TT, PAPER_MICAI/):
 
-    python PAPER_MICAI/presentacion_micai/fuente/construir_presentacion.py
+    python presentacion_micai/fuente/construir_presentacion.py
 
-Salida: PAPER_MICAI/presentacion_micai/MICAI2026_benchmark_trading_signals.pptx
+Salida: presentacion_micai/MICAI2026_benchmark_trading_signals.pptx
 
 - Portada y cierre con los diseños de la plantilla oficial de MICAI (la
   portada cumple los tres componentes que pide: título, autores con

@@ -2,7 +2,7 @@
 
 > Qué parte del TT publica el artículo, qué hizo el TT después y los
 > detalles finos que conviene saber antes de presentar o citar el artículo.
-> Nombres de etapas: `../ESTUDIO_TT/03_MAPA_DE_EXPERIMENTOS.md`.
+> Nombres de etapas: `ESTUDIO_TT/03_MAPA_DE_EXPERIMENTOS.md`.
 
 ---
 

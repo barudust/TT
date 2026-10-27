@@ -23,7 +23,7 @@ internacional con publicación en Springer.
 - La licencia de Springer (*Licence to Publish*, cláusula 4(c)) permite al
   autor publicar el **manuscrito aceptado** en su sitio personal con el aviso
   de la versión de registro (texto en `01_FICHA_Y_ESTADO.md`). El PDF
-  `../paper_review/paper.pdf` ya lo lleva.
+  `paper_review/paper.pdf` ya lo lleva.
 - Las licencias de Springer para capítulos suelen permitir que el autor
   **incluya su contribución en su propia tesis** citando la versión
   publicada. **Antes de usar la opción D, revisar el formulario firmado**
@@ -38,11 +38,11 @@ internacional con publicación en Springer.
 | Lugar del reporte | Qué agregar | Texto |
 |---|---|---|
 | Resumen y abstract | Una frase al final | §5.1 |
-| 1.5 Productos del trabajo | El artículo como segundo producto | `../REPORTE_TECNICO/textos/T01_resumen_abstract_intro.md` §4 |
-| 3.6 Brecha de investigación | "La comparación fue publicada en MICAI 2026 [ref.]" | `../REPORTE_TECNICO/correcciones/C03_ESTADO_DEL_ARTE.md` 3-08 |
-| 4.6 Mismas características | Citar §6 del artículo (11 de 15) | `../REPORTE_TECNICO/textos/T03_justificaciones_sinodal.md` §1 |
+| 1.5 Productos del trabajo | El artículo como segundo producto | [`REPORTE_TECNICO/textos/T01_resumen_abstract_intro.md`](https://github.com/barudust/TT/blob/main/REPORTE_TECNICO/textos/T01_resumen_abstract_intro.md) §4 |
+| 3.6 Brecha de investigación | "La comparación fue publicada en MICAI 2026 [ref.]" | [`REPORTE_TECNICO/correcciones/C03_ESTADO_DEL_ARTE.md`](https://github.com/barudust/TT/blob/main/REPORTE_TECNICO/correcciones/C03_ESTADO_DEL_ARTE.md) 3-08 |
+| 4.6 Mismas características | Citar §6 del artículo (11 de 15) | [`REPORTE_TECNICO/textos/T03_justificaciones_sinodal.md`](https://github.com/barudust/TT/blob/main/REPORTE_TECNICO/textos/T03_justificaciones_sinodal.md) §1 |
 | 6.3 Etapa 2 | Citar §6 | — |
-| 6.4 Etapa 3 | "Estos resultados se publicaron en [ref., §7]" | `../REPORTE_TECNICO/textos/T06_resultados.md` §6.4 |
+| 6.4 Etapa 3 | "Estos resultados se publicaron en [ref., §7]" | [`REPORTE_TECNICO/textos/T06_resultados.md`](https://github.com/barudust/TT/blob/main/REPORTE_TECNICO/textos/T06_resultados.md) §6.4 |
 | 6.5 Etapa 4 | "La verificación con el protocolo final se publicó en [ref., §8]" | §5.3 abajo |
 | 7.2 Cumplimiento de objetivos | Mencionarlo en el objetivo 3 | §5.4 abajo |
 | Referencias | La referencia del artículo | `01_FICHA_Y_ESTADO.md` |

@@ -1,0 +1,41 @@
+# ── Privado (Springer): NUNCA subir ─────────────────────────────────────────
+# El zip para Springer lleva el PDF del artículo SIN el aviso de la licencia;
+# el formulario de copyright va firmado. Ver README, "Lo que no se sube".
+paper_review/_envio_springer/
+*_copyright.pdf
+*.zip
+
+# ── PDF: solo los públicos ──────────────────────────────────────────────────
+*.pdf
+!paper_review/paper.pdf
+!paper_review/supplementary/MICAI2026_ch171490174_supplementary.pdf
+!presentacion_micai/MICAI2026_benchmark_trading_signals.pdf
+!presentacion_micai/GUION_imprimible.pdf
+
+# ── Datos: solo los del artículo ────────────────────────────────────────────
+*.parquet
+!tesis_ml_stocks/01_raw_datasets/*.parquet
+
+# ── LaTeX ───────────────────────────────────────────────────────────────────
+*.aux
+*.log
+*.out
+*.toc
+*.bbl
+*.blg
+*.fls
+*.fdb_latexmk
+*.synctex.gz
+
+# ── Python ──────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+# replicar_lr_v4.py escribe aquí mientras corre
+*.tmp.csv
+
+# ── Office y sistema ────────────────────────────────────────────────────────
+~$*
+.DS_Store
+Thumbs.db

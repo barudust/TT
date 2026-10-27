@@ -1,0 +1,55 @@
+cff-version: 1.2.0
+message: "If you use this code or these results, please cite the paper below."
+title: "A Benchmark of Five Machine-Learning Architectures for Daily Trading-Signal Classification on US Tech Equities — code, data and results"
+type: software
+authors:
+  - family-names: "Polvo Cuatianquiz"
+    given-names: "Jesus Baruc"
+    affiliation: "Escuela Superior de Cómputo, Instituto Politécnico Nacional"
+  - family-names: "Reyes Vera"
+    given-names: "Abdiel"
+    affiliation: "Escuela Superior de Cómputo, Instituto Politécnico Nacional"
+  - family-names: "Juárez Carbajal"
+    given-names: "Emmanuel"
+    affiliation: "Centro de Investigación en Computación, Instituto Politécnico Nacional"
+  - family-names: "Reyes Ramos"
+    given-names: "David"
+    affiliation: "Escuela Superior de Cómputo, Instituto Politécnico Nacional"
+  - family-names: "Aragón García"
+    given-names: "Maribel"
+    affiliation: "Escuela Superior de Cómputo, Instituto Politécnico Nacional"
+repository-code: "https://github.com/barudust/TT"
+keywords:
+  - trading signals
+  - classification
+  - deep learning
+  - logistic regression
+  - XGBoost
+  - LSTM
+  - CNN
+preferred-citation:
+  type: conference-paper
+  title: "A Benchmark of Five Machine-Learning Architectures for Daily Trading-Signal Classification on US Tech Equities"
+  authors:
+    - family-names: "Polvo Cuatianquiz"
+      given-names: "Jesus Baruc"
+    - family-names: "Reyes Vera"
+      given-names: "Abdiel"
+    - family-names: "Juárez Carbajal"
+      given-names: "Emmanuel"
+    - family-names: "Reyes Ramos"
+      given-names: "David"
+    - family-names: "Aragón García"
+      given-names: "Maribel"
+  collection-title: "MICAI 2026, Lecture Notes in Artificial Intelligence"
+  conference:
+    name: "Mexican International Conference on Artificial Intelligence (MICAI 2026)"
+    city: "Chihuahua"
+    country: "MX"
+    date-start: 2026-11-02
+    date-end: 2026-11-06
+  publisher:
+    name: "Springer"
+  year: 2026
+  status: in-press
+  # Cuando salga el capítulo: agregar  doi: "10.1007/..."  y las páginas (start/end).

@@ -1,0 +1,28 @@
+Dispositivo: cuda — NVIDIA GeForce RTX 5060 Ti
+==============================================================================
+  G0 — ¿el pipeline v5 reproduce los números de v4?
+  (modo final, alineado=False, criterio=val_loss, 3 semillas — como v4)
+==============================================================================
+  LSTM      expA lb20  v4=0.3451  v5=0.3451  delta=+0.0000  OK
+  LSTM      expA lb60  v4=0.3891  v5=0.3891  delta=+0.0000  OK
+  LSTM      expB lb20  v4=0.3617  v5=0.3617  delta=+0.0000  OK
+  LSTM      expB lb60  v4=0.3700  v5=0.3700  delta=+0.0000  OK
+  LSTM      expC lb20  v4=0.3702  v5=0.3702  delta=+0.0000  OK
+  LSTM      expC lb60  v4=0.3517  v5=0.3517  delta=+0.0000  OK
+  CNN       expA lb20  v4=0.3236  v5=0.3236  delta=+0.0000  OK
+  CNN       expA lb60  v4=0.3606  v5=0.3606  delta=+0.0000  OK
+  CNN       expB lb20  v4=0.3434  v5=0.3434  delta=+0.0000  OK
+  CNN       expB lb60  v4=0.3344  v5=0.3344  delta=+0.0000  OK
+  CNN       expC lb20  v4=0.3727  v5=0.3727  delta=+0.0000  OK
+  CNN       expC lb60  v4=0.3153  v5=0.3153  delta=+0.0000  OK
+  CNN-LSTM  expA lb20  v4=0.3641  v5=0.3641  delta=+0.0000  OK
+  CNN-LSTM  expA lb60  v4=0.3764  v5=0.3764  delta=+0.0000  OK
+  CNN-LSTM  expB lb20  v4=0.3835  v5=0.3835  delta=+0.0000  OK
+  CNN-LSTM  expB lb60  v4=0.3761  v5=0.3761  delta=+0.0000  OK
+  CNN-LSTM  expC lb20  v4=0.3366  v5=0.3366  delta=+0.0000  OK
+  CNN-LSTM  expC lb60  v4=0.3710  v5=0.3710  delta=+0.0000  OK
+
+  18/18 dentro de ±0.01   |delta| medio = 0.0000   máx = 0.0000
+  G0 PASA → RESULTADOS_OPTIMIZADOS\v5\g0_replicacion.csv
+
+[replicar] tiempo total: 8.1 min

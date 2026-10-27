@@ -15,7 +15,7 @@
 > opcional y marcado como "since submission".
 >
 > Figuras listas en `figuras_presentacion/` (P01–P06) y en
-> `../paper_review/figures/` (`fig_signal_dist.png`, `fig_sharpe_heatmap.png`).
+> `paper_review/figures/` (`fig_signal_dist.png`, `fig_sharpe_heatmap.png`).
 
 ---
 
@@ -39,7 +39,7 @@ Tres ideas que el público debe llevarse:
 |---|---|---|---|---:|
 | 1 | A Benchmark of Five Machine-Learning Architectures for Daily Trading-Signal Classification on US Tech Equities | Autores, ESCOM-IPN y CIC-IPN, MICAI 2026 | — | 0:20 |
 | 2 | Why another benchmark? | Tres problemas: 1–2 modelos por estudio; accuracy/RMSE que no se traducen en dinero; filtrar variables sin probar que ayude | — | 1:00 |
-| 3 | Task: one signal per day | BUY / HOLD / SELL para AAPL, NVDA, TSLA, AMZN, MSFT, GOOGL, META. Etiqueta: percentiles 30/70 del retorno del día siguiente en 252 días (adaptativa, sin *look-ahead*) | Ecuación de la etiqueta (o versión en inglés de `../REPORTE_TECNICO/diagramas/D10_etiqueta`) | 1:15 |
+| 3 | Task: one signal per day | BUY / HOLD / SELL para AAPL, NVDA, TSLA, AMZN, MSFT, GOOGL, META. Etiqueta: percentiles 30/70 del retorno del día siguiente en 252 días (adaptativa, sin *look-ahead*) | Ecuación de la etiqueta (o versión en inglés de [`REPORTE_TECNICO/diagramas/D10_etiqueta.svg`](https://github.com/barudust/TT/blob/main/REPORTE_TECNICO/diagramas/D10_etiqueta.svg) del TT) | 1:15 |
 | 4 | Data and features | Yahoo Finance gratis, 2013–2025; 61 indicadores en 9 familias + SPY y VIX | Lista de familias | 0:50 |
 | 5 | Same test year, different history | Tabla 1: A/B/C con 10/6/4 años, todos prueban en 2025. Por qué 2025 es defendible (retorno debajo de la mediana, volatilidad alta) | Tabla 1 | 1:00 |
 | 6 | Five models, one protocol | LR, XGBoost, LSTM, 1-D CNN, CNN-LSTM; global y por acción; 120 corridas; F1-macro + backtest | Esquema simple | 1:00 |
@@ -116,10 +116,14 @@ predicting one third for each class. A 10 k-parameter LSTM does as well as a
   (https://tt-frontend-womf.onrender.com) por si preguntan por
   reproducibilidad o aplicación.
 
-## Material que falta preparar (para otra sesión)
+## Material que faltaba preparar (ya está hecho)
 
-1. El deck de diapositivas con este guion.
-2. Versión en inglés de los diagramas de etiqueta y de protocolo dev/final
-   (`../REPORTE_TECNICO/diagramas/fuente/` genera las versiones en español;
-   basta traducir los textos).
-3. Un guion de 2 minutos ("elevator pitch") por si la sesión se retrasa.
+1. ~~El deck de diapositivas con este guion.~~ Hecho en
+   [`presentacion_micai/`](presentacion_micai/README.md), versión de 10 min.
+2. ~~Versión en inglés de los diagramas de etiqueta y de protocolo
+   dev/final.~~ Las diapositivas 3 y 8 los dibujan en inglés con formas de
+   PowerPoint (los de [`REPORTE_TECNICO/diagramas/fuente/`](https://github.com/barudust/TT/tree/main/REPORTE_TECNICO/diagramas/fuente)
+   del TT siguen en español).
+3. ~~Un guion de 2 minutos por si la sesión se retrasa.~~ En
+   `presentacion_micai/GUION_DOS_EXPOSITORES.md`, sección "Versión de 2
+   minutos" (sale de `presentacion_micai/fuente/guion.py`).

@@ -1,6 +1,6 @@
 # 02 — Contenido del artículo, sección por sección
 
-> Resumen fiel de lo que dice el texto publicado (`../paper_review/paper.tex`).
+> Resumen fiel de lo que dice el texto publicado (`paper_review/paper.tex`).
 > Las cifras exactas de las tablas están en `03_TABLAS_Y_CIFRAS.md`. Entre
 > corchetes, la etapa del TT de la que sale cada sección (ver `04_PAPER_VS_TT.md`).
 

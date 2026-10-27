@@ -1,0 +1,9 @@
+metrica,corridas,max_abs_diferencia,python,scikit_learn
+test_f1_macro,24,0.0,3.13.5,1.7.2
+test_f1_buy,24,0.0,3.13.5,1.7.2
+test_f1_hold,24,0.0,3.13.5,1.7.2
+test_f1_sell,24,0.0,3.13.5,1.7.2
+sharpe_test,24,0.0,3.13.5,1.7.2
+win_rate_test,24,0.0,3.13.5,1.7.2
+profit_factor_test,24,0.0,3.13.5,1.7.2
+max_drawdown_test,24,0.0,3.13.5,1.7.2

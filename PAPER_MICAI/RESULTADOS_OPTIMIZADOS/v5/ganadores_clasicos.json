@@ -1,0 +1,30 @@
+{
+  "LR": {
+    "params": {
+      "penalty": "l2",
+      "C": 0.00016491236228800314,
+      "class_weight": "balanced",
+      "escalador": "robust"
+    },
+    "f1_2024_mean": 0.3252,
+    "f1_2024_std": 0.0,
+    "n_trials": 150
+  },
+  "XGBoost": {
+    "params": {
+      "n_estimators": 485,
+      "max_depth": 9,
+      "learning_rate": 0.073686514801497,
+      "subsample": 0.9716588679987582,
+      "colsample_bytree": 0.9344371907011841,
+      "min_child_weight": 2,
+      "gamma": 0.034828439862122,
+      "reg_alpha": 1.697838781005609,
+      "reg_lambda": 5.226243589741432,
+      "escalador": "standard"
+    },
+    "f1_2024_mean": 0.3553,
+    "f1_2024_std": 0.005,
+    "n_trials": 150
+  }
+}

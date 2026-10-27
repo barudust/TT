@@ -1,0 +1,32 @@
+# Todo lo necesario para reproducir el artículo, compilarlo y armar la
+# presentación (Python 3.13).
+#
+# Versiones fijadas: las registradas en el estudio de robustez (§8, RTX 5060 Ti).
+# Con ellas el benchmark de la §7 se reproduce exacto (scripts_opt/replicar_lr_v4.py
+# y RESULTADOS_OPTIMIZADOS/v5/g0_replicacion.csv). Las de matplotlib y seaborn
+# son las de la máquina donde se generaron las figuras.
+
+# Modelos y datos
+pandas==2.3.2
+numpy==2.3.3
+scikit-learn==1.7.2
+scipy==1.16.2
+pyarrow
+xgboost==3.2.0
+optuna==4.8.*
+# PyTorch con CUDA 12.8 (LSTM, CNN y CNN-LSTM). Instalarlo aparte:
+#   pip install torch==2.12.* --index-url https://download.pytorch.org/whl/cu128
+torch==2.12.*
+# Solo para volver a descargar los datos (scripts_v1/01_build_raw_dataset.py)
+yfinance
+
+# Figuras
+matplotlib==3.10.6
+seaborn==0.13.2
+
+# Compilar el artículo (además de pdflatex: MiKTeX con cm-super, o TeX Live)
+pypdf
+
+# Presentación del congreso
+python-pptx==1.0.2
+lxml

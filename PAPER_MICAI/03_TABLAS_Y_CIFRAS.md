@@ -1,6 +1,6 @@
 # 03 — Tablas y cifras del artículo (copiadas del texto publicado)
 
-> Números exactos de `../paper_review/paper.tex`. Si alguna cifra se cita en
+> Números exactos de `paper_review/paper.tex`. Si alguna cifra se cita en
 > una diapositiva, el reporte técnico o una respuesta, debe coincidir con
 > esta página. Fuentes de datos: §3–§7 `RESULTADOS_OPTIMIZADOS/v4/resultados_v4.csv`;
 > §8 `RESULTADOS_OPTIMIZADOS/v5/` (reportes `tabla1`–`tabla5`).
@@ -81,7 +81,7 @@ y `P06`.
 
 ## Figura 1 — Distribución de señales, globales, Exp B (§7.5)
 
-Archivo: `../paper_review/figures/fig_signal_dist.png`. Mensajes: CNN 49 %
+Archivo: `paper_review/figures/fig_signal_dist.png`. Mensajes: CNN 49 %
 BUY y 6 % SELL; LR 18 % BUY y 38 % SELL; LSTM y XGBoost cerca de la
 proporción base.
 
