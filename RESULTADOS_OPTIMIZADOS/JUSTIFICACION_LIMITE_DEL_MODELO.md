@@ -134,7 +134,7 @@ Resumen de siete iteraciones (detalle y archivos en
 | Selección de features | Pearson, VIF, Spearman, SHAP | Empeora en 11 de 15 casos |
 | Ensambles | Stacking, soft voting, blending LR+XGB y de 5 modelos (por F1 y por Sharpe) | Ninguno supera a LR solo |
 | Post-proceso | Calibración isotónica, Platt, umbral económico de HOLD, SWA, ponderación por recencia | Solo isotónica ayuda a XGBoost (+0.012) |
-| Etiqueta | 6 horizontes × 5 pares de percentiles (28 configuraciones) | Con 1 día, 25/75 y 20/80 suben ~0.01 el F1 pero aumentan la proporción de MANTENER; 35/65 y 40/60 empeoran; con 5–7 días sube a ≈ 0.43 (otro problema) |
+| Etiqueta | 24 combinaciones de 6 horizontes y 5 pares de percentiles (Vía 8), más 4 pares a 1 día con el modelo de la plataforma (Etapa 6) | Con 1 día, 25/75 y 20/80 suben ~0.01 el F1 pero aumentan la proporción de MANTENER; 35/65 y 40/60 empeoran; con 5–7 días sube a ≈ 0.43 (otro problema) |
 | Robustez | Bootstrap por bloques IC 95 %, walk-forward de 6 años, costos de 5 y 10 pb | LR significativamente arriba en 2025; empate con XGBoost en walk-forward; con costos LR gana por operar menos |
 
 **El patrón:** cada palanca mueve el F1 entre −0.05 y +0.03. El mismo modelo

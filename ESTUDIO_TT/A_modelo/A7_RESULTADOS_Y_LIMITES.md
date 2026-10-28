@@ -192,8 +192,11 @@ confirman:
   de signo entre años (2022: predice 13 % contra 32 % real; 2023: 74 %
   contra 48 %). Un primer análisis que solo miraba 2024 sugería ese factor:
   era sobreajuste a un año.
-- **El peso × 0.90 al entrenar es el mejor en F1, kappa y Sharpe a la
-  vez**, así que la elección no depende de qué métrica se prefiera.
+- **Entre los pesos de reentrenamiento, × 0.90 es el mejor en F1, kappa y
+  Sharpe a la vez**, así que la elección no depende de qué métrica se
+  prefiera. La proporción móvil de 252 días empata en F1 y kappa (0.367 y
+  0.070 contra 0.365 y 0.068), pero da menos Sharpe en 2019–2024 (+0.51
+  contra +0.54), en 2025 (+0.81 contra +0.93) y en 2026 (+0.16 contra +0.29).
 - Diferencia con el umbral: el peso entra en la pérdida del entrenamiento,
   así que el modelo reajusta interceptos **y** coeficientes; no es solo
   correr un umbral.

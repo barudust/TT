@@ -57,8 +57,10 @@ sobreajustar.
 proporcional a su frecuencia, `n / (3 · n_clase)`, para que el modelo no
 aprenda a decir siempre MANTENER. En producción, además, multiplicamos el
 peso de MANTENER por 0.90 (pesos efectivos 1.103 / 0.762 / 1.097) porque el
-modelo predecía MANTENER de más. El 0.90 se eligió solo con 2019–2024 y fue
-el mejor en F1, kappa y Sharpe a la vez.
+modelo predecía MANTENER de más. El 0.90 se eligió solo con 2019–2024: entre
+los pesos probados fue el mejor en F1, kappa y Sharpe a la vez. La
+proporción móvil de 252 días empató en F1 y kappa, pero dio menos Sharpe en
+2019–2024, 2025 y 2026.
 
 ### M7. ¿Qué es SAGA?
 

@@ -264,6 +264,37 @@ probabilidad de encontrar una mejora que es solo ruido. Lo que sí podría
 cambiar el resultado (otro horizonte, más acciones, datos externos) cambia el
 problema, y lo dejamos como trabajo futuro.
 
+### T28. "En la Tabla 34 la proporción móvil tiene mejor F1 y kappa que el peso × 0.90. ¿Por qué eligieron el peso?"
+
+Porque en F1 y kappa empatan (0.367 contra 0.365 y 0.070 contra 0.068: dos
+milésimas), y el peso × 0.90 da más Sharpe en los tres periodos que
+revisamos: 2019–2024 (+0.54 contra +0.51), 2025 (+0.93 contra +0.81) y 2026
+(+0.29 contra +0.16). Entre los pesos de reentrenamiento, el × 0.90 fue el
+mejor en las tres métricas a la vez. Todo se decidió con 2019–2024, sin ver
+2025 ni 2026.
+
+### T29. "¿La LR saca 0.404, 0.390 o 0.373 en 2025? Cada tabla dice otra cosa."
+
+Son el mismo año con montajes distintos, y cada tabla compara solo dentro de
+sí misma. 0.404 es el resultado principal: Etapa 4, Experimento B, seis años
+de entrenamiento (Tabla 25). 0.373 es la prueba año por año: cinco años de
+entrenamiento (2019–2023) y los ajustes de la Etapa 3 (Tabla 30). 0.390 es la
+base de la reimplementación que usamos en la Etapa 5 para probar variables
+nuevas sin tocar el código de la Etapa 4 (Tabla 32). Lo que se lee en cada
+tabla es la diferencia entre variantes, no el número absoluto.
+
+### T30. "Con los ajustes de la Etapa 4, XGBoost gana el promedio de seis años. ¿No debieron elegir XGBoost?"
+
+Los ajustes de la Etapa 4 se eligieron con 2024, así que para 2020–2023 son
+información del futuro; por eso la prueba que cuenta es la de los ajustes de
+la Etapa 3, que no vieron ningún año de prueba (LR 0.360, XGBoost 0.356). Con
+cualquiera de los dos, LR y XGBoost quedan a menos de 0.01, menos de lo que
+cambia el mismo modelo de un año a otro: es un empate. Ante el empate
+decidimos con criterios que no dependen del año: parámetros (186 contra 485
+árboles), rotación (0.38 contra 0.65), Sharpe con costos, interpretabilidad y
+determinismo. Y en la prueba ciega de 2026, que nadie vio, la LR quedó
+primera.
+
 ---
 
 ## Consejos para el día
@@ -271,8 +302,9 @@ problema, y lo dejamos como trabajo futuro.
 1. **Reconoce primero, explica después.** Un sinodal detecta una evasiva al
    instante.
 2. **Ten a mano 5 cifras:** 0.404 [0.379, 0.428] y Sharpe +0.89 (2025);
-   0.35 de media en seis años; 0.394 máximo en cualquier año; 0.354 en 2026;
-   ln 3 en las redes.
+   0.36 de media en seis años con los ajustes fijados de antemano (0.35 con
+   los de la Etapa 4); ningún modelo llega a 0.40 en ningún año; 0.354 en
+   2026; ln 3 en las redes.
 3. **Distingue paper y TT:** el paper es la corrida de la Etapa 3 + Etapa 4; el TT es todo.
 4. **No digas "probamos"** de algo que no se corrió (CatBoost, GRU,
    Transformer, TabNet, Random Forest).

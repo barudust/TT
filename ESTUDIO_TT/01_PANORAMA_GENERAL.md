@@ -276,7 +276,7 @@ Detalle: [C1](C_paper/C1_PAPER_MICAI.md).
 | Modelo global (uno para las 7 acciones) | 7 veces más datos; gana o empata contra modelos por acción en los 5 modelos |
 | Regresión Logística en producción | Gana en el protocolo del paper, empata en prueba año por año, opera menos (mejor con costos), es determinista, rápida e interpretable |
 | Mantener 30/70 y horizonte de 1 día | 40/60 empeora; 5 días mejora pero cambia el problema (queda como trabajo futuro) |
-| Corregir MANTENER con pesos al entrenar, no con un umbral fijo | Un umbral fijo empeora en 6 años de validación; el peso × 0.90 es el mejor en F1, kappa y Sharpe a la vez |
+| Corregir MANTENER con pesos al entrenar, no con un umbral fijo | Un umbral fijo empeora en 6 años de validación; entre los pesos de reentrenamiento, × 0.90 es el mejor en F1, kappa y Sharpe a la vez (la proporción móvil empata en F1 y kappa, con menos Sharpe) |
 | SQLite y no PostgreSQL | La base es reconstruible y pequeña; el esquema es compatible con PostgreSQL si se necesita |
 
 ---

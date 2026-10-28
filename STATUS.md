@@ -4,6 +4,21 @@
 
 Última actualización: 2026-10-28.
 
+## Tercera revisión del reporte, TT2_v5.pdf (2026-10-28)
+
+- `REPORTE_TECNICO/06_REVISION_TT2_v5.md`: de los 25 pendientes de la segunda
+  revisión quedan 24 resueltos (falta la fecha de consulta de las referencias web).
+  El blindaje quedó aplicado: §4.1.1, Tabla 38 ampliada, Anexo B (46 pruebas) y
+  Anexo C (artículo).
+- Nuevo: los índices muestran doce "¡Error! Marcador no definido" y no incluyen los
+  Anexos B y C; cuatro afirmaciones contradicen su propia tabla (negritas de la
+  Tabla 28, "mejor a la vez" en la Tabla 34, 28 combinaciones que son 24, cinco
+  F1 de la LR en 2025 sin explicar) y se vuelven a mezclar ajustes de las Etapas 3
+  y 4 en §7.6.1, §7.9 y §8.2.
+- Tres de esos errores venían de mis textos (T06, T08, Anexo B): corregidos en el
+  repositorio, junto con una nota en `VIA7_REFINAMIENTO.md` (la isotónica no se
+  adoptó) y las preguntas T28–T30 en `D8_PREGUNTAS_TRAMPA.md`.
+
 ## Revisión de la versión corregida del reporte, TT2.pdf (2026-10-28)
 
 - `REPORTE_TECNICO/05_REVISION_TT2.md`: de los 12 problemas de la primera revisión,

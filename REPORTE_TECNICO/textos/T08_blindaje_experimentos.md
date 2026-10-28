@@ -138,10 +138,10 @@ la regla. Agregar la regla y esta tabla:
 | Decisión | Variante | CNN 1D | CNN-LSTM | LSTM |
 |---|---|---:|---:|---:|
 | Criterio de época | Pérdida de validación (Etapa 3) | 0.301 | 0.335 | 0.286 |
-| | **F1 de validación** | **0.328** | 0.335 | **0.344** |
+| | F1 de validación | 0.328 | 0.335 | **0.344** |
 | | F1 promedio de tres épocas | 0.323 | 0.310 | 0.334 |
 | Ventanas alineadas | No (Etapa 3) | 0.301 | 0.335 | 0.344 |
-| | **Sí** | **0.314** | 0.309 | 0.342 |
+| | **Sí** | **0.314** | **0.309** | **0.342** |
 | Escalador | Min-max (Etapa 3) | 0.314 | 0.335 | 0.342 |
 | | Estándar | 0.326 | 0.315 | 0.337 |
 | | Robusto con recorte en ±5 | 0.320 | 0.306 | 0.309 |
@@ -151,11 +151,19 @@ la regla. Agregar la regla y esta tabla:
 | Reentrenar con validación | No (Etapa 3) | 0.314 | 0.335 | 0.342 |
 | | Sí | 0.290 | 0.293 | 0.294 |
 
-*Nota. El pooling temporal se omite: sus alternativas quedaron dentro del
-ruido (CNN 1D 0.308–0.331, CNN-LSTM 0.305–0.306, LSTM 0.336–0.346). Las
-ventanas alineadas se adoptaron aunque le cuestan 0.027 a la CNN-LSTM,
-porque sin ellas los cinco modelos no se evalúan sobre las mismas filas.
-Fuente: `RESULTADOS_OPTIMIZADOS/v5/v1_ablaciones.csv`.*
+*Nota. En negritas, la variante adoptada. Una variante se adoptaba solo si
+mejoraba el F1-macro en al menos 0.005 y más que la mayor de las dos
+desviaciones entre semillas. Por eso, en la CNN 1D no se adoptaron el F1 de
+validación (+0.027) ni el escalador estándar (+0.012): las dos mejoras son
+menores que la desviación entre semillas (0.029 en ambos casos). Las
+ventanas alineadas se adoptaron en las tres redes por diseño, aunque le
+cuestan 0.027 a la CNN-LSTM, porque sin ellas los cinco modelos no se
+evalúan sobre las mismas filas; durante el torneo la CNN-LSTM siguió sin
+alinear, y por eso en las filas siguientes conserva 0.335. El pooling
+temporal se omite: sus alternativas quedaron dentro del ruido (CNN 1D
+0.308–0.331, CNN-LSTM 0.305–0.306, LSTM 0.336–0.346). Fuente:
+`RESULTADOS_OPTIMIZADOS/v5/v1_ablaciones.csv` y `v1_decisiones.json`;
+configuración congelada en `v5/base_v5.json`.*
 
 ### 3.3 [FALTA] Por qué cinco semillas — va en §4.10.5, antes de "En la evaluación final…"
 
@@ -207,7 +215,7 @@ eligieron?". Es mejor que lo diga el documento a que lo descubra un sinodal.
 ### 3.8 [INCOMPLETO] Barrido de la etiqueta — sustituye la última frase de §7.7 ("Los cambios de horizonte…")
 
 > También se evaluó si la etiqueta elegida es la más fácil de aprender, con
-> 28 combinaciones de horizonte (1 a 10 días) y percentiles (de 20/80 a
+> 24 combinaciones de horizonte (1 a 10 días) y percentiles (de 20/80 a
 > 40/60) para la Regresión Logística. Con un horizonte de un día, los
 > percentiles más extremos (25/75) dieron un F1-macro algo mayor, a cambio de
 > una clase MANTENER más grande, y los más cercanos (40/60) uno claramente

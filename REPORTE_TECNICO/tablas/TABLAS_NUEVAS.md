@@ -315,7 +315,7 @@ significativa); LR − LSTM +0.026, LR − CNN-LSTM +0.025, LR − CNN 1D +0.017
 (significativas).
 Con los ajustes elegidos con 2024 (Etapa 4; Tabla 29 del reporte actual): LR
 0.350, XGBoost 0.356, CNN-LSTM 0.328 (cinco años), LSTM 0.314, CNN 1D 0.292;
-ningún modelo supera 0.394 en ningún año.
+con unos u otros ajustes, ningún modelo llega a 0.40 en ningún año.
 Fuente: `RO/v5/walkforward_v4.csv`;
 `RO/observaciones_sinodal/2_lr_contra_cada_uno_6anios.csv`,
 `2_seleccion_resumen.csv`. Figura: `graficas/G04`.
@@ -441,20 +441,28 @@ Figura: `graficas/G07`.
 
 ## T-18 · Corrección del exceso de mantener (origen rodante 2019–2024)
 
-**Pie:** *Alternativas evaluadas sin usar 2025 ni 2026. Mantener real
-promedio: 40 %.*
+**Pie:** *Ocho alternativas evaluadas sin usar 2025 ni 2026. Mantener real
+promedio: 40 %. En negritas, la alternativa elegida.*
 
 | Alternativa | F1 | Kappa | Sharpe | Mantener predicho |
 |---|---:|---:|---:|---:|
 | Pesos balanceados (modelo anterior) | 0.357 | 0.063 | +0.52 | 47 % |
 | P(mantener) × 0.90 al decidir | 0.334 | 0.050 | +0.37 | 23 % |
+| Proporción fija por año (40 %) | 0.337 | 0.062 | +0.58 | 45 % |
+| Proporción móvil causal (63 días) | 0.365 | 0.061 | +0.42 | 43 % |
 | Proporción móvil causal (252 días) | 0.367 | 0.070 | +0.51 | 41 % |
 | Reentrenar con peso de mantener × 0.95 | 0.360 | 0.062 | +0.53 | 42 % |
 | **Reentrenar con peso de mantener × 0.90** | **0.365** | **0.068** | **+0.54** | **36 %** |
 | Reentrenar con peso × 0.85 | 0.360 | 0.062 | +0.46 | 30 % |
 | Reentrenar con peso × 0.80 | 0.352 | 0.061 | +0.41 | 24 % |
 
-Fuente: `ESTUDIO_TT/A_modelo/A7` §4.3; `RO/analisis_hold/`.
+*Nota. Entre los pesos de reentrenamiento, × 0.90 es el mejor en las tres
+métricas. La proporción móvil de 252 días empata en F1 y kappa, pero tiene
+menos Sharpe en 2019–2024, en 2025 (+0.81 contra +0.93) y en 2026 (+0.16
+contra +0.29, Tabla T-19).*
+
+Fuente: `RESULTADOS_OPTIMIZADOS/docs/ANALISIS_HOLD_Y_GLOBAL.md` §8.2;
+`ESTUDIO_TT/A_modelo/A7` §4.3; `RO/analisis_hold/`.
 
 ---
 

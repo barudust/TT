@@ -11,8 +11,12 @@ para que el documento se corrija sin inventar nada.
 - **Segunda revisión (28 de octubre):** la versión corregida `TT2.pdf` (151
   páginas) ya aplica casi todo. Lo que falta, sobre todo el **blindaje de los
   experimentos** (por qué se hizo cada uno), está en
-  [`05_REVISION_TT2.md`](05_REVISION_TT2.md). **Si ya se aplicó la primera
-  revisión, empezar por ahí.**
+  [`05_REVISION_TT2.md`](05_REVISION_TT2.md).
+- **Tercera revisión (28 de octubre):** `TT2_v5.pdf` (168 páginas) resuelve 24
+  de los 25 pendientes de la segunda. Faltan los índices (doce "¡Error!
+  Marcador no definido"), cuatro afirmaciones que su propia tabla contradice
+  y detalles de forma: [`06_REVISION_TT2_v5.md`](06_REVISION_TT2_v5.md).
+  **Es la revisión vigente: empezar por ahí.**
 - **Cómo se citan las páginas:** con el número impreso al pie (p. 39). En el
   visor de PDF es una más (p. 39 impresa = página 40 del PDF), porque la
   portada no lleva número.
@@ -29,6 +33,7 @@ para que el documento se corrija sin inventar nada.
 | [`03_CIFRAS_VIGENTES.md`](03_CIFRAS_VIGENTES.md) | **Todas las cifras que se pueden citar**, con su archivo de origen, y las que no | Cada vez que se escriba un número |
 | [`04_GLOSARIO_DE_REDACCION.md`](04_GLOSARIO_DE_REDACCION.md) | Nombres que hay que usar (etapas, experimentos, modelos, clases) y los que ya no | Al redactar |
 | [`05_REVISION_TT2.md`](05_REVISION_TT2.md) | **Revisión de la versión corregida (28 oct)**: lo que ya quedó, errores puntuales, experimentos que faltan y referencias | Después de aplicar la primera revisión |
+| [`06_REVISION_TT2_v5.md`](06_REVISION_TT2_v5.md) | **Tercera revisión (TT2_v5, 28 oct)**: estado de los 25 pendientes, índices rotos, cuatro afirmaciones que contradicen su tabla, textos listos | Ahora (revisión vigente) |
 | [`correcciones/`](correcciones/) | **Lista detallada por capítulo**: qué dice, qué debe decir, por qué y de dónde sale | Es el trabajo principal |
 | [`textos/`](textos/) | Borradores de los párrafos y secciones que cambian por completo | Para adaptar, no para pegar sin leer |
 | [`tablas/`](tablas/) | Tablas nuevas ya armadas con los datos correctos | Al rehacer los capítulos 4 y 6 |

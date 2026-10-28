@@ -2,6 +2,13 @@
 
 > **Nota (2026-10-22).** Documento de trabajo de la **Etapa 5 (búsqueda de mejoras), ajustes al modelo**, con los nombres que se usaban entonces. Equivalencias: v1 = Etapa 1 (TT1) · optimización de mayo, "v0", v2 y v3 = Etapa 2 · v4 = Etapa 3 · v5 = Etapa 4 (sus V0–V6 = pasos 4.1–4.7) · v7/"Vía 7" y v8/"Vía 8" = Etapa 5 · análisis de septiembre = Etapa 6 · "walk-forward" = prueba año por año. Referencia: [mapa de experimentos](../../ESTUDIO_TT/03_MAPA_DE_EXPERIMENTOS.md).
 
+> **Nota (2026-10-28).** La "adopción" de la calibración isotónica (y del
+> umbral económico) para XGBoost que se lee abajo fue provisional. En la
+> comparación final **no se adoptó** (reporte técnico §7.7): aun calibrado,
+> XGBoost (0.371) queda debajo de la Regresión Logística sin calibrar
+> (0.404), y aplicar un paso adicional a un solo modelo rompe la igualdad de
+> condiciones. Las tablas finales usan XGBoost sin calibrar.
+
 > **Fecha inicio: 2026-08-25.** Este documento resume las técnicas que las vías
 > 0-6 NO probaron. Nada de teoría — código real, resultados reales,
 > conclusiones honestas. Cierra la búsqueda: si algo de aquí no ayuda, ya no

@@ -106,9 +106,10 @@ fijados en la Etapa 3, la Regresión Logística obtuvo el mayor F1-macro medio
 quedaron entre 0.326 y 0.338 (Tabla T-12, Figura G04). Juntando los seis
 años, la diferencia entre la Regresión Logística y XGBoost no es
 significativa (+0.003), mientras que la ventaja sobre cada red sí lo es
-(+0.017 a +0.026). El orden cambia de un año a otro y ningún modelo supera
-0.394 en ningún año. Con los ajustes elegidos con 2024 el resultado es el
-mismo (Regresión Logística 0.350, XGBoost 0.356, redes 0.29–0.33).
+(+0.017 a +0.026). El orden cambia de un año a otro y ningún modelo llega a
+0.40 en ningún año. Con los ajustes elegidos con 2024 la conclusión es la
+misma: los dos modelos clásicos quedan juntos y arriba (XGBoost 0.356,
+Regresión Logística 0.350) y las redes debajo (0.29–0.33).
 
 **Permutación.** En 2025 solo el 0.4 % de 500 permutaciones de las señales
 supera al modelo, mientras que en 2024 lo supera el 79 %: la señal existe en
@@ -148,9 +149,13 @@ las probabilidades de comprar y vender supera a la de mantener; el modelo
 aprende que habrá movimiento, pero no hacia dónde, y ninguna dirección supera
 por separado a mantener. Además, como las variables con más peso son del VIX
 y del S&P 500, iguales para las siete acciones, en periodos de VIX bajo el
-modelo predice mantener para casi todas. Se compararon cinco correcciones con
-origen rodante 2019–2024, sin mirar 2025 ni 2026 (Tabla T-18); la mejor en
-F1, kappa y Sharpe a la vez fue reentrenar con el peso de mantener × 0.90. En
+modelo predice mantener para casi todas. Se compararon ocho correcciones con
+origen rodante 2019–2024, sin mirar 2025 ni 2026 (Tabla T-18). Entre los
+pesos de reentrenamiento, el de mantener × 0.90 fue el mejor en F1, kappa y
+Sharpe a la vez. La proporción móvil causal de 252 días obtuvo un F1 y un
+kappa prácticamente iguales (0.367 y 0.070, contra 0.365 y 0.068), pero
+menos Sharpe en 2019–2024 (+0.51 contra +0.54), en 2025 (+0.81 contra +0.93)
+y en 2026 (+0.16 contra +0.29), por lo que se eligió el peso × 0.90. En
 enero–septiembre de 2026 el modelo corregido obtuvo F1 0.354 y kappa 0.035,
 contra 0.313 y 0.010 del modelo anterior, con una proporción de mantener
 cercana a la real (40 % contra 35 %) (Tabla T-19). La mejora no es
