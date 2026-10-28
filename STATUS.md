@@ -2,7 +2,22 @@
 
 > Punto de entrada para retomar el proyecto desde cero: **[`CONTEXTO.md`](CONTEXTO.md)**.
 
-Última actualización: 2026-10-26.
+Última actualización: 2026-10-28.
+
+## Revisión de la versión corregida del reporte, TT2.pdf (2026-10-28)
+
+- `REPORTE_TECNICO/05_REVISION_TT2.md`: de los 12 problemas de la primera revisión,
+  11 están resueltos. Quedan errores puntuales: el apellido de la portada, el rango
+  0.314–0.394 que no cuadra con la Tabla 29, 186 parámetros en lugar de 231, un
+  anexo citado que no existe, "se publicó" antes del congreso y la falta de la
+  dirección del repositorio.
+- Faltan cinco experimentos que sí se hicieron: 93 variables (Etapa 4), barrido de
+  la etiqueta, por qué cinco semillas, torneo de decisiones con su tabla y costos de
+  5 pb. Falta además el "por qué" de cada etapa.
+- Nuevos: `textos/T08_blindaje_experimentos.md` (textos listos),
+  `tablas/ANEXO_B_REGISTRO_DE_EXPERIMENTOS.md` (las 46 pruebas, cada una con su
+  motivo, su resultado y su decisión) y las preguntas T19–T27 en
+  `ESTUDIO_TT/D_defensa/D8_PREGUNTAS_TRAMPA.md`.
 
 ## Carpeta del paper lista para separarse como repositorio (2026-10-26)
 

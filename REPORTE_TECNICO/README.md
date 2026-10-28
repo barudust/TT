@@ -8,6 +8,11 @@ para que el documento se corrija sin inventar nada.
 
 - **Versión revisada:** `Reporte_Tecnico.pdf` con fecha 21/10/2026, 105 páginas.
 - **Fecha de la revisión:** 26 de octubre de 2026.
+- **Segunda revisión (28 de octubre):** la versión corregida `TT2.pdf` (151
+  páginas) ya aplica casi todo. Lo que falta, sobre todo el **blindaje de los
+  experimentos** (por qué se hizo cada uno), está en
+  [`05_REVISION_TT2.md`](05_REVISION_TT2.md). **Si ya se aplicó la primera
+  revisión, empezar por ahí.**
 - **Cómo se citan las páginas:** con el número impreso al pie (p. 39). En el
   visor de PDF es una más (p. 39 impresa = página 40 del PDF), porque la
   portada no lleva número.
@@ -23,6 +28,7 @@ para que el documento se corrija sin inventar nada.
 | [`02_CONTRADICCIONES.md`](02_CONTRADICCIONES.md) | Lugares donde el documento se contradice a sí mismo, al sistema o al paper | Para no dejar ninguna |
 | [`03_CIFRAS_VIGENTES.md`](03_CIFRAS_VIGENTES.md) | **Todas las cifras que se pueden citar**, con su archivo de origen, y las que no | Cada vez que se escriba un número |
 | [`04_GLOSARIO_DE_REDACCION.md`](04_GLOSARIO_DE_REDACCION.md) | Nombres que hay que usar (etapas, experimentos, modelos, clases) y los que ya no | Al redactar |
+| [`05_REVISION_TT2.md`](05_REVISION_TT2.md) | **Revisión de la versión corregida (28 oct)**: lo que ya quedó, errores puntuales, experimentos que faltan y referencias | Después de aplicar la primera revisión |
 | [`correcciones/`](correcciones/) | **Lista detallada por capítulo**: qué dice, qué debe decir, por qué y de dónde sale | Es el trabajo principal |
 | [`textos/`](textos/) | Borradores de los párrafos y secciones que cambian por completo | Para adaptar, no para pegar sin leer |
 | [`tablas/`](tablas/) | Tablas nuevas ya armadas con los datos correctos | Al rehacer los capítulos 4 y 6 |

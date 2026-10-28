@@ -172,6 +172,100 @@ hasta el día *t*.
 
 ---
 
+## Preguntas sobre los experimentos que no funcionaron
+
+> La idea que hay detrás de todas: **ninguna etapa se hizo sabiendo su
+> resultado.** Cada una respondió a algo concreto: el resultado anterior, la
+> literatura, los revisores del artículo, la sinodal o el sistema en
+> operación. El registro completo, con el motivo de cada prueba, está en el
+> Anexo B del reporte
+> (`REPORTE_TECNICO/tablas/ANEXO_B_REGISTRO_DE_EXPERIMENTOS.md`).
+
+### T19. "En TT1 ya sabían que las redes perdían. ¿Por qué siguieron?"
+
+Porque el TT1 no demostraba eso. Su comparación era dispareja: cada modelo
+recibía variables distintas (de 3 a 25), las redes tenían hiperparámetros
+fijos y su ventana se eligió con la prueba. El propio reporte de TT1 lo dijo
+como su principal limitación. Además, la literatura que revisamos reportaba
+redes por encima de la LR y de XGBoost en clasificación (Nabipour 2020,
+Siswara 2024, Long 2019). Con esa evidencia, lo razonable era igualar las
+condiciones antes de concluir, y eso fue lo que hicimos en las Etapas 2 a 4.
+
+### T20. "¿Para qué probaron unas treinta técnicas si al final se quedaron con la LR?"
+
+Porque "las redes no superan a un modelo lineal" solo es creíble si las
+redes tuvieron una oportunidad real. Si no las hubiéramos optimizado, la
+primera objeción habría sido "no las ajustaron bien", y de hecho fue lo que
+nos pidieron los revisores del artículo. Cada prueba descartada cierra una
+objeción. Los resultados negativos también son resultados: muestran que el
+límite está en la información de los datos y no en el modelo.
+
+### T21. "En agosto rehicieron todo. ¿No bastaba con lo de junio?"
+
+No. Los revisores del artículo de MICAI pidieron una búsqueda de
+hiperparámetros comparable para las redes. Al revisar, encontramos que las
+redes estaban en desventaja: su paro temprano restauraba la época 1 o 2 y su
+ventana se había elegido con la prueba. Era posible que con un protocolo
+justo las redes mejoraran, así que había que comprobarlo. Fue su mejor
+oportunidad, y aun así la LR ganó con significancia en los tres
+experimentos.
+
+### T22. "Las mejoras de la Etapa 5 las midieron sobre 2025. Eso es buscar hasta que salga."
+
+Es cierto que se midieron sobre 2025, y por eso solo las usamos para
+**descartar**. La regla de adopción se fijó antes de probar (≥ 0.005 de F1 o
+≥ 0.10 de Sharpe). La única técnica adoptada, las interacciones, la
+validamos después con un origen rodante 2019–2024 y resultó equivalente, no
+mejor. Los resultados de A, B y C y los del artículo son **sin** ellas. Y la
+prueba ciega de 2026 no intervino en ninguna decisión.
+
+### T23. "Si a varios días el modelo funciona mejor, ¿por qué no cambiaron el horizonte?"
+
+(Si preguntan el número: con 5–7 días la LR llegó a F1 ≈ 0.43 en 2025. No
+lo ofrezcas tú; si lo piden, dilo con las tres razones.)
+
+Por tres razones. Primera, el problema que planteamos es una señal diaria, y
+la plataforma publica una recomendación por día: a cinco días sería otro
+problema. Segunda, esa cifra se midió sobre 2025, así que cambiar la etiqueta
+después de verla sería mover la meta. Tercera, el F1 de etiquetados con
+distinta proporción de clases no se puede comparar directamente. Lo dejamos
+como trabajo futuro, con esa exploración como evidencia de que podría
+funcionar.
+
+### T24. "En la validación 2024 la LR fue la peor. ¿Por qué la eligieron?"
+
+Porque la validación de un año no sirve para escoger. Lo comprobamos: elegir
+cada año el modelo que gana en validación da un F1 medio de 0.342–0.344,
+peor que quedarse siempre con la LR (0.350–0.360). El criterio que
+declaramos es otro: entre los modelos que empatan en seis años de prueba (LR
+y XGBoost), elegir el más simple y el que paga menos costos. La prueba ciega
+de 2026 lo confirmó: la LR quedó primera en F1.
+
+### T25. "La calibración isotónica mejora a XGBoost. ¿Por qué no la usaron?"
+
+Porque aun calibrado XGBoost llega a 0.371, por debajo de la LR sin calibrar
+(0.404). Además, aplicar un paso extra a un solo modelo rompe la igualdad de
+condiciones de la comparación.
+
+### T26. "¿Por qué no agregaron más datos de mercado: tasas, dólar, oro…?"
+
+Sí lo hicimos, tres veces: 181 variables (puntajes z, rezagos e
+interacciones), 94 variables con contexto macroeconómico y sectorial, y 93
+variables con bonos, volatilidad del VIX, crédito, dólar, oro, petróleo e
+índices. Ninguna mejoró de forma consistente. Más variables dan a los
+modelos más formas de ajustarse al ruido.
+
+### T27. "¿Cuándo decidieron parar y por qué ahí?"
+
+Cuando ninguna técnica superaba la variación natural del mismo modelo entre
+años: las pruebas movían el F1 entre −0.05 y +0.03, y la LR sola cambia unos
+0.07 de un año a otro. Seguir probando sobre los mismos datos aumenta la
+probabilidad de encontrar una mejora que es solo ruido. Lo que sí podría
+cambiar el resultado (otro horizonte, más acciones, datos externos) cambia el
+problema, y lo dejamos como trabajo futuro.
+
+---
+
 ## Consejos para el día
 
 1. **Reconoce primero, explica después.** Un sinodal detecta una evasiva al
