@@ -459,7 +459,9 @@ promedio: 40 %. En negritas, la alternativa elegida.*
 *Nota. Entre los pesos de reentrenamiento, × 0.90 es el mejor en las tres
 métricas. La proporción móvil de 252 días empata en F1 y kappa, pero tiene
 menos Sharpe en 2019–2024, en 2025 (+0.81 contra +0.93) y en 2026 (+0.16
-contra +0.29, Tabla T-19).*
+contra +0.29, Tabla T-19). La proporción fija de 40 % tiene el mayor Sharpe
+en 2019–2024 (+0.58), pero un F1 de 0.337 y menos Sharpe en 2025 (+0.88
+contra +0.93); se descartó porque el F1-macro es la métrica principal.*
 
 Fuente: `RESULTADOS_OPTIMIZADOS/docs/ANALISIS_HOLD_Y_GLOBAL.md` §8.2;
 `ESTUDIO_TT/A_modelo/A7` §4.3; `RO/analisis_hold/`.

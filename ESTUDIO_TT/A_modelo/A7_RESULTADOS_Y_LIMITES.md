@@ -180,6 +180,8 @@ confirman:
 |---|---:|---:|---:|---:|
 | "Balanced" (modelo anterior) | 0.357 | 0.063 | +0.52 | 47 % |
 | Multiplicar P(MANTENER) × 0.90 al decidir | 0.334 | 0.050 | +0.37 | 23 % |
+| Proporción fija por año (40 %) | 0.337 | 0.062 | +0.58 | 45 % |
+| Proporción móvil causal (63 días) | 0.365 | 0.061 | +0.42 | 43 % |
 | Proporción móvil causal (252 días) | 0.367 | 0.070 | +0.51 | 41 % |
 | Reentrenar con peso MANTENER × 0.95 | 0.360 | 0.062 | +0.53 | 42 % |
 | **Reentrenar con peso MANTENER × 0.90** | **0.365** | **0.068** | **+0.54** | **36 %** |
@@ -197,6 +199,10 @@ confirman:
   prefiera. La proporción móvil de 252 días empata en F1 y kappa (0.367 y
   0.070 contra 0.365 y 0.068), pero da menos Sharpe en 2019–2024 (+0.51
   contra +0.54), en 2025 (+0.81 contra +0.93) y en 2026 (+0.16 contra +0.29).
+- **La proporción fija de 40 % tiene el mayor Sharpe en 2019–2024 (+0.58)**,
+  pero un F1 de 0.337, casi tres centésimas por debajo, y menos Sharpe en
+  2025 (+0.88 contra +0.93). Se descartó porque el F1-macro es la métrica
+  principal.
 - Diferencia con el umbral: el peso entra en la pérdida del entrenamiento,
   así que el modelo reajusta interceptos **y** coeficientes; no es solo
   correr un umbral.

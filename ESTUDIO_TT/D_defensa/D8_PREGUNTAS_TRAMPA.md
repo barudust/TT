@@ -295,6 +295,15 @@ decidimos con criterios que no dependen del año: parámetros (186 contra 485
 determinismo. Y en la prueba ciega de 2026, que nadie vio, la LR quedó
 primera.
 
+### T31. "En la Tabla 34 la proporción fija tiene el mayor Sharpe. ¿Por qué no la usaron?"
+
+Porque el criterio principal es el F1-macro, no el Sharpe, y ahí la
+proporción fija queda casi tres centésimas abajo (0.337 contra 0.365). Su
+ventaja en Sharpe solo aparece en 2019–2024 (+0.58 contra +0.54); en 2025 da
+menos (+0.88 contra +0.93). Además, fijar el 40 % de MANTENER le impone al
+modelo la proporción del pasado, aunque el año cambie. Con el peso × 0.90 la
+proporción sale del propio modelo.
+
 ---
 
 ## Consejos para el día

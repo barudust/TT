@@ -4,6 +4,22 @@
 
 Última actualización: 2026-10-28.
 
+## Cuarta revisión del reporte, TT2_v7.pdf (2026-10-28)
+
+- `REPORTE_TECNICO/07_REVISION_TT2_v7.md`: las correcciones N-01 a N-14 de la
+  tercera revisión están aplicadas. La comparación palabra por palabra contra el v5
+  no muestra otros cambios en el cuerpo, y las ecuaciones están intactas.
+- Nuevo: los índices de figuras y de tablas se regeneraron fuera de Word. Cada
+  entrada abre un campo TOC sin cerrarlo (309 inicios contra 234 cierres en el
+  .docx), y Word imprime `TOC \h \z \t "Figuras,1"` delante de 75 entradas. El
+  Contenido repite palabras en seis títulos. Se arregla en Word: F9 en el Contenido,
+  y borrar y volver a insertar los otros dos índices por estilo.
+- También: las palabras clave del Anexo C.3 están en LaTeX sin convertir, y la
+  proporción fija de la Tabla 34 tiene el mayor Sharpe sin que el texto diga por
+  qué no se eligió. Corregido en T06, TABLAS_NUEVAS, A7 y en D8 con la pregunta T31.
+- Las referencias [39], [40] y [42] ya traen "Consultado: 24 de marzo de 2026".
+  Falta confirmar que sea la fecha real.
+
 ## Tercera revisión del reporte, TT2_v5.pdf (2026-10-28)
 
 - `REPORTE_TECNICO/06_REVISION_TT2_v5.md`: de los 25 pendientes de la segunda

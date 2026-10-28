@@ -155,8 +155,11 @@ pesos de reentrenamiento, el de mantener × 0.90 fue el mejor en F1, kappa y
 Sharpe a la vez. La proporción móvil causal de 252 días obtuvo un F1 y un
 kappa prácticamente iguales (0.367 y 0.070, contra 0.365 y 0.068), pero
 menos Sharpe en 2019–2024 (+0.51 contra +0.54), en 2025 (+0.81 contra +0.93)
-y en 2026 (+0.16 contra +0.29), por lo que se eligió el peso × 0.90. En
-enero–septiembre de 2026 el modelo corregido obtuvo F1 0.354 y kappa 0.035,
+y en 2026 (+0.16 contra +0.29), por lo que se eligió el peso × 0.90. La
+proporción fija de 40 % obtuvo el mayor Sharpe en 2019–2024 (+0.58), pero un
+F1 de 0.337, casi tres centésimas por debajo del peso × 0.90, y menos Sharpe
+en 2025 (+0.88 contra +0.93). Como el F1-macro es la métrica principal, se
+descartó. En enero–septiembre de 2026 el modelo corregido obtuvo F1 0.354 y kappa 0.035,
 contra 0.313 y 0.010 del modelo anterior, con una proporción de mantener
 cercana a la real (40 % contra 35 %) (Tabla T-19). La mejora no es
 estadísticamente significativa (Wilcoxon p = 0.31): se trata de un modelo

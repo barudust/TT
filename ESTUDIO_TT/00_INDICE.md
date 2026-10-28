@@ -77,7 +77,7 @@
 | D5 | [Preguntas de estadística y validación](D_defensa/D5_PREGUNTAS_ESTADISTICA.md) | Significancia, sobreajuste, fuga de información |
 | D6 | [Preguntas del sistema](D_defensa/D6_PREGUNTAS_SISTEMA.md) | API, base de datos, frontend, despliegue |
 | D7 | [Preguntas del paper](D_defensa/D7_PREGUNTAS_PAPER.md) | |
-| D8 | [Preguntas trampa y cómo responderlas](D_defensa/D8_PREGUNTAS_TRAMPA.md) | Incluye T19–T30: "¿por qué lo hicieron si sabían que no iba a funcionar?", los experimentos descartados y las cifras que cambian de una tabla a otra |
+| D8 | [Preguntas trampa y cómo responderlas](D_defensa/D8_PREGUNTAS_TRAMPA.md) | Incluye T19–T31: "¿por qué lo hicieron si sabían que no iba a funcionar?", los experimentos descartados y las cifras que cambian de una tabla a otra |
 | D9 | [**Observaciones de la sinodal (26 oct) y respuestas**](D_defensa/D9_OBSERVACIONES_SINODAL.md) | Métricas iguales, cómo se elige el modelo, multicolinealidad, prueba ciega 2026 y párrafos para el reporte técnico |
 
 ---
