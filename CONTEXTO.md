@@ -195,6 +195,12 @@ agosto, superado) quedó en la etiqueta **local** `respaldo/baru-local-2026-08-0
 
 ## 10. Pendientes
 
+00. **MICAI 2026: exponer el jueves 5 de noviembre, 16:40, Room 1104** (Paper ID 78).
+    Todo está en `PAPER_MICAI/presentacion_micai/README.md`: tarjetas para imprimir,
+    USB, ensayo y lista de pendientes. Subir `PAPER_MICAI/` a
+    https://github.com/Daivino/PAPER_MICAI antes de esa fecha (la diapositiva 11 lo
+    muestra; comandos en `PAPER_MICAI/README.md`).
+
 0. **Responder el correo de Springer (Atchaya)** con el texto de
    `paper_review/correo_springer.txt` y dos adjuntos: el suplementario
    `paper_review/supplementary/MICAI2026_ch171490174_supplementary.pdf` y

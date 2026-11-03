@@ -1,5 +1,6 @@
 """Genera el guion de la presentación de MICAI en Markdown y en una versión
-imprimible (HTML → PDF con Chrome o Edge), a partir de guion.py.
+imprimible (HTML → PDF con Chrome o Edge), a partir de guion.py. Una salida
+para un expositor (la principal) y otra para dos.
 
 Uso (desde la raíz del repositorio del artículo; dentro del TT, PAPER_MICAI/):
 
@@ -16,70 +17,70 @@ from pathlib import Path
 
 AQUI = Path(__file__).resolve().parent
 sys.path.insert(0, str(AQUI))
-from guion import (DIAPOSITIVAS, FRASES_DE_APOYO, PREGUNTAS, PRONUNCIACION, RESPALDO,  # noqa: E402
-                   VERSION_CORTA)
+from guion import (E1, E2, FRASES_DE_APOYO, MODERADOR, NOMBRE_1, NOMBRE_2, PRONUNCIACION,  # noqa: E402
+                   RESPALDO, SESION, TEMAS_PREGUNTAS, VERSION_CORTA, guion, plano)
 
 SALIDA = AQUI.parent
+NOMBRES = {"uno": "GUION_UN_EXPOSITOR", "dos": "GUION_DOS_EXPOSITORES"}
+TITULOS = {"uno": "Guion para un expositor", "dos": "Guion para dos expositores"}
 
 
 def mmss(seg: int) -> str:
     return f"{seg // 60}:{seg % 60:02d}"
 
 
-def acumulados():
-    t = 0
-    for d in DIAPOSITIVAS:
-        ini = t
-        t += d["seg"]
-        yield d, ini, t
+def frases_apoyo(modo: str):
+    return [f for f in FRASES_DE_APOYO if modo == "dos" or not f[3]]
 
 
-def markdown() -> str:
-    total = sum(d["seg"] for d in DIAPOSITIVAS)
+def markdown(modo: str) -> str:
+    dias = guion(modo)
+    total = dias[-1]["fin"]
+    otro = "dos" if modo == "uno" else "uno"
     out = [
-        "# Guion para dos expositores — MICAI 2026",
+        f"# {TITULOS[modo]} — MICAI 2026",
         "",
         "> Generado desde `fuente/guion.py` (no editar a mano: cambiar ahí y volver a correr",
         "> `generar_guion.py`). Inglés sencillo, frases cortas. Debajo de cada bloque en inglés",
-        "> va la traducción, solo para que sepan qué están diciendo: **en el congreso se dice",
-        "> solo el inglés**.",
+        "> va la traducción, para saber qué se está diciendo: **en el congreso se dice solo el",
+        "> inglés**. Para tenerlo a la mano al presentar están las tarjetas (`TARJETAS_*.pdf`).",
+        "",
+        f"**Cuándo y dónde:** {SESION['dia']}, {SESION['turno']} h, {SESION['sala']}, {SESION['sede']}. "
+        f"Sesión *{SESION['nombre']}* ({SESION['horario']}), Paper ID {SESION['paper_id']}.",
         "",
         f"**Duración total: {mmss(total)} min** (límite oficial: 10 min de exposición + 5 de preguntas).",
-        "El margen es para hablar despacio, respirar y cambiar de expositor sin prisa.",
+        f"El margen es para hablar despacio y respirar. Versión alternativa: `{NOMBRES[otro]}.md`.",
         "",
-        "| Expositor | Diapositivas | Tiempo |",
-        "|---|---|---:|",
     ]
-    for quien in ("Expositor 1", "Expositor 2"):
-        ns = [d["n"] for d in DIAPOSITIVAS if d["quien"] == quien]
-        seg = sum(d["seg"] for d in DIAPOSITIVAS if d["quien"] == quien)
-        rangos = ", ".join(str(n) for n in ns)
-        out.append(f"| **{quien}** | {rangos} | {mmss(seg)} |")
+    if modo == "dos":
+        out += ["| Expositor | Diapositivas | Tiempo |", "|---|---|---:|"]
+        for quien, nombre in ((E1, NOMBRE_1), (E2, NOMBRE_2)):
+            ns = [d["n"] for d in dias if d["quien"] == quien]
+            seg = sum(d["seg"] for d in dias if d["quien"] == quien)
+            out.append(f"| **{quien}** ({nombre}) | {', '.join(str(n) for n in ns)} | {mmss(seg)} |")
+        out += [
+            "",
+            "- **Expositor 1** abre (portada, pregunta, datos, modelos) y cierra (por qué gana, mensajes finales).",
+            "- **Expositor 2** presenta los cuatro resultados y la comparación justa.",
+            "- Cambian de expositor **dos veces**; la frase para pasar la palabra está marcada con →.",
+            "",
+        ]
     out += [
-        "",
-        "- **Expositor 1** abre (portada, pregunta, datos, modelos) y cierra (por qué gana, mensajes finales).",
-        "- **Expositor 2** presenta los cuatro resultados y la comparación justa.",
-        "- Cambian de expositor **dos veces**; la frase para pasar la palabra está marcada con →.",
-        "- Si solo presenta una persona, el guion es el mismo: se omiten las frases de cambio.",
-        "- Reemplazar **[NAME]** por los nombres reales en la diapositiva 1.",
-        "- Si la sesión es después de las 12:00, decir *Good afternoon, everyone* (gud af-ter-NÚN).",
+        "- ✂ marca una frase que se puede saltar si vas tarde (la información ya está en la diapositiva).",
         "",
         "---",
         "",
     ]
-    for d, ini, fin in acumulados():
-        out += [
-            f"## Diapositiva {d['n']} · {d['titulo']} — {d['quien']} · {d['seg']} s "
-            f"(minuto {mmss(ini)} → {mmss(fin)})",
-            "",
-        ]
+    for d in dias:
+        quien = f" — {d['quien']}" if d["quien"] else ""
+        out += [f"## Diapositiva {d['n']} · {d['titulo']}{quien} · {d['seg']} s (minuto {mmss(d['ini'])} → {mmss(d['fin'])})", ""]
         for en in d["en"]:
-            out.append(f"> **{en}**  ")
+            marca = "✂ " if en.startswith("✂") else ""
+            out.append(f"> **{marca}{plano(en)}**  ")
         if d.get("pase"):
             out += [">", f"> → **{d['pase']}**"]
         out += ["", "<details><summary>Traducción</summary>", ""]
-        for es in d["es"]:
-            out.append(f"- {es}")
+        out += [f"- {es}" for es in d["es"]]
         if d.get("pase_es"):
             out.append(f"- → {d['pase_es']}")
         out += ["", "</details>", ""]
@@ -93,16 +94,13 @@ def markdown() -> str:
         "",
     ]
     for b in VERSION_CORTA:
-        out.append(f"**Diapositiva {b['n']}**")
-        out.append("")
-        for en in b["en"]:
-            out.append(f"> **{en}**  ")
+        out += [f"**Diapositiva {b['n']}**", ""]
+        out += [f"> **{plano(en)}**  " for en in b["en"]]
         out += ["", "<details><summary>Traducción</summary>", ""]
         out += [f"- {es}" for es in b["es"]]
         out += ["", "</details>", ""]
     out += ["---", "", "## Diapositivas de respaldo (solo si una pregunta las necesita)", ""]
-    for n, desc in RESPALDO.items():
-        out.append(f"- **{n}.** {desc}")
+    out += [f"- **{n}.** {desc}" for n, desc in RESPALDO.items()]
     out += [
         "",
         "Para saltar a una diapositiva en PowerPoint durante la presentación: escribir el número",
@@ -117,8 +115,7 @@ def markdown() -> str:
         "| Palabra | Se dice |",
         "|---|---|",
     ]
-    for w, pr in PRONUNCIACION:
-        out.append(f"| {w} | {pr} |")
+    out += [f"| {w} | {pr} |" for w, pr in PRONUNCIACION]
     out += [
         "",
         "**Números:** el punto decimal se dice *point* y cada dígito por separado: 0.404 = "
@@ -128,19 +125,20 @@ def markdown() -> str:
         "",
         "## Preguntas probables (respuestas cortas)",
         "",
-        "Quién contesta cada una es una sugerencia por tema; el otro puede completar.",
+        "Las palabras clave son las que hay que reconocer al oír la pregunta.",
         "",
     ]
-    for i, q in enumerate(PREGUNTAS, 1):
-        out += [
-            f"### {i}. {q['q']}",
-            f"*{q['q_es']}* — contesta **{q['quien']}**",
-            "",
-            f"> **{q['a']}**",
-            "",
-            f"{q['a_es']}",
-            "",
-        ]
+    i = 0
+    for letra, tema, ps in TEMAS_PREGUNTAS:
+        out += [f"### {letra}. {tema}", ""]
+        for q in ps:
+            i += 1
+            contesta = f" — contesta **{q['quien']}**" if modo == "dos" else ""
+            out += [f"**{i}. {q['q']}**  ", f"*{q['q_es']}*{contesta}  ", f"Si oyes: {q['claves']}", ""]
+            out += [f"> **{q['a']}**", "", q["a_es"]]
+            if q.get("respaldo"):
+                out[-1] += f" (Ayuda: diapositiva {q['respaldo']}.)"
+            out.append("")
     out += [
         "Respuestas más completas: `../07_PREGUNTAS_MICAI.md`.",
         "",
@@ -151,8 +149,9 @@ def markdown() -> str:
         "| Inglés | Español | Se dice |",
         "|---|---|---|",
     ]
-    for en, es, pr in FRASES_DE_APOYO:
-        out.append(f"| **{en}** | {es} | {pr} |")
+    out += [f"| **{en}** | {es} | {pr} |" for en, es, pr, _ in frases_apoyo(modo)]
+    out += ["", "## Si el moderador te dice…", "", "| Oyes | Haces |", "|---|---|"]
+    out += [f"| {oyes} | {haces} |" for oyes, haces in MODERADOR]
     out.append("")
     return "\n".join(out)
 
@@ -162,6 +161,7 @@ CSS = """
 body { font-family: Calibri, Arial, sans-serif; color: #1f2937; font-size: 12.5pt; line-height: 1.35; }
 h1 { color: #1f3c88; font-size: 22pt; margin: 0 0 4pt; }
 h2 { color: #1f3c88; font-size: 15pt; margin: 18pt 0 6pt; page-break-after: avoid; }
+h3 { color: #1f3c88; font-size: 13pt; margin: 12pt 0 4pt; page-break-after: avoid; }
 .meta { color: #4b5563; margin-bottom: 10pt; }
 .slide { border: 1px solid #d7dce5; border-radius: 8px; padding: 10pt 12pt; margin: 0 0 10pt; page-break-inside: avoid; }
 .cab { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 6pt; }
@@ -177,25 +177,30 @@ td, th { border: 1px solid #d7dce5; padding: 3pt 6pt; text-align: left; }
 th { background: #1f3c88; color: #fff; }
 .q { page-break-inside: avoid; margin-bottom: 8pt; }
 .q .en { font-size: 13pt; }
+.claves { color: #4b5563; font-size: 10.5pt; }
 .salto { page-break-before: always; }
 """
 
 
-def html() -> str:
-    total = sum(d["seg"] for d in DIAPOSITIVAS)
+def html(modo: str) -> str:
+    dias = guion(modo)
+    total = dias[-1]["fin"]
     h = [f"<!doctype html><html lang='en'><head><meta charset='utf-8'><title>MICAI 2026 script</title>"
          f"<style>{CSS}</style></head><body>",
-         "<h1>MICAI 2026 · Guion para dos expositores</h1>",
-         f"<div class='meta'>Total {mmss(total)} min (límite 10 min + 5 de preguntas). "
-         "En el congreso se dice solo el texto grande, en inglés. El gris es la traducción.</div>"]
-    for d, ini, fin in acumulados():
-        cls = "e1" if d["quien"] == "Expositor 1" else "e2"
+         f"<h1>MICAI 2026 · {TITULOS[modo]}</h1>",
+         f"<div class='meta'>{escape(SESION['dia'])}, {SESION['turno']} h, {SESION['sala']}. "
+         f"Total {mmss(total)} min (límite 10 min + 5 de preguntas). "
+         "En el congreso se dice solo el texto grande, en inglés. El gris es la traducción. "
+         "✂ = se puede saltar si vas tarde.</div>"]
+    for d in dias:
+        cls = "e1" if d["quien"] == E1 else "e2"
+        quien = f"<span class='who {cls}'>{escape(d['quien'])}</span> " if d["quien"] else ""
         h.append("<div class='slide'><div class='cab'>"
                  f"<b>{d['n']} · {escape(d['titulo'])}</b>"
-                 f"<span><span class='who {cls}'>{escape(d['quien'])}</span> "
-                 f"<span class='t'>{d['seg']} s · {mmss(ini)} → {mmss(fin)}</span></span></div>")
+                 f"<span>{quien}<span class='t'>{d['seg']} s · {mmss(d['ini'])} → {mmss(d['fin'])}</span></span></div>")
         for en in d["en"]:
-            h.append(f"<div class='en'>{escape(en)}</div>")
+            marca = "✂ " if en.startswith("✂") else ""
+            h.append(f"<div class='en'>{marca}{escape(plano(en))}</div>")
         if d.get("pase"):
             h.append(f"<div class='pase'>→ {escape(d['pase'])}</div>")
         es = " ".join(d["es"]) + (f" → {d['pase_es']}" if d.get("pase_es") else "")
@@ -205,16 +210,26 @@ def html() -> str:
              + ", ".join(str(b["n"]) for b in VERSION_CORTA) + " (número + Enter).</div>")
     for b in VERSION_CORTA:
         h.append(f"<div class='slide'><div class='cab'><b>Diapositiva {b['n']}</b></div>")
-        h += [f"<div class='en'>{escape(en)}</div>" for en in b["en"]]
+        h += [f"<div class='en'>{escape(plano(en))}</div>" for en in b["en"]]
         h.append(f"<div class='es'>{escape(' '.join(b['es']))}</div></div>")
     h.append("<h2 class='salto'>Preguntas probables</h2>")
-    for i, q in enumerate(PREGUNTAS, 1):
-        h.append(f"<div class='q'><b>{i}. {escape(q['q'])}</b> <span class='t'>({escape(q['q_es'])} · "
-                 f"{escape(q['quien'])})</span><div class='en'>{escape(q['a'])}</div>"
-                 f"<div class='es'>{escape(q['a_es'])}</div></div>")
+    i = 0
+    for letra, tema, ps in TEMAS_PREGUNTAS:
+        h.append(f"<h3>{letra}. {escape(tema)}</h3>")
+        for q in ps:
+            i += 1
+            quien = f" · {escape(q['quien'])}" if modo == "dos" else ""
+            ayuda = f" (Ayuda: diapositiva {q['respaldo']}.)" if q.get("respaldo") else ""
+            h.append(f"<div class='q'><b>{i}. {escape(q['q'])}</b> <span class='t'>({escape(q['q_es'])}{quien})</span>"
+                     f"<div class='claves'>Si oyes: {escape(q['claves'])}</div>"
+                     f"<div class='en'>{escape(q['a'])}</div>"
+                     f"<div class='es'>{escape(q['a_es'])}{ayuda}</div></div>")
     h.append("<h2>Frases de apoyo</h2><table><tr><th>Inglés</th><th>Español</th><th>Se dice</th></tr>")
-    for en, es, pr in FRASES_DE_APOYO:
+    for en, es, pr, _ in frases_apoyo(modo):
         h.append(f"<tr><td><b>{escape(en)}</b></td><td>{escape(es)}</td><td>{escape(pr)}</td></tr>")
+    h.append("</table><h2>Si el moderador te dice…</h2><table><tr><th>Oyes</th><th>Haces</th></tr>")
+    for oyes, haces in MODERADOR:
+        h.append(f"<tr><td>{escape(oyes)}</td><td>{escape(haces)}</td></tr>")
     h.append("</table><h2>Pronunciación</h2><table><tr><th>Palabra</th><th>Se dice</th></tr>")
     for w, pr in PRONUNCIACION:
         h.append(f"<tr><td>{escape(w)}</td><td>{escape(pr)}</td></tr>")
@@ -241,10 +256,11 @@ def a_pdf(html_path: Path, pdf_path: Path) -> bool:
 
 
 if __name__ == "__main__":
-    (SALIDA / "GUION_DOS_EXPOSITORES.md").write_text(markdown(), encoding="utf-8")
-    hp = AQUI / "guion_imprimible.html"
-    hp.write_text(html(), encoding="utf-8")
-    ok = a_pdf(hp, SALIDA / "GUION_imprimible.pdf")
-    if ok:
-        hp.unlink()
-    print("guion listo" + ("" if ok else " (sin PDF: no se encontró Chrome ni Edge)"))
+    for modo, nombre in NOMBRES.items():
+        (SALIDA / f"{nombre}.md").write_text(markdown(modo), encoding="utf-8")
+        hp = AQUI / f"{nombre}.html"
+        hp.write_text(html(modo), encoding="utf-8")
+        ok = a_pdf(hp, SALIDA / f"{nombre}.pdf")
+        if ok:
+            hp.unlink()
+        print(f"{nombre}: {mmss(guion(modo)[-1]['fin'])} min" + ("" if ok else " (sin PDF: no se encontró Chrome ni Edge)"))

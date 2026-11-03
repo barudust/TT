@@ -25,7 +25,7 @@ Estado y pendientes: [`STATUS.md`](STATUS.md).
 ├── CONTEXTO.md                 # Punto de entrada: todo el contexto del proyecto
 ├── ESTUDIO_TT/                 # Serie de estudio y defensa (general → particular, con glosario y preguntas)
 ├── REPORTE_TECNICO/            # Revisión del reporte técnico: correcciones, textos, tablas, diagramas y gráficas
-├── PAPER_MICAI/                # Todo lo del artículo de MICAI 2026, autosuficiente (futuro repo aparte): docs, presentación, copia del código y datos
+├── PAPER_MICAI/                # Todo lo del artículo de MICAI 2026, autosuficiente (se publica en github.com/Daivino/PAPER_MICAI): docs, presentación, tarjetas, copia del código y datos
 ├── paper_review/               # Fuente LaTeX del paper MICAI 2026 (camera_ready/ = paquete final)
 ├── presentaciones/             # Fuentes de los decks (avances TT2, sinodales)
 ├── api/                        # API Flask (endpoints, modelo ML, SQLite)

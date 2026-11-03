@@ -21,7 +21,6 @@ Uso (desde cualquier carpeta):
 from __future__ import annotations
 
 import argparse
-import filecmp
 import shutil
 import subprocess
 import sys
@@ -78,6 +77,12 @@ COPIAS = [
 CARPETAS_COPIA = sorted({c.split("/")[0] for c in COPIAS})
 
 
+def iguales(a: Path, b: Path) -> bool:
+    """Iguales salvo los finales de línea, que en Windows dependen de cómo se hizo el checkout."""
+    da, db = a.read_bytes(), b.read_bytes()
+    return da == db or da.replace(b"\r\n", b"\n") == db.replace(b"\r\n", b"\n")
+
+
 def versionados() -> list[str]:
     r = subprocess.run(["git", "ls-files", "-z", "--", *COPIAS], cwd=TT,
                        capture_output=True, check=True)
@@ -103,7 +108,7 @@ def main() -> int:
         destino = AQUI / p
         if not destino.exists():
             nuevos.append(p)
-        elif not filecmp.cmp(TT / p, destino, shallow=False):
+        elif not iguales(TT / p, destino):
             distintos.append(p)
 
     esperados = set(rutas)

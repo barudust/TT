@@ -1,157 +1,186 @@
 # Presentación oral en MICAI 2026
 
-Todo lo necesario para presentar el artículo en el congreso: las diapositivas
-listas (sobre la plantilla oficial), el guion para dos expositores en inglés
-sencillo con traducción y pronunciación, las preguntas probables y la lista de
-pendientes.
+Todo lo necesario para presentar el artículo en el congreso. La versión
+principal es para **un solo expositor**; también está lista la alternativa para
+dos.
 
-| Archivo | Qué es |
+## Cuándo y dónde
+
+| | |
 |---|---|
-| [`MICAI2026_benchmark_trading_signals.pptx`](MICAI2026_benchmark_trading_signals.pptx) | **La presentación**: 11 diapositivas + 4 de respaldo, con el guion en las notas del orador |
-| `MICAI2026_benchmark_trading_signals.pdf` | La misma en PDF, de respaldo en la USB por si la computadora del congreso no abre el .pptx |
-| [`GUION_DOS_EXPOSITORES.md`](GUION_DOS_EXPOSITORES.md) | Guion completo: qué dice cada quien, tiempos, traducción, pronunciación, preguntas y frases de apoyo |
-| `GUION_imprimible.pdf` | El guion en formato para imprimir (texto grande en inglés, traducción en gris) |
-| [`fuente/`](fuente/) | Plantilla oficial, logotipos y los scripts que generan todo (ver "Para cambiar algo") |
+| **Día y hora** | **Jueves 5 de noviembre de 2026, 16:40** (espacio de 16:40 a 17:00) |
+| **Sala** | **Room 1104**, Tec de Monterrey, Campus Chihuahua |
+| **Sesión** | *Machine Learning & Data Analytics*, oral, de 16:00 a 18:20 |
+| **Identificador** | **Paper ID 78** |
+| **Tiempo** | 10 minutos de exposición + 5 de preguntas (página de autores) |
 
----
+Fuente: programa oficial, https://micai.org/2026/activities/#program, consultado
+el 2 de noviembre. **El programa advierte que puede cambiar sin aviso**: hay que
+revisarlo otra vez el miércoles en la noche y el jueves en la mañana. De 16:20 a
+16:40 no aparece ningún artículo, así que conviene estar en la sala desde el
+inicio de la sesión por si el moderador recorre los turnos.
 
-## 1. Reglas oficiales (investigadas el 26 de octubre de 2026)
+## Archivos
 
-Fuente: página para autores de MICAI 2026 (https://micai.org/2026/authors/) y
-página principal (https://micai.org/2026/).
+| Archivo | Qué es | ¿Imprimir? | ¿USB? |
+|---|---|---:|---:|
+| [`TARJETAS_UN_EXPOSITOR.pdf`](TARJETAS_UN_EXPOSITOR.pdf) | **Las tarjetas para exponer**: una por diapositiva, con renglones cortos, pronunciación y minuto; más preguntas por tema, frases de apoyo, cifras clave y versión de 2 minutos | **Sí** | Sí |
+| [`TARJETAS_DOS_EXPOSITORES.pdf`](TARJETAS_DOS_EXPOSITORES.pdf) | Las mismas tarjetas si al final son dos: separadas por color y con las frases para pasar la palabra | Solo si son dos | Sí |
+| [`MICAI2026_benchmark_trading_signals.pptx`](MICAI2026_benchmark_trading_signals.pptx) | **La presentación**: 11 diapositivas + 4 de respaldo, con el guion en las notas del orador | No | **Sí** |
+| [`MICAI2026_benchmark_trading_signals.pdf`](MICAI2026_benchmark_trading_signals.pdf) | La misma en PDF, por si la computadora de la sala no abre bien el .pptx | No | **Sí** |
+| [`GUION_UN_EXPOSITOR.pdf`](GUION_UN_EXPOSITOR.pdf) ([`.md`](GUION_UN_EXPOSITOR.md)) | Guion completo con **traducción**, para ensayar; incluye la tabla de pronunciación | Opcional | Sí |
+| [`GUION_DOS_EXPOSITORES.pdf`](GUION_DOS_EXPOSITORES.pdf) ([`.md`](GUION_DOS_EXPOSITORES.md)) | Lo mismo para dos expositores | Opcional | Sí |
+| [`../paper_review/paper.pdf`](../paper_review/paper.pdf) y el suplementario | El artículo y su material suplementario, por si alguien los pide | Opcional | Sí |
+| [`fuente/`](fuente/) | Plantilla oficial, logotipos y los scripts que generan todo | No | No |
+
+## Qué imprimir
+
+1. **`TARJETAS_UN_EXPOSITOR.pdf`: 11 hojas carta**, a **tamaño real (100 %, sin
+   "ajustar a la página")**, **a una cara**. Mejor en papel grueso (opalina o
+   cartulina delgada).
+2. Corta cada hoja por la línea punteada del centro: salen **22 tarjetas de media
+   carta**.
+3. Ordénalas como salen: `Antes`, `1`–`11`, `?`, `Ayuda`, `A`–`F`, `Cifras`, `2 min`.
+   Engrápalas o únelas con un anillo por la esquina superior izquierda de cada
+   bloque, para que no se revuelvan si se caen: un bloque para la exposición y otro
+   para las preguntas.
+
+Si son dos expositores: imprime `TARJETAS_DOS_EXPOSITORES.pdf` completo y **las
+hojas 7 a 11 una vez más**, para que cada quien tenga sus preguntas. Cada
+expositor se queda con las tarjetas de su color (franja azul: expositor 1; franja
+rosa: expositor 2).
+
+Opcional, para ensayar: `GUION_UN_EXPOSITOR.pdf`, con la traducción. No hace falta
+llevarlo a la sala.
+
+## Qué llevar en la USB
+
+La regla oficial pide llevar la presentación en una USB. Lleva **dos USB** con lo
+mismo, una de ellas en otra bolsa, y prueba que abran en otra computadora. Este
+comando copia todo de una vez (cambia `E:` por la letra de tu USB):
+
+```bash
+python presentacion_micai/fuente/preparar_usb.py E:/MICAI2026
+```
+
+Copia los dos archivos de la presentación, las tarjetas, los guiones, el artículo y
+el suplementario (unos 15 MB). Lo indispensable son el `.pptx` y su `.pdf`.
+
+## Lista de pendientes
+
+- [ ] **Revisar el programa** el miércoles en la noche y el jueves en la mañana.
+- [ ] Confirmar el **registro y el pago** (el artículo aparece en el programa, buena
+      señal, pero el comprobante no está en este repositorio). Llevar el comprobante.
+- [ ] Decidir si son uno o dos expositores. Los nombres están en `fuente/guion.py`
+      (`NOMBRE_1`, `NOMBRE_2`); por ahora, Baruc Polvo y David Reyes. Si cambian: ver
+      "Para cambiar algo".
+- [ ] Copiar los archivos a **dos USB**.
+- [ ] Imprimir y cortar las tarjetas.
+- [ ] Subir el repositorio del artículo a https://github.com/Daivino/PAPER_MICAI
+      **antes del jueves**: la diapositiva 11 lo muestra (comandos en `../README.md`).
+- [ ] Llevar laptop y adaptador HDMI por si la computadora de la sala falla.
+- [ ] Opcional: agregar la foto del expositor en la portada (la plantilla lo permite).
+- [ ] El día de la presentación: llegar a la sala a las **15:45**, presentarse con el
+      moderador (*session chair*) y cargar la presentación. La frase está en la
+      primera tarjeta.
+
+## Cómo ensayar (quedan pocos días)
+
+1. **Martes: entender y pronunciar.** Lee el guion en voz alta con la traducción a la
+   vista. Repite cada tarjeta tres veces fijándote en su recuadro de pronunciación.
+   Para oír cada frase: el botón de audio de Google Translate o DeepL.
+2. **Miércoles: completo y con cronómetro.** Tres pasadas con las diapositivas
+   abiertas y las tarjetas en la mano, pasando de diapositiva en cada `CLIC`. **Meta:
+   entre 8 y 9:30 minutos.** Grábate una vez con el celular y escúchate. Es válido
+   leer: mira al público al final de cada renglón. Si te pasas de 9:30, salta las
+   frases marcadas con ✂.
+3. **Miércoles en la noche: preguntas.** Que alguien te lea las preguntas de las
+   tarjetas `A`–`F` en desorden; tú reconoces la palabra clave, buscas la tarjeta y
+   contestas. Practica también *Sorry, could you repeat the question, please?*
+4. **Jueves en la mañana:** una pasada completa y una de la versión de 2 minutos.
+
+**En el momento:** habla despacio; señala la gráfica cuando digas un número; si te
+pierdes, lee el título de la diapositiva y busca la tarjeta con ese número; si no
+entiendes una pregunta, pide que la repitan. Puedes terminar con *We can talk more
+after the session.*
+
+## Reglas oficiales
+
+Fuente: página para autores (https://micai.org/2026/authors/), consultada el 26 de
+octubre y otra vez el 2 de noviembre de 2026.
 
 | Regla | Detalle | Cómo se cumple aquí |
 |---|---|---|
-| **Fechas y sede** | 2–6 de noviembre de 2026, Tec de Monterrey Campus Chihuahua. Talleres y tutoriales el 2–3; presentaciones de artículos el 4–6 (verificar en el programa) | — |
-| **Modalidad** | Presencial; al menos un autor registrado debe asistir y presentar | Presentan dos autores |
-| **Idioma** | Presentación **en inglés** y diapositivas en inglés | Todo en inglés; guion en inglés sencillo |
-| **Duración** | **10 minutos de exposición + 5 de preguntas** | Guion de 8 min 20 s a ritmo lento (margen de 1 min 40 s) |
-| **Primera diapositiva** | Debe usar la plantilla oficial (`MICAI2026_Template_Author_upt.potx`) con tres componentes: título del artículo, autores con institución, logotipos de la institución (foto del expositor opcional). No modificar el encabezado ni el pie | Portada hecha sobre la plantilla, con los tres componentes y los logos del IPN y de ESCOM |
-| **Resto de diapositivas** | Formato libre | Se usó el diseño "Blank" de la plantilla para mantener el estilo |
-| **Archivo** | El autor lleva la presentación en **USB** el día del evento | Llevar `.pptx` y `.pdf` (ver lista) |
-| **Horario** | La fecha y hora de cada presentación se publican en el programa unos días antes | **Pendiente: revisar https://micai.org/2026/activities/#program** |
-| **Registro** | Un pago por artículo; fecha límite de pago y registro de autores: 16 de octubre | Verificar que el registro quedó completo |
+| **Modalidad** | Presencial; al menos un autor registrado debe asistir y presentar | Presenta uno o dos autores |
+| **Idioma** | Presentación **en inglés** y diapositivas en inglés | Todo en inglés sencillo |
+| **Duración** | **Máximo 10 minutos + 5 de preguntas** (el programa reserva 20 min por artículo) | Guion de unos 8:25 a ritmo lento; unos 9:15 si vas todavía más despacio |
+| **Primera diapositiva** | Plantilla oficial (`MICAI2026_Template_Author_upt.potx`) con título, autores con institución y logotipos (foto opcional). No se modifica el encabezado ni el pie | Portada sobre la plantilla, con los tres componentes y los logos del IPN y de ESCOM |
+| **Resto de diapositivas** | Formato libre | Diseño "Blank" de la plantilla |
+| **Archivo** | El autor lleva la presentación en **USB** el día del evento | Ver "Qué llevar en la USB" |
+| **Registro** | Un pago por artículo; fecha límite: 16 de octubre | Confirmar el comprobante |
 
 No se encontró en la página: proporción de pantalla (se usó 16:9, igual que la
-plantilla), si habrá computadora de la sede (se asume que sí, por la regla de
-la USB) ni presentación remota (no se menciona; es presencial).
+plantilla), si habrá computadora en la sala (se asume que sí, por la regla de la
+USB) ni presentación remota (es presencial).
 
----
+## Las diapositivas
 
-## 2. Las diapositivas
+Tiempos a ritmo lento (95 palabras por minuto + 5 s por diapositiva). La columna
+"Si son dos" indica quién habla en la alternativa.
 
-| # | Diapositiva | Expositor | Tiempo |
-|---:|---|---|---:|
-| 1 | Portada (plantilla oficial) | 1 | 0:30 |
-| 2 | Do deep networks beat simple models? | 1 | 0:50 |
-| 3 | One signal per day, seven tech stocks | 1 | 1:10 |
-| 4 | Five models, one protocol | 1 | 0:55 |
-| 5 | Result 1 · Logistic regression leads on average | 2 | 1:00 |
-| 6 | Result 2 · Do not pre-filter the features | 2 | 0:30 |
-| 7 | Result 3 · The stock matters more than the model | 2 | 0:30 |
-| 8 | Was it fair? We rebuilt the protocol | 2 | 0:45 |
-| 9 | Result 4 · The gap does not close | 2 | 0:50 |
-| 10 | Why does a linear model win here? | 1 | 0:45 |
-| 11 | Takeaways · Thank you · Questions? | 1 | 0:35 |
-| 12–15 | Respaldo: Tabla 6, "since submission", Tablas 3–5, búsqueda de hiperparámetros | — | solo si preguntan |
+| # | Diapositiva | Tiempo | Si son dos |
+|---:|---|---:|---:|
+| 1 | Portada (plantilla oficial) | 0:34 | 1 |
+| 2 | Do deep networks beat simple models? | 0:50 | 1 |
+| 3 | One signal per day, seven tech stocks | 1:02 | 1 |
+| 4 | Five models, one protocol | 0:52 | 1 |
+| 5 | Result 1 · Logistic regression leads on average | 1:00 | 2 |
+| 6 | Result 2 · Do not pre-filter the features | 0:31 | 2 |
+| 7 | Result 3 · The stock matters more than the model | 0:42 | 2 |
+| 8 | Was it fair? We rebuilt the protocol | 0:44 | 2 |
+| 9 | Result 4 · The gap does not close | 0:48 | 2 |
+| 10 | Why does a linear model win here? | 0:47 | 1 |
+| 11 | Takeaways · Thank you · Questions? | 0:34 | 1 |
+| 12–15 | Respaldo: Tabla 6, "since submission", Tablas 3–5, búsqueda de hiperparámetros | solo si preguntan | — |
 
-- Las gráficas son **nativas de PowerPoint** (se pueden editar con clic
-  derecho → Editar datos) y usan exactamente los números del artículo.
-- Los números se escriben en Calibri porque la fuente de la plantilla
-  (Corbel) dibuja las cifras como "minúsculas" y se leen peor.
-- Cada diapositiva tiene en sus **notas** quién habla, cuánto tiempo, el texto
-  en inglés y la traducción. En la vista del moderador de PowerPoint se ven en
-  la laptop, no en la pantalla grande (si la sede lo permite).
+- Las gráficas son **nativas de PowerPoint** (clic derecho → Editar datos) y usan
+  exactamente los números del artículo.
+- Los números van en Calibri porque la fuente de la plantilla (Corbel) dibuja las
+  cifras como "minúsculas" y se leen peor.
+- Cada diapositiva tiene en sus **notas** el minuto, el texto en inglés, la
+  traducción y qué cambia si son dos expositores. Con la vista del moderador de
+  PowerPoint se ven en la laptop, no en la pantalla grande, si la sala lo permite.
+- Para saltar a otra diapositiva durante la presentación: número + **Enter**.
 
----
+Se dejaron así por tiempo, respecto a `../06_PRESENTACION_MICAI.md` (15 minutos): los
+datos y la etiqueta en una sola diapositiva; la economía dentro del resultado 1; por
+qué gana la LR junto con las limitaciones; las tablas completas como respaldo.
 
-## 3. Por qué este orden (y no el de 15 minutos de `../06_PRESENTACION_MICAI.md`)
+## Para cambiar algo
 
-El guion de `06_PRESENTACION_MICAI.md` se escribió suponiendo 15 minutos; la
-regla real es de 10. Se recortó así: los datos y la etiqueta en una sola
-diapositiva; la economía (Sharpe y profit factor) dentro del resultado 1; la
-explicación de por qué gana la LR junto con las limitaciones. Las tablas
-completas pasaron a diapositivas de respaldo.
-
----
-
-## 4. Lista de pendientes antes del viaje
-
-- [ ] Poner los nombres reales en el guion (diapositiva 1: *My name is [NAME]…*)
-      y decidir quién es Expositor 1 y quién Expositor 2.
-- [ ] Revisar el **programa** (https://micai.org/2026/activities/#program): día,
-      hora y sala de la presentación; anotar si es en la mañana o en la tarde
-      (*Good morning* / *Good afternoon*).
-- [ ] Confirmar que el **registro y el pago** quedaron completos.
-- [ ] Opcional: agregar la foto del expositor en la portada (la plantilla lo
-      permite; un círculo junto a los logos).
-- [ ] Copiar a **dos USB** (una por expositor): el `.pptx`, el `.pdf` y el
-      `GUION_imprimible.pdf`. Probar que la USB abre en otra computadora.
-- [ ] Imprimir el `GUION_imprimible.pdf` (una copia por expositor).
-- [ ] Llevar laptop y adaptador HDMI por si la computadora de la sede falla.
-- [ ] Ensayar al menos **tres veces completas con cronómetro** (ver §5), y
-      una vez la **versión de 2 minutos** del guion, por si la sesión va
-      retrasada y el moderador pide recortar.
-- [ ] Revisar `../07_PREGUNTAS_MICAI.md` y las respuestas cortas del guion.
-- [ ] El día de la presentación: llegar a la sala **15 minutos antes** de la
-      sesión, presentarse con el moderador (*session chair*) y cargar la
-      presentación en la computadora de la sala.
-
----
-
-## 5. Cómo ensayar (nivel A2)
-
-1. **Día 1 — leer y entender.** Leer el guion en voz alta con la traducción a
-   la vista. Marcar las palabras difíciles y repasar la tabla de
-   pronunciación.
-2. **Días 2–3 — por partes.** Cada expositor ensaya solo su parte cinco veces
-   con las diapositivas abiertas. Grabarse con el celular y escucharse. Es
-   válido leer de las notas: se recomienda mirar al público al final de cada
-   frase.
-3. **Días 4–5 — completo y con cronómetro.** Ensayar los dos juntos, con los
-   cambios de expositor. Meta: **entre 8 y 9 minutos**. Si se pasa de 9:30,
-   quitar las frases que no estén en **negritas** en la diapositiva (lo
-   importante ya está escrito en ella).
-4. **Preguntas.** Uno lee una pregunta de la lista y el otro contesta con la
-   respuesta corta. Practicar también: *Sorry, could you repeat the question,
-   please?*
-5. **Ayuda para la pronunciación.** Escuchar cada frase en un traductor con
-   voz (por ejemplo, el botón de audio de Google Translate o DeepL) y
-   repetirla en voz alta.
-
-**Consejos para el momento:** hablar despacio (con nervios todos aceleran);
-señalar la gráfica cuando se diga un número; si se olvida algo, leer el título
-de la diapositiva y seguir; si no se entiende una pregunta, pedir que la
-repitan o pedírsela por escrito al moderador; contestar corto y, si hace falta,
-decir *We can talk more after the session.*
-
----
-
-## 6. Para cambiar algo
-
-Todo se genera con scripts; **no editar a mano** el `.pptx` ni el guion si se
-quiere poder regenerarlos.
+Todo se genera con scripts; **no editar a mano** el `.pptx`, los guiones ni las
+tarjetas si se quiere poder regenerarlos. El texto vive en `fuente/guion.py`.
 
 ```bash
-# Cambiar el texto del guion o de las notas: editar fuente/guion.py, luego:
+# Desde la raíz de este repositorio (dentro del TT, desde PAPER_MICAI/)
 python presentacion_micai/fuente/generar_guion.py
+python presentacion_micai/fuente/generar_tarjetas.py
 python presentacion_micai/fuente/construir_presentacion.py
-
-# Cambiar el diseño o los datos de una diapositiva: editar fuente/construir_presentacion.py
 ```
 
-Requisitos: `pip install python-pptx lxml`; Chrome o Edge para el PDF del
-guion. El PDF de las diapositivas se exportó con PowerPoint (*Archivo →
-Exportar → PDF*).
+Después de `construir_presentacion.py` hay que volver a exportar el PDF desde
+PowerPoint (*Archivo → Exportar → PDF*).
 
-Cambios pequeños de último momento (un número, una palabra) se pueden hacer
-directo en PowerPoint; en ese caso, anotarlos también en `fuente/` para no
-perderlos la próxima vez que se regenere.
+Requisitos: `pip install python-pptx lxml`; Chrome o Edge para los PDF del guion y de
+las tarjetas. `generar_tarjetas.py` ajusta la letra de cada tarjeta y se detiene si
+algo no cabe.
 
-## 7. Origen de los archivos de `fuente/`
+Un cambio pequeño de último momento (un número, una palabra) se puede hacer directo
+en PowerPoint o, en las tarjetas, con pluma. Si lo haces, anótalo también en `fuente/`
+para no perderlo la próxima vez que se regenere.
 
-- `plantilla/MICAI2026_Template_Author_upt.potx`: plantilla oficial,
-  descargada de https://micai.org/docs/MICAI2026_Template_Author_upt.potx el
-  26 de octubre de 2026.
-- `logos/ipn.png`, `logos/escom.png`: tomados de la portada del reporte técnico
-  del TT.
+## Origen de los archivos de `fuente/`
+
+- `plantilla/MICAI2026_Template_Author_upt.potx`: plantilla oficial, descargada de
+  https://micai.org/docs/MICAI2026_Template_Author_upt.potx el 26 de octubre de 2026.
+- `logos/ipn.png`, `logos/escom.png`: tomados de la portada del reporte técnico del TT.

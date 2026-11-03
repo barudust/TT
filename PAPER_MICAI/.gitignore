@@ -10,7 +10,12 @@ paper_review/_envio_springer/
 !paper_review/paper.pdf
 !paper_review/supplementary/MICAI2026_ch171490174_supplementary.pdf
 !presentacion_micai/MICAI2026_benchmark_trading_signals.pdf
-!presentacion_micai/GUION_imprimible.pdf
+!presentacion_micai/GUION_UN_EXPOSITOR.pdf
+!presentacion_micai/GUION_DOS_EXPOSITORES.pdf
+!presentacion_micai/TARJETAS_UN_EXPOSITOR.pdf
+!presentacion_micai/TARJETAS_DOS_EXPOSITORES.pdf
+# La copia para la USB se arma con presentacion_micai/fuente/preparar_usb.py
+presentacion_micai/para_usb/
 
 # ── Datos: solo los del artículo ────────────────────────────────────────────
 *.parquet

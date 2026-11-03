@@ -1,11 +1,12 @@
 # 06 — Guion para la presentación en MICAI
 
-> **Actualización (26 oct):** la regla oficial es de **10 minutos + 5 de
-> preguntas**, no 15. La versión final —diapositivas sobre la plantilla
-> oficial, guion para dos expositores en inglés sencillo con traducción,
-> pronunciación y lista de pendientes— está en
-> [`presentacion_micai/`](presentacion_micai/README.md). Este documento queda
-> como versión larga de referencia (útil si piden una charla de 15–20 min).
+> **Actualización:** la regla oficial es de **10 minutos + 5 de preguntas**, no
+> 15, y el programa asigna el **jueves 5 de noviembre, 16:40, Room 1104**. La
+> versión final —diapositivas sobre la plantilla oficial, tarjetas y guion en inglés
+> sencillo para uno o dos expositores, con traducción, pronunciación y lista de
+> pendientes— está en [`presentacion_micai/`](presentacion_micai/README.md). Este
+> documento queda como versión larga de referencia (útil si piden una charla de
+> 15–20 min).
 
 > Base para preparar las diapositivas del congreso. Pensado para **15 minutos
 > de exposición + 5 de preguntas** (ajustar al tiempo que indique el programa
@@ -124,6 +125,8 @@ predicting one third for each class. A 10 k-parameter LSTM does as well as a
    dev/final.~~ Las diapositivas 3 y 8 los dibujan en inglés con formas de
    PowerPoint (los de [`REPORTE_TECNICO/diagramas/fuente/`](https://github.com/barudust/TT/tree/main/REPORTE_TECNICO/diagramas/fuente)
    del TT siguen en español).
-3. ~~Un guion de 2 minutos por si la sesión se retrasa.~~ En
-   `presentacion_micai/GUION_DOS_EXPOSITORES.md`, sección "Versión de 2
-   minutos" (sale de `presentacion_micai/fuente/guion.py`).
+3. ~~Un guion de 2 minutos por si la sesión se retrasa.~~ En las tarjetas y en
+   `presentacion_micai/GUION_UN_EXPOSITOR.md`, sección "Versión de 2 minutos" (sale
+   de `presentacion_micai/fuente/guion.py`).
+4. ~~Tarjetas para tener a la mano al exponer.~~ En
+   `presentacion_micai/TARJETAS_UN_EXPOSITOR.pdf` y `TARJETAS_DOS_EXPOSITORES.pdf`.

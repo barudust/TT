@@ -12,7 +12,8 @@ Salida: presentacion_micai/MICAI2026_benchmark_trading_signals.pptx
 - Diapositivas de contenido sobre el diseño "Blank" de la plantilla (pie
   con los patrocinadores).
 - Gráficas nativas de PowerPoint (editables), con los números del artículo.
-- Notas del orador con el guion en inglés sencillo y su traducción (guion.py).
+- Notas del orador con el guion en inglés sencillo para un expositor, su traducción
+  y qué cambia si son dos (guion.py).
 """
 
 from __future__ import annotations
@@ -36,7 +37,7 @@ from pptx.util import Emu, Inches, Pt
 
 AQUI = Path(__file__).resolve().parent
 sys.path.insert(0, str(AQUI))
-from guion import DIAPOSITIVAS, RESPALDO  # noqa: E402
+from guion import RESPALDO, guion, plano  # noqa: E402
 
 PLANTILLA = AQUI / "plantilla" / "MICAI2026_Template_Author_upt.potx"
 LOGOS = AQUI / "logos"
@@ -203,14 +204,17 @@ def titulo(slide, t, sub=None):
         texto(slide, MX, 1.08, ANCHO - 2 * MX, 0.45, sub, size=18, color=TINTA2, nombre="Subtitle")
 
 
-def notas(slide, d: dict) -> None:
-    partes = [f"{d['quien'].upper()} · {d['seg']} s", ""]
-    partes += d["en"]
-    if d.get("pase"):
-        partes += ["", "→ " + d["pase"]]
+def notas(slide, d: dict, dos: dict) -> None:
+    """Notas para un expositor; al final, qué cambia si son dos."""
+    partes = [f"Minuto {d['ini'] // 60}:{d['ini'] % 60:02d} → {d['fin'] // 60}:{d['fin'] % 60:02d} · {d['seg']} s", ""]
+    partes += [plano(s) for s in d["en"]]
     partes += ["", "ES:"] + d["es"]
-    if d.get("pase_es"):
-        partes += ["→ " + d["pase_es"]]
+    partes += ["", f"SI SON DOS EXPOSITORES: habla {dos['quien']}."]
+    distintas = [plano(s) for s in dos["en"] if plano(s) not in [plano(x) for x in d["en"]]]
+    if distintas:
+        partes += ["Dice en su lugar: " + " ".join(distintas)]
+    if dos.get("pase"):
+        partes += ["Al terminar: → " + dos["pase"]]
     slide.notes_slide.notes_text_frame.text = "\n".join(partes)
 
 
@@ -308,6 +312,9 @@ def s01_portada(prs, slide) -> None:
     sub.height = Inches(1.75)
     for p in stf.paragraphs:
         p.alignment = PP_ALIGN.LEFT
+        # Azul oscuro: en blanco casi no se leen sobre esta parte clara del fondo de la plantilla.
+        for r in p.runs:
+            r.font.color.rgb = rgb("14235C")
         # sin viñetas
         pPr = p._p.get_or_add_pPr()
         pPr.set("marL", "0")
@@ -355,7 +362,7 @@ def s03_datos(prs, slide) -> None:
         chip(slide, MX + col * 1.45, 2.35 + fila * 0.62, 1.3, 0.48, t, fill=TARJETA, color=TITULO, size=16)
     datos = [
         [("Yahoo Finance, ", {"bold": True}), ("free, 2013–2025", {})],
-        [("61 technical features ", {"bold": True}), ("in 9 families", {})],
+        [("61 features ", {"bold": True}), ("in 9 families", {})],
         [("Market context: ", {"bold": True}), ("S&P 500 (SPY) and VIX", {})],
     ]
     for i, d in enumerate(datos):
@@ -541,7 +548,7 @@ def s08_protocolo_corregido(prs, slide) -> None:
         texto(slide, MX, y + 0.3, 1.5, 0.3, sub, size=12, color=TINTA2)
         _barra_tiempo(slide, x0, y, anios, aw, tramos, alto=0.5)
     checks = [("Same 1,736 test rows", "for all five models (before: networks lost the first 20–60 days)"),
-              ("Same Optuna search", "150 trials (LR, XGBoost) · 80 trials, 17–20 hyper-parameters (networks)"),
+              ("Same Optuna sampler", "150 trials (LR, XGBoost) · 80 trials, 17–20 hyper-parameters (networks)"),
               ("No decision uses 2025", "the test year is evaluated only once")]
     for i, (h, d) in enumerate(checks):
         y = 4.4 + i * 0.68
@@ -596,7 +603,7 @@ def s09_resultado4(prs, slide) -> None:
           size=15, color=TINTA2)
     caja(slide, xr2, 4.3, 3.38, 2.1, fill=TARJETA)
     texto(slide, xr2 + 0.3, 4.45, 2.8, 1.9,
-          [[("Networks: ", {"bold": True}), ("validation loss never below ln 3 = 1.099", {})],
+          [[("Networks: ", {"bold": True}), ("validation loss never clearly below ln 3 = 1.099", {})],
            [("592 k → 10 k parameters: ", {"bold": True}), ("same result", {})]],
           size=15, color=TINTA, espacio=8)
     texto(slide, MX, 6.15, 8.3, 0.3, "Dark part: lower bound → macro-F1 · light part: macro-F1 → upper bound",
@@ -627,18 +634,24 @@ def s10_por_que(prs, slide) -> None:
 
 
 def s11_cierre(prs, slide) -> None:
-    texto(slide, 0.85, 1.45, 8.5, 0.7, [[("Takeaways", {"bold": True, "color": BLANCO})]], size=36)
+    # Panel oscuro semitransparente: el fondo de la plantilla es muy claro en esta zona.
+    # Empieza debajo del encabezado de la plantilla para no tapar el logotipo.
+    panel = caja(slide, 0.6, 1.78, 9.35, 4.55, fill=TITULO, radio=0.05, nombre="Panel")
+    alpha = etree.SubElement(panel.fill._xPr.find(qn("a:solidFill"))[0], qn("a:alpha"))
+    alpha.set("val", "72000")
+    texto(slide, 0.85, 1.88, 8.5, 0.7, [[("Takeaways", {"bold": True, "color": BLANCO})]], size=34)
     msgs = ["A well-regularized logistic regression is a strong and cheap baseline.",
             "Do not filter the features before training.",
             "The stock matters more than the model."]
     for i, m in enumerate(msgs):
-        y = 2.35 + i * 0.85
+        y = 2.68 + i * 0.72
         circulo_num(slide, 0.85, y, 0.55, i + 1, fill=BLANCO)
         c = slide.shapes[-1]
         c.text_frame.paragraphs[0].runs[0].font.color.rgb = rgb(TITULO)
         texto(slide, 1.65, y, 7.9, 0.55, [[(m, {"bold": True, "color": BLANCO})]], size=20, anchor="m")
-    texto(slide, 0.85, 5.0, 8.5, 0.6, [[("Thank you · Questions?", {"bold": True, "color": BLANCO})]], size=28)
-    texto(slide, 0.85, 5.6, 8.5, 0.4, [[("Code and data: github.com/barudust/TT", {"color": BLANCO})]], size=16)
+    texto(slide, 0.85, 4.92, 8.5, 0.6, [[("Thank you · Questions?", {"bold": True, "color": BLANCO})]], size=28)
+    texto(slide, 0.85, 5.56, 8.5, 0.4, [[("Code and data: ", {"color": BLANCO}),
+                                         ("github.com/Daivino/PAPER_MICAI", {"color": BLANCO, "bold": True})]], size=18)
 
 
 # --- Respaldo -----------------------------------------------------------------
@@ -753,9 +766,10 @@ def construir() -> Path:
         fn(prs, sl)
         slides.append(sl)
 
-    for sl, d in zip(slides, DIAPOSITIVAS):
-        notas(sl, d)
-    for sl, (n, desc) in zip(slides[len(DIAPOSITIVAS):], RESPALDO.items()):
+    uno, dos = guion("uno"), guion("dos")
+    for sl, d, d2 in zip(slides, uno, dos):
+        notas(sl, d, d2)
+    for sl, (n, desc) in zip(slides[len(uno):], RESPALDO.items()):
         sl.notes_slide.notes_text_frame.text = f"BACKUP (slide {n}) · show only if a question needs it.\n{desc}"
 
     prs.core_properties.title = "A Benchmark of Five Machine-Learning Architectures for Daily Trading-Signal Classification on US Tech Equities"

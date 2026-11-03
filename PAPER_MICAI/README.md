@@ -29,8 +29,9 @@ depende de nada fuera de ella. Mientras siga dentro del repositorio del TT
 |---|---|
 | El artículo (12 páginas, con el aviso de la licencia) | [`paper_review/paper.pdf`](paper_review/paper.pdf) |
 | Material suplementario (7 páginas) | [`paper_review/supplementary/MICAI2026_ch171490174_supplementary.pdf`](paper_review/supplementary/MICAI2026_ch171490174_supplementary.pdf) |
-| Presentación del congreso (10 min, plantilla oficial) | [`presentacion_micai/`](presentacion_micai/README.md) |
-| Guion para dos expositores, imprimible | `presentacion_micai/GUION_imprimible.pdf` |
+| **Presentación del congreso** (jueves 5 de noviembre, 16:40, Room 1104) | [`presentacion_micai/`](presentacion_micai/README.md) |
+| Tarjetas para exponer, listas para imprimir | [`presentacion_micai/TARJETAS_UN_EXPOSITOR.pdf`](presentacion_micai/TARJETAS_UN_EXPOSITOR.pdf) (y `TARJETAS_DOS_EXPOSITORES.pdf`) |
+| Guion completo con traducción | [`presentacion_micai/GUION_UN_EXPOSITOR.pdf`](presentacion_micai/GUION_UN_EXPOSITOR.pdf) (y `GUION_DOS_EXPOSITORES.pdf`) |
 | Preguntas probables con respuesta | [`07_PREGUNTAS_MICAI.md`](07_PREGUNTAS_MICAI.md) |
 | Estado del envío a Springer y pendientes | [`01_FICHA_Y_ESTADO.md`](01_FICHA_Y_ESTADO.md) |
 | Cómo citarlo | [`01_FICHA_Y_ESTADO.md`](01_FICHA_Y_ESTADO.md#cómo-citarlo) y [`CITATION.cff`](CITATION.cff) |
@@ -48,7 +49,7 @@ depende de nada fuera de ella. Mientras siga dentro del repositorio del TT
 | [`05_INCLUSION_EN_EL_REPORTE.md`](05_INCLUSION_EN_EL_REPORTE.md) | Cómo citar e incluir el artículo en el reporte técnico del TT |
 | [`06_PRESENTACION_MICAI.md`](06_PRESENTACION_MICAI.md) | Versión larga del guion (15 min), de referencia |
 | [`07_PREGUNTAS_MICAI.md`](07_PREGUNTAS_MICAI.md) | Preguntas probables del público y de los revisores, en inglés y en español |
-| [`presentacion_micai/`](presentacion_micai/README.md) | Diapositivas, guion de 10 min y de 2 min, PDF de respaldo, reglas oficiales y pendientes del viaje |
+| [`presentacion_micai/`](presentacion_micai/README.md) | Diapositivas, tarjetas y guion para uno o dos expositores, versión de 2 min, PDF de respaldo, qué imprimir, qué llevar en la USB, reglas oficiales y pendientes |
 | [`figuras_presentacion/`](figuras_presentacion/README.md) | Seis gráficas en inglés para diapositivas (PNG y SVG) y su generador |
 
 ### Lo que respalda al artículo (copia exacta del TT, mismas rutas)
@@ -112,7 +113,7 @@ cm-super`).
 | Figuras del artículo | `python scripts_opt/plots_paper.py` | `paper_review/figures/` | segundos |
 | Suplementario | `python paper_review/supplementary/build_supplementary.py` (se detiene si no reproduce las tablas del artículo) | `paper_review/supplementary/` | ~1 min |
 | El artículo | `python paper_review/compilar_paper.py` (con `--doi …` cuando salga el DOI) | `paper_review/paper.pdf` y `paper_review/_envio_springer/` (privado) | ~1 min |
-| Gráficas y presentación del congreso | `python figuras_presentacion/fuente/generar_figuras.py`, `python presentacion_micai/fuente/generar_guion.py`, `python presentacion_micai/fuente/construir_presentacion.py` | `figuras_presentacion/`, `presentacion_micai/` | segundos |
+| Gráficas y presentación del congreso | `python figuras_presentacion/fuente/generar_figuras.py`, `python presentacion_micai/fuente/generar_guion.py`, `python presentacion_micai/fuente/generar_tarjetas.py`, `python presentacion_micai/fuente/construir_presentacion.py` | `figuras_presentacion/`, `presentacion_micai/` | segundos |
 
 Para revisar los números sin entrenar nada basta con los pasos rápidos: los
 resultados de cada corrida ya están guardados, y `analisis_feature_selection.py`,
@@ -158,48 +159,49 @@ El `.gitignore` deja fuera lo siguiente; **no forzarlo con `git add -f`**:
   Springer, que lleva el PDF **sin** el aviso de la licencia.
 - El formulario de copyright firmado (`*_copyright.pdf`) y el `078.zip`
   original.
-- Cualquier otro PDF, salvo los cuatro públicos: el artículo, el
-  suplementario, la presentación y el guion.
+- Cualquier otro PDF, salvo los públicos: el artículo, el suplementario, la
+  presentación, los guiones y las tarjetas.
 
 Una copia del zip corregido está en el release **borrador** `envio-springer`
 del repositorio del TT, que solo ven los colaboradores. **No publicarlo.**
 
 ---
 
-## Para separarlo como repositorio aparte
+## El repositorio del artículo en GitHub
 
-**Antes de crear el repositorio, decidir entre los autores:**
+El repositorio público es **https://github.com/Daivino/PAPER_MICAI**. Esta carpeta
+se publica ahí desde el TT con `git subtree`, que conserva su historial; `.gitignore`
+ya deja fuera lo privado. Hace falta permiso de escritura en ese repositorio.
 
-1. **Licencia del código y de los datos.** Hoy no tiene ninguna. Sin
-   licencia, el código se puede ver pero no reutilizar. MIT es lo más común
-   en artículos. El PDF del artículo queda aparte: lo rige la licencia de
-   Springer (ver `01_FICHA_Y_ESTADO.md`).
-2. **Público o privado.** La licencia de Springer permite el manuscrito
-   aceptado en el sitio del autor si lleva el aviso, y `paper.pdf` ya lo
-   lleva. Es lo mismo que ya está publicado en el TT.
-
-**Pasos (desde la raíz del TT).** Conservan el historial de esta carpeta:
+**Primera vez.** Desde la raíz del TT, con todo confirmado (`git status` limpio):
 
 ```bash
 git subtree split --prefix=PAPER_MICAI -b paper-micai
+git clone https://github.com/Daivino/PAPER_MICAI.git ../PAPER_MICAI_repo
+git -C ../PAPER_MICAI_repo pull --no-rebase --no-edit --allow-unrelated-histories -X theirs ../TT paper-micai
+git -C ../PAPER_MICAI_repo push origin main
 ```
 
-1. Crear en GitHub un repositorio **vacío**, sin README ni licencia.
-2. Subirle la rama del comando anterior:
+El repositorio ya traía un README de dos renglones en su primer commit. Los comandos
+lo combinan sin borrar su historial y se queda este README.
+Si Git pide nombre y correo al combinar, agrega al comando de `pull`, justo después de
+`git`: `-c user.name="…" -c user.email="…"`.
+
+**Para actualizarlo después de un cambio en esta carpeta:**
 
 ```bash
-git push https://github.com/barudust/NOMBRE-DEL-REPO.git paper-micai:main
+git subtree split --prefix=PAPER_MICAI -b paper-micai
+git -C ../PAPER_MICAI_repo pull --no-rebase --no-edit -X theirs ../TT paper-micai
+git -C ../PAPER_MICAI_repo push origin main
 ```
 
-3. Ya en el repositorio nuevo, actualizar `repository-code` en `CITATION.cff`
-   con su dirección.
+**Pendiente de decidir entre los autores: la licencia del código y de los datos.** Hoy
+no tiene ninguna; sin licencia, el código se puede ver pero no reutilizar. MIT es lo
+más común en artículos. El PDF del artículo queda aparte: lo rige la licencia de
+Springer (ver `01_FICHA_Y_ESTADO.md`), que permite el manuscrito aceptado en el sitio
+del autor si lleva el aviso, y `paper.pdf` ya lo lleva.
 
-Desde ese momento **el repositorio nuevo es el original** del artículo.
-`sincronizar_desde_tt.py` solo sirve mientras la carpeta esté dentro del TT.
-Si después cambia algo del artículo en el TT, se vuelve a correr y se copia
-a mano.
-
-### Mientras siga dentro del TT
+### Mantener las copias al día desde el TT
 
 ```bash
 python PAPER_MICAI/sincronizar_desde_tt.py            # revisa si las copias están al día

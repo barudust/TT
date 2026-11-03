@@ -14,6 +14,8 @@
 | Formato | LNCS, una columna, 12 páginas, inglés |
 | Palabras clave | Trading signals · Classification · Deep learning · Logistic regression · XGBoost · LSTM · CNN |
 | Contenido | 11 secciones, 6 tablas, 1 figura en el texto; material suplementario de 7 páginas |
+| Presentación | **Jueves 5 de noviembre de 2026, 16:40, Room 1104**, sesión *Machine Learning & Data Analytics* (16:00–18:20), Tec de Monterrey Campus Chihuahua. Paper ID 78. Ver [`presentacion_micai/`](presentacion_micai/README.md) |
+| Repositorio | https://github.com/Daivino/PAPER_MICAI |
 
 ## Cronología
 
@@ -25,6 +27,8 @@
 | 8 de septiembre | **Camera-ready enviado a Springer** (paquete `078.zip`) |
 | 2 de octubre | Springer pide el material suplementario que el artículo cita; se detecta el apellido mal escrito ("Cuatiaquiz") |
 | 2–3 de octubre | Se genera y verifica el suplementario (7 páginas) y el paquete corregido (`078_corrected.zip`) |
+| 2 de noviembre | El programa del congreso ya asigna día, hora y sala. Se preparan las tarjetas y el guion para un expositor |
+| 5 de noviembre | Presentación en MICAI |
 
 ## Pendientes (verificar el estado real antes de actuar)
 
@@ -40,6 +44,13 @@
    del reporte técnico.
 4. **Registrar el artículo** donde lo pida la escuela (constancia de
    participación, carta de aceptación) para el expediente del TT.
+5. **Lista de autores en el programa del congreso.** El programa (consultado el 2
+   de noviembre) dice "Reyes Vera, Abdiel*; Reyes Ramos, David; Polvo Cuatianquiz,
+   Jesus Baruc; Juarez Carbajal, Emmanuel": otro orden y **falta Maribel Aragón
+   García**. Sale del registro del sistema del congreso, no del artículo, que tiene a
+   los cinco. Conviene avisar a los organizadores y revisar en las pruebas de
+   imprenta que el capítulo salga con los cinco y en el orden correcto.
+6. **Licencia del repositorio:** hoy no tiene (ver `README.md`).
 
 ## Licencia (resumen)
 

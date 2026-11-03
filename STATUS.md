@@ -2,7 +2,21 @@
 
 > Punto de entrada para retomar el proyecto desde cero: **[`CONTEXTO.md`](CONTEXTO.md)**.
 
-Última actualización: 2026-10-28.
+Última actualización: 2026-11-02.
+
+## MICAI 2026: presentación lista (2026-11-02)
+
+- **Jueves 5 de noviembre, 16:40, Room 1104**, sesión *Machine Learning & Data
+  Analytics* (16:00–18:20), Paper ID 78 (programa oficial; puede cambiar).
+- `PAPER_MICAI/presentacion_micai/`: guion para **un expositor** como versión
+  principal (y alternativa para dos), **tarjetas para imprimir**
+  (`TARJETAS_*.pdf`) y `fuente/preparar_usb.py` para copiar todo a la USB.
+- Revisión de las diapositivas contra el artículo: "very slightly better" en la
+  partición B, "never clearly below ln 3", "61 features" y "same Optuna sampler".
+  Saludo cambiado a *Good afternoon*. La diapositiva 11 apunta al repositorio del
+  artículo, https://github.com/Daivino/PAPER_MICAI (comandos en `PAPER_MICAI/README.md`).
+- Pendiente: confirmar si ya se respondió a Springer (`PAPER_MICAI/01_FICHA_Y_ESTADO.md`);
+  el programa lista cuatro autores, sin Maribel Aragón García y en otro orden.
 
 ## Cuarta revisión del reporte, TT2_v7.pdf (2026-10-28)
 

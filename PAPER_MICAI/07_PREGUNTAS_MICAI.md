@@ -130,6 +130,22 @@ complexity.
 in both directions does not use future information. In Section 8 the search
 selected a unidirectional LSTM with attention, and it still ranks below LR.
 
+### P16. The confidence intervals overlap. Why do you say LR is significantly better?
+
+**EN.** Overlapping marginal intervals do not decide a paired comparison. All models
+are scored on the same 1 736 rows, so we bootstrap the paired difference: LR minus
+each model is +0.045 (XGBoost), +0.035 (LSTM), +0.031 (CNN-LSTM) and +0.045 (CNN),
+and all four intervals exclude zero. None of the six differences among the other
+four models is significant.
+
+**ES.** Se prueba la diferencia pareada en las mismas filas, no los intervalos por
+separado. Las cuatro diferencias de la LR excluyen el cero.
+
+### P17. What kind of bootstrap?
+
+**EN.** A block bootstrap on the test rows: blocks of 20 consecutive rows and 2 000
+resamples, because returns on nearby days are not independent.
+
 ### P15. What about the CNN-LSTM with OHLCV channels mentioned in Section 4?
 
 **EN.** That sentence describes an earlier design; in the reported runs all
