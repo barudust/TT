@@ -64,7 +64,7 @@ python presentacion_micai/fuente/preparar_usb.py E:/MICAI2026
 ```
 
 Copia los dos archivos de la presentación, las tarjetas, los guiones, el artículo y
-el suplementario (unos 15 MB). Lo indispensable son el `.pptx` y su `.pdf`.
+el suplementario (unos 13 MB). Lo indispensable son el `.pptx` y su `.pdf`.
 
 ## Lista de pendientes
 
